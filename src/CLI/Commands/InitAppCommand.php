@@ -29,18 +29,17 @@ final class InitAppCommand extends Command
                 'CLI_INIT_APP_PATH_REQUIRED',
                 'validation',
                 [],
-                'Target path required. Usage: foundry init app <path> [--name=vendor/app] [--force]'
+                'Target path required. Usage: foundry init app <path> [--name=vendor/app] [--version=^0.1] [--force]'
             );
         }
 
         $targetPath = $this->resolvePath($context->paths()->root(), $targetArgument);
         $force = in_array('--force', $args, true);
         $projectName = $this->parseOption($args, '--name') ?? $this->defaultProjectName($targetPath);
+        $frameworkVersion = $this->parseOption($args, '--version') ?? '^0.1';
 
         $this->prepareTargetDirectory($targetPath, $force);
-
-        $frameworkPath = $this->relativePath($targetPath, $context->paths()->frameworkRoot());
-        $files = $this->writeScaffold($targetPath, $projectName, $frameworkPath);
+        $files = $this->writeScaffold($targetPath, $projectName, $frameworkVersion);
 
         $paths = new Paths($targetPath, $context->paths()->frameworkRoot());
         $generated = (new IndexGenerator($paths))->generate();
@@ -53,7 +52,8 @@ final class InitAppCommand extends Command
             'payload' => [
                 'project_root' => $targetPath,
                 'project_name' => $projectName,
-                'framework_path' => $frameworkPath,
+                'framework_package' => 'lofye/foundry',
+                'framework_version' => $frameworkVersion,
                 'files_written' => array_values(array_merge($files, $generated, [$contextFile])),
                 'next_steps' => [
                     'cd ' . $targetPath,
@@ -69,11 +69,10 @@ final class InitAppCommand extends Command
     /**
      * @return array<int,string>
      */
-    private function writeScaffold(string $targetPath, string $projectName, string $frameworkPath): array
+    private function writeScaffold(string $targetPath, string $projectName, string $frameworkVersion): array
     {
         $placeholders = [
             '{{PROJECT_NAME}}' => $projectName,
-            '{{FRAMEWORK_PATH}}' => $frameworkPath,
         ];
 
         $composer = [
@@ -82,17 +81,10 @@ final class InitAppCommand extends Command
             'type' => 'project',
             'require' => [
                 'php' => '^8.5',
-                'foundry/framework' => 'dev-main',
+                'lofye/foundry' => $frameworkVersion,
             ],
             'require-dev' => [
                 'phpunit/phpunit' => '^11.5',
-            ],
-            'repositories' => [
-                [
-                    'type' => 'path',
-                    'url' => $frameworkPath,
-                    'options' => ['symlink' => true],
-                ],
             ],
             'autoload' => [
                 'psr-4' => [
@@ -132,19 +124,9 @@ php vendor/bin/foundry generate indexes --json
 php vendor/bin/foundry verify contracts --json
 ```
 
-## Upgrading Foundry (local clone workflow)
-This project consumes Foundry via Composer `path` repository (`{{FRAMEWORK_PATH}}`).
-
-1. Pull latest framework changes:
+## Upgrading Foundry
 ```bash
-git -C {{FRAMEWORK_PATH}} pull
-```
-2. Update this app's lockfile:
-```bash
-composer update foundry/framework
-```
-3. Regenerate and verify:
-```bash
+composer update lofye/foundry
 php vendor/bin/foundry generate indexes --json
 php vendor/bin/foundry verify contracts --json
 ```
@@ -357,31 +339,6 @@ PHP
         }
 
         return null;
-    }
-
-    private function relativePath(string $from, string $to): string
-    {
-        $from = trim($from, '/');
-        $to = trim($to, '/');
-        if ($from === $to) {
-            return '.';
-        }
-
-        $fromParts = $from === '' ? [] : explode('/', $from);
-        $toParts = $to === '' ? [] : explode('/', $to);
-
-        while ($fromParts !== [] && $toParts !== [] && $fromParts[0] === $toParts[0]) {
-            array_shift($fromParts);
-            array_shift($toParts);
-        }
-
-        $up = array_fill(0, count($fromParts), '..');
-        $combined = array_merge($up, $toParts);
-        if ($combined === []) {
-            return '.';
-        }
-
-        return implode('/', $combined);
     }
 
     /**

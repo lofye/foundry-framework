@@ -18,36 +18,21 @@ License: MIT.
 - PHP `^8.5`
 - Composer-based
 
-## Install and Run
+## Install and Run (Packagist)
 ```bash
-composer install
-php bin/foundry generate indexes
-php bin/foundry verify contracts --json
-vendor/bin/phpunit
-```
-
-## Create an Upgrade-Friendly App Project
-Recommended workflow: keep app code in its own repo and consume Foundry via Composer.
-
-From this framework clone:
-```bash
-composer install
-php bin/foundry init app ../my-foundry-app --name=acme/my-foundry-app
-```
-
-Then in the generated app:
-```bash
-cd ../my-foundry-app
+mkdir my-foundry-app
+cd my-foundry-app
+composer require lofye/foundry:^0.1
+php vendor/bin/foundry init app . --name=acme/my-foundry-app --force
 composer install
 php vendor/bin/foundry generate indexes --json
 php vendor/bin/foundry verify contracts --json
 php -S 127.0.0.1:8000 app/platform/public/index.php
 ```
 
-Upgrade flow for existing apps:
+## Upgrade Foundry in an App
 ```bash
-git -C ../foundry pull
-composer update foundry/framework
+composer update lofye/foundry
 php vendor/bin/foundry generate indexes --json
 php vendor/bin/foundry verify contracts --json
 ```
@@ -97,16 +82,16 @@ Use this loop for every change:
 
 Recommended command sequence:
 ```bash
-php bin/foundry inspect feature <feature> --json
-php bin/foundry inspect context <feature> --json
-php bin/foundry generate indexes --json
-php bin/foundry generate context <feature> --json
-php bin/foundry verify feature <feature> --json
-php bin/foundry verify contracts --json
-php bin/foundry verify auth --json
-php bin/foundry verify cache --json
-php bin/foundry verify events --json
-php bin/foundry verify jobs --json
+php vendor/bin/foundry inspect feature <feature> --json
+php vendor/bin/foundry inspect context <feature> --json
+php vendor/bin/foundry generate indexes --json
+php vendor/bin/foundry generate context <feature> --json
+php vendor/bin/foundry verify feature <feature> --json
+php vendor/bin/foundry verify contracts --json
+php vendor/bin/foundry verify auth --json
+php vendor/bin/foundry verify cache --json
+php vendor/bin/foundry verify events --json
+php vendor/bin/foundry verify jobs --json
 vendor/bin/phpunit
 ```
 
@@ -159,46 +144,46 @@ All inspection, verification, and planning commands support `--json`.
 
 Inspect:
 ```bash
-php bin/foundry inspect feature <feature> --json
-php bin/foundry inspect route <METHOD> <PATH> --json
-php bin/foundry inspect auth <feature> --json
-php bin/foundry inspect cache <feature> --json
-php bin/foundry inspect events <feature> --json
-php bin/foundry inspect jobs <feature> --json
-php bin/foundry inspect context <feature> --json
-php bin/foundry inspect dependencies <feature> --json
+php vendor/bin/foundry inspect feature <feature> --json
+php vendor/bin/foundry inspect route <METHOD> <PATH> --json
+php vendor/bin/foundry inspect auth <feature> --json
+php vendor/bin/foundry inspect cache <feature> --json
+php vendor/bin/foundry inspect events <feature> --json
+php vendor/bin/foundry inspect jobs <feature> --json
+php vendor/bin/foundry inspect context <feature> --json
+php vendor/bin/foundry inspect dependencies <feature> --json
 ```
 
 Generate:
 ```bash
-php bin/foundry generate feature <spec.yaml> --json
-php bin/foundry generate indexes --json
-php bin/foundry generate tests <feature> --json
-php bin/foundry generate migration <spec.yaml> --json
-php bin/foundry generate context <feature> --json
+php vendor/bin/foundry generate feature <spec.yaml> --json
+php vendor/bin/foundry generate indexes --json
+php vendor/bin/foundry generate tests <feature> --json
+php vendor/bin/foundry generate migration <spec.yaml> --json
+php vendor/bin/foundry generate context <feature> --json
 ```
 
 Verify:
 ```bash
-php bin/foundry verify feature <feature> --json
-php bin/foundry verify contracts --json
-php bin/foundry verify auth --json
-php bin/foundry verify cache --json
-php bin/foundry verify events --json
-php bin/foundry verify jobs --json
-php bin/foundry verify migrations --json
+php vendor/bin/foundry verify feature <feature> --json
+php vendor/bin/foundry verify contracts --json
+php vendor/bin/foundry verify auth --json
+php vendor/bin/foundry verify cache --json
+php vendor/bin/foundry verify events --json
+php vendor/bin/foundry verify jobs --json
+php vendor/bin/foundry verify migrations --json
 ```
 
 Runtime / planning:
 ```bash
-php bin/foundry init app <path> [--name=vendor/app] [--force]
-php bin/foundry serve
-php bin/foundry queue:work
-php bin/foundry queue:inspect --json
-php bin/foundry schedule:run --json
-php bin/foundry trace:tail --json
-php bin/foundry affected-files <feature> --json
-php bin/foundry impacted-features <permission|event:<name>|cache:<key>> --json
+php vendor/bin/foundry init app <path> [--name=vendor/app] [--version=^0.1] [--force]
+php vendor/bin/foundry serve
+php vendor/bin/foundry queue:work
+php vendor/bin/foundry queue:inspect --json
+php vendor/bin/foundry schedule:run --json
+php vendor/bin/foundry trace:tail --json
+php vendor/bin/foundry affected-files <feature> --json
+php vendor/bin/foundry impacted-features <permission|event:<name>|cache:<key>> --json
 ```
 
 ## Tests

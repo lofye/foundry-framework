@@ -34,6 +34,7 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertSame(0, $result['status']);
         $this->assertSame($target, $result['payload']['project_root']);
         $this->assertSame('acme/marketing-site', $result['payload']['project_name']);
+        $this->assertSame('lofye/foundry', $result['payload']['framework_package']);
         $this->assertFileExists($target . '/composer.json');
         $this->assertFileExists($target . '/app/platform/public/index.php');
         $this->assertFileExists($target . '/app/features/home/feature.yaml');
@@ -42,8 +43,7 @@ final class CLIInitAppCommandTest extends TestCase
 
         $composer = file_get_contents($target . '/composer.json');
         $this->assertIsString($composer);
-        $this->assertStringContainsString('"foundry/framework": "dev-main"', $composer);
-        $this->assertStringContainsString('"type": "path"', $composer);
+        $this->assertStringContainsString('"lofye/foundry": "^0.1"', $composer);
 
         /** @var array<string,mixed> $routes */
         $routes = require $target . '/app/generated/routes.php';
