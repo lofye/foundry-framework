@@ -20,13 +20,22 @@ License: MIT.
 
 ## Install and Run (Packagist)
 ```bash
+# Create a new project folder
 mkdir my-foundry-app
 cd my-foundry-app
-composer require lofye/foundry:^0.1
-php vendor/bin/foundry init app . --name=acme/my-foundry-app --force
+
+# Install Foundry
+composer require lofye/foundry:^0.3
+
+# Initialize a new Foundry app in this folder
+php vendor/bin/foundry init app . --name=acme/my-foundry-app
+
+# Install project dependencies
 composer install
+
+# Generate indexes and verify contracts
 php vendor/bin/foundry generate indexes --json
-php vendor/bin/foundry verify contracts --json
+php vendor/bin/foundry verify contracts --json<
 php -S 127.0.0.1:8000 app/platform/public/index.php
 ```
 
