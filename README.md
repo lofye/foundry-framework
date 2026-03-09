@@ -182,6 +182,27 @@ php vendor/bin/foundry compile graph --feature=<feature> --json
 php vendor/bin/foundry compile graph --changed-only --json
 ```
 
+Architecture analysis:
+```bash
+php vendor/bin/foundry doctor --json
+php vendor/bin/foundry doctor --strict --json
+php vendor/bin/foundry doctor --feature=<feature> --json
+```
+
+Graph visualization:
+```bash
+php vendor/bin/foundry graph visualize --json
+php vendor/bin/foundry graph visualize --events --format=mermaid --json
+php vendor/bin/foundry graph visualize --routes --format=dot --json
+php vendor/bin/foundry graph visualize --caches --feature=<feature> --format=svg --json
+```
+
+AI prompt loop:
+```bash
+php vendor/bin/foundry prompt "add bookmark endpoint for posts" --json
+php vendor/bin/foundry prompt "add bookmark endpoint for posts" --feature-context --dry-run --json
+```
+
 Inspect:
 ```bash
 php vendor/bin/foundry inspect graph --json
@@ -299,3 +320,4 @@ Each example includes feature folders plus generated indexes.
 - `BENCHMARK_NOTES.md`
 - `docs/semantic-compiler-phase0.md`
 - `docs/semantic-compiler-phase0b.md`
+- `docs/semantic-compiler-phase0c.md`

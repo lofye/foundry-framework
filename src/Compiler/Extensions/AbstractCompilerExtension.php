@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Foundry\Compiler\Extensions;
 
+use Foundry\Compiler\Analysis\GraphAnalyzer;
 use Foundry\Compiler\Codemod\Codemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
@@ -91,6 +92,12 @@ abstract class AbstractCompilerExtension implements CompilerExtension
         return [];
     }
 
+    /** @return array<int,GraphAnalyzer> */
+    public function graphAnalyzers(): array
+    {
+        return [];
+    }
+
     public function passPriority(string $phase, CompilerPass $pass): int
     {
         return 100;
@@ -133,6 +140,10 @@ abstract class AbstractCompilerExtension implements CompilerExtension
             'codemods' => array_values(array_map(
                 static fn (Codemod $codemod): string => $codemod->id(),
                 $this->codemods(),
+            )),
+            'graph_analyzers' => array_values(array_map(
+                static fn (GraphAnalyzer $analyzer): string => $analyzer->id(),
+                $this->graphAnalyzers(),
             )),
             'provides' => $descriptor['provides'] ?? [],
         ];

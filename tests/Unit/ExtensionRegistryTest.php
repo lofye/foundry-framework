@@ -189,6 +189,7 @@ PHP);
             $this->assertNotNull($registry->extension('foundry.demo'));
             $this->assertTrue($registry->packRegistry()->has('demo.notes'));
             $this->assertContains('foundry.extensions.php', $registry->registrationSources());
+            $this->assertNotEmpty($registry->graphAnalyzers());
         } finally {
             $project->cleanup();
         }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Foundry\Compiler\Extensions;
 
+use Foundry\Compiler\Analysis\GraphAnalyzer;
 use Foundry\Compiler\Codemod\Codemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
@@ -76,6 +77,11 @@ interface CompilerExtension
      * @return array<int,Codemod>
      */
     public function codemods(): array;
+
+    /**
+     * @return array<int,GraphAnalyzer>
+     */
+    public function graphAnalyzers(): array;
 
     public function passPriority(string $phase, CompilerPass $pass): int;
 

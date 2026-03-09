@@ -5,12 +5,15 @@ namespace Foundry\CLI;
 
 use Foundry\CLI\Commands\GenerateFeatureCommand;
 use Foundry\CLI\Commands\GenerateIndexesCommand;
+use Foundry\CLI\Commands\GraphVisualizeCommand;
 use Foundry\CLI\Commands\ImpactCommand;
 use Foundry\CLI\Commands\InitAppCommand;
 use Foundry\CLI\Commands\InspectGraphCommand;
 use Foundry\CLI\Commands\InspectFeatureCommand;
 use Foundry\CLI\Commands\InspectRouteCommand;
 use Foundry\CLI\Commands\MigrateSpecsCommand;
+use Foundry\CLI\Commands\DoctorCommand;
+use Foundry\CLI\Commands\PromptCommand;
 use Foundry\CLI\Commands\QueueWorkCommand;
 use Foundry\CLI\Commands\ScheduleRunCommand;
 use Foundry\CLI\Commands\ServeCommand;
@@ -35,6 +38,9 @@ final class Application
         $this->commands = $commands ?? [
             new CompileGraphCommand(),
             new InspectGraphCommand(),
+            new DoctorCommand(),
+            new GraphVisualizeCommand(),
+            new PromptCommand(),
             new VerifyGraphCommand(),
             new VerifyCompatibilityCommand(),
             new MigrateSpecsCommand(),

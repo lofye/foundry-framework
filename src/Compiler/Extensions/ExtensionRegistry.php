@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Foundry\Compiler\Extensions;
 
+use Foundry\Compiler\Analysis\GraphAnalyzer;
 use Foundry\Compiler\Codemod\Codemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
@@ -219,6 +220,26 @@ final class ExtensionRegistry
         usort($codemods, static fn (Codemod $a, Codemod $b): int => strcmp($a->id(), $b->id()));
 
         return $codemods;
+    }
+
+    /**
+     * @return array<int,GraphAnalyzer>
+     */
+    public function graphAnalyzers(): array
+    {
+        $analyzers = [];
+        foreach ($this->all() as $extension) {
+            foreach ($extension->graphAnalyzers() as $analyzer) {
+                $analyzers[] = $analyzer;
+            }
+        }
+
+        usort(
+            $analyzers,
+            static fn (GraphAnalyzer $a, GraphAnalyzer $b): int => strcmp($a->id(), $b->id()),
+        );
+
+        return $analyzers;
     }
 
     public function compatibilityReport(string $frameworkVersion, int $graphVersion): CompatibilityReport

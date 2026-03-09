@@ -3,6 +3,13 @@ declare(strict_types=1);
 
 namespace Foundry\Compiler\Extensions;
 
+use Foundry\Compiler\Analysis\Analyzers\AuthAnalyzer;
+use Foundry\Compiler\Analysis\Analyzers\CacheTopologyAnalyzer;
+use Foundry\Compiler\Analysis\Analyzers\DeadCodeAnalyzer;
+use Foundry\Compiler\Analysis\Analyzers\DependencyAnalyzer;
+use Foundry\Compiler\Analysis\Analyzers\SchemaIntegrityAnalyzer;
+use Foundry\Compiler\Analysis\Analyzers\TestCoverageAnalyzer;
+use Foundry\Compiler\Analysis\GraphAnalyzer;
 use Foundry\Compiler\Codemod\Codemod;
 use Foundry\Compiler\Codemod\FeatureManifestV2Codemod;
 use Foundry\Compiler\Migration\FeatureManifestV2Rule;
@@ -70,13 +77,22 @@ final class CoreCompilerExtension extends AbstractCompilerExtension
                 'dependencies',
                 'dependents',
                 'impact',
+                'doctor',
+                'graph.visualize',
+                'prompt',
                 'extensions',
                 'packs',
                 'compatibility',
                 'migrations',
             ],
             providedVerifiers: ['graph', 'compatibility', 'extensions'],
-            providedCapabilities: ['compiler.core', 'migration.feature_manifest_v2'],
+            providedCapabilities: [
+                'compiler.core',
+                'analysis.doctor',
+                'visualization.graph',
+                'prompt.graph_context',
+                'migration.feature_manifest_v2',
+            ],
         );
     }
 
@@ -117,6 +133,21 @@ final class CoreCompilerExtension extends AbstractCompilerExtension
     public function codemods(): array
     {
         return [new FeatureManifestV2Codemod()];
+    }
+
+    /**
+     * @return array<int,GraphAnalyzer>
+     */
+    public function graphAnalyzers(): array
+    {
+        return [
+            new DependencyAnalyzer(),
+            new AuthAnalyzer(),
+            new SchemaIntegrityAnalyzer(),
+            new DeadCodeAnalyzer(),
+            new CacheTopologyAnalyzer(),
+            new TestCoverageAnalyzer(),
+        ];
     }
 
     /**

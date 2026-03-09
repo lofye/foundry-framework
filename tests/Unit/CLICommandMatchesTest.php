@@ -5,12 +5,15 @@ namespace Foundry\Tests\Unit;
 
 use Foundry\CLI\Commands\GenerateFeatureCommand;
 use Foundry\CLI\Commands\GenerateIndexesCommand;
+use Foundry\CLI\Commands\GraphVisualizeCommand;
 use Foundry\CLI\Commands\ImpactCommand;
 use Foundry\CLI\Commands\InitAppCommand;
 use Foundry\CLI\Commands\InspectGraphCommand;
 use Foundry\CLI\Commands\InspectFeatureCommand;
 use Foundry\CLI\Commands\InspectRouteCommand;
 use Foundry\CLI\Commands\MigrateSpecsCommand;
+use Foundry\CLI\Commands\DoctorCommand;
+use Foundry\CLI\Commands\PromptCommand;
 use Foundry\CLI\Commands\QueueWorkCommand;
 use Foundry\CLI\Commands\ScheduleRunCommand;
 use Foundry\CLI\Commands\ServeCommand;
@@ -43,6 +46,9 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new GenerateFeatureCommand())->matches(['generate', 'feature', 'x.yaml']));
         $this->assertTrue((new GenerateIndexesCommand())->matches(['generate', 'indexes']));
         $this->assertTrue((new CompileGraphCommand())->matches(['compile', 'graph']));
+        $this->assertTrue((new DoctorCommand())->matches(['doctor']));
+        $this->assertTrue((new GraphVisualizeCommand())->matches(['graph', 'visualize']));
+        $this->assertTrue((new PromptCommand())->matches(['prompt', 'add', 'feature']));
         $this->assertTrue((new VerifyFeatureCommand())->matches(['verify', 'feature', 'x']));
         $this->assertTrue((new VerifyContractsCommand())->matches(['verify', 'contracts']));
         $this->assertTrue((new VerifyGraphCommand())->matches(['verify', 'graph']));
