@@ -94,6 +94,18 @@ final readonly class ImpactAnalyzer
                 case 'query':
                     $affectedProjections[] = 'query_index.php';
                     break;
+                case 'pipeline_stage':
+                    $affectedProjections[] = 'pipeline_index.php';
+                    break;
+                case 'guard':
+                    $affectedProjections[] = 'guard_index.php';
+                    break;
+                case 'interceptor':
+                    $affectedProjections[] = 'interceptor_index.php';
+                    break;
+                case 'execution_plan':
+                    $affectedProjections[] = 'execution_plan_index.php';
+                    break;
             }
         }
 
@@ -283,6 +295,15 @@ final readonly class ImpactAnalyzer
             $commands[] = 'php vendor/bin/foundry verify contracts --json';
         }
 
+        if (
+            in_array('pipeline_index.php', $projections, true)
+            || in_array('guard_index.php', $projections, true)
+            || in_array('interceptor_index.php', $projections, true)
+            || in_array('execution_plan_index.php', $projections, true)
+        ) {
+            $commands[] = 'php vendor/bin/foundry verify pipeline --json';
+        }
+
         foreach ($features as $feature) {
             $commands[] = 'php vendor/bin/foundry verify feature ' . $feature . ' --json';
         }
@@ -304,7 +325,7 @@ final readonly class ImpactAnalyzer
         $risk = 'low';
         $type = $node->type();
 
-        if (in_array($type, ['route', 'auth', 'rate_limit'], true)) {
+        if (in_array($type, ['route', 'auth', 'rate_limit', 'pipeline_stage', 'interceptor', 'execution_plan'], true)) {
             $risk = 'high';
         }
 
@@ -313,7 +334,7 @@ final readonly class ImpactAnalyzer
             $risk = ($role === 'input') ? 'high' : 'medium';
         }
 
-        if (in_array($type, ['query', 'event', 'job', 'cache', 'feature'], true)) {
+        if (in_array($type, ['query', 'event', 'job', 'cache', 'feature', 'guard'], true)) {
             $risk = $this->maxRisk($risk, 'medium');
         }
 

@@ -24,6 +24,10 @@ final class CoreProjectionEmitters
             new GenericProjectionEmitter('scheduler', 'scheduler_index.php', 'scheduler_index.php', self::schedulerBuilder()),
             new GenericProjectionEmitter('webhook', 'webhook_index.php', 'webhook_index.php', self::webhookBuilder()),
             new GenericProjectionEmitter('query', 'query_index.php', 'query_index.php', self::queryBuilder()),
+            new GenericProjectionEmitter('pipeline', 'pipeline_index.php', null, self::pipelineBuilder()),
+            new GenericProjectionEmitter('guard', 'guard_index.php', null, self::guardBuilder()),
+            new GenericProjectionEmitter('interceptor', 'interceptor_index.php', null, self::interceptorBuilder()),
+            new GenericProjectionEmitter('execution_plan', 'execution_plan_index.php', null, self::executionPlanBuilder()),
         ];
     }
 
@@ -338,6 +342,173 @@ final class CoreProjectionEmitters
             ksort($queries);
 
             return $queries;
+        };
+    }
+
+    /**
+     * @return callable(ApplicationGraph):array<string,mixed>
+     */
+    private static function pipelineBuilder(): callable
+    {
+        return static function (ApplicationGraph $graph): array {
+            $stages = [];
+            foreach ($graph->nodesByType('pipeline_stage') as $node) {
+                $payload = $node->payload();
+                $name = (string) ($payload['name'] ?? '');
+                if ($name === '') {
+                    continue;
+                }
+
+                $stages[$name] = [
+                    'order' => (int) ($payload['order'] ?? 0),
+                    'priority' => (int) ($payload['priority'] ?? 100),
+                    'extension' => (string) ($payload['extension'] ?? 'core'),
+                    'after_stage' => isset($payload['after_stage']) ? (string) $payload['after_stage'] : null,
+                    'before_stage' => isset($payload['before_stage']) ? (string) $payload['before_stage'] : null,
+                ];
+            }
+
+            uasort(
+                $stages,
+                static fn (array $a, array $b): int => ((int) ($a['order'] ?? 0) <=> (int) ($b['order'] ?? 0))
+                    ?: strcmp((string) ($a['extension'] ?? ''), (string) ($b['extension'] ?? '')),
+            );
+
+            $order = array_keys($stages);
+
+            $links = [];
+            foreach ($graph->edges() as $edge) {
+                if ($edge->type !== 'pipeline_stage_next') {
+                    continue;
+                }
+
+                $links[] = [
+                    'from' => (string) ($graph->node($edge->from)?->payload()['name'] ?? str_replace('pipeline_stage:', '', $edge->from)),
+                    'to' => (string) ($graph->node($edge->to)?->payload()['name'] ?? str_replace('pipeline_stage:', '', $edge->to)),
+                ];
+            }
+            usort(
+                $links,
+                static fn (array $a, array $b): int => strcmp((string) ($a['from'] ?? '') . '->' . (string) ($a['to'] ?? ''), (string) ($b['from'] ?? '') . '->' . (string) ($b['to'] ?? '')),
+            );
+
+            return [
+                'version' => 1,
+                'order' => $order,
+                'stages' => $stages,
+                'links' => $links,
+            ];
+        };
+    }
+
+    /**
+     * @return callable(ApplicationGraph):array<string,mixed>
+     */
+    private static function guardBuilder(): callable
+    {
+        return static function (ApplicationGraph $graph): array {
+            $guards = [];
+
+            foreach ($graph->nodesByType('guard') as $node) {
+                $payload = $node->payload();
+                $id = $node->id();
+                $feature = (string) ($payload['feature'] ?? '');
+                $stage = '';
+
+                foreach ($graph->dependencies($id) as $edge) {
+                    if ($edge->type !== 'guard_to_pipeline_stage') {
+                        continue;
+                    }
+                    $stage = (string) ($graph->node($edge->to)?->payload()['name'] ?? '');
+                    break;
+                }
+
+                $guards[$id] = [
+                    'id' => $id,
+                    'feature' => $feature,
+                    'type' => (string) ($payload['type'] ?? ''),
+                    'stage' => $stage,
+                    'config' => $payload,
+                ];
+            }
+
+            ksort($guards);
+
+            return $guards;
+        };
+    }
+
+    /**
+     * @return callable(ApplicationGraph):array<string,mixed>
+     */
+    private static function interceptorBuilder(): callable
+    {
+        return static function (ApplicationGraph $graph): array {
+            $interceptors = [];
+            foreach ($graph->nodesByType('interceptor') as $node) {
+                $payload = $node->payload();
+                $id = (string) ($payload['id'] ?? $node->id());
+                $interceptors[$id] = [
+                    'id' => $id,
+                    'stage' => (string) ($payload['stage'] ?? ''),
+                    'priority' => (int) ($payload['priority'] ?? 100),
+                    'dangerous' => (bool) ($payload['dangerous'] ?? false),
+                ];
+            }
+
+            uasort(
+                $interceptors,
+                static fn (array $a, array $b): int => strcmp((string) ($a['stage'] ?? ''), (string) ($b['stage'] ?? ''))
+                    ?: ((int) ($a['priority'] ?? 0) <=> (int) ($b['priority'] ?? 0))
+                    ?: strcmp((string) ($a['id'] ?? ''), (string) ($b['id'] ?? '')),
+            );
+
+            return $interceptors;
+        };
+    }
+
+    /**
+     * @return callable(ApplicationGraph):array<string,mixed>
+     */
+    private static function executionPlanBuilder(): callable
+    {
+        return static function (ApplicationGraph $graph): array {
+            $byFeature = [];
+            $byRoute = [];
+
+            foreach ($graph->nodesByType('execution_plan') as $node) {
+                $payload = $node->payload();
+                $feature = (string) ($payload['feature'] ?? '');
+                if ($feature === '') {
+                    continue;
+                }
+
+                $row = [
+                    'id' => $node->id(),
+                    'feature' => $feature,
+                    'route_signature' => (string) ($payload['route_signature'] ?? ''),
+                    'route_node' => isset($payload['route_node']) ? (string) $payload['route_node'] : null,
+                    'stages' => array_values(array_map('strval', (array) ($payload['stages'] ?? []))),
+                    'guards' => array_values(array_map('strval', (array) ($payload['guards'] ?? []))),
+                    'interceptors' => is_array($payload['interceptors'] ?? null) ? $payload['interceptors'] : [],
+                    'action_node' => (string) ($payload['action_node'] ?? ''),
+                    'plan_version' => (int) ($payload['plan_version'] ?? 1),
+                ];
+
+                $byFeature[$feature] = $row;
+                $signature = $row['route_signature'];
+                if (is_string($signature) && $signature !== '') {
+                    $byRoute[$signature] = $row;
+                }
+            }
+
+            ksort($byFeature);
+            ksort($byRoute);
+
+            return [
+                'by_feature' => $byFeature,
+                'by_route' => $byRoute,
+            ];
         };
     }
 

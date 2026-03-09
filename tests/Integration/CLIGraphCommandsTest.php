@@ -105,6 +105,26 @@ YAML);
         $inspectDependents = $this->runCommand($app, ['foundry', 'inspect', 'dependents', 'schema:app/features/publish_post/input.schema.json', '--json']);
         $this->assertSame(0, $inspectDependents['status']);
 
+        $inspectPipeline = $this->runCommand($app, ['foundry', 'inspect', 'pipeline', '--json']);
+        $this->assertSame(0, $inspectPipeline['status']);
+        $this->assertNotEmpty($inspectPipeline['payload']['order']);
+
+        $inspectExecutionPlanFeature = $this->runCommand($app, ['foundry', 'inspect', 'execution-plan', 'publish_post', '--json']);
+        $this->assertSame(0, $inspectExecutionPlanFeature['status']);
+        $this->assertSame('publish_post', $inspectExecutionPlanFeature['payload']['plan']['payload']['feature']);
+
+        $inspectExecutionPlanRoute = $this->runCommand($app, ['foundry', 'inspect', 'execution-plan', 'POST', '/posts', '--json']);
+        $this->assertSame(0, $inspectExecutionPlanRoute['status']);
+        $this->assertSame('POST /posts', $inspectExecutionPlanRoute['payload']['plan']['payload']['route_signature']);
+
+        $inspectGuards = $this->runCommand($app, ['foundry', 'inspect', 'guards', 'publish_post', '--json']);
+        $this->assertSame(0, $inspectGuards['status']);
+        $this->assertNotEmpty($inspectGuards['payload']['guards']);
+
+        $inspectInterceptors = $this->runCommand($app, ['foundry', 'inspect', 'interceptors', '--stage=auth', '--json']);
+        $this->assertSame(0, $inspectInterceptors['status']);
+        $this->assertIsArray($inspectInterceptors['payload']['interceptors']);
+
         $impactNode = $this->runCommand($app, ['foundry', 'inspect', 'impact', 'feature:publish_post', '--json']);
         $this->assertSame(0, $impactNode['status']);
         $this->assertArrayHasKey('risk', $impactNode['payload']);
@@ -155,6 +175,10 @@ YAML);
         $verifyGraph = $this->runCommand($app, ['foundry', 'verify', 'graph', '--json']);
         $this->assertSame(0, $verifyGraph['status']);
         $this->assertTrue($verifyGraph['payload']['ok']);
+
+        $verifyPipeline = $this->runCommand($app, ['foundry', 'verify', 'pipeline', '--json']);
+        $this->assertSame(0, $verifyPipeline['status']);
+        $this->assertTrue($verifyPipeline['payload']['ok']);
 
         $verifyExtensions = $this->runCommand($app, ['foundry', 'verify', 'extensions', '--json']);
         $this->assertSame(0, $verifyExtensions['status']);

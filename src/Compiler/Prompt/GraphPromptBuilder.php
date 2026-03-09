@@ -91,18 +91,22 @@ final readonly class GraphPromptBuilder
             'Do not hand-edit app/.foundry/build/* or app/generated/*.',
             'Preserve existing graph node IDs and naming conventions when possible.',
             'Keep manifests, schemas, queries, permissions, events, jobs, cache, and tests in sync.',
+            'Respect execution pipeline stages, guards, and interceptor attachments.',
             'Prefer deterministic, minimal edits scoped to relevant features.',
         ];
 
         $workflow = [
             'php vendor/bin/foundry compile graph --json',
+            'php vendor/bin/foundry inspect execution-plan <feature> --json',
             'php vendor/bin/foundry inspect impact --file=app/features/<feature>/feature.yaml --json',
             'php vendor/bin/foundry verify graph --json',
+            'php vendor/bin/foundry verify pipeline --json',
             'php vendor/bin/foundry verify contracts --json',
             'php vendor/bin/phpunit',
         ];
 
-        $promptText = $this->composePrompt($instruction, $selectedFeatures, $nodes, $constraints, $workflow);
+        $executionPlans = $this->executionPlanContext($graph, $selectedFeatures);
+        $promptText = $this->composePrompt($instruction, $selectedFeatures, $nodes, $executionPlans, $constraints, $workflow);
 
         $recommendedCommands = [];
         foreach ($impact as $report) {
@@ -127,6 +131,7 @@ final readonly class GraphPromptBuilder
                 'nodes' => $nodes,
                 'edges' => $edges,
                 'node_counts' => $this->nodeCounts($nodes),
+                'execution_plans' => $executionPlans,
             ],
             'impact' => $impact,
             'prompt' => [
@@ -237,10 +242,11 @@ final readonly class GraphPromptBuilder
 
     /**
      * @param array<int,array<string,mixed>> $nodes
+     * @param array<int,array<string,mixed>> $executionPlans
      * @param array<int,string> $constraints
      * @param array<int,string> $workflow
      */
-    private function composePrompt(string $instruction, array $selectedFeatures, array $nodes, array $constraints, array $workflow): string
+    private function composePrompt(string $instruction, array $selectedFeatures, array $nodes, array $executionPlans, array $constraints, array $workflow): string
     {
         $byType = $this->nodeCounts($nodes);
 
@@ -251,8 +257,23 @@ final readonly class GraphPromptBuilder
             'Relevant features: ' . ($selectedFeatures === [] ? '(none)' : implode(', ', $selectedFeatures)),
             'Context node counts: ' . json_encode($byType, JSON_UNESCAPED_SLASHES),
             '',
-            'Constraints:',
+            'Execution plans:',
         ];
+
+        if ($executionPlans === []) {
+            $lines[] = '- (none)';
+        } else {
+            foreach ($executionPlans as $plan) {
+                $feature = (string) ($plan['feature'] ?? '');
+                $route = (string) ($plan['route_signature'] ?? '');
+                $stages = implode(', ', array_values(array_map('strval', (array) ($plan['stages'] ?? []))));
+                $guards = implode(', ', array_values(array_map('strval', (array) ($plan['guards'] ?? []))));
+                $lines[] = '- ' . $feature . ' [' . $route . '] stages={' . $stages . '} guards={' . $guards . '}';
+            }
+        }
+
+        $lines[] = '';
+        $lines[] = 'Constraints:';
 
         foreach ($constraints as $constraint) {
             $lines[] = '- ' . $constraint;
@@ -272,6 +293,36 @@ final readonly class GraphPromptBuilder
         $lines[] = '- Include follow-up verification steps.';
 
         return implode("\n", $lines);
+    }
+
+    /**
+     * @param array<int,string> $features
+     * @return array<int,array<string,mixed>>
+     */
+    private function executionPlanContext(ApplicationGraph $graph, array $features): array
+    {
+        $plans = [];
+        foreach ($features as $feature) {
+            $plan = $graph->node('execution_plan:feature:' . $feature);
+            if ($plan === null) {
+                continue;
+            }
+
+            $payload = $plan->payload();
+            $plans[] = [
+                'feature' => (string) ($payload['feature'] ?? $feature),
+                'route_signature' => (string) ($payload['route_signature'] ?? ''),
+                'stages' => array_values(array_map('strval', (array) ($payload['stages'] ?? []))),
+                'guards' => array_values(array_map('strval', (array) ($payload['guards'] ?? []))),
+            ];
+        }
+
+        usort(
+            $plans,
+            static fn (array $a, array $b): int => strcmp((string) ($a['feature'] ?? ''), (string) ($b['feature'] ?? '')),
+        );
+
+        return $plans;
     }
 
     /**

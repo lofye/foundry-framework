@@ -5,6 +5,7 @@ namespace Foundry\Feature;
 
 use Foundry\Http\Route;
 use Foundry\Http\RouteCollection;
+use Foundry\Pipeline\PipelineDefinitionResolver;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Json;
 use Foundry\Support\Paths;
@@ -20,6 +21,26 @@ final class FeatureLoader implements FeatureRegistry
      * @var RouteCollection|null
      */
     private ?RouteCollection $routes = null;
+
+    /**
+     * @var array<string,mixed>|null
+     */
+    private ?array $executionPlans = null;
+
+    /**
+     * @var array<string,mixed>|null
+     */
+    private ?array $pipeline = null;
+
+    /**
+     * @var array<string,mixed>|null
+     */
+    private ?array $guards = null;
+
+    /**
+     * @var array<string,mixed>|null
+     */
+    private ?array $interceptors = null;
 
     public function __construct(private readonly Paths $paths)
     {
@@ -109,6 +130,90 @@ final class FeatureLoader implements FeatureRegistry
         return FeatureContextManifest::fromArray(Json::decodeAssoc($json));
     }
 
+    /**
+     * @return array<string,mixed>
+     */
+    public function executionPlans(): array
+    {
+        if ($this->executionPlans !== null) {
+            return $this->executionPlans;
+        }
+
+        $raw = $this->loadIndexArray('execution_plan_index.php', 'execution_plan_index.php');
+        $byFeature = is_array($raw['by_feature'] ?? null) ? $raw['by_feature'] : [];
+        $byRoute = is_array($raw['by_route'] ?? null) ? $raw['by_route'] : [];
+        ksort($byFeature);
+        ksort($byRoute);
+
+        return $this->executionPlans = [
+            'by_feature' => $byFeature,
+            'by_route' => $byRoute,
+        ];
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function pipelineDefinition(): array
+    {
+        if ($this->pipeline !== null) {
+            return $this->pipeline;
+        }
+
+        $raw = $this->loadIndexArray('pipeline_index.php', 'pipeline_index.php');
+        $order = array_values(array_map('strval', (array) ($raw['order'] ?? [])));
+        if ($order === []) {
+            $order = PipelineDefinitionResolver::defaultStages();
+        }
+
+        $stages = is_array($raw['stages'] ?? null) ? $raw['stages'] : [];
+        $links = is_array($raw['links'] ?? null) ? $raw['links'] : [];
+
+        return $this->pipeline = [
+            'version' => (int) ($raw['version'] ?? 1),
+            'order' => $order,
+            'stages' => $stages,
+            'links' => $links,
+        ];
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function guards(): array
+    {
+        if ($this->guards !== null) {
+            return $this->guards;
+        }
+
+        $rows = $this->loadIndexArray('guard_index.php', 'guard_index.php');
+        ksort($rows);
+
+        return $this->guards = $rows;
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function interceptors(): array
+    {
+        if ($this->interceptors !== null) {
+            return $this->interceptors;
+        }
+
+        $rows = $this->loadIndexArray('interceptor_index.php', 'interceptor_index.php');
+        if ($rows !== []) {
+            uasort(
+                $rows,
+                static fn (array $a, array $b): int => strcmp((string) ($a['stage'] ?? ''), (string) ($b['stage'] ?? ''))
+                    ?: ((int) ($a['priority'] ?? 0) <=> (int) ($b['priority'] ?? 0))
+                    ?: strcmp((string) ($a['id'] ?? ''), (string) ($b['id'] ?? '')),
+            );
+        }
+
+        return $this->interceptors = $rows;
+    }
+
     private function loadFeatures(): void
     {
         if ($this->features !== null) {
@@ -150,5 +255,24 @@ final class FeatureLoader implements FeatureRegistry
         }
 
         return $this->paths->join('app/generated/' . $legacyFile);
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    private function loadIndexArray(string $legacyFile, string $buildFile): array
+    {
+        $path = $this->indexPath($legacyFile, $buildFile);
+        if (!is_file($path)) {
+            return [];
+        }
+
+        /** @var mixed $raw */
+        $raw = require $path;
+        if (!is_array($raw)) {
+            throw new FoundryError('INDEX_INVALID', 'validation', ['path' => $path], 'Generated index must return an array.');
+        }
+
+        return $raw;
     }
 }

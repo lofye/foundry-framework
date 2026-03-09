@@ -43,8 +43,11 @@ final readonly class AnalyzerContext
                 || in_array($this->featureFilter, array_map('strval', (array) ($payload['referenced_by'] ?? [])), true),
             'cache' => in_array($this->featureFilter, array_map('strval', (array) ($payload['features'] ?? [])), true)
                 || in_array($this->featureFilter, array_map('strval', (array) ($payload['invalidated_by'] ?? [])), true),
+            'execution_plan' => $feature === '' ? (str_ends_with($node->id(), ':' . $this->featureFilter)) : $this->includesFeature($feature),
+            'guard' => $this->includesFeature((string) ($payload['feature'] ?? '')),
+            'interceptor' => true,
+            'pipeline_stage' => true,
             default => false,
         };
     }
 }
-

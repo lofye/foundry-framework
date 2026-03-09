@@ -21,6 +21,7 @@ use Foundry\CLI\Commands\CodemodRunCommand;
 use Foundry\CLI\Commands\CompileGraphCommand;
 use Foundry\CLI\Commands\VerifyCompatibilityCommand;
 use Foundry\CLI\Commands\VerifyGraphCommand;
+use Foundry\CLI\Commands\VerifyPipelineCommand;
 use Foundry\CLI\Commands\VerifyContractsCommand;
 use Foundry\CLI\Commands\VerifyFeatureCommand;
 use Foundry\Support\FoundryError;
@@ -42,6 +43,7 @@ final class Application
             new GraphVisualizeCommand(),
             new PromptCommand(),
             new VerifyGraphCommand(),
+            new VerifyPipelineCommand(),
             new VerifyCompatibilityCommand(),
             new MigrateSpecsCommand(),
             new CodemodRunCommand(),

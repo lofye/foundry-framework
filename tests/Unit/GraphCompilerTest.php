@@ -36,6 +36,10 @@ final class GraphCompilerTest extends TestCase
         $this->assertFileExists($this->project->root . '/app/.foundry/build/projections/routes_index.php');
         $this->assertFileExists($this->project->root . '/app/.foundry/build/projections/feature_index.php');
         $this->assertFileExists($this->project->root . '/app/.foundry/build/projections/query_index.php');
+        $this->assertFileExists($this->project->root . '/app/.foundry/build/projections/pipeline_index.php');
+        $this->assertFileExists($this->project->root . '/app/.foundry/build/projections/guard_index.php');
+        $this->assertFileExists($this->project->root . '/app/.foundry/build/projections/execution_plan_index.php');
+        $this->assertFileExists($this->project->root . '/app/.foundry/build/projections/interceptor_index.php');
         $this->assertFileExists($this->project->root . '/app/.foundry/build/manifests/compile_manifest.json');
         $this->assertFileExists($this->project->root . '/app/.foundry/build/manifests/integrity_hashes.json');
         $this->assertFileExists($this->project->root . '/app/.foundry/build/diagnostics/latest.json');

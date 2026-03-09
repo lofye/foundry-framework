@@ -95,6 +95,11 @@ final class GraphVisualizeCommand extends Command
                 continue;
             }
 
+            if ($arg === '--pipeline') {
+                $view = 'pipeline';
+                continue;
+            }
+
             if (str_starts_with($arg, '--format=')) {
                 $format = strtolower((string) substr($arg, strlen('--format=')));
                 continue;
@@ -133,4 +138,3 @@ final class GraphVisualizeCommand extends Command
         return is_dir($context->paths()->features() . '/' . $feature);
     }
 }
-

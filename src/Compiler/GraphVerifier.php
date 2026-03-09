@@ -35,6 +35,11 @@ final class GraphVerifier
             $this->layout->projectionPath('cache_index.php'),
             $this->layout->projectionPath('scheduler_index.php'),
             $this->layout->projectionPath('webhook_index.php'),
+            $this->layout->projectionPath('query_index.php'),
+            $this->layout->projectionPath('pipeline_index.php'),
+            $this->layout->projectionPath('guard_index.php'),
+            $this->layout->projectionPath('execution_plan_index.php'),
+            $this->layout->projectionPath('interceptor_index.php'),
         ];
 
         foreach ($requiredFiles as $file) {

@@ -97,6 +97,11 @@ final class CLIPhase0CCommandsTest extends TestCase
         $this->assertSame(1, $visualizeMissingFeature['status']);
         $this->assertSame('FEATURE_NOT_FOUND', $visualizeMissingFeature['payload']['error']['code']);
 
+        $pipelineViz = $this->runCommand($app, ['foundry', 'graph', 'visualize', '--pipeline', '--json']);
+        $this->assertSame(0, $pipelineViz['status']);
+        $this->assertSame('pipeline', $pipelineViz['payload']['view']);
+        $this->assertArrayHasKey('edges', $pipelineViz['payload']['graph']);
+
         $prompt = $this->runCommand($app, ['foundry', 'prompt', 'Add', 'bookmark', 'support', '--feature-context', '--dry-run', '--json']);
         $this->assertSame(0, $prompt['status']);
         $this->assertTrue($prompt['payload']['dry_run']);
@@ -220,4 +225,3 @@ YAML);
         return ['status' => $status, 'payload' => $payload];
     }
 }
-

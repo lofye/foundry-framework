@@ -9,6 +9,8 @@ use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
 use Foundry\Compiler\Migration\SpecFormat;
 use Foundry\Compiler\Projection\ProjectionEmitter;
+use Foundry\Pipeline\PipelineStageDefinition;
+use Foundry\Pipeline\StageInterceptor;
 
 abstract class AbstractCompilerExtension implements CompilerExtension
 {
@@ -98,6 +100,18 @@ abstract class AbstractCompilerExtension implements CompilerExtension
         return [];
     }
 
+    /** @return array<int,PipelineStageDefinition> */
+    public function pipelineStages(): array
+    {
+        return [];
+    }
+
+    /** @return array<int,StageInterceptor> */
+    public function pipelineInterceptors(): array
+    {
+        return [];
+    }
+
     public function passPriority(string $phase, CompilerPass $pass): int
     {
         return 100;
@@ -144,6 +158,14 @@ abstract class AbstractCompilerExtension implements CompilerExtension
             'graph_analyzers' => array_values(array_map(
                 static fn (GraphAnalyzer $analyzer): string => $analyzer->id(),
                 $this->graphAnalyzers(),
+            )),
+            'pipeline_stages' => array_values(array_map(
+                static fn (PipelineStageDefinition $stage): string => $stage->name,
+                $this->pipelineStages(),
+            )),
+            'pipeline_interceptors' => array_values(array_map(
+                static fn (StageInterceptor $interceptor): string => $interceptor->id(),
+                $this->pipelineInterceptors(),
             )),
             'provides' => $descriptor['provides'] ?? [],
         ];

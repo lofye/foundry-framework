@@ -12,6 +12,7 @@ use Foundry\Cache\ArrayCacheStore;
 use Foundry\Cache\CacheDefinition;
 use Foundry\Cache\CacheManager;
 use Foundry\Cache\CacheRegistry;
+use Foundry\Compiler\Extensions\ExtensionRegistry;
 use Foundry\DB\Connection;
 use Foundry\DB\PdoQueryExecutor;
 use Foundry\DB\QueryDefinition;
@@ -64,6 +65,7 @@ final class RuntimeFactory
 
         $connection = self::connection($paths);
         $featureLoader = new FeatureLoader($paths);
+        $extensions = ExtensionRegistry::forPaths($paths);
         $permissions = self::permissionRegistry($paths);
         $queryRegistry = self::queryRegistry($paths);
         $cacheRegistry = self::cacheRegistry($paths);
@@ -91,6 +93,7 @@ final class RuntimeFactory
             $traceRecorder,
             new AuditRecorder(),
             $paths,
+            registeredInterceptors: $extensions->pipelineInterceptors(),
         );
 
         return new HttpKernel($executor, new StructuredLogger());

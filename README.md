@@ -195,6 +195,7 @@ php vendor/bin/foundry graph visualize --json
 php vendor/bin/foundry graph visualize --events --format=mermaid --json
 php vendor/bin/foundry graph visualize --routes --format=dot --json
 php vendor/bin/foundry graph visualize --caches --feature=<feature> --format=svg --json
+php vendor/bin/foundry graph visualize --pipeline --format=mermaid --json
 ```
 
 AI prompt loop:
@@ -210,6 +211,12 @@ php vendor/bin/foundry inspect build --json
 php vendor/bin/foundry inspect node <node-id> --json
 php vendor/bin/foundry inspect dependencies <node-id> --json
 php vendor/bin/foundry inspect dependents <node-id> --json
+php vendor/bin/foundry inspect pipeline --json
+php vendor/bin/foundry inspect execution-plan <feature|route> --json
+php vendor/bin/foundry inspect guards --json
+php vendor/bin/foundry inspect guards <feature> --json
+php vendor/bin/foundry inspect interceptors --json
+php vendor/bin/foundry inspect interceptors --stage=<stage> --json
 php vendor/bin/foundry inspect impact <node-id> --json
 php vendor/bin/foundry inspect impact --file=<path> --json
 php vendor/bin/foundry inspect affected-tests <node-id> --json
@@ -244,6 +251,7 @@ Verify:
 ```bash
 php vendor/bin/foundry verify feature <feature> --json
 php vendor/bin/foundry verify graph --json
+php vendor/bin/foundry verify pipeline --json
 php vendor/bin/foundry verify extensions --json
 php vendor/bin/foundry verify compatibility --json
 php vendor/bin/foundry verify contracts --json
@@ -311,6 +319,9 @@ Included example apps:
 - `examples/dashboard`
 - `examples/ai-pipeline`
 - `examples/phase0`
+- `examples/phase0b`
+- `examples/phase0c`
+- `examples/phase0d`
 
 Each example includes feature folders plus generated indexes.
 
@@ -318,6 +329,10 @@ Each example includes feature folders plus generated indexes.
 - `ARCHITECTURE.md`
 - `FEATURE_SPEC.md`
 - `BENCHMARK_NOTES.md`
+- `docs/semantic-compiler-phase0.md`
+- `docs/semantic-compiler-phase0b.md`
+- `docs/semantic-compiler-phase0c.md`
+- `docs/semantic-compiler-phase0d.md`
 - `docs/semantic-compiler-phase0.md`
 - `docs/semantic-compiler-phase0b.md`
 - `docs/semantic-compiler-phase0c.md`

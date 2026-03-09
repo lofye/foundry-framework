@@ -95,7 +95,7 @@ final class GraphVisualizer
     private function normalizeView(string $view): string
     {
         return match ($view) {
-            'events', 'routes', 'caches', 'dependencies' => $view,
+            'events', 'routes', 'caches', 'pipeline', 'dependencies' => $view,
             default => 'dependencies',
         };
     }
@@ -130,6 +130,18 @@ final class GraphVisualizer
                     'feature_to_job_dispatch',
                 ], true),
                 'caches' => $edge->type === 'feature_to_cache_invalidation',
+                'pipeline' => in_array($edge->type, [
+                    'pipeline_stage_next',
+                    'feature_to_execution_plan',
+                    'route_to_execution_plan',
+                    'execution_plan_to_stage',
+                    'execution_plan_to_guard',
+                    'execution_plan_to_interceptor',
+                    'feature_to_guard',
+                    'guard_to_pipeline_stage',
+                    'interceptor_to_pipeline_stage',
+                    'execution_plan_to_feature_action',
+                ], true),
                 default => str_starts_with($edge->from, 'feature:') && str_starts_with($edge->to, 'feature:'),
             };
 
@@ -196,6 +208,10 @@ final class GraphVisualizer
             'scheduler' => (string) ($payload['name'] ?? $node->id()),
             'webhook' => (string) ($payload['name'] ?? $node->id()),
             'test' => (string) ($payload['name'] ?? $node->id()),
+            'pipeline_stage' => (string) ($payload['name'] ?? $node->id()),
+            'guard' => (string) ($payload['type'] ?? $node->id()),
+            'interceptor' => (string) ($payload['id'] ?? $node->id()),
+            'execution_plan' => (string) ($payload['route_signature'] ?? $payload['feature'] ?? $node->id()),
             default => $node->id(),
         };
     }
@@ -340,4 +356,3 @@ final class GraphVisualizer
         return implode("\n", $lines);
     }
 }
-

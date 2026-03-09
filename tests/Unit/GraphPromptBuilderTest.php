@@ -6,7 +6,9 @@ namespace Foundry\Tests\Unit;
 use Foundry\Compiler\Analysis\ImpactAnalyzer;
 use Foundry\Compiler\ApplicationGraph;
 use Foundry\Compiler\GraphEdge;
+use Foundry\Compiler\IR\ExecutionPlanNode;
 use Foundry\Compiler\IR\FeatureNode;
+use Foundry\Compiler\IR\GuardNode;
 use Foundry\Compiler\IR\RouteNode;
 use Foundry\Compiler\Prompt\GraphPromptBuilder;
 use Foundry\Support\Paths;
@@ -38,7 +40,9 @@ final class GraphPromptBuilderTest extends TestCase
         $this->assertNotEmpty($bundle['context_bundle']['nodes']);
         $this->assertNotEmpty($bundle['context_bundle']['edges']);
         $this->assertArrayHasKey('feature', $bundle['context_bundle']['node_counts']);
+        $this->assertNotEmpty($bundle['context_bundle']['execution_plans']);
         $this->assertStringContainsString('Instruction:', (string) $bundle['prompt']['text']);
+        $this->assertStringContainsString('Execution plans:', (string) $bundle['prompt']['text']);
         $this->assertStringContainsString('Output requirements:', (string) $bundle['prompt']['text']);
         $this->assertNotEmpty($bundle['recommended_commands']);
         $this->assertNotEmpty($bundle['impact']);
@@ -95,13 +99,24 @@ final class GraphPromptBuilderTest extends TestCase
 
         $graph->addNode(new RouteNode('route:POST:/posts', 'app/features/publish_post/feature.yaml', ['signature' => 'POST /posts']));
         $graph->addNode(new RouteNode('route:GET:/posts', 'app/features/list_posts/feature.yaml', ['signature' => 'GET /posts']));
+        $graph->addNode(new ExecutionPlanNode('execution_plan:feature:publish_post', 'app/features/publish_post/feature.yaml', [
+            'feature' => 'publish_post',
+            'route_signature' => 'POST /posts',
+            'stages' => ['auth', 'validation', 'action'],
+            'guards' => ['guard:auth:publish_post'],
+        ]));
+        $graph->addNode(new GuardNode('guard:auth:publish_post', 'app/features/publish_post/feature.yaml', [
+            'feature' => 'publish_post',
+            'type' => 'authentication',
+        ]));
 
         $graph->addEdge(GraphEdge::make('feature_to_route', 'feature:publish_post', 'route:POST:/posts'));
         $graph->addEdge(GraphEdge::make('feature_to_route', 'feature:list_posts', 'route:GET:/posts'));
+        $graph->addEdge(GraphEdge::make('feature_to_execution_plan', 'feature:publish_post', 'execution_plan:feature:publish_post'));
+        $graph->addEdge(GraphEdge::make('execution_plan_to_guard', 'execution_plan:feature:publish_post', 'guard:auth:publish_post'));
         $graph->addEdge(GraphEdge::make('event_publisher_to_subscriber', 'feature:publish_post', 'feature:list_posts', ['event' => 'post.created']));
         $graph->addEdge(GraphEdge::make('event_publisher_to_subscriber', 'feature:update_post', 'feature:list_posts', ['event' => 'post.updated']));
 
         return $graph;
     }
 }
-

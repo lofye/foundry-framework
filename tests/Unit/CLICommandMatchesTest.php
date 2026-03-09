@@ -21,6 +21,7 @@ use Foundry\CLI\Commands\CodemodRunCommand;
 use Foundry\CLI\Commands\CompileGraphCommand;
 use Foundry\CLI\Commands\VerifyCompatibilityCommand;
 use Foundry\CLI\Commands\VerifyGraphCommand;
+use Foundry\CLI\Commands\VerifyPipelineCommand;
 use Foundry\CLI\Commands\VerifyContractsCommand;
 use Foundry\CLI\Commands\VerifyFeatureCommand;
 use PHPUnit\Framework\TestCase;
@@ -39,6 +40,10 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'pack', 'core.foundation']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'compatibility']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'spec-format', 'feature_manifest']));
+        $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'pipeline']));
+        $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'execution-plan', 'publish_post']));
+        $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'guards', 'publish_post']));
+        $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'interceptors', '--stage=auth']));
         $this->assertFalse((new InspectGraphCommand())->matches(['inspect', 'dependencies', 'x']));
 
         $this->assertTrue((new InspectRouteCommand())->matches(['inspect', 'route', 'GET', '/']));
@@ -52,6 +57,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new VerifyFeatureCommand())->matches(['verify', 'feature', 'x']));
         $this->assertTrue((new VerifyContractsCommand())->matches(['verify', 'contracts']));
         $this->assertTrue((new VerifyGraphCommand())->matches(['verify', 'graph']));
+        $this->assertTrue((new VerifyPipelineCommand())->matches(['verify', 'pipeline']));
         $this->assertTrue((new VerifyCompatibilityCommand())->matches(['verify', 'extensions']));
         $this->assertTrue((new VerifyCompatibilityCommand())->matches(['verify', 'compatibility']));
         $this->assertTrue((new ServeCommand())->matches(['serve']));

@@ -40,5 +40,6 @@ final class ExamplesStructureTest extends TestCase
         $this->assertFileExists(getcwd() . '/examples/phase0/README.md');
         $this->assertFileExists(getcwd() . '/examples/phase0b/README.md');
         $this->assertFileExists(getcwd() . '/examples/phase0c/README.md');
+        $this->assertFileExists(getcwd() . '/examples/phase0d/README.md');
     }
 }

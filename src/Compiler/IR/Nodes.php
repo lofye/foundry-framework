@@ -201,6 +201,38 @@ final class RateLimitNode extends AbstractNode
     }
 }
 
+final class PipelineStageNode extends AbstractNode
+{
+    public function type(): string
+    {
+        return 'pipeline_stage';
+    }
+}
+
+final class GuardNode extends AbstractNode
+{
+    public function type(): string
+    {
+        return 'guard';
+    }
+}
+
+final class InterceptorNode extends AbstractNode
+{
+    public function type(): string
+    {
+        return 'interceptor';
+    }
+}
+
+final class ExecutionPlanNode extends AbstractNode
+{
+    public function type(): string
+    {
+        return 'execution_plan';
+    }
+}
+
 final class NodeFactory
 {
     /**
@@ -234,6 +266,10 @@ final class NodeFactory
             'context_manifest' => new ContextManifestNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
             'auth' => new AuthNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
             'rate_limit' => new RateLimitNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
+            'pipeline_stage' => new PipelineStageNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
+            'guard' => new GuardNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
+            'interceptor' => new InterceptorNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
+            'execution_plan' => new ExecutionPlanNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
             default => new FeatureNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
         };
     }

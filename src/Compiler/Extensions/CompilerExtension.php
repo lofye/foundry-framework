@@ -9,6 +9,8 @@ use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
 use Foundry\Compiler\Migration\SpecFormat;
 use Foundry\Compiler\Projection\ProjectionEmitter;
+use Foundry\Pipeline\PipelineStageDefinition;
+use Foundry\Pipeline\StageInterceptor;
 
 interface CompilerExtension
 {
@@ -82,6 +84,16 @@ interface CompilerExtension
      * @return array<int,GraphAnalyzer>
      */
     public function graphAnalyzers(): array;
+
+    /**
+     * @return array<int,PipelineStageDefinition>
+     */
+    public function pipelineStages(): array;
+
+    /**
+     * @return array<int,StageInterceptor>
+     */
+    public function pipelineInterceptors(): array;
 
     public function passPriority(string $phase, CompilerPass $pass): int;
 

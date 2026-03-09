@@ -9,6 +9,8 @@ use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
 use Foundry\Compiler\Migration\SpecFormat;
 use Foundry\Compiler\Projection\ProjectionEmitter;
+use Foundry\Pipeline\PipelineStageDefinition;
+use Foundry\Pipeline\StageInterceptor;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Paths;
 
@@ -240,6 +242,49 @@ final class ExtensionRegistry
         );
 
         return $analyzers;
+    }
+
+    /**
+     * @return array<int,PipelineStageDefinition>
+     */
+    public function pipelineStages(): array
+    {
+        $stages = [];
+        foreach ($this->all() as $extension) {
+            foreach ($extension->pipelineStages() as $stage) {
+                $stages[] = $stage;
+            }
+        }
+
+        usort(
+            $stages,
+            static fn (PipelineStageDefinition $a, PipelineStageDefinition $b): int => ($a->priority <=> $b->priority)
+                ?: strcmp($a->name, $b->name),
+        );
+
+        return $stages;
+    }
+
+    /**
+     * @return array<int,StageInterceptor>
+     */
+    public function pipelineInterceptors(): array
+    {
+        $interceptors = [];
+        foreach ($this->all() as $extension) {
+            foreach ($extension->pipelineInterceptors() as $interceptor) {
+                $interceptors[] = $interceptor;
+            }
+        }
+
+        usort(
+            $interceptors,
+            static fn (StageInterceptor $a, StageInterceptor $b): int => strcmp($a->stage(), $b->stage())
+                ?: ($a->priority() <=> $b->priority())
+                ?: strcmp($a->id(), $b->id()),
+        );
+
+        return $interceptors;
     }
 
     public function compatibilityReport(string $frameworkVersion, int $graphVersion): CompatibilityReport
