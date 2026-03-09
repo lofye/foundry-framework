@@ -15,7 +15,7 @@ Engineer: GPT-5.3-Codex (Extra High)
 License: MIT.
 
 ## Runtime and Language
-- PHP `^8.5`
+- PHP `^8.4`
 - Composer-based
 
 ## Install and Run (Packagist)
