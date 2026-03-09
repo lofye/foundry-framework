@@ -34,4 +34,9 @@ final class ExamplesStructureTest extends TestCase
             $this->assertFileExists($base . '/' . $feature . '/feature.yaml');
         }
     }
+
+    public function test_phase0_examples_are_documented(): void
+    {
+        $this->assertFileExists(getcwd() . '/examples/phase0/README.md');
+    }
 }

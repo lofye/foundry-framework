@@ -59,7 +59,7 @@ final class FeatureLoader implements FeatureRegistry
             return $this->routes;
         }
 
-        $path = $this->paths->join('app/generated/routes.php');
+        $path = $this->indexPath('routes.php', 'routes_index.php');
         if (!is_file($path)) {
             $this->routes = new RouteCollection([]);
 
@@ -115,7 +115,7 @@ final class FeatureLoader implements FeatureRegistry
             return;
         }
 
-        $path = $this->paths->join('app/generated/feature_index.php');
+        $path = $this->indexPath('feature_index.php', 'feature_index.php');
         if (!is_file($path)) {
             $this->features = [];
 
@@ -140,5 +140,15 @@ final class FeatureLoader implements FeatureRegistry
 
         ksort($loaded);
         $this->features = $loaded;
+    }
+
+    private function indexPath(string $legacyFile, string $buildFile): string
+    {
+        $buildPath = $this->paths->join('app/.foundry/build/projections/' . $buildFile);
+        if (is_file($buildPath)) {
+            return $buildPath;
+        }
+
+        return $this->paths->join('app/generated/' . $legacyFile);
     }
 }

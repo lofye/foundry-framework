@@ -7,11 +7,15 @@ use Foundry\CLI\Commands\GenerateFeatureCommand;
 use Foundry\CLI\Commands\GenerateIndexesCommand;
 use Foundry\CLI\Commands\ImpactCommand;
 use Foundry\CLI\Commands\InitAppCommand;
+use Foundry\CLI\Commands\InspectGraphCommand;
 use Foundry\CLI\Commands\InspectFeatureCommand;
 use Foundry\CLI\Commands\InspectRouteCommand;
+use Foundry\CLI\Commands\MigrateSpecsCommand;
 use Foundry\CLI\Commands\QueueWorkCommand;
 use Foundry\CLI\Commands\ScheduleRunCommand;
 use Foundry\CLI\Commands\ServeCommand;
+use Foundry\CLI\Commands\CompileGraphCommand;
+use Foundry\CLI\Commands\VerifyGraphCommand;
 use Foundry\CLI\Commands\VerifyContractsCommand;
 use Foundry\CLI\Commands\VerifyFeatureCommand;
 use Foundry\Support\FoundryError;
@@ -27,6 +31,10 @@ final class Application
     public function __construct(?array $commands = null)
     {
         $this->commands = $commands ?? [
+            new CompileGraphCommand(),
+            new InspectGraphCommand(),
+            new VerifyGraphCommand(),
+            new MigrateSpecsCommand(),
             new InspectFeatureCommand(),
             new InspectRouteCommand(),
             new InitAppCommand(),

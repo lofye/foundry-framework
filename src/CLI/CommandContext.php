@@ -3,6 +3,12 @@ declare(strict_types=1);
 
 namespace Foundry\CLI;
 
+use Foundry\Compiler\Extensions\CoreCompilerExtension;
+use Foundry\Compiler\Extensions\ExtensionRegistry;
+use Foundry\Compiler\GraphCompiler;
+use Foundry\Compiler\GraphVerifier;
+use Foundry\Compiler\Migration\ManifestVersionResolver;
+use Foundry\Compiler\Migration\SpecMigrator;
 use Foundry\Feature\FeatureLoader;
 use Foundry\Generation\ContextManifestGenerator;
 use Foundry\Generation\FeatureGenerator;
@@ -22,6 +28,10 @@ final class CommandContext
 {
     private ?Paths $paths = null;
     private ?FeatureLoader $loader = null;
+    private ?ExtensionRegistry $extensions = null;
+    private ?GraphCompiler $graphCompiler = null;
+    private ?GraphVerifier $graphVerifier = null;
+    private ?SpecMigrator $specMigrator = null;
 
     public function __construct(private readonly ?string $cwd = null)
     {
@@ -37,9 +47,35 @@ final class CommandContext
         return $this->loader ??= new FeatureLoader($this->paths());
     }
 
+    public function extensionRegistry(): ExtensionRegistry
+    {
+        return $this->extensions ??= new ExtensionRegistry([
+            new CoreCompilerExtension(),
+        ]);
+    }
+
+    public function graphCompiler(): GraphCompiler
+    {
+        return $this->graphCompiler ??= new GraphCompiler($this->paths(), $this->extensionRegistry());
+    }
+
+    public function graphVerifier(): GraphVerifier
+    {
+        return $this->graphVerifier ??= new GraphVerifier($this->paths(), $this->graphCompiler()->buildLayout());
+    }
+
+    public function specMigrator(): SpecMigrator
+    {
+        return $this->specMigrator ??= new SpecMigrator(
+            $this->paths(),
+            new ManifestVersionResolver(),
+            $this->extensionRegistry()->migrationRules(),
+        );
+    }
+
     public function indexGenerator(): IndexGenerator
     {
-        return new IndexGenerator($this->paths());
+        return new IndexGenerator($this->paths(), $this->graphCompiler());
     }
 
     public function featureGenerator(): FeatureGenerator

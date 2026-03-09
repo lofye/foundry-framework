@@ -14,6 +14,7 @@ use Foundry\Cache\CacheManager;
 use Foundry\Cache\CacheRegistry;
 use Foundry\DB\Connection;
 use Foundry\DB\PdoQueryExecutor;
+use Foundry\DB\QueryDefinition;
 use Foundry\DB\QueryRegistry;
 use Foundry\DB\SqlFileLoader;
 use Foundry\DB\TransactionManager;
@@ -100,7 +101,11 @@ final class RuntimeFactory
      */
     private static function loadIndex(Paths $paths, string $file): array
     {
-        $path = $paths->join('app/generated/' . $file);
+        $path = $paths->join('app/.foundry/build/projections/' . $file);
+        if (!is_file($path)) {
+            $path = $paths->join('app/generated/' . $file);
+        }
+
         if (!is_file($path)) {
             return [];
         }
@@ -147,6 +152,33 @@ final class RuntimeFactory
     private static function queryRegistry(Paths $paths): QueryRegistry
     {
         $registry = new QueryRegistry();
+        $index = self::loadIndex($paths, 'query_index.php');
+
+        if ($index !== []) {
+            foreach ($index as $row) {
+                if (!is_array($row)) {
+                    continue;
+                }
+
+                $feature = (string) ($row['feature'] ?? '');
+                $name = (string) ($row['name'] ?? '');
+                $sql = (string) ($row['sql'] ?? '');
+                if ($feature === '' || $name === '' || $sql === '') {
+                    continue;
+                }
+
+                $registry->register(new QueryDefinition(
+                    feature: $feature,
+                    name: $name,
+                    sql: $sql,
+                    placeholders: array_values(array_map('strval', (array) ($row['placeholders'] ?? []))),
+                ));
+            }
+
+            return $registry;
+        }
+
+        // Compatibility fallback for pre-compiler builds.
         $loader = new SqlFileLoader();
         $featureDirs = glob($paths->features() . '/*', GLOB_ONLYDIR) ?: [];
         sort($featureDirs);
