@@ -18,29 +18,29 @@ final class WorkflowGenerator
     /**
      * @return array<string,mixed>
      */
-    public function generate(string $name, string $specPath, bool $force = false): array
+    public function generate(string $name, string $definitionPath, bool $force = false): array
     {
         $name = trim($name);
         if ($name === '') {
             throw new FoundryError('WORKFLOW_NAME_REQUIRED', 'validation', [], 'Workflow name is required.');
         }
 
-        $source = $this->resolvePath($specPath);
+        $source = $this->resolvePath($definitionPath);
         if (!is_file($source)) {
-            throw new FoundryError('WORKFLOW_SPEC_MISSING', 'not_found', ['spec' => $specPath], 'Workflow spec file not found.');
+            throw new FoundryError('WORKFLOW_DEFINITION_MISSING', 'not_found', ['definition' => $definitionPath], 'Workflow definition file not found.');
         }
 
         $document = Yaml::parseFile($source);
         $resource = (string) ($document['resource'] ?? $name);
 
-        $dir = $this->paths->join('app/specs/workflows');
+        $dir = $this->paths->join('app/definitions/workflows');
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
 
-        $targetSpec = $dir . '/' . $name . '.workflow.yaml';
-        if (is_file($targetSpec) && !$force) {
-            throw new FoundryError('WORKFLOW_SPEC_EXISTS', 'io', ['path' => $targetSpec], 'Workflow spec already exists. Use --force to overwrite.');
+        $targetDefinition = $dir . '/' . $name . '.workflow.yaml';
+        if (is_file($targetDefinition) && !$force) {
+            throw new FoundryError('WORKFLOW_DEFINITION_EXISTS', 'io', ['path' => $targetDefinition], 'Workflow definition already exists. Use --force to overwrite.');
         }
 
         $normalized = [
@@ -49,7 +49,7 @@ final class WorkflowGenerator
             'states' => array_values(array_map('strval', (array) ($document['states'] ?? []))),
             'transitions' => is_array($document['transitions'] ?? null) ? $document['transitions'] : new \stdClass(),
         ];
-        file_put_contents($targetSpec, Yaml::dump($normalized));
+        file_put_contents($targetDefinition, Yaml::dump($normalized));
 
         $feature = 'transition_' . $this->singularize($resource) . '_workflow';
         $files = $this->features->generateFromArray([
@@ -69,7 +69,7 @@ final class WorkflowGenerator
             'tests' => ['required' => ['contract', 'feature', 'auth']],
         ], $force);
 
-        $files[] = $targetSpec;
+        $files[] = $targetDefinition;
         $files = array_values(array_unique($files));
         sort($files);
 
@@ -77,7 +77,7 @@ final class WorkflowGenerator
             'workflow' => $name,
             'resource' => $resource,
             'feature' => $feature,
-            'spec' => $targetSpec,
+            'definition' => $targetDefinition,
             'files' => $files,
         ];
     }

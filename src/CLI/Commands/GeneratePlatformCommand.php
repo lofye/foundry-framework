@@ -71,12 +71,12 @@ final class GeneratePlatformCommand extends Command
             throw new FoundryError('CLI_WORKFLOW_REQUIRED', 'validation', [], 'Workflow name required.');
         }
 
-        $spec = $this->extractOption($args, '--spec');
-        if ($spec === null || $spec === '') {
-            throw new FoundryError('CLI_WORKFLOW_SPEC_REQUIRED', 'validation', [], 'Workflow spec path required (--spec=<file>).');
+        $definition = $this->extractOption($args, '--definition');
+        if ($definition === null || $definition === '') {
+            throw new FoundryError('CLI_WORKFLOW_DEFINITION_REQUIRED', 'validation', [], 'Workflow definition path required (--definition=<file>).');
         }
 
-        $result = $context->workflowGenerator()->generate($name, $spec, $force);
+        $result = $context->workflowGenerator()->generate($name, $definition, $force);
 
         return [
             'status' => 0,
@@ -95,12 +95,12 @@ final class GeneratePlatformCommand extends Command
             throw new FoundryError('CLI_ORCHESTRATION_REQUIRED', 'validation', [], 'Orchestration name required.');
         }
 
-        $spec = $this->extractOption($args, '--spec');
-        if ($spec === null || $spec === '') {
-            throw new FoundryError('CLI_ORCHESTRATION_SPEC_REQUIRED', 'validation', [], 'Orchestration spec path required (--spec=<file>).');
+        $definition = $this->extractOption($args, '--definition');
+        if ($definition === null || $definition === '') {
+            throw new FoundryError('CLI_ORCHESTRATION_DEFINITION_REQUIRED', 'validation', [], 'Orchestration definition path required (--definition=<file>).');
         }
 
-        $result = $context->orchestrationGenerator()->generate($name, $spec, $force);
+        $result = $context->orchestrationGenerator()->generate($name, $definition, $force);
 
         return [
             'status' => 0,
@@ -119,12 +119,12 @@ final class GeneratePlatformCommand extends Command
             throw new FoundryError('CLI_SEARCH_INDEX_REQUIRED', 'validation', [], 'Search index name required.');
         }
 
-        $spec = $this->extractOption($args, '--spec');
-        if ($spec === null || $spec === '') {
-            throw new FoundryError('CLI_SEARCH_SPEC_REQUIRED', 'validation', [], 'Search spec path required (--spec=<file>).');
+        $definition = $this->extractOption($args, '--definition');
+        if ($definition === null || $definition === '') {
+            throw new FoundryError('CLI_SEARCH_DEFINITION_REQUIRED', 'validation', [], 'Search definition path required (--definition=<file>).');
         }
 
-        $result = $context->searchIndexGenerator()->generate($name, $spec, $force);
+        $result = $context->searchIndexGenerator()->generate($name, $definition, $force);
 
         return [
             'status' => 0,

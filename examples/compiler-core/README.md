@@ -52,8 +52,8 @@ Expected response includes:
 Outdated manifest (`version: 1`, legacy `llm.risk` field):
 ```bash
 php vendor/bin/foundry inspect migrations --json
-php vendor/bin/foundry migrate specs --dry-run --json
-php vendor/bin/foundry migrate specs --write --json
+php vendor/bin/foundry migrate definitions --dry-run --json
+php vendor/bin/foundry migrate definitions --write --json
 ```
 
 Typical rewrite performed by core migration rule:

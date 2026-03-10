@@ -23,10 +23,10 @@ final class ResourceVerifierTest extends TestCase
         $this->createFeature('update_post');
         $this->createFeature('delete_post');
 
-        mkdir($this->project->root . '/app/specs/resources', 0777, true);
-        mkdir($this->project->root . '/app/specs/listing', 0777, true);
+        mkdir($this->project->root . '/app/definitions/resources', 0777, true);
+        mkdir($this->project->root . '/app/definitions/listing', 0777, true);
 
-        file_put_contents($this->project->root . '/app/specs/resources/posts.resource.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/resources/posts.resource.yaml', <<<'YAML'
 version: 1
 resource: posts
 style: server-rendered
@@ -48,7 +48,7 @@ feature_names:
   delete: delete_post
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/listing/posts.list.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/listing/posts.list.yaml', <<<'YAML'
 version: 1
 resource: posts
 search:

@@ -24,17 +24,17 @@ final class PolicyGenerator
             throw new FoundryError('POLICY_NAME_INVALID', 'validation', ['name' => $name], 'Policy name is invalid.');
         }
 
-        $dir = $this->paths->join('app/specs/policies');
+        $dir = $this->paths->join('app/definitions/policies');
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
 
         $path = $dir . '/' . $policy . '.policy.yaml';
         if (is_file($path) && !$force) {
-            throw new FoundryError('POLICY_SPEC_EXISTS', 'io', ['path' => $path], 'Policy spec already exists. Use --force to overwrite.');
+            throw new FoundryError('POLICY_DEFINITION_EXISTS', 'io', ['path' => $path], 'Policy definition already exists. Use --force to overwrite.');
         }
 
-        $spec = [
+        $definition = [
             'version' => 1,
             'policy' => $policy,
             'resource' => $policy,
@@ -44,11 +44,11 @@ final class PolicyGenerator
                 'viewer' => [$policy . '.view'],
             ],
         ];
-        file_put_contents($path, Yaml::dump($spec));
+        file_put_contents($path, Yaml::dump($definition));
 
         return [
             'policy' => $policy,
-            'spec' => $path,
+            'definition' => $path,
             'files' => [$path],
         ];
     }

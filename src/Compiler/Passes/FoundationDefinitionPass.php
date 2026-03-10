@@ -13,7 +13,7 @@ use Foundry\Compiler\IR\ResourceNode;
 use Foundry\Compiler\IR\StarterKitNode;
 use Foundry\Compiler\IR\UploadProfileNode;
 
-final class FoundationSpecPass implements CompilerPass
+final class FoundationDefinitionPass implements CompilerPass
 {
     /**
      * @var array<int,string>
@@ -39,20 +39,20 @@ final class FoundationSpecPass implements CompilerPass
 
     public function name(): string
     {
-        return 'foundation_specs';
+        return 'foundation_definitions';
     }
 
     public function run(CompilationState $state): void
     {
-        $specs = $state->discoveredSpecs;
-        if ($specs === []) {
+        $definitions = $state->discoveredDefinitions;
+        if ($definitions === []) {
             return;
         }
 
         $resourceFields = [];
         $resourceFeatureMaps = [];
 
-        foreach ($this->sortedRows((array) ($specs['resource'] ?? [])) as $row) {
+        foreach ($this->sortedRows((array) ($definitions['resource'] ?? [])) as $row) {
             $document = is_array($row['document'] ?? null) ? $row['document'] : [];
             $sourcePath = (string) ($row['path'] ?? '');
             $resource = (string) ($document['resource'] ?? ($row['name'] ?? ''));
@@ -63,12 +63,12 @@ final class FoundationSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2201_RESOURCE_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2201_RESOURCE_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported resource spec version %d for %s.', $version, $resource),
+                    message: sprintf('Unsupported resource definition version %d for %s.', $version, $resource),
                     nodeId: 'resource:' . $resource,
                     sourcePath: $sourcePath,
-                    suggestedFix: 'Set version: 1 or run spec migrations.',
+                    suggestedFix: 'Set version: 1 or run definition migrations.',
                     pass: $this->name(),
                 );
             }
@@ -146,7 +146,7 @@ final class FoundationSpecPass implements CompilerPass
             }
         }
 
-        foreach ($this->sortedRows((array) ($specs['listing_config'] ?? [])) as $row) {
+        foreach ($this->sortedRows((array) ($definitions['listing_config'] ?? [])) as $row) {
             $document = is_array($row['document'] ?? null) ? $row['document'] : [];
             $sourcePath = (string) ($row['path'] ?? '');
             $resource = (string) ($document['resource'] ?? ($row['name'] ?? ''));
@@ -157,9 +157,9 @@ final class FoundationSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2203_LISTING_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2203_LISTING_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported listing spec version %d for %s.', $version, $resource),
+                    message: sprintf('Unsupported listing definition version %d for %s.', $version, $resource),
                     nodeId: 'listing_config:' . $resource,
                     sourcePath: $sourcePath,
                     pass: $this->name(),
@@ -250,7 +250,7 @@ final class FoundationSpecPass implements CompilerPass
             }
         }
 
-        foreach ($this->sortedRows((array) ($specs['admin_resource'] ?? [])) as $row) {
+        foreach ($this->sortedRows((array) ($definitions['admin_resource'] ?? [])) as $row) {
             $document = is_array($row['document'] ?? null) ? $row['document'] : [];
             $sourcePath = (string) ($row['path'] ?? '');
             $resource = (string) ($document['resource'] ?? ($row['name'] ?? ''));
@@ -328,7 +328,7 @@ final class FoundationSpecPass implements CompilerPass
             }
         }
 
-        foreach ($this->sortedRows((array) ($specs['upload_profile'] ?? [])) as $row) {
+        foreach ($this->sortedRows((array) ($definitions['upload_profile'] ?? [])) as $row) {
             $document = is_array($row['document'] ?? null) ? $row['document'] : [];
             $sourcePath = (string) ($row['path'] ?? '');
             $profile = (string) ($document['profile'] ?? ($row['name'] ?? ''));
@@ -390,7 +390,7 @@ final class FoundationSpecPass implements CompilerPass
             }
         }
 
-        foreach ($this->sortedRows((array) ($specs['starter'] ?? [])) as $row) {
+        foreach ($this->sortedRows((array) ($definitions['starter'] ?? [])) as $row) {
             $document = is_array($row['document'] ?? null) ? $row['document'] : [];
             $sourcePath = (string) ($row['path'] ?? '');
             $starter = (string) ($document['starter'] ?? ($row['name'] ?? ''));

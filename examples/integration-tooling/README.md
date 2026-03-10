@@ -3,7 +3,7 @@
 This directory demonstrates graph-native integration and contract tooling capabilities:
 
 - notifications (`examples/integration-tooling/notifications`)
-- API resource specs (`examples/integration-tooling/api`)
+- API resource definitions (`examples/integration-tooling/api`)
 - generated docs samples (`examples/integration-tooling/docs`)
 - deep test generation notes (`examples/integration-tooling/tests`)
 

@@ -7,11 +7,11 @@ use Foundry\Compiler\Diagnostics\DiagnosticBag;
 use Foundry\Support\Paths;
 use Foundry\Support\Yaml;
 
-final class SpecMigrator
+final class DefinitionMigrator
 {
     /**
      * @param array<int,MigrationRule> $rules
-     * @param array<int,SpecFormat> $formats
+     * @param array<int,DefinitionFormat> $formats
      */
     public function __construct(
         private readonly Paths $paths,
@@ -21,7 +21,7 @@ final class SpecMigrator
     ) {
     }
 
-    public function migrate(bool $write = false, ?string $path = null, ?DiagnosticBag $diagnostics = null): SpecMigrationResult
+    public function migrate(bool $write = false, ?string $path = null, ?DiagnosticBag $diagnostics = null): DefinitionMigrationResult
     {
         $changes = [];
         $plans = [];
@@ -38,7 +38,7 @@ final class SpecMigrator
                     'source_path' => $relativePath,
                 ];
                 if ($diagnostics !== null) {
-                    $diagnostics->error('FDY7004_NO_MIGRATION_PATH', 'migrations', 'Target path does not exist or is not a feature manifest.', sourcePath: $relativePath, pass: 'migrate_specs');
+                    $diagnostics->error('FDY7004_NO_MIGRATION_PATH', 'migrations', 'Target path does not exist or is not a feature manifest.', sourcePath: $relativePath, pass: 'migrate_definitions');
                 }
                 continue;
             }
@@ -54,7 +54,7 @@ final class SpecMigrator
                     'source_path' => $relativePath,
                 ];
                 if ($diagnostics !== null) {
-                    $diagnostics->error('FDY3002_MANIFEST_PARSE_FAILED', 'migrations', $error->getMessage(), sourcePath: $relativePath, pass: 'migrate_specs');
+                    $diagnostics->error('FDY3002_MANIFEST_PARSE_FAILED', 'migrations', $error->getMessage(), sourcePath: $relativePath, pass: 'migrate_definitions');
                 }
                 continue;
             }
@@ -65,20 +65,20 @@ final class SpecMigrator
 
             if ($currentVersion > $targetVersion) {
                 $message = sprintf(
-                    'Unsupported spec version %d for %s; current supported version is %d.',
+                    'Unsupported definition version %d for %s; current supported version is %d.',
                     $currentVersion,
                     $formatName,
                     $targetVersion,
                 );
                 $inlineDiagnostics[] = [
-                    'code' => 'FDY7003_UNSUPPORTED_SPEC_VERSION',
+                    'code' => 'FDY7003_UNSUPPORTED_DEFINITION_VERSION',
                     'severity' => 'error',
                     'category' => 'migrations',
                     'message' => $message,
                     'source_path' => $relativePath,
                 ];
                 if ($diagnostics !== null) {
-                    $diagnostics->error('FDY7003_UNSUPPORTED_SPEC_VERSION', 'migrations', $message, sourcePath: $relativePath, pass: 'migrate_specs');
+                    $diagnostics->error('FDY7003_UNSUPPORTED_DEFINITION_VERSION', 'migrations', $message, sourcePath: $relativePath, pass: 'migrate_definitions');
                 }
                 continue;
             }
@@ -98,7 +98,7 @@ final class SpecMigrator
                 ];
 
                 if ($diagnostics !== null) {
-                    $diagnostics->warning('FDY3001_OUTDATED_FEATURE_MANIFEST', 'migrations', $message, sourcePath: $relativePath, pass: 'migrate_specs');
+                    $diagnostics->warning('FDY3001_OUTDATED_FEATURE_MANIFEST', 'migrations', $message, sourcePath: $relativePath, pass: 'migrate_definitions');
                 }
             }
 
@@ -123,7 +123,7 @@ final class SpecMigrator
                     'source_path' => $relativePath,
                 ];
                 if ($diagnostics !== null) {
-                    $diagnostics->error('FDY7004_NO_MIGRATION_PATH', 'migrations', (string) $migrationPath['reason'], sourcePath: $relativePath, pass: 'migrate_specs');
+                    $diagnostics->error('FDY7004_NO_MIGRATION_PATH', 'migrations', (string) $migrationPath['reason'], sourcePath: $relativePath, pass: 'migrate_definitions');
                 }
                 continue;
             }
@@ -154,7 +154,7 @@ final class SpecMigrator
             }
         }
 
-        return new SpecMigrationResult(
+        return new DefinitionMigrationResult(
             written: $write,
             changes: $changes,
             diagnostics: $inlineDiagnostics,
@@ -187,12 +187,12 @@ final class SpecMigrator
     /**
      * @return array<int,array<string,mixed>>
      */
-    public function specFormats(): array
+    public function definitionFormats(): array
     {
         $formats = $this->formats;
         if ($formats === []) {
             $formats = [
-                new SpecFormat(
+                new DefinitionFormat(
                     name: 'feature_manifest',
                     description: 'Feature manifest files under app/features/<feature>/feature.yaml',
                     currentVersion: $this->resolver->currentFeatureVersion(),
@@ -201,10 +201,10 @@ final class SpecMigrator
             ];
         }
 
-        usort($formats, static fn (SpecFormat $a, SpecFormat $b): int => strcmp($a->name, $b->name));
+        usort($formats, static fn (DefinitionFormat $a, DefinitionFormat $b): int => strcmp($a->name, $b->name));
 
         return array_values(array_map(
-            static fn (SpecFormat $format): array => $format->toArray(),
+            static fn (DefinitionFormat $format): array => $format->toArray(),
             $formats,
         ));
     }
@@ -212,9 +212,9 @@ final class SpecMigrator
     /**
      * @return array<string,mixed>|null
      */
-    public function specFormat(string $name): ?array
+    public function definitionFormat(string $name): ?array
     {
-        foreach ($this->specFormats() as $format) {
+        foreach ($this->definitionFormats() as $format) {
             if ((string) ($format['name'] ?? '') === $name) {
                 return $format;
             }
@@ -232,7 +232,7 @@ final class SpecMigrator
         if ($fromVersion >= $toVersion) {
             return [
                 'status' => 'up_to_date',
-                'reason' => 'spec is already current',
+                'reason' => 'definition is already current',
                 'rules' => [],
             ];
         }

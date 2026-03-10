@@ -30,13 +30,13 @@ final class GenerateIndexesCommand extends Command
             ];
         }
 
-        $specPath = (string) ($args[2] ?? '');
-        if ($specPath === '') {
-            throw new FoundryError('CLI_MIGRATION_SPEC_REQUIRED', 'validation', [], 'Migration spec path required.');
+        $definitionPath = (string) ($args[2] ?? '');
+        if ($definitionPath === '') {
+            throw new FoundryError('CLI_MIGRATION_DEFINITION_REQUIRED', 'validation', [], 'Migration definition path required.');
         }
 
         $out = $context->paths()->join('app/platform/migrations');
-        $file = $context->migrationGenerator()->generate($specPath, $out);
+        $file = $context->migrationGenerator()->generate($definitionPath, $out);
 
         return [
             'status' => 0,

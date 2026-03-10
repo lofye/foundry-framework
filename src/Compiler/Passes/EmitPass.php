@@ -96,9 +96,9 @@ final class EmitPass implements CompilerPass
             'extensions' => $state->extensions->inspectRows(),
             'extension_registration_sources' => $state->extensions->registrationSources(),
             'packs' => $state->extensions->packRegistry()->inspectRows(),
-            'spec_formats' => array_values(array_map(
+            'definition_formats' => array_values(array_map(
                 static fn ($format): array => method_exists($format, 'toArray') ? $format->toArray() : [],
-                $state->extensions->specFormats(),
+                $state->extensions->definitionFormats(),
             )),
             'codemods' => array_values(array_map(
                 static fn ($codemod): array => [

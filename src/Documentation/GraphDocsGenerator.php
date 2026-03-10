@@ -240,7 +240,7 @@ final class GraphDocsGenerator
             '# LLM Workflow',
             '',
             '1. inspect graph reality before edits',
-            '2. edit source-of-truth files under app/features and app/specs',
+            '2. edit source-of-truth files under app/features and app/definitions',
             '3. compile graph and inspect diagnostics',
             '4. inspect impact and execution plans',
             '5. verify graph, pipeline, and domain verifiers',

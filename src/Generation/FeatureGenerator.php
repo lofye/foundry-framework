@@ -22,20 +22,20 @@ final class FeatureGenerator
     /**
      * @return array<int,string>
      */
-    public function generateFromSpec(string $specPath, bool $force = false): array
+    public function generateFromDefinition(string $definitionPath, bool $force = false): array
     {
-        $spec = Yaml::parseFile($specPath);
+        $definition = Yaml::parseFile($definitionPath);
 
-        return $this->generateFromArray($spec, $force);
+        return $this->generateFromArray($definition, $force);
     }
 
     /**
-     * @param array<string,mixed> $spec
+     * @param array<string,mixed> $definition
      * @return array<int,string>
      */
-    public function generateFromArray(array $spec, bool $force = false): array
+    public function generateFromArray(array $definition, bool $force = false): array
     {
-        $feature = (string) ($spec['feature'] ?? '');
+        $feature = (string) ($definition['feature'] ?? '');
         if ($feature === '' || !Str::isSnakeCase($feature)) {
             throw new FoundryError('FEATURE_NAME_INVALID', 'validation', ['feature' => $feature], 'Feature name must be snake_case.');
         }
@@ -45,20 +45,20 @@ final class FeatureGenerator
             mkdir($base, 0777, true);
         }
 
-        $manifest = $this->buildFeatureManifest($spec);
+        $manifest = $this->buildFeatureManifest($definition);
 
         $written = [];
         $written[] = $this->writeIfAllowed($base . '/feature.yaml', Yaml::dump($manifest), true, $force);
-        $written[] = $this->writeIfAllowed($base . '/input.schema.json', Json::encode($this->schemas->fromFieldSpec($feature . '_input', (array) $spec['input']), true) . "\n", true, $force);
-        $written[] = $this->writeIfAllowed($base . '/output.schema.json', Json::encode($this->schemas->fromFieldSpec($feature . '_output', (array) $spec['output']), true) . "\n", true, $force);
+        $written[] = $this->writeIfAllowed($base . '/input.schema.json', Json::encode($this->schemas->fromFieldDefinition($feature . '_input', (array) $definition['input']), true) . "\n", true, $force);
+        $written[] = $this->writeIfAllowed($base . '/output.schema.json', Json::encode($this->schemas->fromFieldDefinition($feature . '_output', (array) $definition['output']), true) . "\n", true, $force);
         $written[] = $this->writeIfAllowed($base . '/action.php', $this->actionTemplate($feature), false, $force);
 
-        $queries = array_values(array_map('strval', (array) (($spec['database']['queries'] ?? []))));
+        $queries = array_values(array_map('strval', (array) (($definition['database']['queries'] ?? []))));
         $written[] = $this->writeIfAllowed($base . '/queries.sql', $this->queries->generate($queries), true, $force);
 
         $written[] = $this->writeIfAllowed($base . '/permissions.yaml', Yaml::dump([
             'version' => 1,
-            'permissions' => array_values(array_map('strval', (array) ($spec['auth']['permissions'] ?? []))),
+            'permissions' => array_values(array_map('strval', (array) ($definition['auth']['permissions'] ?? []))),
             'rules' => new \stdClass(),
         ]), true, $force);
 
@@ -69,7 +69,7 @@ final class FeatureGenerator
                 'kind' => 'computed',
                 'ttl_seconds' => 300,
                 'invalidated_by' => [$feature],
-            ], array_values(array_map('strval', (array) ($spec['cache']['invalidate'] ?? [])))),
+            ], array_values(array_map('strval', (array) ($definition['cache']['invalidate'] ?? [])))),
         ]), true, $force);
 
         $written[] = $this->writeIfAllowed($base . '/events.yaml', Yaml::dump([
@@ -81,7 +81,7 @@ final class FeatureGenerator
                     'additionalProperties' => false,
                     'properties' => [],
                 ],
-            ], array_values(array_map('strval', (array) ($spec['events']['emit'] ?? [])))),
+            ], array_values(array_map('strval', (array) ($definition['events']['emit'] ?? [])))),
             'subscribe' => [],
         ]), true, $force);
 
@@ -100,12 +100,12 @@ final class FeatureGenerator
                     'backoff_seconds' => [1, 5, 30],
                 ],
                 'timeout_seconds' => 60,
-            ], array_values(array_map('strval', (array) ($spec['jobs']['dispatch'] ?? [])))),
+            ], array_values(array_map('strval', (array) ($definition['jobs']['dispatch'] ?? [])))),
         ]), true, $force);
 
         $written[] = $this->writeIfAllowed($base . '/prompts.md', "# {$feature}\n\nFeature-local LLM notes.\n", false, $force);
 
-        $required = array_values(array_map('strval', (array) ($spec['tests']['required'] ?? ['contract', 'feature', 'auth'])));
+        $required = array_values(array_map('strval', (array) ($definition['tests']['required'] ?? ['contract', 'feature', 'auth'])));
         $written = array_merge($written, $this->tests->generate($feature, $base, $required));
 
         $context = new ContextManifestGenerator($this->paths);
@@ -115,62 +115,62 @@ final class FeatureGenerator
     }
 
     /**
-     * @param array<string,mixed> $spec
+     * @param array<string,mixed> $definition
      * @return array<string,mixed>
      */
-    private function buildFeatureManifest(array $spec): array
+    private function buildFeatureManifest(array $definition): array
     {
         $manifest = [
             'version' => 2,
-            'feature' => (string) $spec['feature'],
-            'kind' => (string) ($spec['kind'] ?? 'http'),
-            'description' => (string) ($spec['description'] ?? 'No description.'),
-            'owners' => (array) ($spec['owners'] ?? ['platform']),
-            'route' => (array) ($spec['route'] ?? []),
-            'input' => ['schema' => 'app/features/' . $spec['feature'] . '/input.schema.json'],
-            'output' => ['schema' => 'app/features/' . $spec['feature'] . '/output.schema.json'],
-            'auth' => (array) ($spec['auth'] ?? ['required' => true, 'strategies' => ['bearer'], 'permissions' => []]),
+            'feature' => (string) $definition['feature'],
+            'kind' => (string) ($definition['kind'] ?? 'http'),
+            'description' => (string) ($definition['description'] ?? 'No description.'),
+            'owners' => (array) ($definition['owners'] ?? ['platform']),
+            'route' => (array) ($definition['route'] ?? []),
+            'input' => ['schema' => 'app/features/' . $definition['feature'] . '/input.schema.json'],
+            'output' => ['schema' => 'app/features/' . $definition['feature'] . '/output.schema.json'],
+            'auth' => (array) ($definition['auth'] ?? ['required' => true, 'strategies' => ['bearer'], 'permissions' => []]),
             'database' => array_merge([
                 'reads' => [],
                 'writes' => [],
                 'transactions' => 'required',
                 'queries' => [],
-            ], (array) ($spec['database'] ?? [])),
+            ], (array) ($definition['database'] ?? [])),
             'cache' => array_merge([
                 'reads' => [],
                 'writes' => [],
                 'invalidate' => [],
-            ], (array) ($spec['cache'] ?? [])),
+            ], (array) ($definition['cache'] ?? [])),
             'events' => array_merge([
                 'emit' => [],
                 'subscribe' => [],
-            ], (array) ($spec['events'] ?? [])),
+            ], (array) ($definition['events'] ?? [])),
             'jobs' => array_merge([
                 'dispatch' => [],
-            ], (array) ($spec['jobs'] ?? [])),
+            ], (array) ($definition['jobs'] ?? [])),
             'rate_limit' => array_merge([
                 'strategy' => 'user',
-                'bucket' => (string) $spec['feature'],
+                'bucket' => (string) $definition['feature'],
                 'cost' => 1,
-            ], (array) ($spec['rate_limit'] ?? [])),
+            ], (array) ($definition['rate_limit'] ?? [])),
             'observability' => array_merge([
                 'audit' => true,
                 'trace' => true,
                 'log_level' => 'info',
-            ], (array) ($spec['observability'] ?? [])),
+            ], (array) ($definition['observability'] ?? [])),
             'tests' => array_merge([
                 'required' => ['contract', 'feature', 'auth'],
-            ], (array) ($spec['tests'] ?? [])),
+            ], (array) ($definition['tests'] ?? [])),
             'llm' => array_merge([
                 'editable' => true,
                 'risk_level' => 'medium',
                 'notes_file' => 'prompts.md',
-            ], (array) ($spec['llm'] ?? [])),
+            ], (array) ($definition['llm'] ?? [])),
         ];
 
         foreach (['csrf', 'resource', 'listing', 'uploads', 'ui'] as $key) {
-            if (is_array($spec[$key] ?? null)) {
-                $manifest[$key] = $spec[$key];
+            if (is_array($definition[$key] ?? null)) {
+                $manifest[$key] = $definition[$key];
             }
         }
 

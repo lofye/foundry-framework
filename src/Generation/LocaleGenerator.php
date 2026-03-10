@@ -45,13 +45,13 @@ return [
 ];
 PHP);
 
-        $specDir = $this->paths->join('app/specs/locales');
-        if (!is_dir($specDir)) {
-            mkdir($specDir, 0777, true);
+        $definitionDir = $this->paths->join('app/definitions/locales');
+        if (!is_dir($definitionDir)) {
+            mkdir($definitionDir, 0777, true);
         }
 
-        $specPath = $specDir . '/core.locale.yaml';
-        $current = is_file($specPath) ? Yaml::parseFile($specPath) : ['version' => 1, 'bundle' => 'core', 'default' => 'en', 'locales' => []];
+        $definitionPath = $definitionDir . '/core.locale.yaml';
+        $current = is_file($definitionPath) ? Yaml::parseFile($definitionPath) : ['version' => 1, 'bundle' => 'core', 'default' => 'en', 'locales' => []];
         $locales = array_values(array_unique(array_map('strval', (array) ($current['locales'] ?? []))));
         $locales[] = $locale;
         $locales = array_values(array_unique($locales));
@@ -62,12 +62,12 @@ PHP);
         $current['default'] = (string) ($current['default'] ?? 'en');
         $current['locales'] = $locales;
         $current['translation_paths'] = ['app/platform/lang'];
-        file_put_contents($specPath, Yaml::dump($current));
+        file_put_contents($definitionPath, Yaml::dump($current));
 
         return [
             'locale' => $locale,
-            'files' => [$messagesPath, $specPath],
-            'spec' => $specPath,
+            'files' => [$messagesPath, $definitionPath],
+            'definition' => $definitionPath,
         ];
     }
 }

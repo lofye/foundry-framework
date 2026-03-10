@@ -65,12 +65,12 @@ final class GenerateIntegrationCommand extends Command
             throw new FoundryError('CLI_API_RESOURCE_REQUIRED', 'validation', [], 'API resource name required.');
         }
 
-        $spec = $this->extractOption($args, '--spec');
-        if ($spec === null || $spec === '') {
-            throw new FoundryError('CLI_API_RESOURCE_SPEC_REQUIRED', 'validation', [], 'API resource spec path required (--spec=<file>).');
+        $definition = $this->extractOption($args, '--definition');
+        if ($definition === null || $definition === '') {
+            throw new FoundryError('CLI_API_RESOURCE_DEFINITION_REQUIRED', 'validation', [], 'API resource definition path required (--definition=<file>).');
         }
 
-        $result = $context->apiResourceGenerator()->generate($name, $spec, $force);
+        $result = $context->apiResourceGenerator()->generate($name, $definition, $force);
 
         return [
             'status' => 0,

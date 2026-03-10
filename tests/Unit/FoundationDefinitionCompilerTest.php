@@ -9,7 +9,7 @@ use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
 use PHPUnit\Framework\TestCase;
 
-final class FoundationSpecCompilerTest extends TestCase
+final class FoundationDefinitionCompilerTest extends TestCase
 {
     private TempProject $project;
 
@@ -23,7 +23,7 @@ final class FoundationSpecCompilerTest extends TestCase
         $this->project->cleanup();
     }
 
-    public function test_foundation_specs_compile_into_graph_and_projections(): void
+    public function test_foundation_definitions_compile_into_graph_and_projections(): void
     {
         foreach ([
             'list_posts',
@@ -42,7 +42,7 @@ final class FoundationSpecCompilerTest extends TestCase
             $this->createFeature($feature, 'GET', '/' . str_replace('_', '/', $feature));
         }
 
-        $this->writeSpecs();
+        $this->writeDefinitions();
 
         $compiler = new GraphCompiler(Paths::fromCwd($this->project->root));
         $result = $compiler->compile(new CompileOptions());
@@ -71,15 +71,15 @@ final class FoundationSpecCompilerTest extends TestCase
         $this->assertSame(0, $result->diagnostics->summary()['error']);
     }
 
-    private function writeSpecs(): void
+    private function writeDefinitions(): void
     {
-        mkdir($this->project->root . '/app/specs/resources', 0777, true);
-        mkdir($this->project->root . '/app/specs/admin', 0777, true);
-        mkdir($this->project->root . '/app/specs/uploads', 0777, true);
-        mkdir($this->project->root . '/app/specs/listing', 0777, true);
-        mkdir($this->project->root . '/app/specs/starters', 0777, true);
+        mkdir($this->project->root . '/app/definitions/resources', 0777, true);
+        mkdir($this->project->root . '/app/definitions/admin', 0777, true);
+        mkdir($this->project->root . '/app/definitions/uploads', 0777, true);
+        mkdir($this->project->root . '/app/definitions/listing', 0777, true);
+        mkdir($this->project->root . '/app/definitions/starters', 0777, true);
 
-        file_put_contents($this->project->root . '/app/specs/resources/posts.resource.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/resources/posts.resource.yaml', <<<'YAML'
 version: 1
 resource: posts
 style: server-rendered
@@ -127,7 +127,7 @@ feature_names:
   delete: delete_post
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/listing/posts.list.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/listing/posts.list.yaml', <<<'YAML'
 version: 1
 resource: posts
 search:
@@ -143,7 +143,7 @@ pagination:
   per_page: 25
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/admin/posts.admin.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/admin/posts.admin.yaml', <<<'YAML'
 version: 1
 resource: posts
 table:
@@ -153,7 +153,7 @@ bulk_actions: [delete]
 row_actions: [edit, delete]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/uploads/avatar.uploads.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/uploads/avatar.uploads.yaml', <<<'YAML'
 version: 1
 profile: avatar
 disk: local
@@ -164,7 +164,7 @@ feature_names:
   attach: attach_avatar
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/starters/server-rendered.starter.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/starters/server-rendered.starter.yaml', <<<'YAML'
 version: 1
 starter: server-rendered
 auth_mode: session

@@ -9,7 +9,7 @@ use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
 use PHPUnit\Framework\TestCase;
 
-final class IntegrationSpecCompilerTest extends TestCase
+final class IntegrationDefinitionCompilerTest extends TestCase
 {
     private TempProject $project;
 
@@ -23,7 +23,7 @@ final class IntegrationSpecCompilerTest extends TestCase
         $this->project->cleanup();
     }
 
-    public function test_integration_specs_compile_into_graph_and_projections(): void
+    public function test_integration_definitions_compile_into_graph_and_projections(): void
     {
         foreach (['api_list_posts', 'api_view_post', 'api_create_post', 'api_update_post', 'api_delete_post', 'dispatch_welcome_email'] as $feature) {
             $path = str_starts_with($feature, 'api_') ? '/api/' . str_replace('_', '/', substr($feature, 4)) : '/' . str_replace('_', '/', $feature);
@@ -31,12 +31,12 @@ final class IntegrationSpecCompilerTest extends TestCase
             $this->createFeature($feature, $method, $path);
         }
 
-        mkdir($this->project->root . '/app/specs/api', 0777, true);
-        mkdir($this->project->root . '/app/specs/notifications', 0777, true);
+        mkdir($this->project->root . '/app/definitions/api', 0777, true);
+        mkdir($this->project->root . '/app/definitions/notifications', 0777, true);
         mkdir($this->project->root . '/app/notifications/schemas', 0777, true);
         mkdir($this->project->root . '/app/notifications/templates', 0777, true);
 
-        file_put_contents($this->project->root . '/app/specs/api/posts.api-resource.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/api/posts.api-resource.yaml', <<<'YAML'
 version: 1
 resource: posts
 style: api
@@ -62,7 +62,7 @@ feature_names:
   delete: api_delete_post
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/notifications/welcome_email.notification.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/notifications/welcome_email.notification.yaml', <<<'YAML'
 version: 1
 notification: welcome_email
 channel: mail

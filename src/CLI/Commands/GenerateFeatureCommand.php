@@ -22,12 +22,12 @@ final class GenerateFeatureCommand extends Command
         $target = (string) ($args[1] ?? '');
 
         if ($target === 'feature') {
-            $specPath = (string) ($args[2] ?? '');
-            if ($specPath === '') {
-                throw new FoundryError('CLI_SPEC_REQUIRED', 'validation', [], 'Feature spec path required.');
+            $definitionPath = (string) ($args[2] ?? '');
+            if ($definitionPath === '') {
+                throw new FoundryError('CLI_DEFINITION_REQUIRED', 'validation', [], 'Feature definition path required.');
             }
 
-            $files = $context->featureGenerator()->generateFromSpec($specPath);
+            $files = $context->featureGenerator()->generateFromDefinition($definitionPath);
 
             return [
                 'status' => 0,

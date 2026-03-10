@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace Foundry\Compiler\Extensions;
 
 use Foundry\Compiler\Codemod\Codemod;
-use Foundry\Compiler\Codemod\FoundationSpecNormalizeCodemod;
+use Foundry\Compiler\Codemod\FoundationDefinitionNormalizeCodemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
-use Foundry\Compiler\Migration\SpecFormat;
-use Foundry\Compiler\Passes\FoundationSpecPass;
+use Foundry\Compiler\Migration\DefinitionFormat;
+use Foundry\Compiler\Passes\FoundationDefinitionPass;
 use Foundry\Compiler\Projection\FoundationProjectionEmitters;
 use Foundry\Compiler\Projection\ProjectionEmitter;
 
@@ -29,7 +29,7 @@ final class FoundationCompilerExtension extends AbstractCompilerExtension
         return new ExtensionDescriptor(
             name: $this->name(),
             version: $this->version(),
-            description: 'Graph-native generators/spec integration for starter kits, resources, admin, uploads, and listing toolkit.',
+            description: 'Graph-native generators/definition integration for starter kits, resources, admin, uploads, and listing toolkit.',
             frameworkVersionConstraint: '*',
             graphVersionConstraint: '^1',
             providedNodeTypes: [
@@ -40,7 +40,7 @@ final class FoundationCompilerExtension extends AbstractCompilerExtension
                 'listing_config',
                 'form_definition',
             ],
-            providedPasses: ['foundation_specs'],
+            providedPasses: ['foundation_definitions'],
             providedPacks: [
                 'foundation.starter',
                 'foundation.resource',
@@ -48,15 +48,15 @@ final class FoundationCompilerExtension extends AbstractCompilerExtension
                 'foundation.uploads',
                 'foundation.listing',
             ],
-            introducedSpecFormats: [
-                'starter_spec',
-                'resource_spec',
-                'admin_resource_spec',
-                'upload_profile_spec',
-                'listing_config_spec',
+            introducedDefinitionFormats: [
+                'starter_definition',
+                'resource_definition',
+                'admin_resource_definition',
+                'upload_profile_definition',
+                'listing_config_definition',
             ],
             providedMigrationRules: [],
-            providedCodemods: ['foundation-spec-v1-normalize'],
+            providedCodemods: ['foundation-definition-v1-normalize'],
             providedProjectionOutputs: [
                 'starter_index.php',
                 'resource_index.php',
@@ -83,7 +83,7 @@ final class FoundationCompilerExtension extends AbstractCompilerExtension
      */
     public function linkPasses(): array
     {
-        return [new FoundationSpecPass()];
+        return [new FoundationDefinitionPass()];
     }
 
     public function passPriority(string $stage, CompilerPass $pass): int
@@ -112,16 +112,16 @@ final class FoundationCompilerExtension extends AbstractCompilerExtension
     }
 
     /**
-     * @return array<int,SpecFormat>
+     * @return array<int,DefinitionFormat>
      */
-    public function specFormats(): array
+    public function definitionFormats(): array
     {
         return [
-            new SpecFormat('starter_spec', 'Starter kit spec files under app/specs/starters/*.starter.yaml', 1, [1]),
-            new SpecFormat('resource_spec', 'Resource spec files under app/specs/resources/*.resource.yaml', 1, [1]),
-            new SpecFormat('admin_resource_spec', 'Admin resource spec files under app/specs/admin/*.admin.yaml', 1, [1]),
-            new SpecFormat('upload_profile_spec', 'Upload profile spec files under app/specs/uploads/*.uploads.yaml', 1, [1]),
-            new SpecFormat('listing_config_spec', 'Listing config spec files under app/specs/listing/*.list.yaml', 1, [1]),
+            new DefinitionFormat('starter_definition', 'Starter kit definition files under app/definitions/starters/*.starter.yaml', 1, [1]),
+            new DefinitionFormat('resource_definition', 'Resource definition files under app/definitions/resources/*.resource.yaml', 1, [1]),
+            new DefinitionFormat('admin_resource_definition', 'Admin resource definition files under app/definitions/admin/*.admin.yaml', 1, [1]),
+            new DefinitionFormat('upload_profile_definition', 'Upload profile definition files under app/definitions/uploads/*.uploads.yaml', 1, [1]),
+            new DefinitionFormat('listing_config_definition', 'Listing config definition files under app/definitions/listing/*.list.yaml', 1, [1]),
         ];
     }
 
@@ -130,7 +130,7 @@ final class FoundationCompilerExtension extends AbstractCompilerExtension
      */
     public function codemods(): array
     {
-        return [new FoundationSpecNormalizeCodemod()];
+        return [new FoundationDefinitionNormalizeCodemod()];
     }
 
     /**
@@ -149,7 +149,7 @@ final class FoundationCompilerExtension extends AbstractCompilerExtension
                 frameworkVersionConstraint: '*',
                 graphVersionConstraint: '^1',
                 generators: ['generate starter server-rendered', 'generate starter api'],
-                specFormats: ['starter_spec'],
+                definitionFormats: ['starter_definition'],
                 migrationRules: [],
                 verifiers: ['verify resource'],
                 examples: ['examples/app-scaffolding/starter'],
@@ -163,8 +163,8 @@ final class FoundationCompilerExtension extends AbstractCompilerExtension
                 requiredCapabilities: ['runtime.pipeline', 'compiler.core'],
                 frameworkVersionConstraint: '*',
                 graphVersionConstraint: '^1',
-                generators: ['generate resource <name> --spec=<file>'],
-                specFormats: ['resource_spec', 'listing_config_spec'],
+                generators: ['generate resource <name> --definition=<file>'],
+                definitionFormats: ['resource_definition', 'listing_config_definition'],
                 migrationRules: [],
                 verifiers: ['verify resource'],
                 examples: ['examples/app-scaffolding/blog'],
@@ -179,7 +179,7 @@ final class FoundationCompilerExtension extends AbstractCompilerExtension
                 frameworkVersionConstraint: '*',
                 graphVersionConstraint: '^1',
                 generators: ['generate admin-resource <name>'],
-                specFormats: ['admin_resource_spec'],
+                definitionFormats: ['admin_resource_definition'],
                 migrationRules: [],
                 verifiers: ['verify resource'],
                 examples: ['examples/app-scaffolding/admin'],
@@ -194,7 +194,7 @@ final class FoundationCompilerExtension extends AbstractCompilerExtension
                 frameworkVersionConstraint: '*',
                 graphVersionConstraint: '^1',
                 generators: ['generate uploads avatar', 'generate uploads attachments'],
-                specFormats: ['upload_profile_spec'],
+                definitionFormats: ['upload_profile_definition'],
                 migrationRules: [],
                 verifiers: ['verify resource'],
                 examples: ['examples/app-scaffolding/uploads'],
@@ -208,8 +208,8 @@ final class FoundationCompilerExtension extends AbstractCompilerExtension
                 requiredCapabilities: ['resource.crud'],
                 frameworkVersionConstraint: '*',
                 graphVersionConstraint: '^1',
-                generators: ['generate resource <name> --spec=<file>'],
-                specFormats: ['listing_config_spec'],
+                generators: ['generate resource <name> --definition=<file>'],
+                definitionFormats: ['listing_config_definition'],
                 migrationRules: [],
                 verifiers: ['verify resource'],
                 examples: ['examples/app-scaffolding/listing'],

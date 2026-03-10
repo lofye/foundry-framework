@@ -102,10 +102,10 @@ Verify graph:
 php vendor/bin/foundry verify graph --json
 ```
 
-Migrate specs:
+Migrate definitions:
 ```bash
-php vendor/bin/foundry migrate specs --dry-run --json
-php vendor/bin/foundry migrate specs --write --json
+php vendor/bin/foundry migrate definitions --dry-run --json
+php vendor/bin/foundry migrate definitions --write --json
 ```
 
 ## Diagnostics
@@ -153,11 +153,11 @@ Inspect registered extensions:
 php vendor/bin/foundry inspect extensions --json
 ```
 
-## Spec migration and codemods
+## Definition migration and codemods
 compiler foundation includes migration foundations:
 - `ManifestVersionResolver`
 - `MigrationRule`
-- `SpecMigrator`
+- `DefinitionMigrator`
 
 Current core migration upgrades feature manifests to v2 conventions.
 

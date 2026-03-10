@@ -16,30 +16,30 @@ use Foundry\Compiler\IR\SearchIndexNode;
 use Foundry\Compiler\IR\StreamNode;
 use Foundry\Compiler\IR\WorkflowNode;
 
-final class PlatformSpecPass implements CompilerPass
+final class PlatformDefinitionPass implements CompilerPass
 {
     public function name(): string
     {
-        return 'platform_specs';
+        return 'platform_definitions';
     }
 
     public function run(CompilationState $state): void
     {
-        $specs = $state->discoveredSpecs;
-        if ($specs === []) {
+        $definitions = $state->discoveredDefinitions;
+        if ($definitions === []) {
             return;
         }
 
-        $knownRoles = $this->processRoles($state, (array) ($specs['roles'] ?? []));
-        $this->processPolicies($state, (array) ($specs['policy'] ?? []), $knownRoles);
+        $knownRoles = $this->processRoles($state, (array) ($definitions['roles'] ?? []));
+        $this->processPolicies($state, (array) ($definitions['policy'] ?? []), $knownRoles);
 
-        $this->processBilling($state, (array) ($specs['billing'] ?? []));
-        $this->processWorkflows($state, (array) ($specs['workflow'] ?? []));
-        $this->processOrchestrations($state, (array) ($specs['orchestration'] ?? []));
-        $this->processSearchIndexes($state, (array) ($specs['search_index'] ?? []));
-        $this->processStreams($state, (array) ($specs['stream'] ?? []));
-        $this->processLocales($state, (array) ($specs['locale_bundle'] ?? []));
-        $this->processInspectUi($state, (array) ($specs['inspect_ui'] ?? []));
+        $this->processBilling($state, (array) ($definitions['billing'] ?? []));
+        $this->processWorkflows($state, (array) ($definitions['workflow'] ?? []));
+        $this->processOrchestrations($state, (array) ($definitions['orchestration'] ?? []));
+        $this->processSearchIndexes($state, (array) ($definitions['search_index'] ?? []));
+        $this->processStreams($state, (array) ($definitions['stream'] ?? []));
+        $this->processLocales($state, (array) ($definitions['locale_bundle'] ?? []));
+        $this->processInspectUi($state, (array) ($definitions['inspect_ui'] ?? []));
     }
 
     /**
@@ -58,9 +58,9 @@ final class PlatformSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2401_BILLING_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2401_BILLING_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported billing spec version %d for provider %s.', $version, $provider),
+                    message: sprintf('Unsupported billing definition version %d for provider %s.', $version, $provider),
                     nodeId: 'billing:' . $provider,
                     sourcePath: $sourcePath,
                     suggestedFix: 'Set version: 1 or run migrations.',
@@ -194,9 +194,9 @@ final class PlatformSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2410_WORKFLOW_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2410_WORKFLOW_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported workflow spec version %d for %s.', $version, $resource),
+                    message: sprintf('Unsupported workflow definition version %d for %s.', $version, $resource),
                     nodeId: 'workflow:' . $resource,
                     sourcePath: $sourcePath,
                     pass: $this->name(),
@@ -332,9 +332,9 @@ final class PlatformSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2420_ORCHESTRATION_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2420_ORCHESTRATION_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported orchestration spec version %d for %s.', $version, $name),
+                    message: sprintf('Unsupported orchestration definition version %d for %s.', $version, $name),
                     nodeId: 'orchestration:' . $name,
                     sourcePath: $sourcePath,
                     pass: $this->name(),
@@ -468,9 +468,9 @@ final class PlatformSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2430_SEARCH_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2430_SEARCH_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported search spec version %d for %s.', $version, $index),
+                    message: sprintf('Unsupported search definition version %d for %s.', $version, $index),
                     nodeId: 'search_index:' . $index,
                     sourcePath: $sourcePath,
                     pass: $this->name(),
@@ -548,9 +548,9 @@ final class PlatformSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2440_STREAM_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2440_STREAM_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported stream spec version %d for %s.', $version, $name),
+                    message: sprintf('Unsupported stream definition version %d for %s.', $version, $name),
                     nodeId: 'stream:' . $name,
                     sourcePath: $sourcePath,
                     pass: $this->name(),
@@ -638,9 +638,9 @@ final class PlatformSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2450_LOCALE_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2450_LOCALE_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported locale spec version %d for bundle %s.', $version, $bundle),
+                    message: sprintf('Unsupported locale definition version %d for bundle %s.', $version, $bundle),
                     nodeId: 'locale_bundle:' . $bundle,
                     sourcePath: $sourcePath,
                     pass: $this->name(),
@@ -692,9 +692,9 @@ final class PlatformSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2460_ROLES_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2460_ROLES_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported roles spec version %d for set %s.', $version, $setName),
+                    message: sprintf('Unsupported roles definition version %d for set %s.', $version, $setName),
                     nodeId: 'role_set:' . $setName,
                     sourcePath: $sourcePath,
                     pass: $this->name(),
@@ -709,7 +709,7 @@ final class PlatformSpecPass implements CompilerPass
                     $state->diagnostics->error(
                         code: 'FDY2461_ROLE_DUPLICATE',
                         category: 'roles',
-                        message: sprintf('Duplicate role %s found across role specs.', $roleName),
+                        message: sprintf('Duplicate role %s found across role definitions.', $roleName),
                         nodeId: 'role:' . $roleName,
                         sourcePath: $sourcePath,
                         pass: $this->name(),
@@ -778,9 +778,9 @@ final class PlatformSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2470_POLICY_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2470_POLICY_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported policy spec version %d for %s.', $version, $policy),
+                    message: sprintf('Unsupported policy definition version %d for %s.', $version, $policy),
                     nodeId: 'policy:' . $policy,
                     sourcePath: $sourcePath,
                     pass: $this->name(),
@@ -854,9 +854,9 @@ final class PlatformSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2480_INSPECT_UI_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2480_INSPECT_UI_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported inspect UI spec version %d for %s.', $version, $name),
+                    message: sprintf('Unsupported inspect UI definition version %d for %s.', $version, $name),
                     nodeId: 'inspect_ui:' . $name,
                     sourcePath: $sourcePath,
                     pass: $this->name(),

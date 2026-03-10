@@ -18,8 +18,8 @@ final class CLIIntegrationCommandsTest extends TestCase
         $this->cwd = getcwd() ?: '.';
         chdir($this->project->root);
 
-        mkdir($this->project->root . '/specs', 0777, true);
-        file_put_contents($this->project->root . '/specs/posts.api-resource.yaml', <<<'YAML'
+        mkdir($this->project->root . '/definitions', 0777, true);
+        file_put_contents($this->project->root . '/definitions/posts.api-resource.yaml', <<<'YAML'
 version: 1
 resource: posts
 style: api
@@ -57,10 +57,10 @@ YAML);
         $this->assertSame(0, $notification['status']);
         $this->assertSame('welcome_email', $notification['payload']['notification']);
 
-        $apiResource = $this->runCommand($app, ['foundry', 'generate', 'api-resource', 'posts', '--spec=specs/posts.api-resource.yaml', '--json']);
+        $apiResource = $this->runCommand($app, ['foundry', 'generate', 'api-resource', 'posts', '--definition=definitions/posts.api-resource.yaml', '--json']);
         $this->assertSame(0, $apiResource['status']);
         $this->assertContains('api_create_post', $apiResource['payload']['features']);
-        $this->assertFileExists($this->project->root . '/app/specs/api/posts.api-resource.yaml');
+        $this->assertFileExists($this->project->root . '/app/definitions/api/posts.api-resource.yaml');
 
         $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json']);
         $this->assertSame(0, $compile['status']);

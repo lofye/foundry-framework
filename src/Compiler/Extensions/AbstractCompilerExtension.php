@@ -7,7 +7,7 @@ use Foundry\Compiler\Analysis\GraphAnalyzer;
 use Foundry\Compiler\Codemod\Codemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
-use Foundry\Compiler\Migration\SpecFormat;
+use Foundry\Compiler\Migration\DefinitionFormat;
 use Foundry\Compiler\Projection\ProjectionEmitter;
 use Foundry\Pipeline\PipelineStageDefinition;
 use Foundry\Pipeline\StageInterceptor;
@@ -82,8 +82,8 @@ abstract class AbstractCompilerExtension implements CompilerExtension
         return [];
     }
 
-    /** @return array<int,SpecFormat> */
-    public function specFormats(): array
+    /** @return array<int,DefinitionFormat> */
+    public function definitionFormats(): array
     {
         return [];
     }
@@ -147,9 +147,9 @@ abstract class AbstractCompilerExtension implements CompilerExtension
                 static fn (PackDefinition $pack): string => $pack->name,
                 $this->packs(),
             )),
-            'spec_formats' => array_values(array_map(
-                static fn (SpecFormat $format): string => $format->name,
-                $this->specFormats(),
+            'definition_formats' => array_values(array_map(
+                static fn (DefinitionFormat $format): string => $format->name,
+                $this->definitionFormats(),
             )),
             'codemods' => array_values(array_map(
                 static fn (Codemod $codemod): string => $codemod->id(),

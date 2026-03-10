@@ -6,21 +6,21 @@ namespace Foundry\Compiler\Codemod;
 use Foundry\Support\Paths;
 use Foundry\Support\Yaml;
 
-final class IntegrationSpecNormalizeCodemod implements Codemod
+final class IntegrationDefinitionNormalizeCodemod implements Codemod
 {
     public function id(): string
     {
-        return 'integration-spec-v1-normalize';
+        return 'integration-definition-v1-normalize';
     }
 
     public function description(): string
     {
-        return 'Normalize integration specs by setting version: 1 and canonical key ordering.';
+        return 'Normalize integration definitions by setting version: 1 and canonical key ordering.';
     }
 
     public function sourceType(): string
     {
-        return 'integration_spec';
+        return 'integration_definition';
     }
 
     public function run(Paths $paths, bool $write = false, ?string $path = null): CodemodResult
@@ -28,13 +28,13 @@ final class IntegrationSpecNormalizeCodemod implements Codemod
         $changes = [];
         $diagnostics = [];
 
-        foreach ($this->specPaths($paths, $path) as $absolute) {
+        foreach ($this->definitionPaths($paths, $path) as $absolute) {
             $relative = $this->relativePath($paths, $absolute);
             try {
                 $document = Yaml::parseFile($absolute);
             } catch (\Throwable $error) {
                 $diagnostics[] = [
-                    'code' => 'FDY2315_INTEGRATION_SPEC_PARSE_ERROR',
+                    'code' => 'FDY2315_INTEGRATION_DEFINITION_PARSE_ERROR',
                     'severity' => 'error',
                     'category' => 'migrations',
                     'message' => $error->getMessage(),
@@ -73,7 +73,7 @@ final class IntegrationSpecNormalizeCodemod implements Codemod
     /**
      * @return array<int,string>
      */
-    private function specPaths(Paths $paths, ?string $path): array
+    private function definitionPaths(Paths $paths, ?string $path): array
     {
         if ($path !== null && $path !== '') {
             $candidate = str_starts_with($path, $paths->root() . '/') ? $path : $paths->join($path);
@@ -82,8 +82,8 @@ final class IntegrationSpecNormalizeCodemod implements Codemod
         }
 
         $files = array_merge(
-            glob($paths->join('app/specs/notifications/*.notification.yaml')) ?: [],
-            glob($paths->join('app/specs/api/*.api-resource.yaml')) ?: [],
+            glob($paths->join('app/definitions/notifications/*.notification.yaml')) ?: [],
+            glob($paths->join('app/definitions/api/*.api-resource.yaml')) ?: [],
         );
         sort($files);
 
@@ -146,9 +146,9 @@ final class IntegrationSpecNormalizeCodemod implements Codemod
     private function formatForPath(string $path): string
     {
         return match (true) {
-            str_ends_with($path, '.notification.yaml') => 'notification_spec',
-            str_ends_with($path, '.api-resource.yaml') => 'api_resource_spec',
-            default => 'integration_spec',
+            str_ends_with($path, '.notification.yaml') => 'notification_definition',
+            str_ends_with($path, '.api-resource.yaml') => 'api_resource_definition',
+            default => 'integration_definition',
         };
     }
 }

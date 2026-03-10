@@ -89,10 +89,10 @@ final class DeepTestGeneratorTest extends TestCase
 
     public function test_generates_tests_for_resource_or_api_resource_target(): void
     {
-        mkdir($this->project->root . '/app/specs/resources', 0777, true);
-        mkdir($this->project->root . '/app/specs/api', 0777, true);
+        mkdir($this->project->root . '/app/definitions/resources', 0777, true);
+        mkdir($this->project->root . '/app/definitions/api', 0777, true);
 
-        file_put_contents($this->project->root . '/app/specs/resources/posts.resource.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/resources/posts.resource.yaml', <<<'YAML'
 version: 1
 resource: posts
 features: [create]
@@ -100,7 +100,7 @@ feature_names:
   create: api_create_post
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/api/posts.api-resource.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/api/posts.api-resource.yaml', <<<'YAML'
 version: 1
 resource: posts
 style: api
@@ -150,7 +150,7 @@ YAML);
         $graph = new ApplicationGraph(1, '0.1.0', '2026-03-09T00:00:00+00:00', 'hash');
         $graph->addNode(new ResourceNode(
             'resource:empty_resource',
-            'app/specs/resources/empty.resource.yaml',
+            'app/definitions/resources/empty.resource.yaml',
             [
                 'resource' => 'empty_resource',
                 'feature_map' => [],
@@ -172,11 +172,11 @@ YAML);
     public function test_deep_mode_includes_not_found_and_notification_dispatch_scenarios(): void
     {
         $this->createFeature('api_view_post', 'GET', '/api/posts/{id}');
-        mkdir($this->project->root . '/app/specs/notifications', 0777, true);
+        mkdir($this->project->root . '/app/definitions/notifications', 0777, true);
         mkdir($this->project->root . '/app/notifications/templates', 0777, true);
         mkdir($this->project->root . '/app/notifications/schemas', 0777, true);
 
-        file_put_contents($this->project->root . '/app/specs/notifications/post_viewed.notification.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/notifications/post_viewed.notification.yaml', <<<'YAML'
 version: 1
 notification: post_viewed
 channel: mail
@@ -252,7 +252,7 @@ rate_limit:
 tests:
   required: [contract, feature, auth]
 listing:
-  spec: app/specs/listing/posts.list.yaml
+  definition: app/definitions/listing/posts.list.yaml
 llm:
   editable: true
   risk_level: low

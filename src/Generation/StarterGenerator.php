@@ -32,14 +32,14 @@ final class StarterGenerator
 
         $generatedFeatures = [];
         $generatedFiles = [];
-        foreach ($this->starterSpecs($starter) as $spec) {
-            $generatedFeatures[] = (string) $spec['feature'];
-            foreach ($this->featureGenerator->generateFromArray($spec, $force) as $path) {
+        foreach ($this->starterDefinitions($starter) as $definition) {
+            $generatedFeatures[] = (string) $definition['feature'];
+            foreach ($this->featureGenerator->generateFromArray($definition, $force) as $path) {
                 $generatedFiles[] = $path;
             }
         }
 
-        foreach ($this->writeStarterSpec($starter, $generatedFeatures, $name, $force) as $path) {
+        foreach ($this->writeStarterDefinition($starter, $generatedFeatures, $name, $force) as $path) {
             $generatedFiles[] = $path;
         }
 
@@ -61,41 +61,41 @@ final class StarterGenerator
     /**
      * @return array<int,array<string,mixed>>
      */
-    private function starterSpecs(string $starter): array
+    private function starterDefinitions(string $starter): array
     {
         return $starter === 'server-rendered'
-            ? $this->serverRenderedSpecs()
-            : $this->apiSpecs();
+            ? $this->serverRenderedDefinitions()
+            : $this->apiDefinitions();
     }
 
     /**
      * @return array<int,array<string,mixed>>
      */
-    private function serverRenderedSpecs(): array
+    private function serverRenderedDefinitions(): array
     {
         return [
-            $this->featureSpec('register_user', 'POST', '/register', false, ['session'], [], true),
-            $this->featureSpec('login_user', 'POST', '/login', false, ['session'], [], true),
-            $this->featureSpec('logout_user', 'POST', '/logout', true, ['session'], [], true),
-            $this->featureSpec('request_password_reset', 'POST', '/password/forgot', false, ['session'], [], true),
-            $this->featureSpec('reset_password', 'POST', '/password/reset', false, ['session'], [], true),
-            $this->featureSpec('verify_email', 'POST', '/email/verify', true, ['session'], ['users.verify_email'], true),
-            $this->featureSpec('view_account_settings', 'GET', '/account/settings', true, ['session'], ['users.settings.view'], false),
-            $this->featureSpec('update_account_settings', 'POST', '/account/settings', true, ['session'], ['users.settings.update'], true),
-            $this->featureSpec('view_dashboard', 'GET', '/dashboard', true, ['session'], ['users.dashboard.view'], false),
+            $this->featureDefinition('register_user', 'POST', '/register', false, ['session'], [], true),
+            $this->featureDefinition('login_user', 'POST', '/login', false, ['session'], [], true),
+            $this->featureDefinition('logout_user', 'POST', '/logout', true, ['session'], [], true),
+            $this->featureDefinition('request_password_reset', 'POST', '/password/forgot', false, ['session'], [], true),
+            $this->featureDefinition('reset_password', 'POST', '/password/reset', false, ['session'], [], true),
+            $this->featureDefinition('verify_email', 'POST', '/email/verify', true, ['session'], ['users.verify_email'], true),
+            $this->featureDefinition('view_account_settings', 'GET', '/account/settings', true, ['session'], ['users.settings.view'], false),
+            $this->featureDefinition('update_account_settings', 'POST', '/account/settings', true, ['session'], ['users.settings.update'], true),
+            $this->featureDefinition('view_dashboard', 'GET', '/dashboard', true, ['session'], ['users.dashboard.view'], false),
         ];
     }
 
     /**
      * @return array<int,array<string,mixed>>
      */
-    private function apiSpecs(): array
+    private function apiDefinitions(): array
     {
         return [
-            $this->featureSpec('api_login', 'POST', '/api/login', false, ['bearer'], [], false),
-            $this->featureSpec('api_logout', 'POST', '/api/logout', true, ['bearer'], ['api.logout'], false),
-            $this->featureSpec('api_revoke_token', 'POST', '/api/tokens/revoke', true, ['bearer'], ['api.tokens.revoke'], false),
-            $this->featureSpec('api_me', 'GET', '/api/me', true, ['bearer'], ['api.me.view'], false),
+            $this->featureDefinition('api_login', 'POST', '/api/login', false, ['bearer'], [], false),
+            $this->featureDefinition('api_logout', 'POST', '/api/logout', true, ['bearer'], ['api.logout'], false),
+            $this->featureDefinition('api_revoke_token', 'POST', '/api/tokens/revoke', true, ['bearer'], ['api.tokens.revoke'], false),
+            $this->featureDefinition('api_me', 'GET', '/api/me', true, ['bearer'], ['api.me.view'], false),
         ];
     }
 
@@ -104,7 +104,7 @@ final class StarterGenerator
      * @param array<int,string> $permissions
      * @return array<string,mixed>
      */
-    private function featureSpec(
+    private function featureDefinition(
         string $feature,
         string $method,
         string $path,
@@ -179,9 +179,9 @@ final class StarterGenerator
      * @param array<int,string> $features
      * @return array<int,string>
      */
-    private function writeStarterSpec(string $starter, array $features, ?string $name, bool $force): array
+    private function writeStarterDefinition(string $starter, array $features, ?string $name, bool $force): array
     {
-        $dir = $this->paths->join('app/specs/starters');
+        $dir = $this->paths->join('app/definitions/starters');
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
@@ -189,10 +189,10 @@ final class StarterGenerator
         $path = $dir . '/' . $starter . '.starter.yaml';
         if (is_file($path) && !$force) {
             throw new FoundryError(
-                'STARTER_SPEC_EXISTS',
+                'STARTER_DEFINITION_EXISTS',
                 'io',
                 ['path' => $path],
-                'Starter spec already exists. Use --force to overwrite.',
+                'Starter definition already exists. Use --force to overwrite.',
             );
         }
 

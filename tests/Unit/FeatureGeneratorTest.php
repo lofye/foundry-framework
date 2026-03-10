@@ -22,10 +22,10 @@ final class FeatureGeneratorTest extends TestCase
         $this->project->cleanup();
     }
 
-    public function test_generates_feature_from_spec(): void
+    public function test_generates_feature_from_definition(): void
     {
-        $specPath = $this->project->root . '/publish_post.yaml';
-        file_put_contents($specPath, <<<'YAML'
+        $definitionPath = $this->project->root . '/publish_post.yaml';
+        file_put_contents($definitionPath, <<<'YAML'
 version: 1
 feature: publish_post
 kind: http
@@ -63,7 +63,7 @@ tests:
 YAML);
 
         $generator = new FeatureGenerator(Paths::fromCwd($this->project->root));
-        $files = $generator->generateFromSpec($specPath);
+        $files = $generator->generateFromDefinition($definitionPath);
 
         $this->assertNotEmpty($files);
         $this->assertFileExists($this->project->root . '/app/features/publish_post/feature.yaml');

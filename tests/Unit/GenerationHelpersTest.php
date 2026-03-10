@@ -33,7 +33,7 @@ final class GenerationHelpersTest extends TestCase
 
     public function test_schema_generator_builds_schema_from_fields(): void
     {
-        $schema = (new SchemaGenerator())->fromFieldSpec('input_title', [
+        $schema = (new SchemaGenerator())->fromFieldDefinition('input_title', [
             'fields' => [
                 'title' => ['type' => 'string', 'required' => true, 'minLength' => 1],
                 'slug' => ['type' => 'string', 'required' => false],
@@ -47,10 +47,10 @@ final class GenerationHelpersTest extends TestCase
 
     public function test_migration_generator_writes_sql_file(): void
     {
-        $spec = $this->project->root . '/migration.yaml';
-        file_put_contents($spec, "name: add_posts\ntable: posts\n");
+        $definition = $this->project->root . '/migration.yaml';
+        file_put_contents($definition, "name: add_posts\ntable: posts\n");
 
-        $path = (new MigrationGenerator())->generate($spec, $this->project->root . '/app/platform/migrations');
+        $path = (new MigrationGenerator())->generate($definition, $this->project->root . '/app/platform/migrations');
 
         $this->assertFileExists($path);
         $this->assertStringContainsString('CREATE TABLE IF NOT EXISTS posts', (string) file_get_contents($path));

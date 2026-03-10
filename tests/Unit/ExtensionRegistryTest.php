@@ -12,7 +12,7 @@ use Foundry\Compiler\Extensions\ExtensionDescriptor;
 use Foundry\Compiler\Extensions\ExtensionRegistry;
 use Foundry\Compiler\Extensions\PackDefinition;
 use Foundry\Compiler\Migration\MigrationRule;
-use Foundry\Compiler\Migration\SpecFormat;
+use Foundry\Compiler\Migration\DefinitionFormat;
 use Foundry\Compiler\Projection\GenericProjectionEmitter;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Paths;
@@ -113,9 +113,9 @@ final class ExtensionRegistryTest extends TestCase
             }
             public function migrationRules(): array { return [$this->rule]; }
             public function codemods(): array { return [$this->codemod]; }
-            public function specFormats(): array
+            public function definitionFormats(): array
             {
-                return [new SpecFormat('feature_manifest', 'Feature manifest', 2, [1, 2])];
+                return [new DefinitionFormat('feature_manifest', 'Feature manifest', 2, [1, 2])];
             }
             public function enrichPasses(): array { return [$this->pass]; }
             public function passPriority(string $stage, CompilerPass $pass): int { return 10; }
@@ -159,7 +159,7 @@ final class ExtensionRegistryTest extends TestCase
         $this->assertSame('B_RULE', $rules[1]->id());
 
         $this->assertSame('a-pack', $registry->packRegistry()->all()[0]->name);
-        $this->assertSame('feature_manifest', $registry->specFormats()[0]->name);
+        $this->assertSame('feature_manifest', $registry->definitionFormats()[0]->name);
         $this->assertSame('a-codemod', $registry->codemods()[0]->id());
 
         $passes = $registry->passesForStage('enrich');

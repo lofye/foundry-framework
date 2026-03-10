@@ -146,8 +146,8 @@ final class DiscoveryPass implements CompilerPass
         }
 
         ksort($state->discoveredFeatures);
-        $state->discoveredSpecs = $this->discoverSpecs($state);
-        $state->analysis['discovered_specs'] = $state->discoveredSpecs;
+        $state->discoveredDefinitions = $this->discoverDefinitions($state);
+        $state->analysis['discovered_definitions'] = $state->discoveredDefinitions;
     }
 
     private function normalizeSchemaPath(string $feature, string $path): string
@@ -256,25 +256,25 @@ final class DiscoveryPass implements CompilerPass
     /**
      * @return array<string,array<string,array<string,mixed>>>
      */
-    private function discoverSpecs(CompilationState $state): array
+    private function discoverDefinitions(CompilationState $state): array
     {
         $map = [
-            'starter' => 'app/specs/starters/*.starter.yaml',
-            'resource' => 'app/specs/resources/*.resource.yaml',
-            'admin_resource' => 'app/specs/admin/*.admin.yaml',
-            'upload_profile' => 'app/specs/uploads/*.uploads.yaml',
-            'listing_config' => 'app/specs/listing/*.list.yaml',
-            'notification' => 'app/specs/notifications/*.notification.yaml',
-            'api_resource' => 'app/specs/api/*.api-resource.yaml',
-            'billing' => 'app/specs/billing/*.billing.yaml',
-            'workflow' => 'app/specs/workflows/*.workflow.yaml',
-            'orchestration' => 'app/specs/orchestrations/*.orchestration.yaml',
-            'search_index' => 'app/specs/search/*.search.yaml',
-            'stream' => 'app/specs/streams/*.stream.yaml',
-            'locale_bundle' => 'app/specs/locales/*.locale.yaml',
-            'roles' => 'app/specs/roles/*.roles.yaml',
-            'policy' => 'app/specs/policies/*.policy.yaml',
-            'inspect_ui' => 'app/specs/inspect-ui/*.inspect-ui.yaml',
+            'starter' => 'app/definitions/starters/*.starter.yaml',
+            'resource' => 'app/definitions/resources/*.resource.yaml',
+            'admin_resource' => 'app/definitions/admin/*.admin.yaml',
+            'upload_profile' => 'app/definitions/uploads/*.uploads.yaml',
+            'listing_config' => 'app/definitions/listing/*.list.yaml',
+            'notification' => 'app/definitions/notifications/*.notification.yaml',
+            'api_resource' => 'app/definitions/api/*.api-resource.yaml',
+            'billing' => 'app/definitions/billing/*.billing.yaml',
+            'workflow' => 'app/definitions/workflows/*.workflow.yaml',
+            'orchestration' => 'app/definitions/orchestrations/*.orchestration.yaml',
+            'search_index' => 'app/definitions/search/*.search.yaml',
+            'stream' => 'app/definitions/streams/*.stream.yaml',
+            'locale_bundle' => 'app/definitions/locales/*.locale.yaml',
+            'roles' => 'app/definitions/roles/*.roles.yaml',
+            'policy' => 'app/definitions/policies/*.policy.yaml',
+            'inspect_ui' => 'app/definitions/inspect-ui/*.inspect-ui.yaml',
         ];
 
         $discovered = [];
@@ -287,7 +287,7 @@ final class DiscoveryPass implements CompilerPass
                 $document = $this->safeYaml(
                     state: $state,
                     path: $path,
-                    code: 'FDY2100_SPEC_PARSE_ERROR',
+                    code: 'FDY2100_DEFINITION_PARSE_ERROR',
                     category: 'discovery',
                     optional: false,
                 );
@@ -295,7 +295,7 @@ final class DiscoveryPass implements CompilerPass
                     continue;
                 }
 
-                $name = $this->specName($type, $document, $path);
+                $name = $this->definitionName($type, $document, $path);
                 if ($name === '') {
                     continue;
                 }
@@ -321,7 +321,7 @@ final class DiscoveryPass implements CompilerPass
     /**
      * @param array<string,mixed> $document
      */
-    private function specName(string $type, array $document, string $path): string
+    private function definitionName(string $type, array $document, string $path): string
     {
         $name = match ($type) {
             'starter' => (string) ($document['starter'] ?? ''),

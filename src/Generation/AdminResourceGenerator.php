@@ -19,42 +19,42 @@ final class AdminResourceGenerator
     /**
      * @return array<string,mixed>
      */
-    public function generate(string $name, ?string $specPath = null, bool $force = false): array
+    public function generate(string $name, ?string $definitionPath = null, bool $force = false): array
     {
         $resource = Str::toSnakeCase($name);
         if ($resource === '') {
             throw new FoundryError('ADMIN_RESOURCE_NAME_INVALID', 'validation', ['resource' => $name], 'Admin resource name is invalid.');
         }
 
-        $spec = $this->resolveSpec($resource, $specPath);
+        $definition = $this->resolveDefinition($resource, $definitionPath);
         $singular = $this->singularize($resource);
 
-        $columns = array_values(array_map('strval', (array) ($spec['table']['columns'] ?? [])));
-        $filters = array_values(array_map('strval', (array) ($spec['filters'] ?? [])));
-        $bulkActions = array_values(array_map('strval', (array) ($spec['bulk_actions'] ?? [])));
-        $rowActions = array_values(array_map('strval', (array) ($spec['row_actions'] ?? ['edit', 'delete'])));
+        $columns = array_values(array_map('strval', (array) ($definition['table']['columns'] ?? [])));
+        $filters = array_values(array_map('strval', (array) ($definition['filters'] ?? [])));
+        $bulkActions = array_values(array_map('strval', (array) ($definition['bulk_actions'] ?? [])));
+        $rowActions = array_values(array_map('strval', (array) ($definition['row_actions'] ?? ['edit', 'delete'])));
 
-        $featureSpecs = [
-            $this->adminFeatureSpec($resource, 'list', 'admin_list_' . $resource, 'GET', '/admin/' . $resource, $columns, $filters),
-            $this->adminFeatureSpec($resource, 'view', 'admin_view_' . $singular, 'GET', '/admin/' . $resource . '/{id}', $columns, $filters),
-            $this->adminFeatureSpec($resource, 'update', 'admin_update_' . $singular, 'POST', '/admin/' . $resource . '/{id}', $columns, $filters),
-            $this->adminFeatureSpec($resource, 'delete', 'admin_delete_' . $singular, 'POST', '/admin/' . $resource . '/{id}/delete', $columns, $filters),
+        $featureDefinitions = [
+            $this->adminFeatureDefinition($resource, 'list', 'admin_list_' . $resource, 'GET', '/admin/' . $resource, $columns, $filters),
+            $this->adminFeatureDefinition($resource, 'view', 'admin_view_' . $singular, 'GET', '/admin/' . $resource . '/{id}', $columns, $filters),
+            $this->adminFeatureDefinition($resource, 'update', 'admin_update_' . $singular, 'POST', '/admin/' . $resource . '/{id}', $columns, $filters),
+            $this->adminFeatureDefinition($resource, 'delete', 'admin_delete_' . $singular, 'POST', '/admin/' . $resource . '/{id}/delete', $columns, $filters),
         ];
 
         if ($bulkActions !== []) {
-            $featureSpecs[] = $this->adminFeatureSpec($resource, 'bulk', 'admin_bulk_update_' . $resource, 'POST', '/admin/' . $resource . '/bulk', $columns, $filters);
+            $featureDefinitions[] = $this->adminFeatureDefinition($resource, 'bulk', 'admin_bulk_update_' . $resource, 'POST', '/admin/' . $resource . '/bulk', $columns, $filters);
         }
 
         $generatedFeatures = [];
         $generatedFiles = [];
-        foreach ($featureSpecs as $featureSpec) {
-            $generatedFeatures[] = (string) $featureSpec['feature'];
-            foreach ($this->featureGenerator->generateFromArray($featureSpec, $force) as $path) {
+        foreach ($featureDefinitions as $featureDefinition) {
+            $generatedFeatures[] = (string) $featureDefinition['feature'];
+            foreach ($this->featureGenerator->generateFromArray($featureDefinition, $force) as $path) {
                 $generatedFiles[] = $path;
             }
         }
 
-        foreach ($this->writeSpec($resource, $columns, $filters, $bulkActions, $rowActions, $force) as $path) {
+        foreach ($this->writeDefinition($resource, $columns, $filters, $bulkActions, $rowActions, $force) as $path) {
             $generatedFiles[] = $path;
         }
 
@@ -65,21 +65,21 @@ final class AdminResourceGenerator
             'resource' => $resource,
             'features' => array_values(array_unique($generatedFeatures)),
             'files' => array_values(array_unique($generatedFiles)),
-            'spec' => $this->paths->join('app/specs/admin/' . $resource . '.admin.yaml'),
+            'definition' => $this->paths->join('app/definitions/admin/' . $resource . '.admin.yaml'),
         ];
     }
 
     /**
      * @return array<string,mixed>
      */
-    private function resolveSpec(string $resource, ?string $specPath): array
+    private function resolveDefinition(string $resource, ?string $definitionPath): array
     {
-        if ($specPath !== null && $specPath !== '') {
-            return Yaml::parseFile($specPath);
+        if ($definitionPath !== null && $definitionPath !== '') {
+            return Yaml::parseFile($definitionPath);
         }
 
-        $resourceSpecPath = $this->paths->join('app/specs/resources/' . $resource . '.resource.yaml');
-        if (!is_file($resourceSpecPath)) {
+        $resourceDefinitionPath = $this->paths->join('app/definitions/resources/' . $resource . '.resource.yaml');
+        if (!is_file($resourceDefinitionPath)) {
             return [
                 'resource' => $resource,
                 'table' => ['columns' => ['id', 'created_at']],
@@ -89,8 +89,8 @@ final class AdminResourceGenerator
             ];
         }
 
-        $resourceSpec = Yaml::parseFile($resourceSpecPath);
-        $fields = is_array($resourceSpec['fields'] ?? null) ? $resourceSpec['fields'] : [];
+        $resourceDefinition = Yaml::parseFile($resourceDefinitionPath);
+        $fields = is_array($resourceDefinition['fields'] ?? null) ? $resourceDefinition['fields'] : [];
         $columns = [];
         $filters = [];
         foreach ($fields as $field => $definition) {
@@ -122,7 +122,7 @@ final class AdminResourceGenerator
      * @param array<int,string> $filters
      * @return array<string,mixed>
      */
-    private function adminFeatureSpec(string $resource, string $operation, string $feature, string $method, string $path, array $columns, array $filters): array
+    private function adminFeatureDefinition(string $resource, string $operation, string $feature, string $method, string $path, array $columns, array $filters): array
     {
         return [
             'feature' => $feature,
@@ -169,7 +169,7 @@ final class AdminResourceGenerator
                 'admin' => true,
             ],
             'listing' => [
-                'spec' => 'app/specs/listing/' . $resource . '.list.yaml',
+                'definition' => 'app/definitions/listing/' . $resource . '.list.yaml',
                 'columns' => $columns,
                 'filters' => $filters,
             ],
@@ -190,16 +190,16 @@ final class AdminResourceGenerator
      * @param array<int,string> $rowActions
      * @return array<int,string>
      */
-    private function writeSpec(string $resource, array $columns, array $filters, array $bulkActions, array $rowActions, bool $force): array
+    private function writeDefinition(string $resource, array $columns, array $filters, array $bulkActions, array $rowActions, bool $force): array
     {
-        $dir = $this->paths->join('app/specs/admin');
+        $dir = $this->paths->join('app/definitions/admin');
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
 
         $path = $dir . '/' . $resource . '.admin.yaml';
         if (is_file($path) && !$force) {
-            throw new FoundryError('ADMIN_SPEC_EXISTS', 'io', ['path' => $path], 'Admin spec already exists. Use --force to overwrite.');
+            throw new FoundryError('ADMIN_DEFINITION_EXISTS', 'io', ['path' => $path], 'Admin definition already exists. Use --force to overwrite.');
         }
 
         $document = [

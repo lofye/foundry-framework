@@ -33,17 +33,17 @@ final class CLIPlatformCommandErrorsTest extends TestCase
         $this->assertSame(1, $billingMissingProvider['status']);
         $this->assertSame('CLI_BILLING_PROVIDER_REQUIRED', $billingMissingProvider['payload']['error']['code']);
 
-        $workflowMissingSpec = $this->runCommand($app, ['foundry', 'generate', 'workflow', 'posts', '--json']);
-        $this->assertSame(1, $workflowMissingSpec['status']);
-        $this->assertSame('CLI_WORKFLOW_SPEC_REQUIRED', $workflowMissingSpec['payload']['error']['code']);
+        $workflowMissingDefinition = $this->runCommand($app, ['foundry', 'generate', 'workflow', 'posts', '--json']);
+        $this->assertSame(1, $workflowMissingDefinition['status']);
+        $this->assertSame('CLI_WORKFLOW_DEFINITION_REQUIRED', $workflowMissingDefinition['payload']['error']['code']);
 
         $orchestrationMissingName = $this->runCommand($app, ['foundry', 'generate', 'orchestration', '--json']);
         $this->assertSame(1, $orchestrationMissingName['status']);
         $this->assertSame('CLI_ORCHESTRATION_REQUIRED', $orchestrationMissingName['payload']['error']['code']);
 
-        $searchMissingSpec = $this->runCommand($app, ['foundry', 'generate', 'search-index', 'posts', '--json']);
-        $this->assertSame(1, $searchMissingSpec['status']);
-        $this->assertSame('CLI_SEARCH_SPEC_REQUIRED', $searchMissingSpec['payload']['error']['code']);
+        $searchMissingDefinition = $this->runCommand($app, ['foundry', 'generate', 'search-index', 'posts', '--json']);
+        $this->assertSame(1, $searchMissingDefinition['status']);
+        $this->assertSame('CLI_SEARCH_DEFINITION_REQUIRED', $searchMissingDefinition['payload']['error']['code']);
 
         $streamMissingName = $this->runCommand($app, ['foundry', 'generate', 'stream', '--json']);
         $this->assertSame(1, $streamMissingName['status']);

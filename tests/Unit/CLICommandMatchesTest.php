@@ -18,7 +18,7 @@ use Foundry\CLI\Commands\InspectFeatureCommand;
 use Foundry\CLI\Commands\InspectNotificationCommand;
 use Foundry\CLI\Commands\InspectResourceCommand;
 use Foundry\CLI\Commands\InspectRouteCommand;
-use Foundry\CLI\Commands\MigrateSpecsCommand;
+use Foundry\CLI\Commands\MigrateDefinitionsCommand;
 use Foundry\CLI\Commands\DoctorCommand;
 use Foundry\CLI\Commands\ExportOpenApiCommand;
 use Foundry\CLI\Commands\PreviewNotificationCommand;
@@ -54,7 +54,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'packs']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'pack', 'core.foundation']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'compatibility']));
-        $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'spec-format', 'feature_manifest']));
+        $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'definition-format', 'feature_manifest']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'pipeline']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'execution-plan', 'publish_post']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'guards', 'publish_post']));
@@ -65,16 +65,16 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new InitAppCommand())->matches(['init', 'app', './my-app']));
         $this->assertTrue((new GenerateFeatureCommand())->matches(['generate', 'feature', 'x.yaml']));
         $this->assertTrue((new GenerateScaffoldCommand())->matches(['generate', 'starter', 'api']));
-        $this->assertTrue((new GenerateScaffoldCommand())->matches(['generate', 'resource', 'posts', '--spec=specs/posts.resource.yaml']));
+        $this->assertTrue((new GenerateScaffoldCommand())->matches(['generate', 'resource', 'posts', '--definition=definitions/posts.resource.yaml']));
         $this->assertTrue((new GenerateScaffoldCommand())->matches(['generate', 'admin-resource', 'posts']));
         $this->assertTrue((new GenerateScaffoldCommand())->matches(['generate', 'uploads', 'avatar']));
         $this->assertTrue((new GenerateIntegrationCommand())->matches(['generate', 'notification', 'welcome_email']));
-        $this->assertTrue((new GenerateIntegrationCommand())->matches(['generate', 'api-resource', 'posts', '--spec=specs/posts.api-resource.yaml']));
+        $this->assertTrue((new GenerateIntegrationCommand())->matches(['generate', 'api-resource', 'posts', '--definition=definitions/posts.api-resource.yaml']));
         $this->assertTrue((new GenerateIntegrationCommand())->matches(['generate', 'docs', '--format=markdown']));
         $this->assertTrue((new GeneratePlatformCommand())->matches(['generate', 'billing', 'stripe']));
-        $this->assertTrue((new GeneratePlatformCommand())->matches(['generate', 'workflow', 'posts', '--spec=specs/posts.workflow.yaml']));
-        $this->assertTrue((new GeneratePlatformCommand())->matches(['generate', 'orchestration', 'process_doc', '--spec=specs/process_doc.orchestration.yaml']));
-        $this->assertTrue((new GeneratePlatformCommand())->matches(['generate', 'search-index', 'posts', '--spec=specs/posts.search.yaml']));
+        $this->assertTrue((new GeneratePlatformCommand())->matches(['generate', 'workflow', 'posts', '--definition=definitions/posts.workflow.yaml']));
+        $this->assertTrue((new GeneratePlatformCommand())->matches(['generate', 'orchestration', 'process_doc', '--definition=definitions/process_doc.orchestration.yaml']));
+        $this->assertTrue((new GeneratePlatformCommand())->matches(['generate', 'search-index', 'posts', '--definition=definitions/posts.search.yaml']));
         $this->assertTrue((new GeneratePlatformCommand())->matches(['generate', 'stream', 'job-progress']));
         $this->assertTrue((new GeneratePlatformCommand())->matches(['generate', 'locale', 'fr']));
         $this->assertTrue((new GeneratePlatformCommand())->matches(['generate', 'roles']));
@@ -115,7 +115,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new QueueWorkCommand())->matches(['queue:work']));
         $this->assertTrue((new ScheduleRunCommand())->matches(['schedule:run']));
         $this->assertTrue((new ImpactCommand())->matches(['affected-files', 'x']));
-        $this->assertTrue((new MigrateSpecsCommand())->matches(['migrate', 'specs', '--dry-run']));
+        $this->assertTrue((new MigrateDefinitionsCommand())->matches(['migrate', 'definitions', '--dry-run']));
         $this->assertTrue((new CodemodRunCommand())->matches(['codemod', 'run', 'feature-manifest-v1-to-v2', '--dry-run']));
     }
 }

@@ -27,14 +27,14 @@ final class PlatformVerifiersTest extends TestCase
         $this->createFeature('publish_post', 'POST', '/posts/{id}/publish', ['posts.publish'], ['post.published']);
         $this->createFeature('stream_events', 'GET', '/streams/events', ['streams.view']);
 
-        mkdir($this->project->root . '/app/specs/billing', 0777, true);
-        mkdir($this->project->root . '/app/specs/workflows', 0777, true);
-        mkdir($this->project->root . '/app/specs/orchestrations', 0777, true);
-        mkdir($this->project->root . '/app/specs/search', 0777, true);
-        mkdir($this->project->root . '/app/specs/streams', 0777, true);
-        mkdir($this->project->root . '/app/specs/locales', 0777, true);
-        mkdir($this->project->root . '/app/specs/roles', 0777, true);
-        mkdir($this->project->root . '/app/specs/policies', 0777, true);
+        mkdir($this->project->root . '/app/definitions/billing', 0777, true);
+        mkdir($this->project->root . '/app/definitions/workflows', 0777, true);
+        mkdir($this->project->root . '/app/definitions/orchestrations', 0777, true);
+        mkdir($this->project->root . '/app/definitions/search', 0777, true);
+        mkdir($this->project->root . '/app/definitions/streams', 0777, true);
+        mkdir($this->project->root . '/app/definitions/locales', 0777, true);
+        mkdir($this->project->root . '/app/definitions/roles', 0777, true);
+        mkdir($this->project->root . '/app/definitions/policies', 0777, true);
         mkdir($this->project->root . '/app/platform/lang/en', 0777, true);
         mkdir($this->project->root . '/app/platform/lang/fr', 0777, true);
 
@@ -52,7 +52,7 @@ declare(strict_types=1);
 return ['greeting' => 'Bonjour', 'farewell' => 'Salut'];
 PHP);
 
-        file_put_contents($this->project->root . '/app/specs/billing/stripe.billing.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/billing/stripe.billing.yaml', <<<'YAML'
 version: 1
 provider: stripe
 plans:
@@ -62,7 +62,7 @@ feature_names:
   checkout: publish_post
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/workflows/posts.workflow.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/workflows/posts.workflow.yaml', <<<'YAML'
 version: 1
 resource: posts
 states: [draft, review, published]
@@ -74,7 +74,7 @@ transitions:
     emit: [post.published]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/orchestrations/process.orchestration.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/orchestrations/process.orchestration.yaml', <<<'YAML'
 version: 1
 name: process
 steps:
@@ -85,7 +85,7 @@ steps:
     depends_on: [extract]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/search/posts.search.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/search/posts.search.yaml', <<<'YAML'
 version: 1
 index: posts
 adapter: sql
@@ -93,7 +93,7 @@ fields: [title]
 filters: [status]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/streams/events.stream.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/streams/events.stream.yaml', <<<'YAML'
 version: 1
 stream: events
 transport: sse
@@ -105,7 +105,7 @@ auth:
 publish_features: [stream_events]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/locales/core.locale.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/locales/core.locale.yaml', <<<'YAML'
 version: 1
 bundle: core
 default: en
@@ -113,7 +113,7 @@ locales: [en, fr]
 translation_paths: [app/platform/lang]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/roles/default.roles.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/roles/default.roles.yaml', <<<'YAML'
 version: 1
 set: default
 roles:
@@ -123,7 +123,7 @@ roles:
     permissions: [posts.publish]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/policies/posts.policy.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/policies/posts.policy.yaml', <<<'YAML'
 version: 1
 policy: posts
 resource: posts
@@ -192,14 +192,14 @@ YAML);
 
     public function test_platform_verifiers_report_invalid_payloads(): void
     {
-        file_put_contents($this->project->root . '/app/specs/billing/stripe.billing.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/billing/stripe.billing.yaml', <<<'YAML'
 version: 1
 provider: stripe
 plans:
   - key: starter
     price_id: ""
 YAML);
-        file_put_contents($this->project->root . '/app/specs/workflows/posts.workflow.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/workflows/posts.workflow.yaml', <<<'YAML'
 version: 1
 resource: posts
 states: [draft]
@@ -208,7 +208,7 @@ transitions:
     from: [review]
     to: archived
 YAML);
-        file_put_contents($this->project->root . '/app/specs/orchestrations/process.orchestration.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/orchestrations/process.orchestration.yaml', <<<'YAML'
 version: 1
 name: process
 steps:
@@ -217,13 +217,13 @@ steps:
     job: finalize_document_processing
     depends_on: [missing]
 YAML);
-        file_put_contents($this->project->root . '/app/specs/search/posts.search.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/search/posts.search.yaml', <<<'YAML'
 version: 1
 index: posts
 adapter: unsupported
 fields: []
 YAML);
-        file_put_contents($this->project->root . '/app/specs/streams/events.stream.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/streams/events.stream.yaml', <<<'YAML'
 version: 1
 stream: events
 transport: websocket
@@ -231,21 +231,21 @@ route:
   path: ""
 auth: {}
 YAML);
-        file_put_contents($this->project->root . '/app/specs/locales/core.locale.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/locales/core.locale.yaml', <<<'YAML'
 version: 1
 bundle: core
 default: en
 locales: [fr]
 translation_paths: [app/platform/lang]
 YAML);
-        file_put_contents($this->project->root . '/app/specs/roles/default.roles.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/roles/default.roles.yaml', <<<'YAML'
 version: 1
 set: default
 roles:
   admin:
     permissions: ['*']
 YAML);
-        file_put_contents($this->project->root . '/app/specs/policies/posts.policy.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/policies/posts.policy.yaml', <<<'YAML'
 version: 1
 policy: posts
 resource: posts

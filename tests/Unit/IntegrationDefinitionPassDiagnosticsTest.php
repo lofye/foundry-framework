@@ -9,7 +9,7 @@ use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
 use PHPUnit\Framework\TestCase;
 
-final class IntegrationSpecPassDiagnosticsTest extends TestCase
+final class IntegrationDefinitionPassDiagnosticsTest extends TestCase
 {
     private TempProject $project;
 
@@ -20,10 +20,10 @@ final class IntegrationSpecPassDiagnosticsTest extends TestCase
         $this->createFeature('dispatch_welcome_email', 'GET', '/dispatch/welcome');
         $this->createFeature('api_list_posts', 'GET', '/posts');
 
-        mkdir($this->project->root . '/app/specs/notifications', 0777, true);
-        mkdir($this->project->root . '/app/specs/api', 0777, true);
+        mkdir($this->project->root . '/app/definitions/notifications', 0777, true);
+        mkdir($this->project->root . '/app/definitions/api', 0777, true);
 
-        file_put_contents($this->project->root . '/app/specs/notifications/welcome_email.notification.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/notifications/welcome_email.notification.yaml', <<<'YAML'
 version: 2
 notification: welcome_email
 channel: sms
@@ -33,7 +33,7 @@ input_schema: app/notifications/schemas/missing.input.schema.json
 dispatch_features: [missing_feature]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/api/posts.api-resource.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/api/posts.api-resource.yaml', <<<'YAML'
 version: 2
 resource: posts
 style: server-rendered
@@ -48,7 +48,7 @@ YAML);
         $this->project->cleanup();
     }
 
-    public function test_integration_spec_pass_emits_expected_diagnostics_for_invalid_specs(): void
+    public function test_integration_definition_pass_emits_expected_diagnostics_for_invalid_definitions(): void
     {
         $compiler = new GraphCompiler(Paths::fromCwd($this->project->root));
         $result = $compiler->compile(new CompileOptions());
@@ -58,13 +58,13 @@ YAML);
             $result->diagnostics->toArray(),
         ));
 
-        $this->assertContains('FDY2301_NOTIFICATION_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2301_NOTIFICATION_DEFINITION_VERSION_UNSUPPORTED', $codes);
         $this->assertContains('FDY2302_NOTIFICATION_CHANNEL_UNSUPPORTED', $codes);
         $this->assertContains('FDY2303_NOTIFICATION_QUEUE_MISSING', $codes);
         $this->assertContains('FDY2304_NOTIFICATION_FEATURE_MISSING', $codes);
         $this->assertContains('FDY2305_NOTIFICATION_TEMPLATE_MISSING', $codes);
         $this->assertContains('FDY2306_NOTIFICATION_SCHEMA_MISSING', $codes);
-        $this->assertContains('FDY2310_API_RESOURCE_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2310_API_RESOURCE_DEFINITION_VERSION_UNSUPPORTED', $codes);
         $this->assertContains('FDY2312_API_FEATURE_ROUTE_NOT_API', $codes);
         $this->assertContains('FDY2314_API_RESOURCE_STYLE_MISMATCH', $codes);
     }

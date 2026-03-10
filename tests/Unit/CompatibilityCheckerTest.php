@@ -8,12 +8,12 @@ use Foundry\Compiler\Extensions\CompatibilityChecker;
 use Foundry\Compiler\Extensions\ExtensionDescriptor;
 use Foundry\Compiler\Extensions\ExtensionRegistry;
 use Foundry\Compiler\Extensions\PackDefinition;
-use Foundry\Compiler\Migration\SpecFormat;
+use Foundry\Compiler\Migration\DefinitionFormat;
 use PHPUnit\Framework\TestCase;
 
 final class CompatibilityCheckerTest extends TestCase
 {
-    public function test_checker_reports_extension_pack_and_spec_conflicts(): void
+    public function test_checker_reports_extension_pack_and_definition_conflicts(): void
     {
         $extensionA = new class extends AbstractCompilerExtension {
             public function name(): string { return 'a-ext'; }
@@ -43,9 +43,9 @@ final class CompatibilityCheckerTest extends TestCase
                     ),
                 ];
             }
-            public function specFormats(): array
+            public function definitionFormats(): array
             {
-                return [new SpecFormat('shared_format', 'Shared', 1, [1])];
+                return [new DefinitionFormat('shared_format', 'Shared', 1, [1])];
             }
         };
 
@@ -77,9 +77,9 @@ final class CompatibilityCheckerTest extends TestCase
                     ),
                 ];
             }
-            public function specFormats(): array
+            public function definitionFormats(): array
             {
-                return [new SpecFormat('shared_format', 'Shared', 2, [2])];
+                return [new DefinitionFormat('shared_format', 'Shared', 2, [2])];
             }
         };
 
@@ -95,7 +95,7 @@ final class CompatibilityCheckerTest extends TestCase
         $this->assertContains('FDY7007_CONFLICTING_PROJECTION_PROVIDER', $codes);
         $this->assertContains('FDY7008_INCOMPATIBLE_PACK_VERSION', $codes);
         $this->assertContains('FDY7009_PACK_CAPABILITY_MISSING', $codes);
-        $this->assertContains('FDY7003_UNSUPPORTED_SPEC_VERSION', $codes);
+        $this->assertContains('FDY7003_UNSUPPORTED_DEFINITION_VERSION', $codes);
     }
 
     public function test_checker_returns_ok_for_core_extension_defaults(): void

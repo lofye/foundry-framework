@@ -8,7 +8,7 @@ use Foundry\Compiler\Extensions\ExtensionRegistry;
 use Foundry\Compiler\GraphCompiler;
 use Foundry\Compiler\GraphVerifier;
 use Foundry\Compiler\Migration\ManifestVersionResolver;
-use Foundry\Compiler\Migration\SpecMigrator;
+use Foundry\Compiler\Migration\DefinitionMigrator;
 use Foundry\Documentation\GraphDocsGenerator;
 use Foundry\Documentation\InspectUiGenerator;
 use Foundry\Export\OpenApiExporter;
@@ -61,7 +61,7 @@ final class CommandContext
     private ?ExtensionRegistry $extensions = null;
     private ?GraphCompiler $graphCompiler = null;
     private ?GraphVerifier $graphVerifier = null;
-    private ?SpecMigrator $specMigrator = null;
+    private ?DefinitionMigrator $definitionMigrator = null;
     private ?CodemodEngine $codemodEngine = null;
 
     public function __construct(private readonly ?string $cwd = null)
@@ -93,13 +93,13 @@ final class CommandContext
         return $this->graphVerifier ??= new GraphVerifier($this->paths(), $this->graphCompiler()->buildLayout());
     }
 
-    public function specMigrator(): SpecMigrator
+    public function definitionMigrator(): DefinitionMigrator
     {
-        return $this->specMigrator ??= new SpecMigrator(
+        return $this->definitionMigrator ??= new DefinitionMigrator(
             $this->paths(),
             new ManifestVersionResolver(),
             $this->extensionRegistry()->migrationRules(),
-            $this->extensionRegistry()->specFormats(),
+            $this->extensionRegistry()->definitionFormats(),
         );
     }
 

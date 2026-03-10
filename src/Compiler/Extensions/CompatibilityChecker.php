@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Foundry\Compiler\Extensions;
 
-use Foundry\Compiler\Migration\SpecFormat;
+use Foundry\Compiler\Migration\DefinitionFormat;
 
 final class CompatibilityChecker
 {
@@ -169,28 +169,28 @@ final class CompatibilityChecker
             }
         }
 
-        $specFormatVersions = [];
-        foreach ($this->extensions->specFormats() as $format) {
-            if (!$format instanceof SpecFormat) {
+        $definitionFormatVersions = [];
+        foreach ($this->extensions->definitionFormats() as $format) {
+            if (!$format instanceof DefinitionFormat) {
                 continue;
             }
 
-            $existing = $specFormatVersions[$format->name] ?? null;
+            $existing = $definitionFormatVersions[$format->name] ?? null;
             if ($existing !== null && $existing !== $format->currentVersion) {
                 $diagnostics[] = $this->diagnostic(
-                    code: 'FDY7003_UNSUPPORTED_SPEC_VERSION',
+                    code: 'FDY7003_UNSUPPORTED_DEFINITION_VERSION',
                     severity: 'error',
                     message: sprintf(
-                        'Spec format %s is declared with conflicting current versions (%d and %d).',
+                        'Definition format %s is declared with conflicting current versions (%d and %d).',
                         $format->name,
                         (int) $existing,
                         $format->currentVersion,
                     ),
                 );
             }
-            $specFormatVersions[$format->name] = $format->currentVersion;
+            $definitionFormatVersions[$format->name] = $format->currentVersion;
         }
-        ksort($specFormatVersions);
+        ksort($definitionFormatVersions);
 
         usort(
             $diagnostics,
@@ -227,7 +227,7 @@ final class CompatibilityChecker
                     ],
                     $this->packs->all(),
                 )),
-                'spec_versions' => $specFormatVersions,
+                'definition_versions' => $definitionFormatVersions,
             ],
         );
     }

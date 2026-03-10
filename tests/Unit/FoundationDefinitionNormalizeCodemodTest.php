@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace Foundry\Tests\Unit;
 
-use Foundry\Compiler\Codemod\FoundationSpecNormalizeCodemod;
+use Foundry\Compiler\Codemod\FoundationDefinitionNormalizeCodemod;
 use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
 use PHPUnit\Framework\TestCase;
 
-final class FoundationSpecNormalizeCodemodTest extends TestCase
+final class FoundationDefinitionNormalizeCodemodTest extends TestCase
 {
     private TempProject $project;
 
     protected function setUp(): void
     {
         $this->project = new TempProject();
-        mkdir($this->project->root . '/app/specs/resources', 0777, true);
-        file_put_contents($this->project->root . '/app/specs/resources/posts.resource.yaml', <<<'YAML'
+        mkdir($this->project->root . '/app/definitions/resources', 0777, true);
+        file_put_contents($this->project->root . '/app/definitions/resources/posts.resource.yaml', <<<'YAML'
 resource: posts
 fields:
   title:
@@ -33,7 +33,7 @@ YAML);
 
     public function test_codemod_reports_changes_in_dry_run_and_write_modes(): void
     {
-        file_put_contents($this->project->root . '/app/specs/resources/posts.resource.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/resources/posts.resource.yaml', <<<'YAML'
 resource: posts
 fields:
   title:
@@ -41,7 +41,7 @@ fields:
     type: string
 YAML);
 
-        $codemod = new FoundationSpecNormalizeCodemod();
+        $codemod = new FoundationDefinitionNormalizeCodemod();
         $dryRun = $codemod->run(Paths::fromCwd($this->project->root), false);
         $this->assertNotEmpty($dryRun->changes);
         $this->assertFalse($dryRun->written);
@@ -50,18 +50,18 @@ YAML);
         $this->assertNotEmpty($write->changes);
         $this->assertTrue($write->written);
 
-        $content = (string) file_get_contents($this->project->root . '/app/specs/resources/posts.resource.yaml');
+        $content = (string) file_get_contents($this->project->root . '/app/definitions/resources/posts.resource.yaml');
         $this->assertStringContainsString('version: 1', $content);
     }
 
-    public function test_codemod_reports_parse_diagnostics_for_invalid_spec_files(): void
+    public function test_codemod_reports_parse_diagnostics_for_invalid_definition_files(): void
     {
-        file_put_contents($this->project->root . '/app/specs/resources/posts.resource.yaml', "version: [\nresource: posts\n");
+        file_put_contents($this->project->root . '/app/definitions/resources/posts.resource.yaml', "version: [\nresource: posts\n");
 
-        $codemod = new FoundationSpecNormalizeCodemod();
+        $codemod = new FoundationDefinitionNormalizeCodemod();
         $result = $codemod->run(Paths::fromCwd($this->project->root), false);
 
         $this->assertNotEmpty($result->diagnostics);
-        $this->assertSame('FDY2213_FOUNDATION_SPEC_PARSE_ERROR', $result->diagnostics[0]['code']);
+        $this->assertSame('FDY2213_FOUNDATION_DEFINITION_PARSE_ERROR', $result->diagnostics[0]['code']);
     }
 }

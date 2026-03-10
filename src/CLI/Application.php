@@ -18,7 +18,7 @@ use Foundry\CLI\Commands\InspectFeatureCommand;
 use Foundry\CLI\Commands\InspectNotificationCommand;
 use Foundry\CLI\Commands\InspectResourceCommand;
 use Foundry\CLI\Commands\InspectRouteCommand;
-use Foundry\CLI\Commands\MigrateSpecsCommand;
+use Foundry\CLI\Commands\MigrateDefinitionsCommand;
 use Foundry\CLI\Commands\DoctorCommand;
 use Foundry\CLI\Commands\ExportOpenApiCommand;
 use Foundry\CLI\Commands\PreviewNotificationCommand;
@@ -57,7 +57,7 @@ final class Application
             new VerifyGraphCommand(),
             new VerifyPipelineCommand(),
             new VerifyCompatibilityCommand(),
-            new MigrateSpecsCommand(),
+            new MigrateDefinitionsCommand(),
             new CodemodRunCommand(),
             new InspectFeatureCommand(),
             new InspectNotificationCommand(),

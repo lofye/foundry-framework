@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Foundry\Compiler\Migration;
 
-final readonly class SpecMigrationResult
+final readonly class DefinitionMigrationResult
 {
     /**
      * @param array<int,array<string,mixed>> $changes

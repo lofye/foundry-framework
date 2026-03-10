@@ -37,9 +37,9 @@ final class CLIScaffoldingCommandErrorsTest extends TestCase
         $this->assertSame(1, $starterInvalid['status']);
         $this->assertSame('STARTER_INVALID', $starterInvalid['payload']['error']['code']);
 
-        $resourceMissingSpec = $this->runCommand($app, ['foundry', 'generate', 'resource', 'posts', '--json']);
-        $this->assertSame(1, $resourceMissingSpec['status']);
-        $this->assertSame('CLI_RESOURCE_SPEC_REQUIRED', $resourceMissingSpec['payload']['error']['code']);
+        $resourceMissingDefinition = $this->runCommand($app, ['foundry', 'generate', 'resource', 'posts', '--json']);
+        $this->assertSame(1, $resourceMissingDefinition['status']);
+        $this->assertSame('CLI_RESOURCE_DEFINITION_REQUIRED', $resourceMissingDefinition['payload']['error']['code']);
 
         $adminMissingName = $this->runCommand($app, ['foundry', 'generate', 'admin-resource', '--json']);
         $this->assertSame(1, $adminMissingName['status']);

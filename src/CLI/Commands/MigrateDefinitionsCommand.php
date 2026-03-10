@@ -6,12 +6,12 @@ namespace Foundry\CLI\Commands;
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
 
-final class MigrateSpecsCommand extends Command
+final class MigrateDefinitionsCommand extends Command
 {
     #[\Override]
     public function matches(array $args): bool
     {
-        return ($args[0] ?? null) === 'migrate' && ($args[1] ?? null) === 'specs';
+        return ($args[0] ?? null) === 'migrate' && ($args[1] ?? null) === 'definitions';
     }
 
     #[\Override]
@@ -21,11 +21,11 @@ final class MigrateSpecsCommand extends Command
         $dryRun = in_array('--dry-run', $args, true) || !$write;
         $path = $this->extractOption($args, '--path');
 
-        $result = $context->specMigrator()->migrate($write, $path);
+        $result = $context->definitionMigrator()->migrate($write, $path);
 
         return [
             'status' => 0,
-            'message' => $write ? 'Spec migration complete.' : 'Spec migration dry run complete.',
+            'message' => $write ? 'Definition migration complete.' : 'Definition migration dry run complete.',
             'payload' => [
                 'mode' => $write ? 'write' : 'dry-run',
                 'dry_run' => $dryRun,

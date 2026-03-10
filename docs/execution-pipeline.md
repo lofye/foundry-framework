@@ -58,7 +58,7 @@ Compiled guard types include:
 - `request_validation`
 - `transaction`
 
-Feature manifests remain source-of-truth. Guard nodes are compiled from feature specs and linked into each `execution_plan` node.
+Feature manifests remain source-of-truth. Guard nodes are compiled from feature definitions and linked into each `execution_plan` node.
 
 ## Interceptors
 

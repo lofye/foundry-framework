@@ -18,9 +18,9 @@ final class CLIPlatformCommandsTest extends TestCase
         $this->cwd = getcwd() ?: '.';
         chdir($this->project->root);
 
-        mkdir($this->project->root . '/specs', 0777, true);
+        mkdir($this->project->root . '/definitions', 0777, true);
 
-        file_put_contents($this->project->root . '/specs/posts.workflow.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/definitions/posts.workflow.yaml', <<<'YAML'
 version: 1
 resource: posts
 states: [draft, review, published]
@@ -31,7 +31,7 @@ transitions:
     permission: posts.publish
 YAML);
 
-        file_put_contents($this->project->root . '/specs/process_uploaded_document.orchestration.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/definitions/process_uploaded_document.orchestration.yaml', <<<'YAML'
 version: 1
 name: process_uploaded_document
 steps:
@@ -42,7 +42,7 @@ steps:
     depends_on: [extract_text]
 YAML);
 
-        file_put_contents($this->project->root . '/specs/posts.search.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/definitions/posts.search.yaml', <<<'YAML'
 version: 1
 index: posts
 adapter: sql
@@ -69,15 +69,15 @@ YAML);
         $this->assertSame(0, $billing['status']);
         $this->assertSame('stripe', $billing['payload']['provider']);
 
-        $workflow = $this->runCommand($app, ['foundry', 'generate', 'workflow', 'posts', '--spec=specs/posts.workflow.yaml', '--json']);
+        $workflow = $this->runCommand($app, ['foundry', 'generate', 'workflow', 'posts', '--definition=definitions/posts.workflow.yaml', '--json']);
         $this->assertSame(0, $workflow['status']);
         $this->assertSame('posts', $workflow['payload']['workflow']);
 
-        $orchestration = $this->runCommand($app, ['foundry', 'generate', 'orchestration', 'process_uploaded_document', '--spec=specs/process_uploaded_document.orchestration.yaml', '--json']);
+        $orchestration = $this->runCommand($app, ['foundry', 'generate', 'orchestration', 'process_uploaded_document', '--definition=definitions/process_uploaded_document.orchestration.yaml', '--json']);
         $this->assertSame(0, $orchestration['status']);
         $this->assertSame('process_uploaded_document', $orchestration['payload']['orchestration']);
 
-        $search = $this->runCommand($app, ['foundry', 'generate', 'search-index', 'posts', '--spec=specs/posts.search.yaml', '--json']);
+        $search = $this->runCommand($app, ['foundry', 'generate', 'search-index', 'posts', '--definition=definitions/posts.search.yaml', '--json']);
         $this->assertSame(0, $search['status']);
         $this->assertSame('posts', $search['payload']['index']);
 
@@ -93,7 +93,7 @@ YAML);
 
         $roles = $this->runCommand($app, ['foundry', 'generate', 'roles', '--json']);
         $this->assertSame(0, $roles['status']);
-        $this->assertFileExists($this->project->root . '/app/specs/roles/default.roles.yaml');
+        $this->assertFileExists($this->project->root . '/app/definitions/roles/default.roles.yaml');
 
         $policy = $this->runCommand($app, ['foundry', 'generate', 'policy', 'posts', '--json']);
         $this->assertSame(0, $policy['status']);

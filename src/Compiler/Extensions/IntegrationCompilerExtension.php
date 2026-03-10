@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace Foundry\Compiler\Extensions;
 
 use Foundry\Compiler\Codemod\Codemod;
-use Foundry\Compiler\Codemod\IntegrationSpecNormalizeCodemod;
+use Foundry\Compiler\Codemod\IntegrationDefinitionNormalizeCodemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
-use Foundry\Compiler\Migration\SpecFormat;
-use Foundry\Compiler\Passes\IntegrationSpecPass;
+use Foundry\Compiler\Migration\DefinitionFormat;
+use Foundry\Compiler\Passes\IntegrationDefinitionPass;
 use Foundry\Compiler\Projection\IntegrationProjectionEmitters;
 use Foundry\Compiler\Projection\ProjectionEmitter;
 
@@ -33,11 +33,11 @@ final class IntegrationCompilerExtension extends AbstractCompilerExtension
             frameworkVersionConstraint: '*',
             graphVersionConstraint: '^1',
             providedNodeTypes: ['notification', 'api_resource'],
-            providedPasses: ['integration_specs'],
+            providedPasses: ['integration_definitions'],
             providedPacks: ['integration.notifications', 'integration.api', 'integration.docs', 'integration.tests'],
-            introducedSpecFormats: ['notification_spec', 'api_resource_spec'],
+            introducedDefinitionFormats: ['notification_definition', 'api_resource_definition'],
             providedMigrationRules: [],
-            providedCodemods: ['integration-spec-v1-normalize'],
+            providedCodemods: ['integration-definition-v1-normalize'],
             providedProjectionOutputs: ['notification_index.php', 'api_resource_index.php'],
             providedInspectSurfaces: ['notification', 'api'],
             providedVerifiers: ['notifications', 'api'],
@@ -50,7 +50,7 @@ final class IntegrationCompilerExtension extends AbstractCompilerExtension
      */
     public function linkPasses(): array
     {
-        return [new IntegrationSpecPass()];
+        return [new IntegrationDefinitionPass()];
     }
 
     public function passPriority(string $stage, CompilerPass $pass): int
@@ -79,13 +79,13 @@ final class IntegrationCompilerExtension extends AbstractCompilerExtension
     }
 
     /**
-     * @return array<int,SpecFormat>
+     * @return array<int,DefinitionFormat>
      */
-    public function specFormats(): array
+    public function definitionFormats(): array
     {
         return [
-            new SpecFormat('notification_spec', 'Notification spec files under app/specs/notifications/*.notification.yaml', 1, [1]),
-            new SpecFormat('api_resource_spec', 'API resource spec files under app/specs/api/*.api-resource.yaml', 1, [1]),
+            new DefinitionFormat('notification_definition', 'Notification definition files under app/definitions/notifications/*.notification.yaml', 1, [1]),
+            new DefinitionFormat('api_resource_definition', 'API resource definition files under app/definitions/api/*.api-resource.yaml', 1, [1]),
         ];
     }
 
@@ -94,7 +94,7 @@ final class IntegrationCompilerExtension extends AbstractCompilerExtension
      */
     public function codemods(): array
     {
-        return [new IntegrationSpecNormalizeCodemod()];
+        return [new IntegrationDefinitionNormalizeCodemod()];
     }
 
     /**
@@ -113,7 +113,7 @@ final class IntegrationCompilerExtension extends AbstractCompilerExtension
                 frameworkVersionConstraint: '*',
                 graphVersionConstraint: '^1',
                 generators: ['generate notification <name>'],
-                specFormats: ['notification_spec'],
+                definitionFormats: ['notification_definition'],
                 migrationRules: [],
                 verifiers: ['verify notifications'],
                 examples: ['examples/integration-tooling/notifications'],
@@ -127,8 +127,8 @@ final class IntegrationCompilerExtension extends AbstractCompilerExtension
                 requiredCapabilities: ['resource.crud', 'compiler.core', 'runtime.pipeline'],
                 frameworkVersionConstraint: '*',
                 graphVersionConstraint: '^1',
-                generators: ['generate api-resource <name> --spec=<file>', 'export openapi --format=json'],
-                specFormats: ['api_resource_spec'],
+                generators: ['generate api-resource <name> --definition=<file>', 'export openapi --format=json'],
+                definitionFormats: ['api_resource_definition'],
                 migrationRules: [],
                 verifiers: ['verify api'],
                 examples: ['examples/integration-tooling/api'],
@@ -143,7 +143,7 @@ final class IntegrationCompilerExtension extends AbstractCompilerExtension
                 frameworkVersionConstraint: '*',
                 graphVersionConstraint: '^1',
                 generators: ['generate docs --format=markdown'],
-                specFormats: [],
+                definitionFormats: [],
                 migrationRules: [],
                 verifiers: ['verify graph'],
                 examples: ['examples/integration-tooling/docs'],
@@ -158,7 +158,7 @@ final class IntegrationCompilerExtension extends AbstractCompilerExtension
                 frameworkVersionConstraint: '*',
                 graphVersionConstraint: '^1',
                 generators: ['generate tests <target> --mode=deep', 'generate tests --all-missing'],
-                specFormats: [],
+                definitionFormats: [],
                 migrationRules: [],
                 verifiers: ['verify feature'],
                 examples: ['examples/integration-tooling/tests'],

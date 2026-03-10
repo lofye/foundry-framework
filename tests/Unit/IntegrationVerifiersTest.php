@@ -22,12 +22,12 @@ final class IntegrationVerifiersTest extends TestCase
         $this->createFeature('api_list_posts', 'GET', '/api/posts');
         $this->createFeature('dispatch_welcome_email', 'POST', '/dispatch/welcome');
 
-        mkdir($this->project->root . '/app/specs/api', 0777, true);
-        mkdir($this->project->root . '/app/specs/notifications', 0777, true);
+        mkdir($this->project->root . '/app/definitions/api', 0777, true);
+        mkdir($this->project->root . '/app/definitions/notifications', 0777, true);
         mkdir($this->project->root . '/app/notifications/schemas', 0777, true);
         mkdir($this->project->root . '/app/notifications/templates', 0777, true);
 
-        file_put_contents($this->project->root . '/app/specs/api/posts.api-resource.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/api/posts.api-resource.yaml', <<<'YAML'
 version: 1
 resource: posts
 style: api
@@ -36,7 +36,7 @@ feature_names:
   list: api_list_posts
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/notifications/welcome_email.notification.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/notifications/welcome_email.notification.yaml', <<<'YAML'
 version: 1
 notification: welcome_email
 channel: mail
@@ -77,7 +77,7 @@ PHP);
 
     public function test_notifications_verifier_reports_invalid_configuration_and_warnings(): void
     {
-        file_put_contents($this->project->root . '/app/specs/notifications/welcome_email.notification.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/notifications/welcome_email.notification.yaml', <<<'YAML'
 version: 1
 notification: welcome_email
 channel: sms
@@ -119,7 +119,7 @@ YAML);
     {
         $this->createFeature('api_bad_create', 'POST', '/posts');
 
-        file_put_contents($this->project->root . '/app/specs/api/posts.api-resource.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/api/posts.api-resource.yaml', <<<'YAML'
 version: 1
 resource: posts
 style: api

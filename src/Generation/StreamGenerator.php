@@ -26,17 +26,17 @@ final class StreamGenerator
             throw new FoundryError('STREAM_NAME_INVALID', 'validation', ['name' => $name], 'Stream name is invalid.');
         }
 
-        $dir = $this->paths->join('app/specs/streams');
+        $dir = $this->paths->join('app/definitions/streams');
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
 
-        $specPath = $dir . '/' . $stream . '.stream.yaml';
-        if (is_file($specPath) && !$force) {
-            throw new FoundryError('STREAM_SPEC_EXISTS', 'io', ['path' => $specPath], 'Stream spec already exists. Use --force to overwrite.');
+        $definitionPath = $dir . '/' . $stream . '.stream.yaml';
+        if (is_file($definitionPath) && !$force) {
+            throw new FoundryError('STREAM_DEFINITION_EXISTS', 'io', ['path' => $definitionPath], 'Stream definition already exists. Use --force to overwrite.');
         }
 
-        $spec = [
+        $definition = [
             'version' => 1,
             'stream' => $stream,
             'transport' => 'sse',
@@ -52,7 +52,7 @@ final class StreamGenerator
                 ],
             ],
         ];
-        file_put_contents($specPath, Yaml::dump($spec));
+        file_put_contents($definitionPath, Yaml::dump($definition));
 
         $feature = 'stream_' . $stream;
         $files = $this->features->generateFromArray([
@@ -69,14 +69,14 @@ final class StreamGenerator
             'tests' => ['required' => ['contract', 'feature', 'auth']],
         ], $force);
 
-        $files[] = $specPath;
+        $files[] = $definitionPath;
         $files = array_values(array_unique($files));
         sort($files);
 
         return [
             'stream' => $stream,
             'feature' => $feature,
-            'spec' => $specPath,
+            'definition' => $definitionPath,
             'files' => $files,
         ];
     }

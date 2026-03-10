@@ -5,13 +5,13 @@ namespace Foundry\Tests\Unit;
 
 use Foundry\Compiler\Migration\FeatureManifestV2Rule;
 use Foundry\Compiler\Migration\ManifestVersionResolver;
-use Foundry\Compiler\Migration\SpecMigrator;
+use Foundry\Compiler\Migration\DefinitionMigrator;
 use Foundry\Support\Paths;
 use Foundry\Support\Yaml;
 use Foundry\Tests\Fixtures\TempProject;
 use PHPUnit\Framework\TestCase;
 
-final class SpecMigratorTest extends TestCase
+final class DefinitionMigratorTest extends TestCase
 {
     private TempProject $project;
 
@@ -43,9 +43,9 @@ YAML);
         $this->project->cleanup();
     }
 
-    public function test_migrate_specs_dry_run_and_write_modes(): void
+    public function test_migrate_definitions_dry_run_and_write_modes(): void
     {
-        $migrator = new SpecMigrator(
+        $migrator = new DefinitionMigrator(
             Paths::fromCwd($this->project->root),
             new ManifestVersionResolver(),
             [new FeatureManifestV2Rule()],
@@ -68,9 +68,9 @@ YAML);
         $this->assertSame('medium', $manifest['llm']['risk_level']);
     }
 
-    public function test_migrate_specs_supports_path_filter(): void
+    public function test_migrate_definitions_supports_path_filter(): void
     {
-        $migrator = new SpecMigrator(
+        $migrator = new DefinitionMigrator(
             Paths::fromCwd($this->project->root),
             new ManifestVersionResolver(),
             [new FeatureManifestV2Rule()],
@@ -84,7 +84,7 @@ YAML);
 
     public function test_inspect_returns_rule_metadata(): void
     {
-        $migrator = new SpecMigrator(
+        $migrator = new DefinitionMigrator(
             Paths::fromCwd($this->project->root),
             new ManifestVersionResolver(),
             [new FeatureManifestV2Rule()],
@@ -96,10 +96,10 @@ YAML);
         $this->assertSame(1, $rules[0]['from_version']);
         $this->assertSame(2, $rules[0]['to_version']);
 
-        $formats = $migrator->specFormats();
+        $formats = $migrator->definitionFormats();
         $this->assertSame('feature_manifest', $formats[0]['name']);
         $this->assertSame(2, $formats[0]['current_version']);
-        $this->assertSame('feature_manifest', $migrator->specFormat('feature_manifest')['name']);
-        $this->assertNull($migrator->specFormat('missing_format'));
+        $this->assertSame('feature_manifest', $migrator->definitionFormat('feature_manifest')['name']);
+        $this->assertNull($migrator->definitionFormat('missing_format'));
     }
 }

@@ -8,7 +8,7 @@ The compiler core established Foundry as a semantic compiler with a canonical gr
 - The canonical compiled graph remains authoritative.
 - Extensions and packs register through explicit registries.
 - Compatibility is validated and inspectable.
-- Spec migrations and codemods run on source-of-truth files and emit structured diagnostics.
+- Definition migrations and codemods run on source-of-truth files and emit structured diagnostics.
 
 ## Explicit Extension Registration
 
@@ -60,7 +60,7 @@ Each pack declares:
 - owning extension
 - provided and required capabilities
 - framework and graph constraints
-- generators/spec formats/migration rules/verifiers metadata
+- generators/definition formats/migration rules/verifiers metadata
 
 Inspect commands:
 
@@ -77,13 +77,13 @@ Compatibility is explicit and enforced across:
 - graph version
 - extension descriptors
 - pack constraints
-- spec format declarations
+- definition format declarations
 
 Diagnostics include:
 
 - `FDY7001_INCOMPATIBLE_EXTENSION_VERSION`
 - `FDY7002_INCOMPATIBLE_GRAPH_VERSION`
-- `FDY7003_UNSUPPORTED_SPEC_VERSION`
+- `FDY7003_UNSUPPORTED_DEFINITION_VERSION`
 - `FDY7004_NO_MIGRATION_PATH`
 - `FDY7005_DUPLICATE_EXTENSION_ID`
 - `FDY7006_CONFLICTING_NODE_PROVIDER`
@@ -99,9 +99,9 @@ php vendor/bin/foundry verify extensions --json
 php vendor/bin/foundry verify compatibility --json
 ```
 
-## Spec Migration Framework
+## Definition Migration Framework
 
-Spec migrations are version-aware and deterministic.
+Definition migrations are version-aware and deterministic.
 
 Current built-in format:
 
@@ -122,10 +122,10 @@ Commands:
 
 ```bash
 php vendor/bin/foundry inspect migrations --json
-php vendor/bin/foundry inspect spec-format feature_manifest --json
-php vendor/bin/foundry migrate specs --dry-run --json
-php vendor/bin/foundry migrate specs --path=<path> --dry-run --json
-php vendor/bin/foundry migrate specs --write --json
+php vendor/bin/foundry inspect definition-format feature_manifest --json
+php vendor/bin/foundry migrate definitions --dry-run --json
+php vendor/bin/foundry migrate definitions --path=<path> --dry-run --json
+php vendor/bin/foundry migrate definitions --write --json
 ```
 
 ## Codemod Engine
@@ -145,11 +145,11 @@ php vendor/bin/foundry codemod run feature-manifest-v1-to-v2 --write --json
 
 ## Build Artifacts and Inspection
 
-extensions and migrations layer metadata is surfaced through existing build and inspect channels, including extension descriptors, packs, spec formats, codemods, and compatibility summaries.
+extensions and migrations layer metadata is surfaced through existing build and inspect channels, including extension descriptors, packs, definition formats, codemods, and compatibility summaries.
 
 ## Canonical Workflow
 
-1. Edit source-of-truth specs/files.
+1. Edit source-of-truth definitions/files.
 2. `php vendor/bin/foundry compile graph --json`
 3. Inspect diagnostics/impact/compatibility.
 4. Verify graph/extensions/compatibility.

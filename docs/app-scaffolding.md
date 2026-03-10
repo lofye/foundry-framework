@@ -2,13 +2,13 @@
 
 The app scaffolding layer adds graph-native generators for the most common application slices:
 - starter kits (`server-rendered`, `api`)
-- CRUD resources from resource specs
+- CRUD resources from resource definitions
 - server-rendered form partial generation
 - admin resource generation
 - uploads/media profile generation
-- listing/search/filter/sort/pagination specs
+- listing/search/filter/sort/pagination definitions
 
-All generated artifacts remain source-of-truth files first (`app/features/*`, `app/specs/*`).
+All generated artifacts remain source-of-truth files first (`app/features/*`, `app/definitions/*`).
 The semantic compiler then compiles those files into the canonical graph and emits projections.
 
 ## New Commands
@@ -16,7 +16,7 @@ The semantic compiler then compiles those files into the canonical graph and emi
 Generate:
 - `php vendor/bin/foundry generate starter server-rendered --json`
 - `php vendor/bin/foundry generate starter api --json`
-- `php vendor/bin/foundry generate resource <name> --spec=<file> --json`
+- `php vendor/bin/foundry generate resource <name> --definition=<file> --json`
 - `php vendor/bin/foundry generate admin-resource <name> --json`
 - `php vendor/bin/foundry generate uploads avatar --json`
 - `php vendor/bin/foundry generate uploads attachments --json`
@@ -26,11 +26,11 @@ Inspect/verify:
 - `php vendor/bin/foundry verify resource <name> --json`
 
 Codemod:
-- `php vendor/bin/foundry codemod run foundation-spec-v1-normalize --dry-run --json`
+- `php vendor/bin/foundry codemod run foundation-definition-v1-normalize --dry-run --json`
 
 ## Graph Nodes
 
-App scaffolding specs compile to dedicated graph nodes:
+App scaffolding definitions compile to dedicated graph nodes:
 - `starter_kit`
 - `resource`
 - `admin_resource`
@@ -52,7 +52,7 @@ App scaffolding emits additional graph-derived projections:
 
 ## Development Loop
 
-1. Edit or generate source specs/features.
+1. Edit or generate source definitions/features.
 2. Compile graph: `php vendor/bin/foundry compile graph --json`
 3. Inspect resource/pipeline/impact surfaces.
 4. Verify graph/contracts/resource.
@@ -62,4 +62,4 @@ App scaffolding emits additional graph-derived projections:
 
 - No parallel runtime middleware stack is introduced.
 - Guards/interceptors remain pipeline-native via feature manifests.
-- Specs are versioned (`version: 1`) and codemod-ready.
+- Definitions are versioned (`version: 1`) and codemod-ready.

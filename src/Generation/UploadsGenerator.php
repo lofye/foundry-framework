@@ -25,20 +25,20 @@ final class UploadsGenerator
             throw new FoundryError('UPLOAD_PROFILE_INVALID', 'validation', ['profile' => $profile], 'Upload profile must be avatar or attachments.');
         }
 
-        $featureSpecs = $profile === 'avatar'
-            ? $this->avatarSpecs()
-            : $this->attachmentSpecs();
+        $featureDefinitions = $profile === 'avatar'
+            ? $this->avatarDefinitions()
+            : $this->attachmentDefinitions();
 
         $generatedFeatures = [];
         $generatedFiles = [];
-        foreach ($featureSpecs as $spec) {
-            $generatedFeatures[] = (string) $spec['feature'];
-            foreach ($this->featureGenerator->generateFromArray($spec, $force) as $path) {
+        foreach ($featureDefinitions as $definition) {
+            $generatedFeatures[] = (string) $definition['feature'];
+            foreach ($this->featureGenerator->generateFromArray($definition, $force) as $path) {
                 $generatedFiles[] = $path;
             }
         }
 
-        foreach ($this->writeSpec($profile, $generatedFeatures, $force) as $path) {
+        foreach ($this->writeDefinition($profile, $generatedFeatures, $force) as $path) {
             $generatedFiles[] = $path;
         }
 
@@ -53,37 +53,37 @@ final class UploadsGenerator
             'profile' => $profile,
             'features' => array_values(array_unique($generatedFeatures)),
             'files' => array_values(array_unique($generatedFiles)),
-            'spec' => $this->paths->join('app/specs/uploads/' . $profile . '.uploads.yaml'),
+            'definition' => $this->paths->join('app/definitions/uploads/' . $profile . '.uploads.yaml'),
         ];
     }
 
     /**
      * @return array<int,array<string,mixed>>
      */
-    private function avatarSpecs(): array
+    private function avatarDefinitions(): array
     {
         return [
-            $this->uploadFeatureSpec('upload_avatar', '/account/avatar/upload', 'upload', 'avatar'),
-            $this->uploadFeatureSpec('attach_avatar', '/account/avatar/attach', 'attach', 'avatar'),
+            $this->uploadFeatureDefinition('upload_avatar', '/account/avatar/upload', 'upload', 'avatar'),
+            $this->uploadFeatureDefinition('attach_avatar', '/account/avatar/attach', 'attach', 'avatar'),
         ];
     }
 
     /**
      * @return array<int,array<string,mixed>>
      */
-    private function attachmentSpecs(): array
+    private function attachmentDefinitions(): array
     {
         return [
-            $this->uploadFeatureSpec('upload_attachment', '/attachments/upload', 'upload', 'attachments'),
-            $this->uploadFeatureSpec('attach_attachment', '/attachments/attach', 'attach', 'attachments'),
-            $this->uploadFeatureSpec('delete_attachment', '/attachments/{id}/delete', 'delete', 'attachments'),
+            $this->uploadFeatureDefinition('upload_attachment', '/attachments/upload', 'upload', 'attachments'),
+            $this->uploadFeatureDefinition('attach_attachment', '/attachments/attach', 'attach', 'attachments'),
+            $this->uploadFeatureDefinition('delete_attachment', '/attachments/{id}/delete', 'delete', 'attachments'),
         ];
     }
 
     /**
      * @return array<string,mixed>
      */
-    private function uploadFeatureSpec(string $feature, string $path, string $operation, string $profile): array
+    private function uploadFeatureDefinition(string $feature, string $path, string $operation, string $profile): array
     {
         $method = $operation === 'delete' ? 'DELETE' : 'POST';
 
@@ -163,16 +163,16 @@ final class UploadsGenerator
      * @param array<int,string> $features
      * @return array<int,string>
      */
-    private function writeSpec(string $profile, array $features, bool $force): array
+    private function writeDefinition(string $profile, array $features, bool $force): array
     {
-        $dir = $this->paths->join('app/specs/uploads');
+        $dir = $this->paths->join('app/definitions/uploads');
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
 
         $path = $dir . '/' . $profile . '.uploads.yaml';
         if (is_file($path) && !$force) {
-            throw new FoundryError('UPLOAD_SPEC_EXISTS', 'io', ['path' => $path], 'Upload spec already exists. Use --force to overwrite.');
+            throw new FoundryError('UPLOAD_DEFINITION_EXISTS', 'io', ['path' => $path], 'Upload definition already exists. Use --force to overwrite.');
         }
 
         $document = [

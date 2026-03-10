@@ -16,7 +16,7 @@ use Foundry\Compiler\Codemod\FeatureManifestV2Codemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\FeatureManifestV2Rule;
 use Foundry\Compiler\Migration\MigrationRule;
-use Foundry\Compiler\Migration\SpecFormat;
+use Foundry\Compiler\Migration\DefinitionFormat;
 use Foundry\Compiler\Passes\PipelinePass;
 use Foundry\Compiler\Projection\CoreProjectionEmitters;
 use Foundry\Compiler\Projection\ProjectionEmitter;
@@ -66,7 +66,7 @@ final class CoreCompilerExtension extends AbstractCompilerExtension
             ],
             providedPasses: ['discovery', 'normalize', 'link', 'pipeline', 'validate', 'enrich', 'analyze', 'emit'],
             providedPacks: ['core.foundation'],
-            introducedSpecFormats: ['feature_manifest'],
+            introducedDefinitionFormats: ['feature_manifest'],
             providedMigrationRules: ['FDY_MIGRATE_FEATURE_MANIFEST_V2'],
             providedCodemods: ['feature-manifest-v1-to-v2'],
             providedProjectionOutputs: [
@@ -142,12 +142,12 @@ final class CoreCompilerExtension extends AbstractCompilerExtension
     }
 
     /**
-     * @return array<int,SpecFormat>
+     * @return array<int,DefinitionFormat>
      */
-    public function specFormats(): array
+    public function definitionFormats(): array
     {
         return [
-            new SpecFormat(
+            new DefinitionFormat(
                 name: 'feature_manifest',
                 description: 'Feature source-of-truth manifest at app/features/<feature>/feature.yaml.',
                 currentVersion: 2,
@@ -207,7 +207,7 @@ final class CoreCompilerExtension extends AbstractCompilerExtension
                 frameworkVersionConstraint: '*',
                 graphVersionConstraint: '^1',
                 generators: ['generate feature', 'generate indexes'],
-                specFormats: ['feature_manifest'],
+                definitionFormats: ['feature_manifest'],
                 migrationRules: ['FDY_MIGRATE_FEATURE_MANIFEST_V2'],
                 verifiers: ['verify graph'],
                 docsEmitters: [],

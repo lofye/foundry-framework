@@ -9,7 +9,7 @@ final class ExtensionDescriptor
      * @param array<int,string> $providedNodeTypes
      * @param array<int,string> $providedPasses
      * @param array<int,string> $providedPacks
-     * @param array<int,string> $introducedSpecFormats
+     * @param array<int,string> $introducedDefinitionFormats
      * @param array<int,string> $providedMigrationRules
      * @param array<int,string> $providedCodemods
      * @param array<int,string> $providedProjectionOutputs
@@ -26,7 +26,7 @@ final class ExtensionDescriptor
         public readonly array $providedNodeTypes = [],
         public readonly array $providedPasses = [],
         public readonly array $providedPacks = [],
-        public readonly array $introducedSpecFormats = [],
+        public readonly array $introducedDefinitionFormats = [],
         public readonly array $providedMigrationRules = [],
         public readonly array $providedCodemods = [],
         public readonly array $providedProjectionOutputs = [],
@@ -51,7 +51,7 @@ final class ExtensionDescriptor
                 'node_types' => $this->sortedUnique($this->providedNodeTypes),
                 'passes' => $this->sortedUnique($this->providedPasses),
                 'packs' => $this->sortedUnique($this->providedPacks),
-                'spec_formats' => $this->sortedUnique($this->introducedSpecFormats),
+                'definition_formats' => $this->sortedUnique($this->introducedDefinitionFormats),
                 'migration_rules' => $this->sortedUnique($this->providedMigrationRules),
                 'codemods' => $this->sortedUnique($this->providedCodemods),
                 'projection_outputs' => $this->sortedUnique($this->providedProjectionOutputs),

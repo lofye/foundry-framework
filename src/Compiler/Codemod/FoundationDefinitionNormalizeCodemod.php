@@ -6,21 +6,21 @@ namespace Foundry\Compiler\Codemod;
 use Foundry\Support\Paths;
 use Foundry\Support\Yaml;
 
-final class FoundationSpecNormalizeCodemod implements Codemod
+final class FoundationDefinitionNormalizeCodemod implements Codemod
 {
     public function id(): string
     {
-        return 'foundation-spec-v1-normalize';
+        return 'foundation-definition-v1-normalize';
     }
 
     public function description(): string
     {
-        return 'Normalize foundation specs by setting version: 1 and canonical key ordering.';
+        return 'Normalize foundation definitions by setting version: 1 and canonical key ordering.';
     }
 
     public function sourceType(): string
     {
-        return 'foundation_spec';
+        return 'foundation_definition';
     }
 
     public function run(Paths $paths, bool $write = false, ?string $path = null): CodemodResult
@@ -28,13 +28,13 @@ final class FoundationSpecNormalizeCodemod implements Codemod
         $changes = [];
         $diagnostics = [];
 
-        foreach ($this->specPaths($paths, $path) as $absolute) {
+        foreach ($this->definitionPaths($paths, $path) as $absolute) {
             $relative = $this->relativePath($paths, $absolute);
             try {
                 $document = Yaml::parseFile($absolute);
             } catch (\Throwable $error) {
                 $diagnostics[] = [
-                    'code' => 'FDY2213_FOUNDATION_SPEC_PARSE_ERROR',
+                    'code' => 'FDY2213_FOUNDATION_DEFINITION_PARSE_ERROR',
                     'severity' => 'error',
                     'category' => 'migrations',
                     'message' => $error->getMessage(),
@@ -73,7 +73,7 @@ final class FoundationSpecNormalizeCodemod implements Codemod
     /**
      * @return array<int,string>
      */
-    private function specPaths(Paths $paths, ?string $path): array
+    private function definitionPaths(Paths $paths, ?string $path): array
     {
         if ($path !== null && $path !== '') {
             $candidate = str_starts_with($path, $paths->root() . '/') ? $path : $paths->join($path);
@@ -81,7 +81,7 @@ final class FoundationSpecNormalizeCodemod implements Codemod
             return is_file($candidate) ? [$candidate] : [];
         }
 
-        $files = glob($paths->join('app/specs/*/*.yaml')) ?: [];
+        $files = glob($paths->join('app/definitions/*/*.yaml')) ?: [];
         sort($files);
 
         return $files;
@@ -143,12 +143,12 @@ final class FoundationSpecNormalizeCodemod implements Codemod
     private function formatForPath(string $path): string
     {
         return match (true) {
-            str_ends_with($path, '.starter.yaml') => 'starter_spec',
-            str_ends_with($path, '.resource.yaml') => 'resource_spec',
-            str_ends_with($path, '.admin.yaml') => 'admin_resource_spec',
-            str_ends_with($path, '.uploads.yaml') => 'upload_profile_spec',
-            str_ends_with($path, '.list.yaml') => 'listing_config_spec',
-            default => 'foundation_spec',
+            str_ends_with($path, '.starter.yaml') => 'starter_definition',
+            str_ends_with($path, '.resource.yaml') => 'resource_definition',
+            str_ends_with($path, '.admin.yaml') => 'admin_resource_definition',
+            str_ends_with($path, '.uploads.yaml') => 'upload_profile_definition',
+            str_ends_with($path, '.list.yaml') => 'listing_config_definition',
+            default => 'foundation_definition',
         };
     }
 }

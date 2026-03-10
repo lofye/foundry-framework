@@ -41,18 +41,18 @@ final readonly class SourceScanner
             }
         }
 
-        $projectSpecFiles = glob($this->paths->join('app/platform/config/*.yaml')) ?: [];
-        sort($projectSpecFiles);
-        foreach ($projectSpecFiles as $file) {
+        $projectDefinitionFiles = glob($this->paths->join('app/platform/config/*.yaml')) ?: [];
+        sort($projectDefinitionFiles);
+        foreach ($projectDefinitionFiles as $file) {
             $relative = $this->relativePath($file);
             if ($relative !== '') {
                 $files[] = $relative;
             }
         }
 
-        $foundationSpecFiles = glob($this->paths->join('app/specs/*/*.yaml')) ?: [];
-        sort($foundationSpecFiles);
-        foreach ($foundationSpecFiles as $file) {
+        $foundationDefinitionFiles = glob($this->paths->join('app/definitions/*/*.yaml')) ?: [];
+        sort($foundationDefinitionFiles);
+        foreach ($foundationDefinitionFiles as $file) {
             $relative = $this->relativePath($file);
             if ($relative !== '') {
                 $files[] = $relative;

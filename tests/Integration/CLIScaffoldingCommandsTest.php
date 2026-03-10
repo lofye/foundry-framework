@@ -18,8 +18,8 @@ final class CLIScaffoldingCommandsTest extends TestCase
         $this->cwd = getcwd() ?: '.';
         chdir($this->project->root);
 
-        mkdir($this->project->root . '/specs', 0777, true);
-        file_put_contents($this->project->root . '/specs/posts.resource.yaml', <<<'YAML'
+        mkdir($this->project->root . '/definitions', 0777, true);
+        file_put_contents($this->project->root . '/definitions/posts.resource.yaml', <<<'YAML'
 version: 1
 resource: posts
 style: server-rendered
@@ -76,11 +76,11 @@ YAML);
         $this->assertSame(0, $starter['status']);
         $this->assertContains('register_user', $starter['payload']['features']);
 
-        $resource = $this->runCommand($app, ['foundry', 'generate', 'resource', 'posts', '--spec=specs/posts.resource.yaml', '--json']);
+        $resource = $this->runCommand($app, ['foundry', 'generate', 'resource', 'posts', '--definition=definitions/posts.resource.yaml', '--json']);
         $this->assertSame(0, $resource['status']);
         $this->assertContains('list_posts', $resource['payload']['features']);
-        $this->assertFileExists($this->project->root . '/app/specs/resources/posts.resource.yaml');
-        $this->assertFileExists($this->project->root . '/app/specs/listing/posts.list.yaml');
+        $this->assertFileExists($this->project->root . '/app/definitions/resources/posts.resource.yaml');
+        $this->assertFileExists($this->project->root . '/app/definitions/listing/posts.list.yaml');
 
         $admin = $this->runCommand($app, ['foundry', 'generate', 'admin-resource', 'posts', '--json']);
         $this->assertSame(0, $admin['status']);
@@ -89,7 +89,7 @@ YAML);
         $uploads = $this->runCommand($app, ['foundry', 'generate', 'uploads', 'avatar', '--json']);
         $this->assertSame(0, $uploads['status']);
         $this->assertContains('upload_avatar', $uploads['payload']['features']);
-        $this->assertFileExists($this->project->root . '/app/specs/uploads/avatar.uploads.yaml');
+        $this->assertFileExists($this->project->root . '/app/definitions/uploads/avatar.uploads.yaml');
 
         $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json']);
         $this->assertSame(0, $compile['status']);
@@ -102,13 +102,13 @@ YAML);
         $this->assertSame(0, $verifyResource['status']);
         $this->assertTrue($verifyResource['payload']['ok']);
 
-        $inspectSpecFormat = $this->runCommand($app, ['foundry', 'inspect', 'spec-format', 'resource_spec', '--json']);
-        $this->assertSame(0, $inspectSpecFormat['status']);
-        $this->assertSame('resource_spec', $inspectSpecFormat['payload']['spec_format']['name']);
+        $inspectDefinitionFormat = $this->runCommand($app, ['foundry', 'inspect', 'definition-format', 'resource_definition', '--json']);
+        $this->assertSame(0, $inspectDefinitionFormat['status']);
+        $this->assertSame('resource_definition', $inspectDefinitionFormat['payload']['definition_format']['name']);
 
-        $codemod = $this->runCommand($app, ['foundry', 'codemod', 'run', 'foundation-spec-v1-normalize', '--dry-run', '--json']);
+        $codemod = $this->runCommand($app, ['foundry', 'codemod', 'run', 'foundation-definition-v1-normalize', '--dry-run', '--json']);
         $this->assertSame(0, $codemod['status']);
-        $this->assertSame('foundation-spec-v1-normalize', $codemod['payload']['codemod']);
+        $this->assertSame('foundation-definition-v1-normalize', $codemod['payload']['codemod']);
     }
 
     /**

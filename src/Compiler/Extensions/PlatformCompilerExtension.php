@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace Foundry\Compiler\Extensions;
 
 use Foundry\Compiler\Codemod\Codemod;
-use Foundry\Compiler\Codemod\PlatformSpecNormalizeCodemod;
+use Foundry\Compiler\Codemod\PlatformDefinitionNormalizeCodemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
-use Foundry\Compiler\Migration\SpecFormat;
-use Foundry\Compiler\Passes\PlatformSpecPass;
+use Foundry\Compiler\Migration\DefinitionFormat;
+use Foundry\Compiler\Passes\PlatformDefinitionPass;
 use Foundry\Compiler\Projection\PlatformProjectionEmitters;
 use Foundry\Compiler\Projection\ProjectionEmitter;
 
@@ -33,7 +33,7 @@ final class PlatformCompilerExtension extends AbstractCompilerExtension
             frameworkVersionConstraint: '*',
             graphVersionConstraint: '^1',
             providedNodeTypes: ['billing', 'workflow', 'orchestration', 'search_index', 'stream', 'locale_bundle', 'role', 'policy', 'inspect_ui'],
-            providedPasses: ['platform_specs'],
+            providedPasses: ['platform_definitions'],
             providedPacks: [
                 'platform.billing',
                 'platform.workflows',
@@ -44,19 +44,19 @@ final class PlatformCompilerExtension extends AbstractCompilerExtension
                 'platform.roles',
                 'platform.inspect_ui',
             ],
-            introducedSpecFormats: [
-                'billing_spec',
-                'workflow_spec',
-                'orchestration_spec',
-                'search_spec',
-                'stream_spec',
-                'locale_spec',
-                'roles_spec',
-                'policy_spec',
-                'inspect_ui_spec',
+            introducedDefinitionFormats: [
+                'billing_definition',
+                'workflow_definition',
+                'orchestration_definition',
+                'search_definition',
+                'stream_definition',
+                'locale_definition',
+                'roles_definition',
+                'policy_definition',
+                'inspect_ui_definition',
             ],
             providedMigrationRules: [],
-            providedCodemods: ['platform-spec-v1-normalize'],
+            providedCodemods: ['platform-definition-v1-normalize'],
             providedProjectionOutputs: [
                 'billing_index.php',
                 'workflow_index.php',
@@ -88,7 +88,7 @@ final class PlatformCompilerExtension extends AbstractCompilerExtension
      */
     public function linkPasses(): array
     {
-        return [new PlatformSpecPass()];
+        return [new PlatformDefinitionPass()];
     }
 
     public function passPriority(string $stage, CompilerPass $pass): int
@@ -117,20 +117,20 @@ final class PlatformCompilerExtension extends AbstractCompilerExtension
     }
 
     /**
-     * @return array<int,SpecFormat>
+     * @return array<int,DefinitionFormat>
      */
-    public function specFormats(): array
+    public function definitionFormats(): array
     {
         return [
-            new SpecFormat('billing_spec', 'Billing provider/plan specs under app/specs/billing/*.billing.yaml', 1, [1]),
-            new SpecFormat('workflow_spec', 'Workflow FSM specs under app/specs/workflows/*.workflow.yaml', 1, [1]),
-            new SpecFormat('orchestration_spec', 'Orchestration specs under app/specs/orchestrations/*.orchestration.yaml', 1, [1]),
-            new SpecFormat('search_spec', 'Search index specs under app/specs/search/*.search.yaml', 1, [1]),
-            new SpecFormat('stream_spec', 'Realtime stream specs under app/specs/streams/*.stream.yaml', 1, [1]),
-            new SpecFormat('locale_spec', 'Locale bundle specs under app/specs/locales/*.locale.yaml', 1, [1]),
-            new SpecFormat('roles_spec', 'Role map specs under app/specs/roles/*.roles.yaml', 1, [1]),
-            new SpecFormat('policy_spec', 'Policy map specs under app/specs/policies/*.policy.yaml', 1, [1]),
-            new SpecFormat('inspect_ui_spec', 'Inspect UI specs under app/specs/inspect-ui/*.inspect-ui.yaml', 1, [1]),
+            new DefinitionFormat('billing_definition', 'Billing provider/plan definitions under app/definitions/billing/*.billing.yaml', 1, [1]),
+            new DefinitionFormat('workflow_definition', 'Workflow FSM definitions under app/definitions/workflows/*.workflow.yaml', 1, [1]),
+            new DefinitionFormat('orchestration_definition', 'Orchestration definitions under app/definitions/orchestrations/*.orchestration.yaml', 1, [1]),
+            new DefinitionFormat('search_definition', 'Search index definitions under app/definitions/search/*.search.yaml', 1, [1]),
+            new DefinitionFormat('stream_definition', 'Realtime stream definitions under app/definitions/streams/*.stream.yaml', 1, [1]),
+            new DefinitionFormat('locale_definition', 'Locale bundle definitions under app/definitions/locales/*.locale.yaml', 1, [1]),
+            new DefinitionFormat('roles_definition', 'Role map definitions under app/definitions/roles/*.roles.yaml', 1, [1]),
+            new DefinitionFormat('policy_definition', 'Policy map definitions under app/definitions/policies/*.policy.yaml', 1, [1]),
+            new DefinitionFormat('inspect_ui_definition', 'Inspect UI definitions under app/definitions/inspect-ui/*.inspect-ui.yaml', 1, [1]),
         ];
     }
 
@@ -139,7 +139,7 @@ final class PlatformCompilerExtension extends AbstractCompilerExtension
      */
     public function codemods(): array
     {
-        return [new PlatformSpecNormalizeCodemod()];
+        return [new PlatformDefinitionNormalizeCodemod()];
     }
 
     /**
@@ -148,14 +148,14 @@ final class PlatformCompilerExtension extends AbstractCompilerExtension
     public function packs(): array
     {
         return [
-            new PackDefinition(name: 'platform.billing', version: '1.0.0', extension: $this->name(), providedCapabilities: ['billing.stripe'], requiredCapabilities: ['compiler.core', 'runtime.pipeline'], generators: ['generate billing stripe'], specFormats: ['billing_spec'], verifiers: ['verify billing']),
-            new PackDefinition(name: 'platform.workflows', version: '1.0.0', extension: $this->name(), providedCapabilities: ['workflow.fsm'], requiredCapabilities: ['compiler.core'], generators: ['generate workflow <name> --spec=<file>'], specFormats: ['workflow_spec'], verifiers: ['verify workflows']),
-            new PackDefinition(name: 'platform.orchestration', version: '1.0.0', extension: $this->name(), providedCapabilities: ['orchestration.graph'], requiredCapabilities: ['compiler.core', 'workflow.fsm'], generators: ['generate orchestration <name> --spec=<file>'], specFormats: ['orchestration_spec'], verifiers: ['verify orchestrations']),
-            new PackDefinition(name: 'platform.search', version: '1.0.0', extension: $this->name(), providedCapabilities: ['search.adapters'], requiredCapabilities: ['compiler.core'], generators: ['generate search-index <name> --spec=<file>'], specFormats: ['search_spec'], verifiers: ['verify search']),
-            new PackDefinition(name: 'platform.streams', version: '1.0.0', extension: $this->name(), providedCapabilities: ['streams.sse'], requiredCapabilities: ['compiler.core', 'runtime.pipeline'], generators: ['generate stream <name>'], specFormats: ['stream_spec'], verifiers: ['verify streams']),
-            new PackDefinition(name: 'platform.locales', version: '1.0.0', extension: $this->name(), providedCapabilities: ['localization.i18n'], requiredCapabilities: ['compiler.core'], generators: ['generate locale <locale>'], specFormats: ['locale_spec'], verifiers: ['verify locales']),
-            new PackDefinition(name: 'platform.roles', version: '1.0.0', extension: $this->name(), providedCapabilities: ['auth.roles_policies'], requiredCapabilities: ['compiler.core'], generators: ['generate roles', 'generate policy <name>'], specFormats: ['roles_spec', 'policy_spec'], verifiers: ['verify policies']),
-            new PackDefinition(name: 'platform.inspect_ui', version: '1.0.0', extension: $this->name(), providedCapabilities: ['inspect.ui'], requiredCapabilities: ['compiler.core'], generators: ['generate inspect-ui'], specFormats: ['inspect_ui_spec'], verifiers: ['verify graph']),
+            new PackDefinition(name: 'platform.billing', version: '1.0.0', extension: $this->name(), providedCapabilities: ['billing.stripe'], requiredCapabilities: ['compiler.core', 'runtime.pipeline'], generators: ['generate billing stripe'], definitionFormats: ['billing_definition'], verifiers: ['verify billing']),
+            new PackDefinition(name: 'platform.workflows', version: '1.0.0', extension: $this->name(), providedCapabilities: ['workflow.fsm'], requiredCapabilities: ['compiler.core'], generators: ['generate workflow <name> --definition=<file>'], definitionFormats: ['workflow_definition'], verifiers: ['verify workflows']),
+            new PackDefinition(name: 'platform.orchestration', version: '1.0.0', extension: $this->name(), providedCapabilities: ['orchestration.graph'], requiredCapabilities: ['compiler.core', 'workflow.fsm'], generators: ['generate orchestration <name> --definition=<file>'], definitionFormats: ['orchestration_definition'], verifiers: ['verify orchestrations']),
+            new PackDefinition(name: 'platform.search', version: '1.0.0', extension: $this->name(), providedCapabilities: ['search.adapters'], requiredCapabilities: ['compiler.core'], generators: ['generate search-index <name> --definition=<file>'], definitionFormats: ['search_definition'], verifiers: ['verify search']),
+            new PackDefinition(name: 'platform.streams', version: '1.0.0', extension: $this->name(), providedCapabilities: ['streams.sse'], requiredCapabilities: ['compiler.core', 'runtime.pipeline'], generators: ['generate stream <name>'], definitionFormats: ['stream_definition'], verifiers: ['verify streams']),
+            new PackDefinition(name: 'platform.locales', version: '1.0.0', extension: $this->name(), providedCapabilities: ['localization.i18n'], requiredCapabilities: ['compiler.core'], generators: ['generate locale <locale>'], definitionFormats: ['locale_definition'], verifiers: ['verify locales']),
+            new PackDefinition(name: 'platform.roles', version: '1.0.0', extension: $this->name(), providedCapabilities: ['auth.roles_policies'], requiredCapabilities: ['compiler.core'], generators: ['generate roles', 'generate policy <name>'], definitionFormats: ['roles_definition', 'policy_definition'], verifiers: ['verify policies']),
+            new PackDefinition(name: 'platform.inspect_ui', version: '1.0.0', extension: $this->name(), providedCapabilities: ['inspect.ui'], requiredCapabilities: ['compiler.core'], generators: ['generate inspect-ui'], definitionFormats: ['inspect_ui_definition'], verifiers: ['verify graph']),
         ];
     }
 }

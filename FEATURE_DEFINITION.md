@@ -1,4 +1,4 @@
-# Feature Definition Spec (Foundry v2)
+# Feature Definition Definition (Foundry v2)
 
 ## Required files per feature
 `app/features/<feature>/`

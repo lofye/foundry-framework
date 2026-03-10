@@ -7,7 +7,7 @@ use Foundry\Compiler\Analysis\GraphAnalyzer;
 use Foundry\Compiler\Codemod\Codemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
-use Foundry\Compiler\Migration\SpecFormat;
+use Foundry\Compiler\Migration\DefinitionFormat;
 use Foundry\Compiler\Projection\ProjectionEmitter;
 use Foundry\Pipeline\PipelineStageDefinition;
 use Foundry\Pipeline\StageInterceptor;
@@ -71,9 +71,9 @@ interface CompilerExtension
     public function migrationRules(): array;
 
     /**
-     * @return array<int,SpecFormat>
+     * @return array<int,DefinitionFormat>
      */
-    public function specFormats(): array;
+    public function definitionFormats(): array;
 
     /**
      * @return array<int,Codemod>

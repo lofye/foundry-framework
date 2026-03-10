@@ -7,7 +7,7 @@ use Foundry\Compiler\Analysis\GraphAnalyzer;
 use Foundry\Compiler\Codemod\Codemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
-use Foundry\Compiler\Migration\SpecFormat;
+use Foundry\Compiler\Migration\DefinitionFormat;
 use Foundry\Compiler\Projection\ProjectionEmitter;
 use Foundry\Pipeline\PipelineStageDefinition;
 use Foundry\Pipeline\StageInterceptor;
@@ -194,18 +194,18 @@ final class ExtensionRegistry
     }
 
     /**
-     * @return array<int,SpecFormat>
+     * @return array<int,DefinitionFormat>
      */
-    public function specFormats(): array
+    public function definitionFormats(): array
     {
         $formats = [];
         foreach ($this->all() as $extension) {
-            foreach ($extension->specFormats() as $format) {
+            foreach ($extension->definitionFormats() as $format) {
                 $formats[] = $format;
             }
         }
 
-        usort($formats, static fn (SpecFormat $a, SpecFormat $b): int => strcmp($a->name, $b->name));
+        usort($formats, static fn (DefinitionFormat $a, DefinitionFormat $b): int => strcmp($a->name, $b->name));
 
         return $formats;
     }

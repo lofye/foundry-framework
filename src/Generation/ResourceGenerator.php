@@ -20,9 +20,9 @@ final class ResourceGenerator
     /**
      * @return array<string,mixed>
      */
-    public function generate(string $name, string $specPath, bool $force = false): array
+    public function generate(string $name, string $definitionPath, bool $force = false): array
     {
-        $document = Yaml::parseFile($specPath);
+        $document = Yaml::parseFile($definitionPath);
         $resource = (string) ($document['resource'] ?? $name);
         if ($resource === '') {
             $resource = $name;
@@ -33,7 +33,7 @@ final class ResourceGenerator
             throw new FoundryError('RESOURCE_NAME_INVALID', 'validation', ['resource' => $name], 'Resource name is invalid.');
         }
 
-        $canonical = $this->canonicalResourceSpec($document, $resource);
+        $canonical = $this->canonicalResourceDefinition($document, $resource);
         $singular = $this->singularize($resource);
         $operations = array_values(array_map('strval', (array) $canonical['features']));
         $featureMap = $this->featureMap($resource, $singular, $operations, (string) ($canonical['style'] ?? 'server-rendered'));
@@ -47,7 +47,7 @@ final class ResourceGenerator
             }
 
             $generatedFeatures[] = $feature;
-            $spec = $this->featureSpec(
+            $definition = $this->featureDefinition(
                 canonical: $canonical,
                 resource: $resource,
                 singular: $singular,
@@ -55,7 +55,7 @@ final class ResourceGenerator
                 feature: $feature,
             );
 
-            foreach ($this->featureGenerator->generateFromArray($spec, $force) as $path) {
+            foreach ($this->featureGenerator->generateFromArray($definition, $force) as $path) {
                 $generatedFiles[] = $path;
             }
 
@@ -69,11 +69,11 @@ final class ResourceGenerator
             }
         }
 
-        foreach ($this->writeResourceSpec($canonical, $featureMap, $force) as $path) {
+        foreach ($this->writeResourceDefinition($canonical, $featureMap, $force) as $path) {
             $generatedFiles[] = $path;
         }
 
-        foreach ($this->writeListingSpec($canonical, $resource, $force) as $path) {
+        foreach ($this->writeListingDefinition($canonical, $resource, $force) as $path) {
             $generatedFiles[] = $path;
         }
 
@@ -88,7 +88,7 @@ final class ResourceGenerator
             'resource' => $resource,
             'features' => array_values(array_unique($generatedFeatures)),
             'files' => array_values(array_unique($generatedFiles)),
-            'spec' => $this->paths->join('app/specs/resources/' . $resource . '.resource.yaml'),
+            'definition' => $this->paths->join('app/definitions/resources/' . $resource . '.resource.yaml'),
         ];
     }
 
@@ -96,11 +96,11 @@ final class ResourceGenerator
      * @param array<string,mixed> $document
      * @return array<string,mixed>
      */
-    private function canonicalResourceSpec(array $document, string $resource): array
+    private function canonicalResourceDefinition(array $document, string $resource): array
     {
         $fields = is_array($document['fields'] ?? null) ? $document['fields'] : [];
         if ($fields === []) {
-            throw new FoundryError('RESOURCE_FIELDS_REQUIRED', 'validation', ['resource' => $resource], 'Resource spec must define fields.');
+            throw new FoundryError('RESOURCE_FIELDS_REQUIRED', 'validation', ['resource' => $resource], 'Resource definition must define fields.');
         }
 
         $canonicalFields = [];
@@ -220,7 +220,7 @@ final class ResourceGenerator
      * @param array<string,mixed> $canonical
      * @return array<string,mixed>
      */
-    private function featureSpec(array $canonical, string $resource, string $singular, string $operation, string $feature): array
+    private function featureDefinition(array $canonical, string $resource, string $singular, string $operation, string $feature): array
     {
         $style = (string) ($canonical['style'] ?? 'server-rendered');
         $isApi = $style === 'api';
@@ -331,7 +331,7 @@ final class ResourceGenerator
                 'primary_key' => (string) ($canonical['model']['primary_key'] ?? 'id'),
             ],
             'listing' => [
-                'spec' => 'app/specs/listing/' . $resource . '.list.yaml',
+                'definition' => 'app/definitions/listing/' . $resource . '.list.yaml',
             ],
             'ui' => [
                 'style' => $style,
@@ -354,9 +354,9 @@ final class ResourceGenerator
      * @param array<string,string> $featureMap
      * @return array<int,string>
      */
-    private function writeResourceSpec(array $canonical, array $featureMap, bool $force): array
+    private function writeResourceDefinition(array $canonical, array $featureMap, bool $force): array
     {
-        $dir = $this->paths->join('app/specs/resources');
+        $dir = $this->paths->join('app/definitions/resources');
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
@@ -364,7 +364,7 @@ final class ResourceGenerator
         $resource = (string) $canonical['resource'];
         $path = $dir . '/' . $resource . '.resource.yaml';
         if (is_file($path) && !$force) {
-            throw new FoundryError('RESOURCE_SPEC_EXISTS', 'io', ['path' => $path], 'Resource spec already exists. Use --force to overwrite.');
+            throw new FoundryError('RESOURCE_DEFINITION_EXISTS', 'io', ['path' => $path], 'Resource definition already exists. Use --force to overwrite.');
         }
 
         $document = $canonical;
@@ -378,9 +378,9 @@ final class ResourceGenerator
      * @param array<string,mixed> $canonical
      * @return array<int,string>
      */
-    private function writeListingSpec(array $canonical, string $resource, bool $force): array
+    private function writeListingDefinition(array $canonical, string $resource, bool $force): array
     {
-        $dir = $this->paths->join('app/specs/listing');
+        $dir = $this->paths->join('app/definitions/listing');
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }

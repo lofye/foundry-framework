@@ -6,13 +6,13 @@ namespace Foundry\Tests\Unit;
 use Foundry\Compiler\Diagnostics\DiagnosticBag;
 use Foundry\Compiler\Migration\ManifestVersionResolver;
 use Foundry\Compiler\Migration\MigrationRule;
-use Foundry\Compiler\Migration\SpecFormat;
-use Foundry\Compiler\Migration\SpecMigrator;
+use Foundry\Compiler\Migration\DefinitionFormat;
+use Foundry\Compiler\Migration\DefinitionMigrator;
 use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
 use PHPUnit\Framework\TestCase;
 
-final class SpecMigratorEdgeCasesTest extends TestCase
+final class DefinitionMigratorEdgeCasesTest extends TestCase
 {
     private TempProject $project;
 
@@ -28,7 +28,7 @@ final class SpecMigratorEdgeCasesTest extends TestCase
 
     public function test_migrate_reports_missing_path_and_parse_failures_with_diagnostics_bag(): void
     {
-        $migrator = new SpecMigrator(
+        $migrator = new DefinitionMigrator(
             Paths::fromCwd($this->project->root),
             new ManifestVersionResolver(),
             [],
@@ -69,15 +69,15 @@ final class SpecMigratorEdgeCasesTest extends TestCase
         };
 
         $resolver = new ManifestVersionResolver(3);
-        $migrator = new SpecMigrator(
+        $migrator = new DefinitionMigrator(
             Paths::fromCwd($this->project->root),
             $resolver,
             [$rule],
-            [new SpecFormat('feature_manifest', 'Feature', 3, [1, 2, 3])],
+            [new DefinitionFormat('feature_manifest', 'Feature', 3, [1, 2, 3])],
         );
 
         $unsupported = $migrator->migrate(false, 'app/features/unsupported/feature.yaml');
-        $this->assertSame('FDY7003_UNSUPPORTED_SPEC_VERSION', $unsupported->diagnostics[0]['code']);
+        $this->assertSame('FDY7003_UNSUPPORTED_DEFINITION_VERSION', $unsupported->diagnostics[0]['code']);
 
         $missingPath = $migrator->migrate(false, 'app/features/missing_path/feature.yaml');
         $codes = array_values(array_map(static fn (array $row): string => (string) ($row['code'] ?? ''), $missingPath->diagnostics));
@@ -85,19 +85,19 @@ final class SpecMigratorEdgeCasesTest extends TestCase
         $this->assertSame('missing_path', $missingPath->plans[0]['status']);
     }
 
-    public function test_spec_format_listing_uses_provided_format_rows(): void
+    public function test_definition_format_listing_uses_provided_format_rows(): void
     {
-        $migrator = new SpecMigrator(
+        $migrator = new DefinitionMigrator(
             Paths::fromCwd($this->project->root),
             new ManifestVersionResolver(2),
             [],
             [
-                new SpecFormat('z_format', 'Z', 1, [1]),
-                new SpecFormat('a_format', 'A', 2, [1, 2]),
+                new DefinitionFormat('z_format', 'Z', 1, [1]),
+                new DefinitionFormat('a_format', 'A', 2, [1, 2]),
             ],
         );
 
-        $formats = $migrator->specFormats();
+        $formats = $migrator->definitionFormats();
         $this->assertSame('a_format', $formats[0]['name']);
         $this->assertSame('z_format', $formats[1]['name']);
     }

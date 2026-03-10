@@ -6,23 +6,23 @@ namespace Foundry\Generation;
 final class SchemaGenerator
 {
     /**
-     * @param array<string,mixed> $spec
+     * @param array<string,mixed> $definition
      * @return array<string,mixed>
      */
-    public function fromFieldSpec(string $title, array $spec): array
+    public function fromFieldDefinition(string $title, array $definition): array
     {
-        $fields = is_array($spec['fields'] ?? null) ? $spec['fields'] : [];
+        $fields = is_array($definition['fields'] ?? null) ? $definition['fields'] : [];
 
         $required = [];
         $properties = [];
 
-        foreach ($fields as $name => $fieldSpec) {
-            if (!is_array($fieldSpec)) {
+        foreach ($fields as $name => $fieldDefinition) {
+            if (!is_array($fieldDefinition)) {
                 continue;
             }
 
-            $properties[$name] = $this->mapField($fieldSpec);
-            if ((bool) ($fieldSpec['required'] ?? false)) {
+            $properties[$name] = $this->mapField($fieldDefinition);
+            if ((bool) ($fieldDefinition['required'] ?? false)) {
                 $required[] = $name;
             }
         }

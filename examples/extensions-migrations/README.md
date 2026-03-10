@@ -4,7 +4,7 @@ This directory demonstrates extension and migration foundations:
 
 - **Example A**: explicit extension registration and a minimal extension pass.
 - **Example B**: pack/capability metadata exposed through extension descriptors.
-- **Example C**: spec migration path from feature manifest v1 to v2.
+- **Example C**: definition migration path from feature manifest v1 to v2.
 - **Example D**: deterministic codemod dry-run output.
 
 ## Example A - Minimal Extension Registration
@@ -70,7 +70,7 @@ llm:
 Dry run command:
 
 ```bash
-php vendor/bin/foundry migrate specs --path=app/features/publish_post/feature.yaml --dry-run --json
+php vendor/bin/foundry migrate definitions --path=app/features/publish_post/feature.yaml --dry-run --json
 ```
 
 ## Example D - Codemod Example

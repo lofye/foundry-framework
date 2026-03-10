@@ -6,21 +6,21 @@ namespace Foundry\Compiler\Codemod;
 use Foundry\Support\Paths;
 use Foundry\Support\Yaml;
 
-final class PlatformSpecNormalizeCodemod implements Codemod
+final class PlatformDefinitionNormalizeCodemod implements Codemod
 {
     public function id(): string
     {
-        return 'platform-spec-v1-normalize';
+        return 'platform-definition-v1-normalize';
     }
 
     public function description(): string
     {
-        return 'Normalize platform specs by enforcing version: 1 and canonical key ordering.';
+        return 'Normalize platform definitions by enforcing version: 1 and canonical key ordering.';
     }
 
     public function sourceType(): string
     {
-        return 'platform_spec';
+        return 'platform_definition';
     }
 
     public function run(Paths $paths, bool $write = false, ?string $path = null): CodemodResult
@@ -28,13 +28,13 @@ final class PlatformSpecNormalizeCodemod implements Codemod
         $changes = [];
         $diagnostics = [];
 
-        foreach ($this->specPaths($paths, $path) as $absolute) {
+        foreach ($this->definitionPaths($paths, $path) as $absolute) {
             $relative = $this->relativePath($paths, $absolute);
             try {
                 $document = Yaml::parseFile($absolute);
             } catch (\Throwable $error) {
                 $diagnostics[] = [
-                    'code' => 'FDY2485_PLATFORM_SPEC_PARSE_ERROR',
+                    'code' => 'FDY2485_PLATFORM_DEFINITION_PARSE_ERROR',
                     'severity' => 'error',
                     'category' => 'migrations',
                     'message' => $error->getMessage(),
@@ -73,7 +73,7 @@ final class PlatformSpecNormalizeCodemod implements Codemod
     /**
      * @return array<int,string>
      */
-    private function specPaths(Paths $paths, ?string $path): array
+    private function definitionPaths(Paths $paths, ?string $path): array
     {
         if ($path !== null && $path !== '') {
             $candidate = str_starts_with($path, $paths->root() . '/') ? $path : $paths->join($path);
@@ -82,15 +82,15 @@ final class PlatformSpecNormalizeCodemod implements Codemod
         }
 
         $files = array_merge(
-            glob($paths->join('app/specs/billing/*.billing.yaml')) ?: [],
-            glob($paths->join('app/specs/workflows/*.workflow.yaml')) ?: [],
-            glob($paths->join('app/specs/orchestrations/*.orchestration.yaml')) ?: [],
-            glob($paths->join('app/specs/search/*.search.yaml')) ?: [],
-            glob($paths->join('app/specs/streams/*.stream.yaml')) ?: [],
-            glob($paths->join('app/specs/locales/*.locale.yaml')) ?: [],
-            glob($paths->join('app/specs/roles/*.roles.yaml')) ?: [],
-            glob($paths->join('app/specs/policies/*.policy.yaml')) ?: [],
-            glob($paths->join('app/specs/inspect-ui/*.inspect-ui.yaml')) ?: [],
+            glob($paths->join('app/definitions/billing/*.billing.yaml')) ?: [],
+            glob($paths->join('app/definitions/workflows/*.workflow.yaml')) ?: [],
+            glob($paths->join('app/definitions/orchestrations/*.orchestration.yaml')) ?: [],
+            glob($paths->join('app/definitions/search/*.search.yaml')) ?: [],
+            glob($paths->join('app/definitions/streams/*.stream.yaml')) ?: [],
+            glob($paths->join('app/definitions/locales/*.locale.yaml')) ?: [],
+            glob($paths->join('app/definitions/roles/*.roles.yaml')) ?: [],
+            glob($paths->join('app/definitions/policies/*.policy.yaml')) ?: [],
+            glob($paths->join('app/definitions/inspect-ui/*.inspect-ui.yaml')) ?: [],
         );
         sort($files);
 
@@ -153,16 +153,16 @@ final class PlatformSpecNormalizeCodemod implements Codemod
     private function formatForPath(string $path): string
     {
         return match (true) {
-            str_ends_with($path, '.billing.yaml') => 'billing_spec',
-            str_ends_with($path, '.workflow.yaml') => 'workflow_spec',
-            str_ends_with($path, '.orchestration.yaml') => 'orchestration_spec',
-            str_ends_with($path, '.search.yaml') => 'search_spec',
-            str_ends_with($path, '.stream.yaml') => 'stream_spec',
-            str_ends_with($path, '.locale.yaml') => 'locale_spec',
-            str_ends_with($path, '.roles.yaml') => 'roles_spec',
-            str_ends_with($path, '.policy.yaml') => 'policy_spec',
-            str_ends_with($path, '.inspect-ui.yaml') => 'inspect_ui_spec',
-            default => 'platform_spec',
+            str_ends_with($path, '.billing.yaml') => 'billing_definition',
+            str_ends_with($path, '.workflow.yaml') => 'workflow_definition',
+            str_ends_with($path, '.orchestration.yaml') => 'orchestration_definition',
+            str_ends_with($path, '.search.yaml') => 'search_definition',
+            str_ends_with($path, '.stream.yaml') => 'stream_definition',
+            str_ends_with($path, '.locale.yaml') => 'locale_definition',
+            str_ends_with($path, '.roles.yaml') => 'roles_definition',
+            str_ends_with($path, '.policy.yaml') => 'policy_definition',
+            str_ends_with($path, '.inspect-ui.yaml') => 'inspect_ui_definition',
+            default => 'platform_definition',
         };
     }
 }

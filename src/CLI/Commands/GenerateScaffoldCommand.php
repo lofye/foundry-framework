@@ -66,12 +66,12 @@ final class GenerateScaffoldCommand extends Command
             throw new FoundryError('CLI_RESOURCE_REQUIRED', 'validation', [], 'Resource name required.');
         }
 
-        $spec = $this->extractOption($args, '--spec');
-        if ($spec === null || $spec === '') {
-            throw new FoundryError('CLI_RESOURCE_SPEC_REQUIRED', 'validation', [], 'Resource spec path required (--spec=<file>).');
+        $definition = $this->extractOption($args, '--definition');
+        if ($definition === null || $definition === '') {
+            throw new FoundryError('CLI_RESOURCE_DEFINITION_REQUIRED', 'validation', [], 'Resource definition path required (--definition=<file>).');
         }
 
-        $result = $context->resourceGenerator()->generate($resource, $spec, $force);
+        $result = $context->resourceGenerator()->generate($resource, $definition, $force);
 
         return [
             'status' => 0,
@@ -90,8 +90,8 @@ final class GenerateScaffoldCommand extends Command
             throw new FoundryError('CLI_ADMIN_RESOURCE_REQUIRED', 'validation', [], 'Admin resource name required.');
         }
 
-        $spec = $this->extractOption($args, '--spec');
-        $result = $context->adminResourceGenerator()->generate($resource, $spec, $force);
+        $definition = $this->extractOption($args, '--definition');
+        $result = $context->adminResourceGenerator()->generate($resource, $definition, $force);
 
         return [
             'status' => 0,

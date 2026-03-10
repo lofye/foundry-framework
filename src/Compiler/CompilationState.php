@@ -17,7 +17,7 @@ final class CompilationState
     /**
      * @var array<string,array<string,array<string,mixed>>>
      */
-    public array $discoveredSpecs = [];
+    public array $discoveredDefinitions = [];
 
     /**
      * @var array<string,mixed>

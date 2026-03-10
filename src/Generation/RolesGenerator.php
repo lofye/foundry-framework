@@ -18,17 +18,17 @@ final class RolesGenerator
      */
     public function generate(bool $force = false): array
     {
-        $specDir = $this->paths->join('app/specs/roles');
-        if (!is_dir($specDir)) {
-            mkdir($specDir, 0777, true);
+        $definitionDir = $this->paths->join('app/definitions/roles');
+        if (!is_dir($definitionDir)) {
+            mkdir($definitionDir, 0777, true);
         }
 
-        $specPath = $specDir . '/default.roles.yaml';
-        if (is_file($specPath) && !$force) {
-            throw new FoundryError('ROLES_SPEC_EXISTS', 'io', ['path' => $specPath], 'Roles spec already exists. Use --force to overwrite.');
+        $definitionPath = $definitionDir . '/default.roles.yaml';
+        if (is_file($definitionPath) && !$force) {
+            throw new FoundryError('ROLES_DEFINITION_EXISTS', 'io', ['path' => $definitionPath], 'Roles definition already exists. Use --force to overwrite.');
         }
 
-        $spec = [
+        $definition = [
             'version' => 1,
             'set' => 'default',
             'roles' => [
@@ -37,7 +37,7 @@ final class RolesGenerator
                 'viewer' => ['permissions' => ['posts.view']],
             ],
         ];
-        file_put_contents($specPath, Yaml::dump($spec));
+        file_put_contents($definitionPath, Yaml::dump($definition));
 
         $migrationPath = $this->paths->join('app/platform/migrations/20260309_create_roles_tables.sql');
         if (!is_file($migrationPath) || $force) {
@@ -59,8 +59,8 @@ SQL);
         }
 
         return [
-            'spec' => $specPath,
-            'files' => [$specPath, $migrationPath],
+            'definition' => $definitionPath,
+            'files' => [$definitionPath, $migrationPath],
         ];
     }
 }

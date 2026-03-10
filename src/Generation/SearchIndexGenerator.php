@@ -16,27 +16,27 @@ final class SearchIndexGenerator
     /**
      * @return array<string,mixed>
      */
-    public function generate(string $name, string $specPath, bool $force = false): array
+    public function generate(string $name, string $definitionPath, bool $force = false): array
     {
         $name = trim($name);
         if ($name === '') {
             throw new FoundryError('SEARCH_INDEX_NAME_REQUIRED', 'validation', [], 'Search index name is required.');
         }
 
-        $source = $this->resolvePath($specPath);
+        $source = $this->resolvePath($definitionPath);
         if (!is_file($source)) {
-            throw new FoundryError('SEARCH_INDEX_SPEC_MISSING', 'not_found', ['spec' => $specPath], 'Search index spec file not found.');
+            throw new FoundryError('SEARCH_INDEX_DEFINITION_MISSING', 'not_found', ['definition' => $definitionPath], 'Search index definition file not found.');
         }
 
         $document = Yaml::parseFile($source);
-        $dir = $this->paths->join('app/specs/search');
+        $dir = $this->paths->join('app/definitions/search');
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
 
-        $targetSpec = $dir . '/' . $name . '.search.yaml';
-        if (is_file($targetSpec) && !$force) {
-            throw new FoundryError('SEARCH_INDEX_SPEC_EXISTS', 'io', ['path' => $targetSpec], 'Search index spec already exists. Use --force to overwrite.');
+        $targetDefinition = $dir . '/' . $name . '.search.yaml';
+        if (is_file($targetDefinition) && !$force) {
+            throw new FoundryError('SEARCH_INDEX_DEFINITION_EXISTS', 'io', ['path' => $targetDefinition], 'Search index definition already exists. Use --force to overwrite.');
         }
 
         $normalized = [
@@ -48,12 +48,12 @@ final class SearchIndexGenerator
             'fields' => array_values(array_map('strval', (array) ($document['fields'] ?? []))),
             'filters' => array_values(array_map('strval', (array) ($document['filters'] ?? []))),
         ];
-        file_put_contents($targetSpec, Yaml::dump($normalized));
+        file_put_contents($targetDefinition, Yaml::dump($normalized));
 
         return [
             'index' => $name,
-            'spec' => $targetSpec,
-            'files' => [$targetSpec],
+            'definition' => $targetDefinition,
+            'files' => [$targetDefinition],
         ];
     }
 

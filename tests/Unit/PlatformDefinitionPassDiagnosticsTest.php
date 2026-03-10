@@ -9,7 +9,7 @@ use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
 use PHPUnit\Framework\TestCase;
 
-final class PlatformSpecPassDiagnosticsTest extends TestCase
+final class PlatformDefinitionPassDiagnosticsTest extends TestCase
 {
     private TempProject $project;
 
@@ -20,17 +20,17 @@ final class PlatformSpecPassDiagnosticsTest extends TestCase
         $this->createFeature('list_posts');
         $this->createFeature('view_post');
 
-        mkdir($this->project->root . '/app/specs/billing', 0777, true);
-        mkdir($this->project->root . '/app/specs/workflows', 0777, true);
-        mkdir($this->project->root . '/app/specs/orchestrations', 0777, true);
-        mkdir($this->project->root . '/app/specs/search', 0777, true);
-        mkdir($this->project->root . '/app/specs/streams', 0777, true);
-        mkdir($this->project->root . '/app/specs/locales', 0777, true);
-        mkdir($this->project->root . '/app/specs/roles', 0777, true);
-        mkdir($this->project->root . '/app/specs/policies', 0777, true);
-        mkdir($this->project->root . '/app/specs/inspect-ui', 0777, true);
+        mkdir($this->project->root . '/app/definitions/billing', 0777, true);
+        mkdir($this->project->root . '/app/definitions/workflows', 0777, true);
+        mkdir($this->project->root . '/app/definitions/orchestrations', 0777, true);
+        mkdir($this->project->root . '/app/definitions/search', 0777, true);
+        mkdir($this->project->root . '/app/definitions/streams', 0777, true);
+        mkdir($this->project->root . '/app/definitions/locales', 0777, true);
+        mkdir($this->project->root . '/app/definitions/roles', 0777, true);
+        mkdir($this->project->root . '/app/definitions/policies', 0777, true);
+        mkdir($this->project->root . '/app/definitions/inspect-ui', 0777, true);
 
-        file_put_contents($this->project->root . '/app/specs/billing/paddle.billing.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/billing/paddle.billing.yaml', <<<'YAML'
 version: 2
 provider: paddle
 plans:
@@ -42,7 +42,7 @@ feature_names:
   checkout: missing_checkout_feature
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/workflows/posts.workflow.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/workflows/posts.workflow.yaml', <<<'YAML'
 version: 2
 resource: posts
 states: [draft]
@@ -54,14 +54,14 @@ transitions:
     emit: [post.published]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/workflows/empty.workflow.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/workflows/empty.workflow.yaml', <<<'YAML'
 version: 1
 resource: empty
 states: []
 transitions: {}
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/orchestrations/process.orchestration.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/orchestrations/process.orchestration.yaml', <<<'YAML'
 version: 2
 name: process
 steps:
@@ -77,7 +77,7 @@ steps:
     depends_on: [missing]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/search/posts.search.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/search/posts.search.yaml', <<<'YAML'
 version: 2
 index: posts
 adapter: unsupported
@@ -86,7 +86,7 @@ fields: []
 filters: []
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/streams/first.stream.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/streams/first.stream.yaml', <<<'YAML'
 version: 2
 stream: first
 transport: websocket
@@ -95,7 +95,7 @@ route:
 publish_features: [missing_feature]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/streams/second.stream.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/streams/second.stream.yaml', <<<'YAML'
 version: 1
 stream: second
 transport: sse
@@ -104,7 +104,7 @@ route:
 publish_features: [list_posts]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/locales/core.locale.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/locales/core.locale.yaml', <<<'YAML'
 version: 2
 bundle: core
 default: en
@@ -112,7 +112,7 @@ locales: [fr]
 translation_paths: [app/platform/lang]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/roles/default.roles.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/roles/default.roles.yaml', <<<'YAML'
 version: 2
 set: default
 roles:
@@ -120,7 +120,7 @@ roles:
     permissions: [posts.unknown]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/roles/duplicate.roles.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/roles/duplicate.roles.yaml', <<<'YAML'
 version: 1
 set: duplicate
 roles:
@@ -128,7 +128,7 @@ roles:
     permissions: [posts.create]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/policies/posts.policy.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/policies/posts.policy.yaml', <<<'YAML'
 version: 2
 policy: posts
 resource: posts
@@ -136,7 +136,7 @@ rules:
   ghost: [posts.view]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/inspect-ui/dev.inspect-ui.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/inspect-ui/dev.inspect-ui.yaml', <<<'YAML'
 version: 2
 name: dev
 enabled: true
@@ -149,7 +149,7 @@ YAML);
         $this->project->cleanup();
     }
 
-    public function test_platform_spec_pass_emits_expected_diagnostics(): void
+    public function test_platform_definition_pass_emits_expected_diagnostics(): void
     {
         $compiler = new GraphCompiler(Paths::fromCwd($this->project->root));
         $result = $compiler->compile(new CompileOptions());
@@ -159,38 +159,38 @@ YAML);
             $result->diagnostics->toArray(),
         ));
 
-        $this->assertContains('FDY2401_BILLING_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2401_BILLING_DEFINITION_VERSION_UNSUPPORTED', $codes);
         $this->assertContains('FDY2402_BILLING_PROVIDER_UNSUPPORTED', $codes);
         $this->assertContains('FDY2403_BILLING_PLAN_DUPLICATE', $codes);
         $this->assertContains('FDY2404_BILLING_PRICE_ID_MISSING', $codes);
         $this->assertContains('FDY2405_BILLING_FEATURE_MISSING', $codes);
-        $this->assertContains('FDY2410_WORKFLOW_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2410_WORKFLOW_DEFINITION_VERSION_UNSUPPORTED', $codes);
         $this->assertContains('FDY2411_WORKFLOW_STATES_EMPTY', $codes);
         $this->assertContains('FDY2412_WORKFLOW_TRANSITION_FROM_INVALID', $codes);
         $this->assertContains('FDY2413_WORKFLOW_TRANSITION_TO_INVALID', $codes);
         $this->assertContains('FDY2414_WORKFLOW_PERMISSION_MISSING', $codes);
         $this->assertContains('FDY2415_WORKFLOW_EVENT_MISSING', $codes);
-        $this->assertContains('FDY2420_ORCHESTRATION_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2420_ORCHESTRATION_DEFINITION_VERSION_UNSUPPORTED', $codes);
         $this->assertContains('FDY2421_ORCHESTRATION_STEP_DUPLICATE', $codes);
         $this->assertContains('FDY2422_ORCHESTRATION_JOB_MISSING', $codes);
         $this->assertContains('FDY2423_ORCHESTRATION_DEPENDENCY_UNKNOWN', $codes);
         $this->assertContains('FDY2424_ORCHESTRATION_CYCLE', $codes);
         $this->assertContains('FDY2425_ORCHESTRATION_JOB_UNKNOWN', $codes);
-        $this->assertContains('FDY2430_SEARCH_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2430_SEARCH_DEFINITION_VERSION_UNSUPPORTED', $codes);
         $this->assertContains('FDY2431_SEARCH_ADAPTER_UNSUPPORTED', $codes);
         $this->assertContains('FDY2432_SEARCH_FIELDS_EMPTY', $codes);
-        $this->assertContains('FDY2440_STREAM_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2440_STREAM_DEFINITION_VERSION_UNSUPPORTED', $codes);
         $this->assertContains('FDY2441_STREAM_TRANSPORT_UNSUPPORTED', $codes);
         $this->assertContains('FDY2442_STREAM_ROUTE_CONFLICT', $codes);
         $this->assertContains('FDY2443_STREAM_FEATURE_MISSING', $codes);
-        $this->assertContains('FDY2450_LOCALE_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2450_LOCALE_DEFINITION_VERSION_UNSUPPORTED', $codes);
         $this->assertContains('FDY2451_LOCALE_DEFAULT_INVALID', $codes);
-        $this->assertContains('FDY2460_ROLES_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2460_ROLES_DEFINITION_VERSION_UNSUPPORTED', $codes);
         $this->assertContains('FDY2461_ROLE_DUPLICATE', $codes);
         $this->assertContains('FDY2462_ROLE_PERMISSION_MISSING', $codes);
-        $this->assertContains('FDY2470_POLICY_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2470_POLICY_DEFINITION_VERSION_UNSUPPORTED', $codes);
         $this->assertContains('FDY2471_POLICY_ROLE_MISSING', $codes);
-        $this->assertContains('FDY2480_INSPECT_UI_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2480_INSPECT_UI_DEFINITION_VERSION_UNSUPPORTED', $codes);
     }
 
     private function createFeature(string $feature): void

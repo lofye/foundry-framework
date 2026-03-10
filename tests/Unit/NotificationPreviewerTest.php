@@ -21,7 +21,7 @@ final class NotificationPreviewerTest extends TestCase
     protected function setUp(): void
     {
         $this->project = new TempProject();
-        mkdir($this->project->root . '/app/specs/notifications', 0777, true);
+        mkdir($this->project->root . '/app/definitions/notifications', 0777, true);
         mkdir($this->project->root . '/app/notifications/templates', 0777, true);
         mkdir($this->project->root . '/app/notifications/schemas', 0777, true);
     }
@@ -71,7 +71,7 @@ return [
 ];
 PHP);
 
-        file_put_contents($this->project->root . '/app/specs/notifications/welcome_email.notification.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/notifications/welcome_email.notification.yaml', <<<'YAML'
 version: 1
 notification: welcome_email
 channel: mail
@@ -153,7 +153,7 @@ PHP);
 }
 JSON);
 
-        file_put_contents($this->project->root . '/app/specs/notifications/weekly_digest.notification.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/notifications/weekly_digest.notification.yaml', <<<'YAML'
 version: 1
 notification: weekly_digest
 channel: mail
@@ -182,7 +182,7 @@ PHP);
 
         file_put_contents($this->project->root . '/app/notifications/schemas/broken.input.schema.json', '{invalid json');
 
-        file_put_contents($this->project->root . '/app/specs/notifications/broken.notification.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/notifications/broken.notification.yaml', <<<'YAML'
 version: 1
 notification: broken
 channel: mail
@@ -192,7 +192,7 @@ input_schema: app/notifications/schemas/broken.input.schema.json
 dispatch_features: [dispatch_report_email]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/notifications/missing.notification.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/notifications/missing.notification.yaml', <<<'YAML'
 version: 1
 notification: missing_schema
 channel: mail
@@ -216,7 +216,7 @@ YAML);
         $graph = new ApplicationGraph(1, '0.1.0', '2026-03-09T00:00:00+00:00', 'hash');
         $graph->addNode(new NotificationNode(
             'notification:broken_template',
-            'app/specs/notifications/broken_template.notification.yaml',
+            'app/definitions/notifications/broken_template.notification.yaml',
             [
                 'notification' => 'broken_template',
                 'channel' => 'mail',

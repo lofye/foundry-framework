@@ -228,7 +228,7 @@ php vendor/bin/foundry inspect packs --json
 php vendor/bin/foundry inspect pack <name> --json
 php vendor/bin/foundry inspect compatibility --json
 php vendor/bin/foundry inspect migrations --json
-php vendor/bin/foundry inspect spec-format <name> --json
+php vendor/bin/foundry inspect definition-format <name> --json
 php vendor/bin/foundry inspect resource <name> --json
 php vendor/bin/foundry inspect notification <name> --json
 php vendor/bin/foundry inspect api <name> --json
@@ -244,22 +244,22 @@ php vendor/bin/foundry inspect dependencies <feature> --json
 
 Generate:
 ```bash
-php vendor/bin/foundry generate feature <spec.yaml> --json
+php vendor/bin/foundry generate feature <definition.yaml> --json
 php vendor/bin/foundry generate starter server-rendered --json
 php vendor/bin/foundry generate starter api --json
-php vendor/bin/foundry generate resource <name> --spec=<file> --json
+php vendor/bin/foundry generate resource <name> --definition=<file> --json
 php vendor/bin/foundry generate admin-resource <name> --json
 php vendor/bin/foundry generate uploads avatar --json
 php vendor/bin/foundry generate uploads attachments --json
 php vendor/bin/foundry generate notification <name> --json
-php vendor/bin/foundry generate api-resource <name> --spec=<file> --json
+php vendor/bin/foundry generate api-resource <name> --definition=<file> --json
 php vendor/bin/foundry generate docs --format=markdown --json
 php vendor/bin/foundry generate docs --format=html --json
 php vendor/bin/foundry generate indexes --json
 php vendor/bin/foundry generate tests <feature> --json
 php vendor/bin/foundry generate tests <target> --mode=deep --json
 php vendor/bin/foundry generate tests --all-missing --mode=deep --json
-php vendor/bin/foundry generate migration <spec.yaml> --json
+php vendor/bin/foundry generate migration <definition.yaml> --json
 php vendor/bin/foundry generate context <feature> --json
 ```
 
@@ -297,9 +297,9 @@ php vendor/bin/foundry schedule:run --json
 php vendor/bin/foundry trace:tail --json
 php vendor/bin/foundry affected-files <feature> --json
 php vendor/bin/foundry impacted-features <permission|event:<name>|cache:<key>> --json
-php vendor/bin/foundry migrate specs --dry-run --json
-php vendor/bin/foundry migrate specs --path=<path> --dry-run --json
-php vendor/bin/foundry migrate specs --write --json
+php vendor/bin/foundry migrate definitions --dry-run --json
+php vendor/bin/foundry migrate definitions --path=<path> --dry-run --json
+php vendor/bin/foundry migrate definitions --write --json
 php vendor/bin/foundry codemod run <name> --dry-run --json
 php vendor/bin/foundry codemod run <name> --write --json
 ```
@@ -353,7 +353,7 @@ Each example includes feature folders plus generated indexes.
 
 ## Additional Docs
 - `ARCHITECTURE.md`
-- `FEATURE_SPEC.md`
+- `FEATURE_DEFINITION.md`
 - `BENCHMARK_NOTES.md`
 - `docs/semantic-compiler.md`
 - `docs/extensions-and-migrations.md`

@@ -18,27 +18,27 @@ final class OrchestrationGenerator
     /**
      * @return array<string,mixed>
      */
-    public function generate(string $name, string $specPath, bool $force = false): array
+    public function generate(string $name, string $definitionPath, bool $force = false): array
     {
         $name = trim($name);
         if ($name === '') {
             throw new FoundryError('ORCHESTRATION_NAME_REQUIRED', 'validation', [], 'Orchestration name is required.');
         }
 
-        $source = $this->resolvePath($specPath);
+        $source = $this->resolvePath($definitionPath);
         if (!is_file($source)) {
-            throw new FoundryError('ORCHESTRATION_SPEC_MISSING', 'not_found', ['spec' => $specPath], 'Orchestration spec file not found.');
+            throw new FoundryError('ORCHESTRATION_DEFINITION_MISSING', 'not_found', ['definition' => $definitionPath], 'Orchestration definition file not found.');
         }
 
         $document = Yaml::parseFile($source);
-        $dir = $this->paths->join('app/specs/orchestrations');
+        $dir = $this->paths->join('app/definitions/orchestrations');
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
 
-        $targetSpec = $dir . '/' . $name . '.orchestration.yaml';
-        if (is_file($targetSpec) && !$force) {
-            throw new FoundryError('ORCHESTRATION_SPEC_EXISTS', 'io', ['path' => $targetSpec], 'Orchestration spec already exists. Use --force to overwrite.');
+        $targetDefinition = $dir . '/' . $name . '.orchestration.yaml';
+        if (is_file($targetDefinition) && !$force) {
+            throw new FoundryError('ORCHESTRATION_DEFINITION_EXISTS', 'io', ['path' => $targetDefinition], 'Orchestration definition already exists. Use --force to overwrite.');
         }
 
         $normalized = [
@@ -46,7 +46,7 @@ final class OrchestrationGenerator
             'name' => (string) ($document['name'] ?? $name),
             'steps' => array_values((array) ($document['steps'] ?? [])),
         ];
-        file_put_contents($targetSpec, Yaml::dump($normalized));
+        file_put_contents($targetDefinition, Yaml::dump($normalized));
 
         $feature = 'start_' . $name . '_orchestration';
         $files = $this->features->generateFromArray([
@@ -61,14 +61,14 @@ final class OrchestrationGenerator
             'tests' => ['required' => ['contract', 'feature', 'auth']],
         ], $force);
 
-        $files[] = $targetSpec;
+        $files[] = $targetDefinition;
         $files = array_values(array_unique($files));
         sort($files);
 
         return [
             'orchestration' => $name,
             'feature' => $feature,
-            'spec' => $targetSpec,
+            'definition' => $targetDefinition,
             'files' => $files,
         ];
     }

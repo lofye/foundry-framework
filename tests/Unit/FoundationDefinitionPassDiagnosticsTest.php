@@ -9,7 +9,7 @@ use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
 use PHPUnit\Framework\TestCase;
 
-final class FoundationSpecPassDiagnosticsTest extends TestCase
+final class FoundationDefinitionPassDiagnosticsTest extends TestCase
 {
     private TempProject $project;
 
@@ -18,13 +18,13 @@ final class FoundationSpecPassDiagnosticsTest extends TestCase
         $this->project = new TempProject();
         $this->createFeature('list_posts');
 
-        mkdir($this->project->root . '/app/specs/resources', 0777, true);
-        mkdir($this->project->root . '/app/specs/admin', 0777, true);
-        mkdir($this->project->root . '/app/specs/uploads', 0777, true);
-        mkdir($this->project->root . '/app/specs/listing', 0777, true);
-        mkdir($this->project->root . '/app/specs/starters', 0777, true);
+        mkdir($this->project->root . '/app/definitions/resources', 0777, true);
+        mkdir($this->project->root . '/app/definitions/admin', 0777, true);
+        mkdir($this->project->root . '/app/definitions/uploads', 0777, true);
+        mkdir($this->project->root . '/app/definitions/listing', 0777, true);
+        mkdir($this->project->root . '/app/definitions/starters', 0777, true);
 
-        file_put_contents($this->project->root . '/app/specs/resources/posts.resource.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/resources/posts.resource.yaml', <<<'YAML'
 version: 2
 resource: posts
 style: server-rendered
@@ -43,7 +43,7 @@ feature_names:
   delete: delete_post
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/listing/posts.list.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/listing/posts.list.yaml', <<<'YAML'
 version: 2
 resource: posts
 search:
@@ -59,7 +59,7 @@ pagination:
   per_page: 25
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/admin/posts.admin.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/admin/posts.admin.yaml', <<<'YAML'
 version: 1
 resource: posts
 table:
@@ -69,7 +69,7 @@ bulk_actions: [delete]
 row_actions: [edit, delete]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/uploads/avatar.uploads.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/uploads/avatar.uploads.yaml', <<<'YAML'
 version: 1
 profile: avatar
 disk: unknown_disk
@@ -78,7 +78,7 @@ feature_names:
   attach: missing_attach_feature
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/starters/server-rendered.starter.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/starters/server-rendered.starter.yaml', <<<'YAML'
 version: 1
 starter: server-rendered
 features: [list_posts, missing_feature]
@@ -90,7 +90,7 @@ YAML);
         $this->project->cleanup();
     }
 
-    public function test_foundation_spec_pass_emits_diagnostics_for_invalid_specs(): void
+    public function test_foundation_definition_pass_emits_diagnostics_for_invalid_definitions(): void
     {
         $compiler = new GraphCompiler(Paths::fromCwd($this->project->root));
         $result = $compiler->compile(new CompileOptions());
@@ -100,10 +100,10 @@ YAML);
             $result->diagnostics->toArray(),
         ));
 
-        $this->assertContains('FDY2201_RESOURCE_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2201_RESOURCE_DEFINITION_VERSION_UNSUPPORTED', $codes);
         $this->assertContains('FDY2212_RESOURCE_FIELD_TYPE_INVALID', $codes);
         $this->assertContains('FDY2202_RESOURCE_FEATURE_MISSING', $codes);
-        $this->assertContains('FDY2203_LISTING_SPEC_VERSION_UNSUPPORTED', $codes);
+        $this->assertContains('FDY2203_LISTING_DEFINITION_VERSION_UNSUPPORTED', $codes);
         $this->assertContains('FDY2204_LISTING_SEARCH_FIELD_INVALID', $codes);
         $this->assertContains('FDY2205_LISTING_SORT_FIELD_INVALID', $codes);
         $this->assertContains('FDY2206_LISTING_FILTER_FIELD_INVALID', $codes);

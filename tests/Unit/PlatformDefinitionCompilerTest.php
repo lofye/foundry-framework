@@ -9,7 +9,7 @@ use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
 use PHPUnit\Framework\TestCase;
 
-final class PlatformSpecCompilerTest extends TestCase
+final class PlatformDefinitionCompilerTest extends TestCase
 {
     private TempProject $project;
 
@@ -39,16 +39,16 @@ final class PlatformSpecCompilerTest extends TestCase
             ['extract_document_text', 'generate_document_summary', 'classify_document', 'finalize_document_processing'],
         );
 
-        mkdir($this->project->root . '/app/specs/resources', 0777, true);
-        mkdir($this->project->root . '/app/specs/billing', 0777, true);
-        mkdir($this->project->root . '/app/specs/workflows', 0777, true);
-        mkdir($this->project->root . '/app/specs/orchestrations', 0777, true);
-        mkdir($this->project->root . '/app/specs/search', 0777, true);
-        mkdir($this->project->root . '/app/specs/streams', 0777, true);
-        mkdir($this->project->root . '/app/specs/locales', 0777, true);
-        mkdir($this->project->root . '/app/specs/roles', 0777, true);
-        mkdir($this->project->root . '/app/specs/policies', 0777, true);
-        mkdir($this->project->root . '/app/specs/inspect-ui', 0777, true);
+        mkdir($this->project->root . '/app/definitions/resources', 0777, true);
+        mkdir($this->project->root . '/app/definitions/billing', 0777, true);
+        mkdir($this->project->root . '/app/definitions/workflows', 0777, true);
+        mkdir($this->project->root . '/app/definitions/orchestrations', 0777, true);
+        mkdir($this->project->root . '/app/definitions/search', 0777, true);
+        mkdir($this->project->root . '/app/definitions/streams', 0777, true);
+        mkdir($this->project->root . '/app/definitions/locales', 0777, true);
+        mkdir($this->project->root . '/app/definitions/roles', 0777, true);
+        mkdir($this->project->root . '/app/definitions/policies', 0777, true);
+        mkdir($this->project->root . '/app/definitions/inspect-ui', 0777, true);
         mkdir($this->project->root . '/app/platform/lang/en', 0777, true);
         mkdir($this->project->root . '/app/platform/lang/fr', 0777, true);
 
@@ -72,7 +72,7 @@ return [
 ];
 PHP);
 
-        file_put_contents($this->project->root . '/app/specs/resources/posts.resource.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/resources/posts.resource.yaml', <<<'YAML'
 version: 1
 resource: posts
 style: server-rendered
@@ -92,7 +92,7 @@ feature_names:
   delete: delete_post
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/billing/stripe.billing.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/billing/stripe.billing.yaml', <<<'YAML'
 version: 1
 provider: stripe
 plans:
@@ -115,7 +115,7 @@ feature_names:
 webhook_signing_secret_env: STRIPE_WEBHOOK_SECRET
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/workflows/posts.workflow.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/workflows/posts.workflow.yaml', <<<'YAML'
 version: 1
 resource: posts
 states: [draft, review, published, archived]
@@ -130,7 +130,7 @@ transitions:
     to: archived
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/orchestrations/process_uploaded_document.orchestration.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/orchestrations/process_uploaded_document.orchestration.yaml', <<<'YAML'
 version: 1
 name: process_uploaded_document
 steps:
@@ -147,7 +147,7 @@ steps:
     depends_on: [generate_summary, classify_document]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/search/posts.search.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/search/posts.search.yaml', <<<'YAML'
 version: 1
 index: posts
 adapter: sql
@@ -159,7 +159,7 @@ fields: [title, slug, body_markdown]
 filters: [status, created_at]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/streams/job_progress.stream.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/streams/job_progress.stream.yaml', <<<'YAML'
 version: 1
 stream: job_progress
 transport: sse
@@ -177,7 +177,7 @@ payload_schema:
     data: { type: object }
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/locales/core.locale.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/locales/core.locale.yaml', <<<'YAML'
 version: 1
 bundle: core
 default: en
@@ -185,7 +185,7 @@ locales: [en, fr]
 translation_paths: [app/platform/lang]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/roles/default.roles.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/roles/default.roles.yaml', <<<'YAML'
 version: 1
 set: default
 roles:
@@ -197,7 +197,7 @@ roles:
     permissions: [posts.view]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/policies/posts.policy.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/policies/posts.policy.yaml', <<<'YAML'
 version: 1
 policy: posts
 resource: posts
@@ -207,7 +207,7 @@ rules:
   viewer: [posts.view]
 YAML);
 
-        file_put_contents($this->project->root . '/app/specs/inspect-ui/dev.inspect-ui.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/inspect-ui/dev.inspect-ui.yaml', <<<'YAML'
 version: 1
 name: dev
 enabled: true
@@ -222,7 +222,7 @@ YAML);
         $this->project->cleanup();
     }
 
-    public function test_platform_specs_compile_into_graph_and_projections(): void
+    public function test_platform_definitions_compile_into_graph_and_projections(): void
     {
         $compiler = new GraphCompiler(Paths::fromCwd($this->project->root));
         $result = $compiler->compile(new CompileOptions());

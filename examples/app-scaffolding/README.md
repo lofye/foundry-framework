@@ -1,6 +1,6 @@
 # App Scaffolding Examples
 
-This folder provides minimal app-scaffolding source-of-truth spec examples.
+This folder provides minimal app-scaffolding source-of-truth definition examples.
 
 ## A. Starter
 - `starter/server-rendered.starter.yaml`

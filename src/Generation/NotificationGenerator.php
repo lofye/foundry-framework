@@ -24,20 +24,20 @@ final class NotificationGenerator
             throw new FoundryError('NOTIFICATION_NAME_INVALID', 'validation', ['name' => $name], 'Notification name is invalid.');
         }
 
-        $specDir = $this->paths->join('app/specs/notifications');
+        $definitionDir = $this->paths->join('app/definitions/notifications');
         $schemaDir = $this->paths->join('app/notifications/schemas');
         $templateDir = $this->paths->join('app/notifications/templates');
         $testsDir = $this->paths->join('app/notifications/tests');
 
-        foreach ([$specDir, $schemaDir, $templateDir, $testsDir] as $dir) {
+        foreach ([$definitionDir, $schemaDir, $templateDir, $testsDir] as $dir) {
             if (!is_dir($dir)) {
                 mkdir($dir, 0777, true);
             }
         }
 
-        $specPath = $specDir . '/' . $notification . '.notification.yaml';
-        if (is_file($specPath) && !$force) {
-            throw new FoundryError('NOTIFICATION_SPEC_EXISTS', 'io', ['path' => $specPath], 'Notification spec already exists. Use --force to overwrite.');
+        $definitionPath = $definitionDir . '/' . $notification . '.notification.yaml';
+        if (is_file($definitionPath) && !$force) {
+            throw new FoundryError('NOTIFICATION_DEFINITION_EXISTS', 'io', ['path' => $definitionPath], 'Notification definition already exists. Use --force to overwrite.');
         }
 
         $schemaPath = $schemaDir . '/' . $notification . '.input.schema.json';
@@ -45,7 +45,7 @@ final class NotificationGenerator
         $dispatchPath = $this->paths->join('app/notifications/dispatch_' . $notification . '.php');
         $testPath = $testsDir . '/' . $notification . '_notification_test.php';
 
-        $spec = [
+        $definition = [
             'version' => 1,
             'notification' => $notification,
             'channel' => 'mail',
@@ -55,7 +55,7 @@ final class NotificationGenerator
             'dispatch_features' => [],
         ];
 
-        file_put_contents($specPath, Yaml::dump($spec));
+        file_put_contents($definitionPath, Yaml::dump($definition));
 
         file_put_contents($schemaPath, <<<'JSON'
 {
@@ -78,8 +78,8 @@ JSON);
             'notification' => $notification,
             'channel' => 'mail',
             'queue' => 'default',
-            'files' => [$specPath, $schemaPath, $templatePath, $dispatchPath, $testPath],
-            'spec' => $specPath,
+            'files' => [$definitionPath, $schemaPath, $templatePath, $dispatchPath, $testPath],
+            'definition' => $definitionPath,
         ];
     }
 

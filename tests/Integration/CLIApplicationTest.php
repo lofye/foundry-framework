@@ -27,8 +27,8 @@ final class CLIApplicationTest extends TestCase
 
     public function test_generate_inspect_and_verify_commands(): void
     {
-        $spec = $this->project->root . '/publish_post.yaml';
-        file_put_contents($spec, <<<'YAML'
+        $definition = $this->project->root . '/publish_post.yaml';
+        file_put_contents($definition, <<<'YAML'
 version: 1
 feature: publish_post
 kind: http
@@ -67,7 +67,7 @@ YAML);
 
         $app = new Application();
 
-        $this->assertSame(0, $this->runCommand($app, ['foundry', 'generate', 'feature', $spec, '--json'])['status']);
+        $this->assertSame(0, $this->runCommand($app, ['foundry', 'generate', 'feature', $definition, '--json'])['status']);
         $this->assertFileExists($this->project->root . '/app/features/publish_post/feature.yaml');
 
         $this->assertSame(0, $this->runCommand($app, ['foundry', 'generate', 'indexes', '--json'])['status']);

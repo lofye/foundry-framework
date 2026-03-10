@@ -29,17 +29,17 @@ final class BillingGenerator
             throw new FoundryError('BILLING_PROVIDER_UNSUPPORTED', 'validation', ['provider' => $provider], 'Only stripe is currently supported.');
         }
 
-        $dir = $this->paths->join('app/specs/billing');
+        $dir = $this->paths->join('app/definitions/billing');
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
 
-        $specPath = $dir . '/' . $provider . '.billing.yaml';
-        if (is_file($specPath) && !$force) {
-            throw new FoundryError('BILLING_SPEC_EXISTS', 'io', ['path' => $specPath], 'Billing spec already exists. Use --force to overwrite.');
+        $definitionPath = $dir . '/' . $provider . '.billing.yaml';
+        if (is_file($definitionPath) && !$force) {
+            throw new FoundryError('BILLING_DEFINITION_EXISTS', 'io', ['path' => $definitionPath], 'Billing definition already exists. Use --force to overwrite.');
         }
 
-        $spec = [
+        $definition = [
             'version' => 1,
             'provider' => $provider,
             'plans' => [
@@ -67,11 +67,11 @@ final class BillingGenerator
             ],
             'webhook_signing_secret_env' => 'STRIPE_WEBHOOK_SECRET',
         ];
-        file_put_contents($specPath, Yaml::dump($spec));
+        file_put_contents($definitionPath, Yaml::dump($definition));
 
-        $generated = [$specPath];
-        foreach ($this->featureSpecs() as $featureSpec) {
-            foreach ($this->features->generateFromArray($featureSpec, $force) as $file) {
+        $generated = [$definitionPath];
+        foreach ($this->featureDefinitions() as $featureDefinition) {
+            foreach ($this->features->generateFromArray($featureDefinition, $force) as $file) {
                 $generated[] = $file;
             }
         }
@@ -81,10 +81,10 @@ final class BillingGenerator
 
         return [
             'provider' => $provider,
-            'spec' => $specPath,
+            'definition' => $definitionPath,
             'features' => array_values(array_map(
                 static fn (array $row): string => (string) ($row['feature'] ?? ''),
-                $this->featureSpecs(),
+                $this->featureDefinitions(),
             )),
             'files' => $generated,
         ];
@@ -93,7 +93,7 @@ final class BillingGenerator
     /**
      * @return array<int,array<string,mixed>>
      */
-    private function featureSpecs(): array
+    private function featureDefinitions(): array
     {
         return [
             [

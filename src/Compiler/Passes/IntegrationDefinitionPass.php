@@ -11,22 +11,22 @@ use Foundry\Compiler\IR\NotificationNode;
 use Foundry\Compiler\IR\SchemaNode;
 use Foundry\Support\Json;
 
-final class IntegrationSpecPass implements CompilerPass
+final class IntegrationDefinitionPass implements CompilerPass
 {
     public function name(): string
     {
-        return 'integration_specs';
+        return 'integration_definitions';
     }
 
     public function run(CompilationState $state): void
     {
-        $specs = $state->discoveredSpecs;
-        if ($specs === []) {
+        $definitions = $state->discoveredDefinitions;
+        if ($definitions === []) {
             return;
         }
 
-        $this->processNotifications($state, (array) ($specs['notification'] ?? []));
-        $this->processApiResources($state, (array) ($specs['api_resource'] ?? []));
+        $this->processNotifications($state, (array) ($definitions['notification'] ?? []));
+        $this->processApiResources($state, (array) ($definitions['api_resource'] ?? []));
     }
 
     /**
@@ -48,7 +48,7 @@ final class IntegrationSpecPass implements CompilerPass
                 $state->diagnostics->error(
                     code: 'FDY2308_NOTIFICATION_DUPLICATE',
                     category: 'notifications',
-                    message: sprintf('Duplicate notification spec detected for %s.', $name),
+                    message: sprintf('Duplicate notification definition detected for %s.', $name),
                     nodeId: 'notification:' . $name,
                     sourcePath: $sourcePath,
                     relatedNodes: ['notification:' . $name],
@@ -61,9 +61,9 @@ final class IntegrationSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2301_NOTIFICATION_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2301_NOTIFICATION_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported notification spec version %d for %s.', $version, $name),
+                    message: sprintf('Unsupported notification definition version %d for %s.', $version, $name),
                     nodeId: 'notification:' . $name,
                     sourcePath: $sourcePath,
                     suggestedFix: 'Set version: 1 or run migrations.',
@@ -198,7 +198,7 @@ final class IntegrationSpecPass implements CompilerPass
                 $state->diagnostics->error(
                     code: 'FDY2313_API_RESOURCE_DUPLICATE',
                     category: 'api',
-                    message: sprintf('Duplicate api resource spec detected for %s.', $resource),
+                    message: sprintf('Duplicate api resource definition detected for %s.', $resource),
                     nodeId: 'api_resource:' . $resource,
                     sourcePath: $sourcePath,
                     pass: $this->name(),
@@ -210,9 +210,9 @@ final class IntegrationSpecPass implements CompilerPass
             $version = (int) ($document['version'] ?? 1);
             if ($version !== 1) {
                 $state->diagnostics->error(
-                    code: 'FDY2310_API_RESOURCE_SPEC_VERSION_UNSUPPORTED',
+                    code: 'FDY2310_API_RESOURCE_DEFINITION_VERSION_UNSUPPORTED',
                     category: 'migrations',
-                    message: sprintf('Unsupported api resource spec version %d for %s.', $version, $resource),
+                    message: sprintf('Unsupported api resource definition version %d for %s.', $version, $resource),
                     nodeId: 'api_resource:' . $resource,
                     sourcePath: $sourcePath,
                     suggestedFix: 'Set version: 1 or run migrations.',

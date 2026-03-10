@@ -9,15 +9,15 @@ The integration and contract tooling layer extends the graph-first compiler subs
 
 These capabilities are compiler-native:
 
-- source specs are versioned and discovered under `app/specs/*`
-- specs compile into canonical graph nodes and edges
+- source definitions are versioned and discovered under `app/definitions/*`
+- definitions compile into canonical graph nodes and edges
 - runtime metadata is emitted as projections from graph state
 - inspect/verify commands read graph-backed reality
 - generation writes source-of-truth files first, then compile/projection emits runtime artifacts
 
-## New Specs
+## New Definitions
 
-`app/specs/notifications/*.notification.yaml`
+`app/definitions/notifications/*.notification.yaml`
 
 ```yaml
 version: 1
@@ -29,7 +29,7 @@ input_schema: app/notifications/schemas/welcome_email.input.schema.json
 dispatch_features: [dispatch_welcome_email]
 ```
 
-`app/specs/api/*.api-resource.yaml`
+`app/definitions/api/*.api-resource.yaml`
 
 ```yaml
 version: 1
@@ -50,19 +50,19 @@ The integration and contract tooling layer adds:
 
 - `notification` nodes
 - `api_resource` nodes
-- integration link pass (`integration_specs`)
+- integration link pass (`integration_definitions`)
 - projections:
   - `notification_index.php`
   - `api_resource_index.php`
 - codemod:
-  - `integration-spec-v1-normalize`
+  - `integration-definition-v1-normalize`
 
 ## CLI Surface
 
 Generation:
 
 - `php vendor/bin/foundry generate notification <name> --json`
-- `php vendor/bin/foundry generate api-resource <name> --spec=<file> --json`
+- `php vendor/bin/foundry generate api-resource <name> --definition=<file> --json`
 - `php vendor/bin/foundry generate docs --format=markdown --json`
 - `php vendor/bin/foundry generate docs --format=html --json`
 - `php vendor/bin/foundry generate tests <target> --mode=deep --json`
@@ -109,7 +109,7 @@ No separate parser or registry is used for API contracts, docs, or deep-test con
 
 ## Workflow
 
-1. edit specs or feature source files
+1. edit definitions or feature source files
 2. compile graph
 3. inspect graph/impact/diagnostics
 4. run verifiers

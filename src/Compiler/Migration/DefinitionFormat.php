@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Foundry\Compiler\Migration;
 
-final class SpecFormat
+final class DefinitionFormat
 {
     /**
      * @param array<int,int> $supportedVersions

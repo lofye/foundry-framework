@@ -37,7 +37,7 @@ final class InspectGraphCommand extends Command
         'pack',
         'compatibility',
         'migrations',
-        'spec-format',
+        'definition-format',
     ];
 
     #[\Override]
@@ -64,7 +64,7 @@ final class InspectGraphCommand extends Command
                 || $this->extractOption($args, '--route') !== null;
         }
 
-        if (in_array($target, ['extension', 'pack', 'spec-format'], true)) {
+        if (in_array($target, ['extension', 'pack', 'definition-format'], true)) {
             $name = (string) ($args[2] ?? '');
 
             return $name !== '';
@@ -115,13 +115,13 @@ final class InspectGraphCommand extends Command
                 'status' => 0,
                 'message' => null,
                 'payload' => [
-                    'rules' => $context->specMigrator()->inspect(),
-                    'spec_formats' => $context->specMigrator()->specFormats(),
+                    'rules' => $context->definitionMigrator()->inspect(),
+                    'definition_formats' => $context->definitionMigrator()->definitionFormats(),
                     'codemods' => $context->codemodEngine()->inspectRows(),
-                    'pending' => $context->specMigrator()->migrate(false)->toArray(),
+                    'pending' => $context->definitionMigrator()->migrate(false)->toArray(),
                 ],
             ],
-            'spec-format' => $this->inspectSpecFormat($context, (string) ($args[2] ?? '')),
+            'definition-format' => $this->inspectDefinitionFormat($context, (string) ($args[2] ?? '')),
             'build' => $this->inspectBuild($context),
             default => $this->inspectGraphSurface($args, $context),
         };
@@ -231,22 +231,22 @@ final class InspectGraphCommand extends Command
         ];
     }
 
-    private function inspectSpecFormat(CommandContext $context, string $name): array
+    private function inspectDefinitionFormat(CommandContext $context, string $name): array
     {
         if ($name === '') {
-            throw new FoundryError('CLI_SPEC_FORMAT_REQUIRED', 'validation', [], 'Spec format name required.');
+            throw new FoundryError('CLI_DEFINITION_FORMAT_REQUIRED', 'validation', [], 'Definition format name required.');
         }
 
-        $format = $context->specMigrator()->specFormat($name);
+        $format = $context->definitionMigrator()->definitionFormat($name);
         if ($format === null) {
-            throw new FoundryError('SPEC_FORMAT_NOT_FOUND', 'not_found', ['format' => $name], 'Spec format not found.');
+            throw new FoundryError('DEFINITION_FORMAT_NOT_FOUND', 'not_found', ['format' => $name], 'Definition format not found.');
         }
 
         return [
             'status' => 0,
             'message' => null,
             'payload' => [
-                'spec_format' => $format,
+                'definition_format' => $format,
             ],
         ];
     }

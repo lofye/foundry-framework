@@ -33,9 +33,9 @@ final class CLIIntegrationCommandErrorsTest extends TestCase
         $this->assertSame(1, $notificationMissing['status']);
         $this->assertSame('CLI_NOTIFICATION_REQUIRED', $notificationMissing['payload']['error']['code']);
 
-        $apiResourceMissingSpec = $this->runCommand($app, ['foundry', 'generate', 'api-resource', 'posts', '--json']);
-        $this->assertSame(1, $apiResourceMissingSpec['status']);
-        $this->assertSame('CLI_API_RESOURCE_SPEC_REQUIRED', $apiResourceMissingSpec['payload']['error']['code']);
+        $apiResourceMissingDefinition = $this->runCommand($app, ['foundry', 'generate', 'api-resource', 'posts', '--json']);
+        $this->assertSame(1, $apiResourceMissingDefinition['status']);
+        $this->assertSame('CLI_API_RESOURCE_DEFINITION_REQUIRED', $apiResourceMissingDefinition['payload']['error']['code']);
 
         $docsInvalidFormat = $this->runCommand($app, ['foundry', 'generate', 'docs', '--format=txt', '--json']);
         $this->assertSame(1, $docsInvalidFormat['status']);

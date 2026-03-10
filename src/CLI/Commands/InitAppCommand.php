@@ -121,7 +121,7 @@ php -S 127.0.0.1:8000 app/platform/public/index.php
 ## LLM Workflow
 ```bash
 php vendor/bin/foundry inspect feature home --json
-php vendor/bin/foundry generate feature <spec.yaml> --json
+php vendor/bin/foundry generate feature <definition.yaml> --json
 php vendor/bin/foundry compile graph --json
 php vendor/bin/foundry verify graph --json
 php vendor/bin/foundry verify contracts --json

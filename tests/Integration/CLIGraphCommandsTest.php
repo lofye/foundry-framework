@@ -165,12 +165,12 @@ YAML);
         $migrations = $this->runCommand($app, ['foundry', 'inspect', 'migrations', '--json']);
         $this->assertSame(0, $migrations['status']);
         $this->assertNotEmpty($migrations['payload']['rules']);
-        $this->assertNotEmpty($migrations['payload']['spec_formats']);
+        $this->assertNotEmpty($migrations['payload']['definition_formats']);
         $this->assertNotEmpty($migrations['payload']['codemods']);
 
-        $specFormat = $this->runCommand($app, ['foundry', 'inspect', 'spec-format', 'feature_manifest', '--json']);
-        $this->assertSame(0, $specFormat['status']);
-        $this->assertSame('feature_manifest', $specFormat['payload']['spec_format']['name']);
+        $definitionFormat = $this->runCommand($app, ['foundry', 'inspect', 'definition-format', 'feature_manifest', '--json']);
+        $this->assertSame(0, $definitionFormat['status']);
+        $this->assertSame('feature_manifest', $definitionFormat['payload']['definition_format']['name']);
 
         $verifyGraph = $this->runCommand($app, ['foundry', 'verify', 'graph', '--json']);
         $this->assertSame(0, $verifyGraph['status']);
@@ -188,11 +188,11 @@ YAML);
         $this->assertSame(0, $verifyCompatibility['status']);
         $this->assertTrue($verifyCompatibility['payload']['ok']);
 
-        $migrateDryRun = $this->runCommand($app, ['foundry', 'migrate', 'specs', '--dry-run', '--json']);
+        $migrateDryRun = $this->runCommand($app, ['foundry', 'migrate', 'definitions', '--dry-run', '--json']);
         $this->assertSame(0, $migrateDryRun['status']);
         $this->assertSame('dry-run', $migrateDryRun['payload']['mode']);
 
-        $migratePathDryRun = $this->runCommand($app, ['foundry', 'migrate', 'specs', '--path=app/features/publish_post/feature.yaml', '--dry-run', '--json']);
+        $migratePathDryRun = $this->runCommand($app, ['foundry', 'migrate', 'definitions', '--path=app/features/publish_post/feature.yaml', '--dry-run', '--json']);
         $this->assertSame(0, $migratePathDryRun['status']);
         $this->assertSame('app/features/publish_post/feature.yaml', $migratePathDryRun['payload']['path']);
 
