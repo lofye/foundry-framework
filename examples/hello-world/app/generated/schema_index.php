@@ -7,4 +7,9 @@ declare(strict_types=1);
  * Regenerate with: php vendor/bin/foundry compile graph
  */
 return array (
+  'say_hello' => 
+  array (
+    'input' => 'app/features/say_hello/input.schema.json',
+    'output' => 'app/features/say_hello/output.schema.json',
+  ),
 );

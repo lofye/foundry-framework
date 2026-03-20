@@ -97,6 +97,50 @@ final class OfficialExampleApplicationsTest extends TestCase
         $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'pipeline', '--json'])['status']);
     }
 
+    public function test_dashboard_example_compiles_and_supports_architecture_commands(): void
+    {
+        $this->importExampleApp('dashboard');
+        $app = new Application();
+
+        $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json']);
+        $this->assertSame(0, $compile['status']);
+
+        $inspect = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--command', 'POST /login', '--json']);
+        $this->assertSame(0, $inspect['status']);
+        $this->assertSame('command', $inspect['payload']['view']);
+        $this->assertSame('POST /login', $inspect['payload']['command_filter']);
+        $this->assertContains('login', $inspect['payload']['summary']['features']);
+
+        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=login', '--json']);
+        $this->assertSame(0, $doctor['status']);
+        $this->assertTrue($doctor['payload']['ok']);
+
+        $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'graph', '--json'])['status']);
+        $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'pipeline', '--json'])['status']);
+    }
+
+    public function test_ai_pipeline_example_compiles_and_supports_architecture_commands(): void
+    {
+        $this->importExampleApp('ai-pipeline');
+        $app = new Application();
+
+        $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json']);
+        $this->assertSame(0, $compile['status']);
+
+        $inspect = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--feature', 'submit_document', '--json']);
+        $this->assertSame(0, $inspect['status']);
+        $this->assertSame('dependencies', $inspect['payload']['view']);
+        $this->assertSame('submit_document', $inspect['payload']['feature_filter']);
+        $this->assertContains('submit_document', $inspect['payload']['summary']['features']);
+
+        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=classify_document', '--json']);
+        $this->assertSame(0, $doctor['status']);
+        $this->assertTrue($doctor['payload']['ok']);
+
+        $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'graph', '--json'])['status']);
+        $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'pipeline', '--json'])['status']);
+    }
+
     /**
      * @param array<int,string> $argv
      * @return array{status:int,payload:array<string,mixed>}

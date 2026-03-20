@@ -7,32 +7,25 @@ declare(strict_types=1);
  * Regenerate with: php vendor/bin/foundry compile graph
  */
 return array (
-  'current_user' => 
+  'publish_story' => 
   array (
     'permissions' => 
     array (
-      0 => 'current_user.execute',
+      0 => 'editorial.publish',
     ),
   ),
-  'list_notifications' => 
+  'review_story' => 
   array (
     'permissions' => 
     array (
-      0 => 'list_notifications.execute',
+      0 => 'editorial.review',
     ),
   ),
-  'login' => 
+  'submit_story' => 
   array (
     'permissions' => 
     array (
-      0 => 'login.execute',
-    ),
-  ),
-  'upload_avatar' => 
-  array (
-    'permissions' => 
-    array (
-      0 => 'upload_avatar.execute',
+      0 => 'editorial.submit',
     ),
   ),
 );

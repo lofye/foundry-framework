@@ -7,4 +7,10 @@ declare(strict_types=1);
  * Regenerate with: php vendor/bin/foundry compile graph
  */
 return array (
+  'say_hello' => 
+  array (
+    'permissions' => 
+    array (
+    ),
+  ),
 );

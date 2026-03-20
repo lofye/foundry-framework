@@ -1,6 +1,6 @@
 # Docs Example
 
-Generate docs from compiled graph:
+After copying the example definitions into a Foundry app, generate docs from the compiled graph:
 
 ```bash
 php vendor/bin/foundry compile graph --json

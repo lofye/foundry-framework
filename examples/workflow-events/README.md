@@ -23,5 +23,6 @@ php vendor/bin/foundry graph inspect --workflow=editorial --json
 php vendor/bin/foundry inspect graph --feature=publish_story --json
 php vendor/bin/foundry doctor --feature=publish_story --json
 php vendor/bin/foundry verify graph --json
+php vendor/bin/foundry verify workflows --json
 php vendor/bin/foundry verify pipeline --json
 ```
