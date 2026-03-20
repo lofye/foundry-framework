@@ -26,6 +26,8 @@ final class GraphVerifier
             $this->layout->compileManifestPath(),
             $this->layout->integrityHashesPath(),
             $this->layout->diagnosticsPath(),
+            $this->layout->configValidationPath(),
+            $this->layout->configSchemasPath(),
             $this->layout->projectionPath('routes_index.php'),
             $this->layout->projectionPath('feature_index.php'),
             $this->layout->projectionPath('schema_index.php'),
@@ -78,6 +80,16 @@ final class GraphVerifier
             if ((int) ($summary['error'] ?? 0) > 0) {
                 $errors[] = 'Compiled graph contains error diagnostics.';
             }
+        }
+
+        $configValidation = $this->readJsonFile($this->layout->configValidationPath());
+        if ($configValidation === null) {
+            $errors[] = 'diagnostics/config_validation.json is missing or invalid JSON.';
+        }
+
+        $configSchemas = $this->readJsonFile($this->layout->configSchemasPath());
+        if ($configSchemas === null) {
+            $errors[] = 'manifests/config_schemas.json is missing or invalid JSON.';
         }
 
         $integrity = $this->readJsonFile($this->layout->integrityHashesPath());

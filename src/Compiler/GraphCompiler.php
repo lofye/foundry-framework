@@ -7,6 +7,7 @@ use Foundry\Compiler\Analysis\ImpactAnalyzer;
 use Foundry\Compiler\Diagnostics\DiagnosticBag;
 use Foundry\Compiler\Extensions\ExtensionRegistry;
 use Foundry\Compiler\Passes\AnalyzePass;
+use Foundry\Compiler\Passes\ConfigValidationPass;
 use Foundry\Compiler\Passes\DiscoveryPass;
 use Foundry\Compiler\Passes\EmitPass;
 use Foundry\Compiler\Passes\EnrichPass;
@@ -75,6 +76,8 @@ final class GraphCompiler
                 diagnostics: $diagnostics,
                 plan: $plan,
                 manifest: $previousManifest,
+                configSchemas: (array) (($this->readJson($this->layout->configSchemasPath())['schemas'] ?? [])),
+                configValidation: $this->readJson($this->layout->configValidationPath()) ?? [],
                 integrityHashes: array_map('strval', $integrity),
                 projections: [],
                 writtenFiles: [],
@@ -167,6 +170,8 @@ final class GraphCompiler
             diagnostics: $state->diagnostics,
             plan: $state->plan,
             manifest: $state->manifest,
+            configSchemas: $state->configSchemas,
+            configValidation: $state->configValidation,
             integrityHashes: $state->integrityHashes,
             projections: $state->projections,
             writtenFiles: $writtenFiles,
@@ -209,6 +214,8 @@ final class GraphCompiler
 
         $passes[] = ['pass' => new DiscoveryPass(), 'stage' => 'discovery', 'extension' => null];
         $passes = array_merge($passes, $this->extensionStagePassRows($extensions->all(), 'discovery'));
+
+        $passes[] = ['pass' => new ConfigValidationPass(), 'stage' => 'config_validation', 'extension' => null];
 
         $passes[] = ['pass' => new NormalizePass(), 'stage' => 'normalize', 'extension' => null];
         $passes = array_merge($passes, $this->extensionStagePassRows($extensions->all(), 'normalize'));

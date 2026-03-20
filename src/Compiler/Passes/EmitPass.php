@@ -44,6 +44,18 @@ final class EmitPass implements CompilerPass
         ], true) . "\n");
         $writtenFiles[] = $diagnosticsPath;
 
+        $configValidationPath = $state->layout->configValidationPath();
+        file_put_contents($configValidationPath, Json::encode(
+            $state->configValidation !== [] ? $state->configValidation : [
+                'summary' => ['error' => 0, 'warning' => 0, 'info' => 0, 'total' => 0],
+                'items' => [],
+                'schema_ids' => array_keys($state->configSchemas),
+                'validated_sources' => [],
+            ],
+            true,
+        ) . "\n");
+        $writtenFiles[] = $configValidationPath;
+
         $projectionRows = [];
         foreach ($state->extensions->projectionEmitters() as $emitter) {
             if (!$emitter instanceof ProjectionEmitter) {
@@ -72,6 +84,14 @@ final class EmitPass implements CompilerPass
         ksort($projectionRows);
         $state->projections = $projectionRows;
 
+        $configSchemasPath = $state->layout->configSchemasPath();
+        file_put_contents($configSchemasPath, Json::encode([
+            'schema_version' => 1,
+            'generated_at' => $state->graph->compiledAt(),
+            'schemas' => $state->configSchemas,
+        ], true) . "\n");
+        $writtenFiles[] = $configSchemasPath;
+
         $manifest = [
             'graph_version' => $state->graph->graphVersion(),
             'framework_version' => $state->graph->frameworkVersion(),
@@ -92,6 +112,14 @@ final class EmitPass implements CompilerPass
                 'change_risk' => $state->analysis['change_risk'] ?? 'low',
                 'changed_nodes' => array_keys((array) ($state->analysis['change_impact'] ?? [])),
                 'compatibility' => $state->analysis['compatibility'] ?? [],
+            ],
+            'config_schemas' => [
+                'path' => $this->relativePath($state, $configSchemasPath),
+                'count' => count($state->configSchemas),
+            ],
+            'config_validation' => [
+                'path' => $this->relativePath($state, $configValidationPath),
+                'summary' => (array) ($state->configValidation['summary'] ?? []),
             ],
             'extensions' => $state->extensions->inspectRows(),
             'extension_registration_sources' => $state->extensions->registrationSources(),

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Foundry\Compiler\Extensions;
 
+use Foundry\Config\ConfigSchemaCatalog;
+
 final class ExtensionDescriptor
 {
     /**
@@ -79,26 +81,7 @@ final class ExtensionDescriptor
      */
     public static function schema(): array
     {
-        return [
-            'schema_version' => 1,
-            'required_fields' => ['name', 'version', 'framework_version_constraint', 'graph_version_constraint'],
-            'optional_fields' => [
-                'description',
-                'provided_node_types',
-                'provided_passes',
-                'provided_packs',
-                'introduced_definition_formats',
-                'provided_migration_rules',
-                'provided_codemods',
-                'provided_projection_outputs',
-                'provided_inspect_surfaces',
-                'provided_verifiers',
-                'provided_capabilities',
-                'required_extensions',
-                'optional_extensions',
-                'conflicts_with_extensions',
-            ],
-        ];
+        return (new ConfigSchemaCatalog())->schemas()['extension.descriptor'];
     }
 
     /**

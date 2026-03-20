@@ -113,6 +113,11 @@ final class DoctorCommand extends Command
                 'summary' => $compileSummary,
                 'items' => $compileResult->diagnostics->toArray(),
             ],
+            'config_validation' => $compileResult->configValidation,
+            'config_schemas' => [
+                'count' => count($compileResult->configSchemas),
+                'path' => (string) (($compileResult->manifest['config_schemas']['path'] ?? '')),
+            ],
             'doctor_diagnostics' => $analysis['diagnostics'] ?? ['summary' => [], 'items' => []],
             'extension_diagnostics' => $extensionReport->diagnostics,
             'extension_lifecycle' => $extensionReport->lifecycle,

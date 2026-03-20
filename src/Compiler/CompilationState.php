@@ -35,6 +35,16 @@ final class CompilationState
     public array $manifest = [];
 
     /**
+     * @var array<string,array<string,mixed>>
+     */
+    public array $configSchemas = [];
+
+    /**
+     * @var array<string,mixed>
+     */
+    public array $configValidation = [];
+
+    /**
      * @var array<string,string>
      */
     public array $integrityHashes = [];

@@ -162,6 +162,21 @@ return array (
       'cost' => 1,
       'strategy' => 'user',
     ),
+    'csrf' => 
+    array (
+    ),
+    'resource' => 
+    array (
+    ),
+    'listing' => 
+    array (
+    ),
+    'uploads' => 
+    array (
+    ),
+    'ui' => 
+    array (
+    ),
     'tests' => 
     array (
       'required' => 

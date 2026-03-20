@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Foundry\Compiler\Extensions;
 
+use Foundry\Config\ConfigSchemaCatalog;
+
 final class PackDefinition
 {
     /**
@@ -74,25 +76,7 @@ final class PackDefinition
      */
     public static function schema(): array
     {
-        return [
-            'schema_version' => 1,
-            'required_fields' => ['name', 'version', 'extension', 'framework_version_constraint', 'graph_version_constraint'],
-            'optional_fields' => [
-                'description',
-                'provided_capabilities',
-                'required_capabilities',
-                'dependencies',
-                'optional_dependencies',
-                'conflicts_with',
-                'generators',
-                'inspect_surfaces',
-                'definition_formats',
-                'migration_rules',
-                'verifiers',
-                'docs_emitters',
-                'examples',
-            ],
-        ];
+        return (new ConfigSchemaCatalog())->schemas()['extension.pack'];
     }
 
     /**

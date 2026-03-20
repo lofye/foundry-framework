@@ -526,8 +526,10 @@ final class ApiSurfaceRegistry
             $this->surfaceEntry('generated_metadata', 'app/.foundry/build/graph/app_graph.php', 'internal_api', 'internal', 'Canonical graph PHP artifact.'),
             $this->surfaceEntry('generated_metadata', 'app/.foundry/build/projections/*.php', 'internal_api', 'internal', 'Generated projection artifacts used by the runtime.'),
             $this->surfaceEntry('generated_metadata', 'app/.foundry/build/manifests/compile_manifest.json', 'internal_api', 'internal', 'Compiler manifest artifact.'),
+            $this->surfaceEntry('generated_metadata', 'app/.foundry/build/manifests/config_schemas.json', 'internal_api', 'internal', 'Machine-readable config schema artifact.'),
             $this->surfaceEntry('generated_metadata', 'app/.foundry/build/manifests/integrity_hashes.json', 'internal_api', 'internal', 'Compiler integrity hash artifact.'),
             $this->surfaceEntry('generated_metadata', 'app/.foundry/build/diagnostics/latest.json', 'internal_api', 'internal', 'Latest compiler diagnostics artifact.'),
+            $this->surfaceEntry('generated_metadata', 'app/.foundry/build/diagnostics/config_validation.json', 'internal_api', 'internal', 'Latest config validation diagnostics artifact.'),
         ];
     }
 
