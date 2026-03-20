@@ -143,3 +143,10 @@ Recommended loop for graph-native changes:
 4. `php vendor/bin/foundry inspect graph --event=post.created --format=mermaid --json`
 5. `php vendor/bin/foundry prompt "<instruction>" --json`
 6. Run verify and PHPUnit commands from suggested actions.
+
+## Related Examples
+
+- `examples/hello-world`
+- `examples/workflow-events`
+- `examples/architecture-tools`
+- `docs/example-applications.md`

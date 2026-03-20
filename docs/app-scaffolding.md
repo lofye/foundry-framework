@@ -70,3 +70,11 @@ App scaffolding emits additional graph-derived projections:
 - No parallel runtime middleware stack is introduced.
 - Guards/interceptors remain pipeline-native via feature manifests.
 - Definitions are versioned (`version: 1`) and codemod-ready.
+
+## Related Examples
+
+- `examples/hello-world`
+- `examples/blog-api`
+- `examples/reference-blog`
+- `examples/app-scaffolding`
+- `docs/example-applications.md`

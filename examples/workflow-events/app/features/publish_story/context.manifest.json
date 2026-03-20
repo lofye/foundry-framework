@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "feature": "publish_story",
+  "kind": "http",
+  "relevant_files": [
+    "app/features/publish_story/feature.yaml",
+    "app/features/publish_story/action.php",
+    "app/features/publish_story/input.schema.json",
+    "app/features/publish_story/output.schema.json",
+    "app/features/publish_story/permissions.yaml",
+    "app/features/publish_story/events.yaml",
+    "app/features/publish_story/jobs.yaml",
+    "app/features/publish_story/cache.yaml",
+    "app/features/publish_story/prompts.md",
+    "app/features/publish_story/tests/publish_story_auth_test.php",
+    "app/features/publish_story/tests/publish_story_contract_test.php",
+    "app/features/publish_story/tests/publish_story_feature_test.php"
+  ],
+  "generated_files": [
+    "app/generated/routes.php",
+    "app/generated/event_index.php",
+    "app/generated/job_index.php",
+    "app/generated/cache_index.php",
+    "app/generated/feature_index.php",
+    "app/generated/schema_index.php"
+  ],
+  "upstream_dependencies": [
+    "review_story"
+  ],
+  "downstream_dependents": [],
+  "contracts": {
+    "input": "app/features/publish_story/input.schema.json",
+    "output": "app/features/publish_story/output.schema.json"
+  },
+  "tests": [
+    "publish_story_auth_test",
+    "publish_story_contract_test",
+    "publish_story_feature_test"
+  ],
+  "forbidden_paths": [
+    "src/Core",
+    "src/Http"
+  ],
+  "risk_level": "medium"
+}

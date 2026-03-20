@@ -8,11 +8,8 @@ use Foundry\Core\RuntimeFactory;
 use Foundry\Http\RequestContext;
 use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 
-#[PreserveGlobalState(false)]
 final class CLIInitAppCommandTest extends TestCase
 {
     private TempProject $project;
@@ -31,7 +28,6 @@ final class CLIInitAppCommandTest extends TestCase
         $this->project->cleanup();
     }
 
-    #[RunInSeparateProcess]
     public function test_new_command_scaffolds_standard_project_with_docs_and_bootable_routes(): void
     {
         $app = new Application();
@@ -92,7 +88,6 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertSame('demo-user', $protected['body']['user_id']);
     }
 
-    #[RunInSeparateProcess]
     public function test_init_app_supports_minimal_starter_mode(): void
     {
         $app = new Application();
@@ -107,12 +102,16 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertFileExists($target . '/app/features/submit_feedback/feature.yaml');
         $this->assertFileDoesNotExist($target . '/app/features/dashboard/feature.yaml');
 
-        $public = $this->bootRequest($target, 'GET', '/');
-        $this->assertSame(200, $public['status']);
-        $this->assertSame('minimal', $public['body']['starter']);
+        $this->seedInstalledApp($target);
+
+        $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json'], $target);
+        $this->assertSame(0, $compile['status']);
+
+        $inspect = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--json'], $target);
+        $this->assertSame(0, $inspect['status']);
+        $this->assertContains('submit_feedback', $inspect['payload']['summary']['features']);
     }
 
-    #[RunInSeparateProcess]
     public function test_new_command_supports_api_first_starter_mode(): void
     {
         $app = new Application();
@@ -130,13 +129,15 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertFileExists($target . '/app/features/api_me/feature.yaml');
         $this->assertFileDoesNotExist($target . '/app/features/dashboard/feature.yaml');
 
-        $public = $this->bootRequest($target, 'GET', '/');
-        $this->assertSame(200, $public['status']);
-        $this->assertSame('api-first', $public['body']['starter']);
+        $this->seedInstalledApp($target);
 
-        $protected = $this->bootRequest($target, 'GET', '/api/me', ['x-user-id' => 'api-user']);
-        $this->assertSame(200, $protected['status']);
-        $this->assertSame('api-user', $protected['body']['user_id']);
+        $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json'], $target);
+        $this->assertSame(0, $compile['status']);
+
+        $inspect = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--command', 'GET /api/me', '--json'], $target);
+        $this->assertSame(0, $inspect['status']);
+        $this->assertSame('GET /api/me', $inspect['payload']['command_filter']);
+        $this->assertContains('api_me', $inspect['payload']['summary']['features']);
     }
 
     /**

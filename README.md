@@ -367,17 +367,27 @@ Coverage note:
   `php -dzend_extension=/path/to/xdebug.so -d xdebug.mode=coverage vendor/bin/phpunit --coverage-text`
 
 ## Examples
-Included example apps:
+Start with `docs/example-applications.md` or `examples/README.md`.
+
+Official example set:
+- `examples/hello-world`
 - `examples/blog-api`
+- `examples/extensions-migrations`
+- `examples/workflow-events`
+- `examples/reference-blog`
+
+Supplemental app examples:
 - `examples/dashboard`
 - `examples/ai-pipeline`
+
+Framework/tooling examples:
 - `examples/compiler-core`
-- `examples/extensions-migrations`
 - `examples/architecture-tools`
 - `examples/execution-pipeline`
 - `examples/app-scaffolding`
+- `examples/integration-tooling`
 
-Each example includes feature folders plus generated indexes.
+Thresholds should be treated as the richer real-app reference; the smaller examples stay focused on one teachable pattern at a time.
 
 ## Additional Docs
 - `ARCHITECTURE.md`
@@ -390,6 +400,7 @@ Each example includes feature folders plus generated indexes.
 - `docs/architecture-tools.md`
 - `docs/execution-pipeline.md`
 - `docs/app-scaffolding.md`
+- `docs/example-applications.md`
 - `docs/public-api-policy.md`
 - `docs/api-notifications-docs.md`
 - `docs/contributor-vocabulary.md`

@@ -1,5 +1,7 @@
 # Extensions And Migrations Examples
 
+`examples/extensions-migrations` is the official extension example in the Foundry example set.
+
 This directory demonstrates extension and migration foundations:
 
 - **Example A**: explicit extension registration and a minimal extension pass.

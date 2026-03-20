@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "feature": "review_story",
+  "kind": "http",
+  "relevant_files": [
+    "app/features/review_story/feature.yaml",
+    "app/features/review_story/action.php",
+    "app/features/review_story/input.schema.json",
+    "app/features/review_story/output.schema.json",
+    "app/features/review_story/permissions.yaml",
+    "app/features/review_story/events.yaml",
+    "app/features/review_story/jobs.yaml",
+    "app/features/review_story/cache.yaml",
+    "app/features/review_story/prompts.md",
+    "app/features/review_story/tests/review_story_auth_test.php",
+    "app/features/review_story/tests/review_story_contract_test.php",
+    "app/features/review_story/tests/review_story_feature_test.php"
+  ],
+  "generated_files": [
+    "app/generated/routes.php",
+    "app/generated/event_index.php",
+    "app/generated/feature_index.php",
+    "app/generated/schema_index.php"
+  ],
+  "upstream_dependencies": [
+    "submit_story"
+  ],
+  "downstream_dependents": [
+    "publish_story"
+  ],
+  "contracts": {
+    "input": "app/features/review_story/input.schema.json",
+    "output": "app/features/review_story/output.schema.json"
+  },
+  "tests": [
+    "review_story_auth_test",
+    "review_story_contract_test",
+    "review_story_feature_test"
+  ],
+  "forbidden_paths": [
+    "src/Core",
+    "src/Http"
+  ],
+  "risk_level": "low"
+}
