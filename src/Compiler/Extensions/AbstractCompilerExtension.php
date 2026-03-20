@@ -8,6 +8,7 @@ use Foundry\Compiler\Codemod\Codemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\MigrationRule;
 use Foundry\Compiler\Migration\DefinitionFormat;
+use Foundry\Doctor\DoctorCheck;
 use Foundry\Compiler\Projection\ProjectionEmitter;
 use Foundry\Pipeline\PipelineStageDefinition;
 use Foundry\Pipeline\StageInterceptor;
@@ -100,6 +101,12 @@ abstract class AbstractCompilerExtension implements CompilerExtension
         return [];
     }
 
+    /** @return array<int,DoctorCheck> */
+    public function doctorChecks(): array
+    {
+        return [];
+    }
+
     /** @return array<int,PipelineStageDefinition> */
     public function pipelineStages(): array
     {
@@ -161,6 +168,10 @@ abstract class AbstractCompilerExtension implements CompilerExtension
                 static fn (GraphAnalyzer $analyzer): string => $analyzer->id(),
                 $this->graphAnalyzers(),
             )),
+            'doctor_checks' => array_values(array_map(
+                static fn (DoctorCheck $check): string => $check->id(),
+                $this->doctorChecks(),
+            )),
             'pipeline_stages' => array_values(array_map(
                 static fn (PipelineStageDefinition $stage): string => $stage->name,
                 $this->pipelineStages(),
@@ -190,6 +201,10 @@ abstract class AbstractCompilerExtension implements CompilerExtension
                     'graph_analyzers' => array_values(array_map(
                         static fn (GraphAnalyzer $analyzer): string => $analyzer->id(),
                         $this->graphAnalyzers(),
+                    )),
+                    'doctor_checks' => array_values(array_map(
+                        static fn (DoctorCheck $check): string => $check->id(),
+                        $this->doctorChecks(),
                     )),
                     'migration_rules' => array_values(array_map(
                         static fn (MigrationRule $rule): string => $rule->id(),

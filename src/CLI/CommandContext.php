@@ -66,8 +66,16 @@ final class CommandContext
     private ?CodemodEngine $codemodEngine = null;
     private ?ApiSurfaceRegistry $apiSurfaceRegistry = null;
 
-    public function __construct(private readonly ?string $cwd = null)
+    public function __construct(
+        private readonly ?string $cwd = null,
+        private readonly bool $jsonOutput = false,
+    )
     {
+    }
+
+    public function expectsJson(): bool
+    {
+        return $this->jsonOutput;
     }
 
     public function paths(): Paths

@@ -70,7 +70,11 @@ final class CLIArchitectureToolsCommandsTest extends TestCase
 
         $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=list_posts', '--json']);
         $this->assertSame(0, $doctor['status']);
+        $this->assertTrue($doctor['payload']['ok']);
+        $this->assertSame(0, $doctor['payload']['exit_code']);
+        $this->assertSame('php vendor/bin/foundry', $doctor['payload']['command_prefix']);
         $this->assertSame('list_posts', $doctor['payload']['feature_filter']);
+        $this->assertArrayHasKey('checks', $doctor['payload']);
         $this->assertArrayHasKey('analyzers', $doctor['payload']);
         $this->assertArrayHasKey('diagnostics_summary', $doctor['payload']);
         $this->assertArrayHasKey('extension_diagnostics', $doctor['payload']);
@@ -116,6 +120,37 @@ final class CLIArchitectureToolsCommandsTest extends TestCase
         $promptMissingInstruction = $this->runCommand($app, ['foundry', 'prompt', '--json']);
         $this->assertSame(1, $promptMissingInstruction['status']);
         $this->assertSame('CLI_PROMPT_INSTRUCTION_REQUIRED', $promptMissingInstruction['payload']['error']['code']);
+    }
+
+    public function test_doctor_loads_extension_registered_checks_and_renders_human_output(): void
+    {
+        file_put_contents($this->project->root . '/foundry.extensions.php', <<<'PHP'
+<?php
+declare(strict_types=1);
+
+return [
+    \Foundry\Tests\Fixtures\CustomDoctorExtension::class,
+];
+PHP);
+
+        $app = new Application();
+
+        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=list_posts', '--json']);
+        $this->assertSame(0, $doctor['status']);
+        $this->assertArrayHasKey('fixture_custom_doctor', $doctor['payload']['checks']);
+
+        $codes = array_values(array_map(
+            static fn (array $row): string => (string) ($row['code'] ?? ''),
+            (array) ($doctor['payload']['doctor_diagnostics']['items'] ?? []),
+        ));
+        $this->assertContains('FDY9901_FIXTURE_DOCTOR_CHECK', $codes);
+
+        $human = $this->runRawCommand($app, ['foundry', 'doctor', '--feature=list_posts']);
+        $this->assertSame(0, $human['status']);
+        $this->assertStringContainsString('Foundry doctor completed with warnings.', $human['output']);
+        $this->assertStringContainsString('fixture_custom_doctor: warning', $human['output']);
+        $this->assertStringContainsString('FDY9901_FIXTURE_DOCTOR_CHECK', $human['output']);
+        $this->assertStringNotContainsString('"checks"', $human['output']);
     }
 
     /**
@@ -226,5 +261,18 @@ YAML);
         $payload = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
 
         return ['status' => $status, 'payload' => $payload];
+    }
+
+    /**
+     * @param array<int,string> $argv
+     * @return array{status:int,output:string}
+     */
+    private function runRawCommand(Application $app, array $argv): array
+    {
+        ob_start();
+        $status = $app->run($argv);
+        $output = ob_get_clean() ?: '';
+
+        return ['status' => $status, 'output' => $output];
     }
 }

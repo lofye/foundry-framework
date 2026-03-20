@@ -15,8 +15,25 @@ final class TempProject
 
         mkdir($this->root . '/app/features', 0777, true);
         mkdir($this->root . '/app/generated', 0777, true);
+        mkdir($this->root . '/app/.foundry/build', 0777, true);
         mkdir($this->root . '/app/platform/migrations', 0777, true);
         mkdir($this->root . '/app/platform/logs', 0777, true);
+        mkdir($this->root . '/app/platform/tmp', 0777, true);
+        mkdir($this->root . '/vendor/bin', 0777, true);
+
+        file_put_contents($this->root . '/composer.json', <<<'JSON'
+{
+  "name": "foundry/tests-app",
+  "type": "project",
+  "require": {
+    "php": "^8.4",
+    "ext-json": "*",
+    "ext-pdo": "*"
+  }
+}
+JSON);
+        file_put_contents($this->root . '/vendor/autoload.php', "<?php\n");
+        file_put_contents($this->root . '/vendor/bin/foundry', "#!/usr/bin/env php\n<?php\n");
     }
 
     public function cleanup(): void

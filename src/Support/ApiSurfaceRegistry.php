@@ -295,7 +295,7 @@ final class ApiSurfaceRegistry
         $commands = [
             $this->cliCommandEntry('help', 'help [<command> [<subcommand>]]', 'stable', 'Show the classified CLI reference and per-command stability details.'),
             $this->cliCommandEntry('compile graph', 'compile graph [--feature=<feature>] [--changed-only]', 'stable', 'Compile source-of-truth files into the canonical application graph.'),
-            $this->cliCommandEntry('doctor', 'doctor [--feature=<feature>] [--strict]', 'experimental', 'Diagnose architecture issues from compiled graph state.'),
+            $this->cliCommandEntry('doctor', 'doctor [--feature=<feature>] [--strict]', 'experimental', 'Diagnose environment, install, build, and architecture issues from current Foundry state.'),
             $this->cliCommandEntry('graph visualize', 'graph visualize [--events|--routes|--caches|--pipeline] [--feature=<feature>] [--format=mermaid|dot|svg|json]', 'experimental', 'Render graph-derived architecture views.'),
             $this->cliCommandEntry('prompt', 'prompt <instruction...> [--feature-context] [--dry-run]', 'experimental', 'Build structured AI-edit prompts from current graph state.'),
             $this->cliCommandEntry('serve', 'serve', 'internal', 'Emit the lightweight local PHP server hint used in development.'),
@@ -483,6 +483,8 @@ final class ApiSurfaceRegistry
             $this->surfaceEntry('extension_hook', 'Foundry\\Compiler\\GraphEdge', 'extension_api', 'stable', 'Graph edge contract exposed when extensions inspect graph relationships.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Compiler\\Diagnostics\\DiagnosticBag', 'extension_api', 'stable', 'Diagnostics sink exposed to extension passes and analyzers.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Compiler\\Diagnostics\\Diagnostic', 'extension_api', 'stable', 'Structured diagnostic record exposed through extension-facing diagnostics flows.'),
+            $this->surfaceEntry('extension_hook', 'Foundry\\Doctor\\DoctorCheck', 'extension_api', 'stable', 'Doctor check contract for environment and architecture diagnostics.'),
+            $this->surfaceEntry('extension_hook', 'Foundry\\Doctor\\DoctorContext', 'extension_api', 'stable', 'Context exposed to custom doctor checks registered by applications and extensions.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Compiler\\Projection\\ProjectionEmitter', 'extension_api', 'stable', 'Projection emitter contract for generated metadata outputs.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Compiler\\Migration\\MigrationRule', 'extension_api', 'stable', 'Definition migration rule contract.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Compiler\\Migration\\DefinitionFormat', 'extension_api', 'stable', 'Definition format metadata contract.'),

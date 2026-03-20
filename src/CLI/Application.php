@@ -107,7 +107,7 @@ final class Application
             return true;
         }));
 
-        $context = new CommandContext();
+        $context = new CommandContext(jsonOutput: $json);
 
         try {
             if ($args === [] || ($args[0] ?? null) === 'help') {

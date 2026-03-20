@@ -8,6 +8,7 @@ use Foundry\Compiler\Codemod\Codemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Migration\DefinitionFormat;
 use Foundry\Compiler\Migration\MigrationRule;
+use Foundry\Doctor\DoctorCheck;
 use Foundry\Compiler\Projection\ProjectionEmitter;
 use Foundry\Pipeline\PipelineStageDefinition;
 use Foundry\Pipeline\StageInterceptor;
@@ -281,6 +282,23 @@ final class ExtensionRegistry
         usort($analyzers, static fn (GraphAnalyzer $a, GraphAnalyzer $b): int => strcmp($a->id(), $b->id()));
 
         return $analyzers;
+    }
+
+    /**
+     * @return array<int,DoctorCheck>
+     */
+    public function doctorChecks(): array
+    {
+        $checks = [];
+        foreach ($this->all() as $extension) {
+            foreach ($extension->doctorChecks() as $check) {
+                $checks[] = $check;
+            }
+        }
+
+        usort($checks, static fn (DoctorCheck $a, DoctorCheck $b): int => strcmp($a->id(), $b->id()));
+
+        return $checks;
     }
 
     /**

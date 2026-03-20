@@ -1,17 +1,18 @@
 # Foundry Architecture Tools
 
-The compiler core established a canonical semantic compiler and graph. The extensions and migrations layer established extensions, packs, migrations, codemods, and compatibility contracts. The architecture tools layer adds developer-facing capabilities that operate strictly on the canonical graph:
+The compiler core established a canonical semantic compiler and graph. The extensions and migrations layer established extensions, packs, migrations, codemods, and compatibility contracts. The architecture tools layer adds developer-facing capabilities that operate on the canonical graph plus the local install/runtime environment:
 
-- `doctor` architecture diagnostics
+- `doctor` environment and architecture diagnostics
 - `graph visualize` graph-derived architecture diagrams
 - `prompt` structured AI-assisted development context
 
 ## Rules
 
-- Application graph remains the single source of truth.
-- Analysis and visualization derive only from graph nodes/edges.
+- Application graph remains the single source of truth for architecture analysis.
+- Graph-derived diagnostics stay deterministic; environment/install checks layer on top without changing graph semantics.
 - Prompt context is extracted from graph state, not ad hoc file scanning.
 - Analyzer contributions come from extension-registered graph analyzers.
+- Environment/install diagnostics can be extended through extension-registered doctor checks.
 - Diagnostics use the existing `DiagnosticBag` shape and severity model.
 - CLI outputs remain deterministic and support `--json`.
 
@@ -25,11 +26,16 @@ php vendor/bin/foundry doctor --strict --json
 php vendor/bin/foundry doctor --feature=<name> --json
 ```
 
-Doctor compiles graph state, runs extension-registered analyzers, and returns:
+Doctor compiles graph state, validates environment and build assumptions, runs extension-registered analyzers and doctor checks, and returns:
 
+- runtime compatibility diagnostics
+- install/layout diagnostics
+- directory and build artifact integrity diagnostics
+- metadata freshness diagnostics
 - compile diagnostics
 - doctor diagnostics
 - extension compatibility and lifecycle diagnostics
+- doctor check results
 - analyzer-specific findings
 - optional feature-scoped impact preview
 - deterministic recommended follow-up commands
@@ -42,6 +48,16 @@ Current analyzer set (core extension):
 - dead code detection
 - cache topology checks
 - test coverage checks
+
+Current built-in doctor checks:
+
+- PHP version and required extension compatibility
+- install completeness (`composer.json`, autoload, CLI entrypoint, feature root)
+- writable build/generated/log/tmp directories
+- extension compatibility summary
+- graph/build artifact integrity
+- generated metadata freshness
+- route/pipeline consistency
 
 `--strict` fails on warnings and errors; default mode fails on errors only.
 
