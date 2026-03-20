@@ -44,17 +44,23 @@ final class ApiSurfaceRegistryTest extends TestCase
 
         $stable = $registry->classifyCliCommand(['compile', 'graph']);
         $scaffold = $registry->classifyCliCommand(['new', 'demo-app']);
-        $experimental = $registry->classifyCliCommand(['graph', 'visualize']);
+        $graphInspect = $registry->classifyCliCommand(['graph', 'inspect']);
+        $graphVisualize = $registry->classifyCliCommand(['graph', 'visualize']);
+        $graphExport = $registry->classifyCliCommand(['export', 'graph']);
         $internal = $registry->classifyCliCommand(['queue:work']);
 
         $this->assertNotNull($stable);
         $this->assertNotNull($scaffold);
-        $this->assertNotNull($experimental);
+        $this->assertNotNull($graphInspect);
+        $this->assertNotNull($graphVisualize);
+        $this->assertNotNull($graphExport);
         $this->assertNotNull($internal);
         $this->assertSame('stable', $stable['stability']);
         $this->assertSame('stable', $scaffold['stability']);
         $this->assertSame('new', $scaffold['signature']);
-        $this->assertSame('experimental', $experimental['stability']);
+        $this->assertSame('stable', $graphInspect['stability']);
+        $this->assertSame('stable', $graphVisualize['stability']);
+        $this->assertSame('stable', $graphExport['stability']);
         $this->assertSame('internal', $internal['stability']);
     }
 

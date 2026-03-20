@@ -78,7 +78,9 @@ final class GraphDocsGeneratorTest extends TestCase
         $this->assertStringContainsString('Foundry\\Feature\\', $apiSurfaceMd);
         $this->assertStringContainsString('# CLI Reference', $cliReferenceMd);
         $this->assertStringContainsString('compile graph [stable]', $cliReferenceMd);
-        $this->assertStringContainsString('graph visualize [experimental]', $cliReferenceMd);
+        $this->assertStringContainsString('graph inspect [stable]', $cliReferenceMd);
+        $this->assertStringContainsString('graph visualize [stable]', $cliReferenceMd);
+        $this->assertStringContainsString('export graph [stable]', $cliReferenceMd);
         $this->assertStringContainsString('Recommended commands:', $llmMd);
         $this->assertStringContainsString('<h1>Feature Catalog</h1>', $featuresHtml);
     }

@@ -22,8 +22,8 @@ See `doctor/doctor.sample.json` for representative output shape.
 Command:
 
 ```bash
-php vendor/bin/foundry graph visualize --events --format=mermaid --json
-php vendor/bin/foundry graph visualize --routes --format=dot --json
+php vendor/bin/foundry inspect graph --event=post.created --format=mermaid --json
+php vendor/bin/foundry export graph --view=routes --format=dot --json
 ```
 
 See:

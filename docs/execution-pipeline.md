@@ -102,7 +102,7 @@ php vendor/bin/foundry verify pipeline --json
 Visualize:
 
 ```bash
-php vendor/bin/foundry graph visualize --pipeline --format=mermaid --json
+php vendor/bin/foundry inspect graph --pipeline --format=mermaid --json
 ```
 
 ## Runtime Behavior

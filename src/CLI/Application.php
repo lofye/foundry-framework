@@ -20,6 +20,7 @@ use Foundry\CLI\Commands\InspectResourceCommand;
 use Foundry\CLI\Commands\InspectRouteCommand;
 use Foundry\CLI\Commands\MigrateDefinitionsCommand;
 use Foundry\CLI\Commands\DoctorCommand;
+use Foundry\CLI\Commands\ExportGraphCommand;
 use Foundry\CLI\Commands\ExportOpenApiCommand;
 use Foundry\CLI\Commands\PreviewNotificationCommand;
 use Foundry\CLI\Commands\PromptCommand;
@@ -55,6 +56,7 @@ final class Application
             new InspectGraphCommand(),
             new DoctorCommand(),
             new GraphVisualizeCommand(),
+            new ExportGraphCommand(),
             new PromptCommand(),
             new VerifyGraphCommand(),
             new VerifyPipelineCommand(),

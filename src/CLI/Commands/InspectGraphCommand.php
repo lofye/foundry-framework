@@ -5,6 +5,7 @@ namespace Foundry\CLI\Commands;
 
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
+use Foundry\CLI\Commands\Concerns\InteractsWithGraphInspection;
 use Foundry\Compiler\ApplicationGraph;
 use Foundry\Compiler\CompileOptions;
 use Foundry\Compiler\Extensions\ExtensionDescriptor;
@@ -17,6 +18,8 @@ use Foundry\Support\Json;
 
 final class InspectGraphCommand extends Command
 {
+    use InteractsWithGraphInspection;
+
     /**
      * @var array<int,string>
      */
@@ -46,6 +49,10 @@ final class InspectGraphCommand extends Command
     #[\Override]
     public function matches(array $args): bool
     {
+        if (($args[0] ?? null) === 'graph' && ($args[1] ?? null) === 'inspect') {
+            return true;
+        }
+
         if (($args[0] ?? null) !== 'inspect') {
             return false;
         }
@@ -86,6 +93,10 @@ final class InspectGraphCommand extends Command
     #[\Override]
     public function run(array $args, CommandContext $context): array
     {
+        if (($args[0] ?? null) === 'graph' && ($args[1] ?? null) === 'inspect') {
+            return $this->inspectGraphOverview(array_merge(['inspect', 'graph'], array_slice($args, 2)), $context);
+        }
+
         $target = (string) ($args[1] ?? '');
 
         return match ($target) {
@@ -153,19 +164,7 @@ final class InspectGraphCommand extends Command
         $target = (string) ($args[1] ?? '');
 
         return match ($target) {
-            'graph' => [
-                'status' => 0,
-                'message' => null,
-                'payload' => [
-                    'graph_version' => $graph->graphVersion(),
-                    'framework_version' => $graph->frameworkVersion(),
-                    'compiled_at' => $graph->compiledAt(),
-                    'source_hash' => $graph->sourceHash(),
-                    'node_counts' => $graph->nodeCountsByType(),
-                    'edge_counts' => $graph->edgeCountsByType(),
-                    'diagnostics_summary' => $this->diagnosticsSummary($compiler),
-                ],
-            ],
+            'graph' => $this->inspectGraphOverview($args, $context, $graph),
             'pipeline' => $this->inspectPipeline($graph),
             'execution-plan' => $this->inspectExecutionPlan($graph, $args),
             'guards' => $this->inspectGuards($graph, (string) ($args[2] ?? '')),
@@ -198,6 +197,48 @@ final class InspectGraphCommand extends Command
                 'diagnostics' => $diagnostics,
                 'verification' => $verification->toArray(),
             ],
+        ];
+    }
+
+    /**
+     * @param array<int,string> $args
+     */
+    private function inspectGraphOverview(array $args, CommandContext $context, ?ApplicationGraph $graph = null): array
+    {
+        $options = $this->parseGraphOptions($args);
+        $format = is_string($options['format'] ?? null) ? strtolower((string) $options['format']) : null;
+        if ($format !== null) {
+            $options['format'] = $format;
+            if (!in_array($format, $this->graphVisualizer()->allowedFormats(), true)) {
+                throw new FoundryError(
+                    'CLI_GRAPH_FORMAT_INVALID',
+                    'validation',
+                    ['format' => $format],
+                    'Unsupported graph format. Use mermaid, dot, json, or svg.',
+                );
+            }
+        }
+
+        $feature = is_string($options['feature'] ?? null) ? $options['feature'] : null;
+        if ($feature !== null && !$this->featureExists($context, $feature)) {
+            throw new FoundryError(
+                'FEATURE_NOT_FOUND',
+                'not_found',
+                ['feature' => $feature],
+                'Feature not found.',
+            );
+        }
+
+        $graph ??= $this->loadOrCompileGraph($context->graphCompiler());
+        $payload = $this->buildGraphInspectionPayload($context, $options);
+        $payload['node_counts'] = $graph->nodeCountsByType();
+        $payload['edge_counts'] = $graph->edgeCountsByType();
+        $payload['diagnostics_summary'] = $this->diagnosticsSummary($context->graphCompiler());
+
+        return [
+            'status' => 0,
+            'message' => $context->expectsJson() ? null : $this->renderGraphInspectionMessage($payload, $format !== null),
+            'payload' => $context->expectsJson() ? $payload : null,
         ];
     }
 
@@ -813,5 +854,10 @@ final class InspectGraphCommand extends Command
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    private function featureExists(CommandContext $context, string $feature): bool
+    {
+        return is_dir($context->paths()->features() . '/' . $feature);
     }
 }

@@ -143,8 +143,16 @@ final class ApiSurfaceRegistry
             'help', 'new', 'serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail', 'affected-files', 'impacted-features' => $first,
             'compile', 'graph', 'export', 'preview', 'init', 'migrate', 'codemod' => match ($first) {
                 'compile' => $second === 'graph' ? 'compile graph' : null,
-                'graph' => $second === 'visualize' ? 'graph visualize' : null,
-                'export' => $second === 'openapi' ? 'export openapi' : null,
+                'graph' => match ($second) {
+                    'inspect' => 'graph inspect',
+                    'visualize' => 'graph visualize',
+                    default => null,
+                },
+                'export' => match ($second) {
+                    'graph' => 'export graph',
+                    'openapi' => 'export openapi',
+                    default => null,
+                },
                 'preview' => $second === 'notification' ? 'preview notification' : null,
                 'init' => $second === 'app' ? 'init app' : null,
                 'migrate' => $second === 'definitions' ? 'migrate definitions' : null,
@@ -296,7 +304,8 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('help', 'help [<command> [<subcommand>]]', 'stable', 'Show the classified CLI reference and per-command stability details.'),
             $this->cliCommandEntry('compile graph', 'compile graph [--feature=<feature>] [--changed-only]', 'stable', 'Compile source-of-truth files into the canonical application graph.'),
             $this->cliCommandEntry('doctor', 'doctor [--feature=<feature>] [--strict]', 'experimental', 'Diagnose environment, install, build, and architecture issues from current Foundry state.'),
-            $this->cliCommandEntry('graph visualize', 'graph visualize [--events|--routes|--caches|--pipeline] [--feature=<feature>] [--format=mermaid|dot|svg|json]', 'experimental', 'Render graph-derived architecture views.'),
+            $this->cliCommandEntry('graph inspect', 'graph inspect [--view=<view>|--events|--routes|--caches|--pipeline|--workflows|--extensions] [--feature=<feature>] [--extension=<extension>] [--pipeline-stage=<stage>] [--command=<target>] [--event=<name>] [--workflow=<name>] [--format=mermaid|dot|svg|json]', 'stable', 'Inspect graph summaries and filtered architecture slices through the stable graph surface.'),
+            $this->cliCommandEntry('graph visualize', 'graph visualize [--view=<view>|--events|--routes|--caches|--pipeline|--workflows|--extensions] [--feature=<feature>] [--extension=<extension>] [--pipeline-stage=<stage>] [--command=<target>] [--event=<name>] [--workflow=<name>] [--format=mermaid|dot|svg|json]', 'stable', 'Render graph slices through the stable graph inspection surface.'),
             $this->cliCommandEntry('prompt', 'prompt <instruction...> [--feature-context] [--dry-run]', 'experimental', 'Build structured AI-edit prompts from current graph state.'),
             $this->cliCommandEntry('serve', 'serve', 'internal', 'Emit the lightweight local PHP server hint used in development.'),
             $this->cliCommandEntry('queue:work', 'queue:work [<queue>]', 'internal', 'Run the local queue worker loop.'),
@@ -309,12 +318,13 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('init app', 'init app <target> [--starter=<minimal|standard|api-first>] [--name=<package>] [--version=<constraint>] [--force]', 'stable', 'Scaffold a new Foundry application (legacy alias).'),
             $this->cliCommandEntry('migrate definitions', 'migrate definitions [--path=<path>] [--dry-run|--write]', 'experimental', 'Apply framework-provided definition migrations.'),
             $this->cliCommandEntry('codemod run', 'codemod run <id> [--path=<path>] [--dry-run|--write]', 'experimental', 'Run explicit source codemods contributed by the framework or extensions.'),
+            $this->cliCommandEntry('export graph', 'export graph [--view=<view>|--events|--routes|--caches|--pipeline|--workflows|--extensions] [--feature=<feature>] [--extension=<extension>] [--pipeline-stage=<stage>] [--command=<target>] [--event=<name>] [--workflow=<name>] [--format=json|dot|mermaid|svg] [--output=<path>]', 'stable', 'Export graph slices to docs- and tooling-friendly files.'),
             $this->cliCommandEntry('export openapi', 'export openapi [--format=json|yaml]', 'stable', 'Export OpenAPI documents derived from the canonical graph.'),
             $this->cliCommandEntry('preview notification', 'preview notification <name>', 'stable', 'Render notification output from current graph state.'),
         ];
 
         foreach ([
-            'graph' => ['stable', 'Inspect high-level graph metadata and diagnostics summary.'],
+            'graph' => ['stable', 'Inspect high-level graph metadata, summaries, and filtered architecture slices.'],
             'build' => ['internal', 'Inspect compiler build artifacts and manifests used for framework debugging.'],
             'node' => ['stable', 'Inspect a single graph node and its related diagnostics.'],
             'dependencies' => ['stable', 'Inspect feature or graph-node dependencies from compiled graph state.'],
@@ -336,7 +346,8 @@ final class ApiSurfaceRegistry
             'api-surface' => ['stable', 'Inspect the classified public, extension, experimental, and internal API registry.'],
         ] as $target => [$stability, $summary]) {
             $usage = match ($target) {
-                'graph', 'build', 'pipeline', 'extensions', 'packs', 'compatibility', 'migrations' => 'inspect ' . $target,
+                'graph' => 'inspect graph [--view=<view>|--events|--routes|--caches|--pipeline|--workflows|--extensions] [--feature=<feature>] [--extension=<extension>] [--pipeline-stage=<stage>] [--command=<target>] [--event=<name>] [--workflow=<name>] [--format=mermaid|dot|svg|json]',
+                'build', 'pipeline', 'extensions', 'packs', 'compatibility', 'migrations' => 'inspect ' . $target,
                 'node', 'dependents', 'affected-tests', 'affected-features' => 'inspect ' . $target . ' <node-id>',
                 'dependencies' => 'inspect dependencies <feature|node-id>',
                 'execution-plan' => 'inspect execution-plan <feature>|--feature=<feature>|--route=<METHOD PATH>',

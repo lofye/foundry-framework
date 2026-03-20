@@ -53,6 +53,19 @@ final class CLIArchitectureToolsCommandsTest extends TestCase
             requiredTests: ['feature'],
             createTests: [],
         );
+
+        mkdir($this->project->root . '/app/definitions/workflows', 0777, true);
+        file_put_contents($this->project->root . '/app/definitions/workflows/posts.workflow.yaml', <<<'YAML'
+version: 1
+resource: posts
+states: [draft, published]
+transitions:
+  publish:
+    from: [draft]
+    to: published
+    permission: posts.create
+    emit: [post.created]
+YAML);
     }
 
     protected function tearDown(): void
@@ -108,6 +121,57 @@ final class CLIArchitectureToolsCommandsTest extends TestCase
         $this->assertSame(0, $pipelineViz['status']);
         $this->assertSame('pipeline', $pipelineViz['payload']['view']);
         $this->assertArrayHasKey('edges', $pipelineViz['payload']['graph']);
+
+        $pipelineFeatureViz = $this->runCommand($app, ['foundry', 'graph', 'visualize', '--pipeline', '--feature=publish_post', '--json']);
+        $this->assertSame(0, $pipelineFeatureViz['status']);
+        $this->assertSame('publish_post', $pipelineFeatureViz['payload']['feature_filter']);
+        $this->assertNotEmpty($pipelineFeatureViz['payload']['summary']['features']);
+
+        $inspectGraph = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--command', 'POST /posts', '--format=dot', '--json']);
+        $this->assertSame(0, $inspectGraph['status']);
+        $this->assertSame('command', $inspectGraph['payload']['view']);
+        $this->assertSame('POST /posts', $inspectGraph['payload']['command_filter']);
+        $this->assertArrayHasKey('summary', $inspectGraph['payload']);
+        $this->assertStringContainsString('digraph foundry', (string) $inspectGraph['payload']['rendered']);
+
+        $inspectGraphBadFormat = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--format=bad', '--json']);
+        $this->assertSame(1, $inspectGraphBadFormat['status']);
+        $this->assertSame('CLI_GRAPH_FORMAT_INVALID', $inspectGraphBadFormat['payload']['error']['code']);
+
+        $inspectGraphMissingFeature = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--feature=missing', '--json']);
+        $this->assertSame(1, $inspectGraphMissingFeature['status']);
+        $this->assertSame('FEATURE_NOT_FOUND', $inspectGraphMissingFeature['payload']['error']['code']);
+
+        $inspectGraphHuman = $this->runRawCommand($app, ['foundry', 'inspect', 'graph']);
+        $this->assertSame(0, $inspectGraphHuman['status']);
+        $this->assertStringContainsString('Application graph overview', $inspectGraphHuman['output']);
+        $this->assertStringNotContainsString('"graph_version"', $inspectGraphHuman['output']);
+
+        $graphInspect = $this->runCommand($app, ['foundry', 'graph', 'inspect', '--workflow=posts', '--json']);
+        $this->assertSame(0, $graphInspect['status']);
+        $this->assertSame('workflows', $graphInspect['payload']['view']);
+        $this->assertSame('posts', $graphInspect['payload']['workflow_filter']);
+        $this->assertContains('posts', $graphInspect['payload']['summary']['workflows']);
+
+        $exportGraph = $this->runCommand($app, ['foundry', 'export', 'graph', '--extension=core', '--format=json', '--json']);
+        $this->assertSame(0, $exportGraph['status']);
+        $this->assertSame('extensions', $exportGraph['payload']['view']);
+        $this->assertSame('core', $exportGraph['payload']['extension_filter']);
+        $this->assertFileExists($exportGraph['payload']['file']);
+        $this->assertStringContainsString('"view": "extensions"', (string) $exportGraph['payload']['rendered']);
+
+        $exportGraphBadFormat = $this->runCommand($app, ['foundry', 'export', 'graph', '--format=bad', '--json']);
+        $this->assertSame(1, $exportGraphBadFormat['status']);
+        $this->assertSame('CLI_GRAPH_FORMAT_INVALID', $exportGraphBadFormat['payload']['error']['code']);
+
+        $exportGraphMissingFeature = $this->runCommand($app, ['foundry', 'export', 'graph', '--feature=missing', '--json']);
+        $this->assertSame(1, $exportGraphMissingFeature['status']);
+        $this->assertSame('FEATURE_NOT_FOUND', $exportGraphMissingFeature['payload']['error']['code']);
+
+        $exportGraphHuman = $this->runRawCommand($app, ['foundry', 'export', 'graph', '--workflow=posts', '--format=json']);
+        $this->assertSame(0, $exportGraphHuman['status']);
+        $this->assertStringContainsString('Workflow graph for posts', $exportGraphHuman['output']);
+        $this->assertStringContainsString('file:', $exportGraphHuman['output']);
 
         $prompt = $this->runCommand($app, ['foundry', 'prompt', 'Add', 'bookmark', 'support', '--feature-context', '--dry-run', '--json']);
         $this->assertSame(0, $prompt['status']);

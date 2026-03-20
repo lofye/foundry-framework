@@ -20,6 +20,7 @@ use Foundry\CLI\Commands\InspectResourceCommand;
 use Foundry\CLI\Commands\InspectRouteCommand;
 use Foundry\CLI\Commands\MigrateDefinitionsCommand;
 use Foundry\CLI\Commands\DoctorCommand;
+use Foundry\CLI\Commands\ExportGraphCommand;
 use Foundry\CLI\Commands\ExportOpenApiCommand;
 use Foundry\CLI\Commands\PreviewNotificationCommand;
 use Foundry\CLI\Commands\PromptCommand;
@@ -48,6 +49,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new InspectResourceCommand())->matches(['inspect', 'resource', 'posts']));
         $this->assertFalse((new InspectFeatureCommand())->matches(['other']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'graph']));
+        $this->assertTrue((new InspectGraphCommand())->matches(['graph', 'inspect']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'impact', '--file=app/features/x/feature.yaml']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'dependencies', 'feature:x']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'extension', 'core']));
@@ -84,6 +86,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new GeneratePlatformCommand())->matches(['generate', 'inspect-ui']));
         $this->assertTrue((new GenerateFeatureCommand())->matches(['generate', 'tests', '--all-missing']));
         $this->assertTrue((new GenerateIndexesCommand())->matches(['generate', 'indexes']));
+        $this->assertTrue((new ExportGraphCommand())->matches(['export', 'graph', '--format=json']));
         $this->assertTrue((new ExportOpenApiCommand())->matches(['export', 'openapi', '--format=json']));
         $this->assertTrue((new PreviewNotificationCommand())->matches(['preview', 'notification', 'welcome_email']));
         $this->assertTrue((new CompileGraphCommand())->matches(['compile', 'graph']));

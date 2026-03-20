@@ -28,7 +28,7 @@ Representative payload: `inspect/execution_plan.sample.json`.
 ## Example C - Visualize Pipeline
 
 ```bash
-php vendor/bin/foundry graph visualize --pipeline --format=mermaid --json
+php vendor/bin/foundry inspect graph --pipeline --format=mermaid --json
 ```
 
 Representative diagram: `visualize/pipeline.mermaid`.

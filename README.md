@@ -211,13 +211,13 @@ php vendor/bin/foundry doctor --strict --json
 php vendor/bin/foundry doctor --feature=<feature> --json
 ```
 
-Graph visualization:
+Graph inspection and export:
 ```bash
-php vendor/bin/foundry graph visualize --json
-php vendor/bin/foundry graph visualize --events --format=mermaid --json
-php vendor/bin/foundry graph visualize --routes --format=dot --json
-php vendor/bin/foundry graph visualize --caches --feature=<feature> --format=svg --json
-php vendor/bin/foundry graph visualize --pipeline --format=mermaid --json
+php vendor/bin/foundry inspect graph --json
+php vendor/bin/foundry inspect graph --command="POST /posts" --format=dot --json
+php vendor/bin/foundry graph inspect --workflow=posts --json
+php vendor/bin/foundry graph visualize --pipeline --feature=<feature> --format=mermaid --json
+php vendor/bin/foundry export graph --extension=core --format=json --json
 ```
 
 AI prompt loop:

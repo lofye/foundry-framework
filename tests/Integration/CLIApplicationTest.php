@@ -113,7 +113,17 @@ YAML);
         $commandHelp = $this->runCommand($app, ['foundry', 'help', 'graph', 'visualize', '--json']);
         $this->assertSame(0, $commandHelp['status']);
         $this->assertSame('graph visualize', $commandHelp['payload']['command']['signature']);
-        $this->assertSame('experimental', $commandHelp['payload']['command']['stability']);
+        $this->assertSame('stable', $commandHelp['payload']['command']['stability']);
+
+        $inspectHelp = $this->runCommand($app, ['foundry', 'help', 'graph', 'inspect', '--json']);
+        $this->assertSame(0, $inspectHelp['status']);
+        $this->assertSame('graph inspect', $inspectHelp['payload']['command']['signature']);
+        $this->assertSame('stable', $inspectHelp['payload']['command']['stability']);
+
+        $exportHelp = $this->runCommand($app, ['foundry', 'help', 'export', 'graph', '--json']);
+        $this->assertSame(0, $exportHelp['status']);
+        $this->assertSame('export graph', $exportHelp['payload']['command']['signature']);
+        $this->assertSame('stable', $exportHelp['payload']['command']['stability']);
 
         $newHelp = $this->runCommand($app, ['foundry', 'help', 'new', '--json']);
         $this->assertSame(0, $newHelp['status']);

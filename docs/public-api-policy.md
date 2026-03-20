@@ -67,7 +67,8 @@ Use the CLI itself to inspect the current classification:
 
 ```bash
 php vendor/bin/foundry help --json
-php vendor/bin/foundry help graph visualize --json
+php vendor/bin/foundry help graph inspect --json
+php vendor/bin/foundry help export graph --json
 php vendor/bin/foundry inspect api-surface --json
 ```
 

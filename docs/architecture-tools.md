@@ -3,7 +3,9 @@
 The compiler core established a canonical semantic compiler and graph. The extensions and migrations layer established extensions, packs, migrations, codemods, and compatibility contracts. The architecture tools layer adds developer-facing capabilities that operate on the canonical graph plus the local install/runtime environment:
 
 - `doctor` environment and architecture diagnostics
-- `graph visualize` graph-derived architecture diagrams
+- `inspect graph` / `graph inspect` graph-derived summaries and filtered slices
+- `graph visualize` stable rendered graph aliases
+- `export graph` docs- and tooling-friendly graph exports
 - `prompt` structured AI-assisted development context
 
 ## Rules
@@ -61,15 +63,16 @@ Current built-in doctor checks:
 
 `--strict` fails on warnings and errors; default mode fails on errors only.
 
-## Graph Visualization
+## Graph Visualization And Export
 
 Command surface:
 
 ```bash
-php vendor/bin/foundry graph visualize --json
+php vendor/bin/foundry inspect graph --json
+php vendor/bin/foundry graph inspect --workflow=posts --json
 php vendor/bin/foundry graph visualize --events --format=mermaid --json
-php vendor/bin/foundry graph visualize --routes --format=dot --json
-php vendor/bin/foundry graph visualize --caches --feature=<name> --format=svg --json
+php vendor/bin/foundry inspect graph --command="POST /posts" --format=dot --json
+php vendor/bin/foundry export graph --extension=core --format=json --json
 ```
 
 Visualization views:
@@ -78,6 +81,20 @@ Visualization views:
 - `events`: feature event emit/subscribe topology
 - `routes`: request lifecycle-related route/feature/schema/query/event/job edges
 - `caches`: cache invalidation topology
+- `pipeline`: execution-plan, stage, guard, and interceptor topology
+- `workflows`: workflow/orchestration relationships
+- `extensions`: extension-to-pack and extension-to-pipeline ownership slices
+- `command`: route/execution-plan focused slices for a feature or route target
+
+Filters:
+
+- `--feature=<feature>`
+- `--extension=<extension>`
+- `--pipeline-stage=<stage>` or `--pipeline=<stage>`
+- `--command=<feature|METHOD /path|execution_plan:...>`
+- `--event=<name>`
+- `--workflow=<name>`
+- `--area=<dependencies|events|routes|caches|pipeline|workflows|extensions|command>`
 
 Formats:
 
@@ -85,6 +102,13 @@ Formats:
 - `dot`
 - `json`
 - `svg` (lightweight deterministic textual SVG rendering)
+
+Stable aliases:
+
+- `inspect graph` is the primary summary/slice surface
+- `graph inspect` is a stable alias for the same payload
+- `graph visualize` is a stable alias that defaults to rendered output
+- `export graph` writes deterministic files under `app/.foundry/build/exports`
 
 ## Foundry Prompt
 
@@ -116,6 +140,6 @@ Recommended loop for graph-native changes:
 1. Edit source-of-truth manifests/schemas/tests under `app/features/*`.
 2. `php vendor/bin/foundry compile graph --json`
 3. `php vendor/bin/foundry doctor --json`
-4. `php vendor/bin/foundry graph visualize --events --format=mermaid --json`
+4. `php vendor/bin/foundry inspect graph --event=post.created --format=mermaid --json`
 5. `php vendor/bin/foundry prompt "<instruction>" --json`
 6. Run verify and PHPUnit commands from suggested actions.
