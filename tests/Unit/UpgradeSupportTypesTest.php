@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Foundry\Tests\Unit;
 
 use Foundry\Upgrade\DeprecationMetadata;
+use Foundry\Upgrade\UpgradeIssue;
+use Foundry\Upgrade\UpgradeReport;
 use Foundry\Upgrade\VersionComparator;
 use PHPUnit\Framework\TestCase;
 
@@ -49,5 +51,39 @@ final class UpgradeSupportTypesTest extends TestCase
             'migration' => 'Upgrade the manifest before 1.0.',
             'reference' => 'docs/upgrade-safety.md#feature-manifest-v1',
         ], $metadata->toArray());
+    }
+
+    public function test_upgrade_report_renders_warning_headline_and_skips_empty_affected_values(): void
+    {
+        $report = new UpgradeReport(
+            ok: true,
+            currentVersion: '0.4.0',
+            targetVersion: '1.0.0',
+            graphVersion: 1,
+            commandPrefix: 'php bin/foundry',
+            summary: ['error' => 0, 'warning' => 1, 'info' => 0, 'total' => 1],
+            issues: [
+                new UpgradeIssue(
+                    code: 'FDY1301_DEPRECATED_CLI_USAGE',
+                    severity: 'warning',
+                    category: 'upgrade',
+                    summary: 'Legacy command detected.',
+                    affected: ['source_path' => 'README.md', 'line' => '', 'match' => null],
+                    whyItMatters: 'Old commands will be removed.',
+                    introducedIn: '0.4.0',
+                    targetVersion: '1.0.0',
+                    migration: 'Use `new` instead of `init app`.',
+                    reference: 'docs/upgrade-safety.md',
+                ),
+            ],
+            checks: [],
+        );
+
+        $rendered = $report->renderHuman();
+
+        $this->assertStringContainsString('Upgrade check found issues to review.', $rendered);
+        $this->assertStringContainsString('Affected: source_path=README.md', $rendered);
+        $this->assertStringNotContainsString('line=', $rendered);
+        $this->assertStringNotContainsString('match=', $rendered);
     }
 }

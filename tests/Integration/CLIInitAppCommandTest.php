@@ -8,9 +8,11 @@ use Foundry\Core\RuntimeFactory;
 use Foundry\Http\RequestContext;
 use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 
+#[PreserveGlobalState(false)]
 final class CLIInitAppCommandTest extends TestCase
 {
     private TempProject $project;
