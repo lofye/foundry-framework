@@ -197,6 +197,76 @@ YAML);
         $this->assertSame('EXPLAIN_TARGET_REQUIRED', $missing['payload']['error']['code']);
     }
 
+    public function test_explain_reports_unsupported_kind_and_ambiguous_targets_cleanly(): void
+    {
+        $app = new Application();
+        $this->enablePro($app);
+
+        $feature = $this->project->root . '/app/features/publish_profile';
+        mkdir($feature . '/tests', 0777, true);
+        file_put_contents($feature . '/feature.yaml', <<<'YAML'
+version: 1
+feature: publish_profile
+kind: http
+description: profile publish
+route:
+  method: POST
+  path: /profiles
+input:
+  schema: app/features/publish_profile/input.schema.json
+output:
+  schema: app/features/publish_profile/output.schema.json
+auth:
+  required: true
+  strategies: [bearer]
+  permissions: [profiles.create]
+database:
+  reads: []
+  writes: []
+  transactions: required
+  queries: []
+cache:
+  reads: []
+  writes: []
+  invalidate: []
+events:
+  emit: []
+jobs:
+  dispatch: []
+rate_limit: {}
+tests:
+  required: [contract, feature]
+llm:
+  editable: true
+  risk: low
+YAML);
+        file_put_contents($feature . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
+        file_put_contents($feature . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
+        file_put_contents($feature . '/action.php', '<?php declare(strict_types=1); namespace App\\Features\\PublishProfile; use Foundry\\Feature\\FeatureAction; use Foundry\\Feature\\FeatureServices; use Foundry\\Auth\\AuthContext; use Foundry\\Http\\RequestContext; final class Action implements FeatureAction { public function handle(array $input, RequestContext $request, AuthContext $auth, FeatureServices $services): array { return []; } }');
+        file_put_contents($feature . '/permissions.yaml', "version: 1\npermissions: [profiles.create]\nrules: {}\n");
+        file_put_contents($feature . '/cache.yaml', "version: 1\nentries: []\n");
+        file_put_contents($feature . '/events.yaml', "version: 1\nemit: []\nsubscribe: []\n");
+        file_put_contents($feature . '/jobs.yaml', "version: 1\ndispatch: []\n");
+        file_put_contents($feature . '/tests/publish_profile_contract_test.php', '<?php declare(strict_types=1);');
+        file_put_contents($feature . '/tests/publish_profile_feature_test.php', '<?php declare(strict_types=1);');
+
+        $paths = Paths::fromCwd($this->project->root);
+        $manifest = Yaml::parseFile($feature . '/feature.yaml');
+        (new ContextManifestGenerator($paths))->write('publish_profile', $manifest);
+
+        $this->assertSame(0, $this->runCommand($app, ['foundry', 'compile', 'graph', '--json'])['status']);
+
+        $unsupported = $this->runCommand($app, ['foundry', 'explain', 'unknown:thing', '--json']);
+        $this->assertSame(1, $unsupported['status']);
+        $this->assertSame('EXPLAIN_TARGET_KIND_UNSUPPORTED', $unsupported['payload']['error']['code']);
+
+        $ambiguous = $this->runCommandRaw($app, ['foundry', 'explain', 'publish']);
+        $this->assertSame(1, $ambiguous['status']);
+        $this->assertStringContainsString('Ambiguous target: "publish"', $ambiguous['output']);
+        $this->assertStringContainsString('publish_post (feature)', $ambiguous['output']);
+        $this->assertStringContainsString('publish_profile (feature)', $ambiguous['output']);
+    }
+
     public function test_generate_requires_provider_or_deterministic_mode(): void
     {
         $app = new Application();

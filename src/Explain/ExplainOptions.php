@@ -13,6 +13,7 @@ final readonly class ExplainOptions
         public bool $includeExecutionFlow = true,
         public bool $includeRelatedCommands = true,
         public bool $includeRelatedDocs = true,
+        public ?string $type = null,
     ) {
     }
 
@@ -29,6 +30,7 @@ final readonly class ExplainOptions
             'include_execution_flow' => $this->includeExecutionFlow,
             'include_related_commands' => $this->includeRelatedCommands,
             'include_related_docs' => $this->includeRelatedDocs,
+            'type' => $this->type,
         ];
     }
 }

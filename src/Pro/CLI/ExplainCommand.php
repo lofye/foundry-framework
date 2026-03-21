@@ -123,6 +123,7 @@ final class ExplainCommand extends Command
                 includeDiagnostics: $includeDiagnostics,
                 includeNeighbors: $includeNeighbors,
                 includeExecutionFlow: $includeExecutionFlow,
+                type: $targetKind !== '' ? $targetKind : null,
             ),
         ];
     }

@@ -10,7 +10,7 @@ final class ExplainContext
     /**
      * @var array<string,mixed>
      */
-    private array $data = [];
+    private array $data;
 
     public function __construct(
         public readonly ApplicationGraph $graph,
@@ -18,6 +18,18 @@ final class ExplainContext
         public readonly ExplainSubject $subject,
         public readonly string $commandPrefix,
     ) {
+        $this->data = [
+            'graph_subject' => $subject->metadata,
+            'related_nodes' => [],
+            'pipeline' => [],
+            'commands' => [],
+            'workflows' => [],
+            'events' => [],
+            'schemas' => [],
+            'extensions' => [],
+            'diagnostics' => [],
+            'docs' => [],
+        ];
     }
 
     public function set(string $key, mixed $value): void

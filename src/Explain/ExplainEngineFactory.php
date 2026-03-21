@@ -51,12 +51,14 @@ final class ExplainEngineFactory
             $apiSurfaceRegistry,
             $extensionRows,
         );
+        $subjectFactory = new ExplainSubjectFactory();
 
         return new ExplainEngine(
             graph: $graph,
-            resolver: new ExplainTargetResolver($graph, $artifacts),
+            resolver: new ExplainTargetResolver($graph, $artifacts, $subjectFactory),
             artifacts: $artifacts,
             summaryBuilder: new RuleBasedSummaryBuilder(),
+            planAssembler: new ExplanationPlanAssembler(),
             collectors: [
                 new GraphNeighborhoodCollector(),
                 new PipelineContextCollector(),

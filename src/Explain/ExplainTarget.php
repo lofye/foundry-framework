@@ -36,11 +36,8 @@ final readonly class ExplainTarget
         $selector = $normalized;
 
         if (preg_match('/^([a-z_]+):(.*)$/', $normalized, $matches) === 1) {
-            $candidateKind = strtolower(trim((string) ($matches[1] ?? '')));
-            if (in_array($candidateKind, self::SUPPORTED_KINDS, true)) {
-                $kind = $candidateKind;
-                $selector = trim((string) ($matches[2] ?? ''));
-            }
+            $kind = strtolower(trim((string) ($matches[1] ?? '')));
+            $selector = trim((string) ($matches[2] ?? ''));
         }
 
         if ($kind === null && $kindOverride !== null && $kindOverride !== '') {

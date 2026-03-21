@@ -96,7 +96,7 @@ final class TextExplanationRenderer implements ExplanationRendererInterface
      */
     private function appendPrimarySections(array &$lines, array $payload): void
     {
-        foreach ($this->orderedSections((array) ($payload['sections'] ?? [])) as $section) {
+        foreach ((array) ($payload['sections'] ?? []) as $section) {
             if (!is_array($section)) {
                 continue;
             }
@@ -123,39 +123,6 @@ final class TextExplanationRenderer implements ExplanationRendererInterface
                 $lines[] = $row;
             }
         }
-    }
-
-    /**
-     * @param array<int,mixed> $sections
-     * @return array<int,array<string,mixed>>
-     */
-    private function orderedSections(array $sections): array
-    {
-        $rows = [];
-        foreach ($sections as $index => $section) {
-            if (!is_array($section)) {
-                continue;
-            }
-
-            $section['_render_index'] = $index;
-            $rows[] = $section;
-        }
-
-        usort($rows, function (array $left, array $right): int {
-            $leftId = (string) ($left['id'] ?? '');
-            $rightId = (string) ($right['id'] ?? '');
-
-            return ($this->sectionPriority($leftId) <=> $this->sectionPriority($rightId))
-                ?: ((int) ($left['_render_index'] ?? 0) <=> (int) ($right['_render_index'] ?? 0))
-                ?: strcmp((string) ($left['title'] ?? ''), (string) ($right['title'] ?? ''));
-        });
-
-        foreach ($rows as &$row) {
-            unset($row['_render_index']);
-        }
-        unset($row);
-
-        return $rows;
     }
 
     /**
@@ -994,24 +961,6 @@ final class TextExplanationRenderer implements ExplanationRendererInterface
             'interceptor_to_pipeline_stage',
             'pipeline_stage_next',
         ], true);
-    }
-
-    private function sectionPriority(string $id): int
-    {
-        return match ($id) {
-            'subject' => 0,
-            'contracts' => 10,
-            'route' => 20,
-            'workflow' => 30,
-            'event' => 40,
-            'extension' => 50,
-            'command' => 60,
-            'job' => 70,
-            'schema' => 80,
-            'pipeline_stage' => 90,
-            'impact' => 900,
-            default => 800,
-        };
     }
 
     private function routeSummaryValue(mixed $value): ?string

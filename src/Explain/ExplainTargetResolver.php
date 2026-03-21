@@ -17,8 +17,12 @@ final class ExplainTargetResolver
     public function __construct(
         private readonly ApplicationGraph $graph,
         private readonly ExplainArtifactCatalog $artifacts,
+        ?ExplainSubjectFactory $subjectFactory = null,
     ) {
+        $this->subjectFactory = $subjectFactory ?? new ExplainSubjectFactory();
     }
+
+    private readonly ExplainSubjectFactory $subjectFactory;
 
     public function resolve(ExplainTarget $target): ExplainSubject
     {
@@ -28,6 +32,10 @@ final class ExplainTargetResolver
         }
 
         if ($target->kind !== null && $target->kind !== '') {
+            if (!in_array($target->kind, ExplainTarget::SUPPORTED_KINDS, true)) {
+                UnsupportedExplainTargetException::raise($target->kind);
+            }
+
             $resolved = $this->resolveExplicit($target->kind, $selector);
             if ($resolved !== null) {
                 return $resolved;
@@ -35,15 +43,11 @@ final class ExplainTargetResolver
 
             $candidates = $this->fuzzyMatches($selector, $target->kind);
             if ($candidates !== []) {
-                throw new FoundryError(
-                    'EXPLAIN_TARGET_AMBIGUOUS',
-                    'validation',
-                    [
-                        'target' => $target->raw,
-                        'kind' => $target->kind,
-                        'candidates' => array_map($this->candidateSummary(...), $candidates),
-                    ],
+                AmbiguousExplainTargetException::raise(
+                    $target->raw,
+                    array_map($this->candidateSummary(...), $candidates),
                     $this->ambiguityMessage($target->raw, $candidates),
+                    $target->kind,
                 );
             }
 
@@ -57,7 +61,10 @@ final class ExplainTargetResolver
 
         $exactNode = $this->graph->node($selector);
         if ($exactNode instanceof GraphNode) {
-            return $this->subjectFromGraphNode($exactNode);
+            $subject = $this->subjectFactory->fromGraphNode($exactNode);
+            if ($this->isExplainableSubject($subject)) {
+                return $subject;
+            }
         }
 
         $aliasMatches = $this->exactAliasMatches($selector, includeRouteAndCommand: false);
@@ -65,10 +72,9 @@ final class ExplainTargetResolver
             return $aliasMatches[0];
         }
         if (count($aliasMatches) > 1) {
-            throw new FoundryError(
-                'EXPLAIN_TARGET_AMBIGUOUS',
-                'validation',
-                ['target' => $target->raw, 'candidates' => array_map($this->candidateSummary(...), $aliasMatches)],
+            AmbiguousExplainTargetException::raise(
+                $target->raw,
+                array_map($this->candidateSummary(...), $aliasMatches),
                 $this->ambiguityMessage($target->raw, $aliasMatches),
             );
         }
@@ -78,10 +84,9 @@ final class ExplainTargetResolver
             return $routeOrCommandMatches[0];
         }
         if (count($routeOrCommandMatches) > 1) {
-            throw new FoundryError(
-                'EXPLAIN_TARGET_AMBIGUOUS',
-                'validation',
-                ['target' => $target->raw, 'candidates' => array_map($this->candidateSummary(...), $routeOrCommandMatches)],
+            AmbiguousExplainTargetException::raise(
+                $target->raw,
+                array_map($this->candidateSummary(...), $routeOrCommandMatches),
                 $this->ambiguityMessage($target->raw, $routeOrCommandMatches),
             );
         }
@@ -91,10 +96,9 @@ final class ExplainTargetResolver
             return $fuzzy[0];
         }
         if (count($fuzzy) > 1) {
-            throw new FoundryError(
-                'EXPLAIN_TARGET_AMBIGUOUS',
-                'validation',
-                ['target' => $target->raw, 'candidates' => array_map($this->candidateSummary(...), $fuzzy)],
+            AmbiguousExplainTargetException::raise(
+                $target->raw,
+                array_map($this->candidateSummary(...), $fuzzy),
                 $this->ambiguityMessage($target->raw, $fuzzy),
             );
         }
@@ -120,7 +124,7 @@ final class ExplainTargetResolver
         foreach ($this->possibleGraphNodeIds($kind, $selector) as $nodeId) {
             $node = $this->graph->node($nodeId);
             if ($node instanceof GraphNode) {
-                return $this->subjectFromGraphNode($node);
+                return $this->subjectFactory->fromGraphNode($node);
             }
         }
 
@@ -134,15 +138,11 @@ final class ExplainTargetResolver
             return $matches[0];
         }
         if (count($matches) > 1) {
-            throw new FoundryError(
-                'EXPLAIN_TARGET_AMBIGUOUS',
-                'validation',
-                [
-                    'target' => $kind . ':' . $selector,
-                    'kind' => $kind,
-                    'candidates' => array_map($this->candidateSummary(...), $matches),
-                ],
+            AmbiguousExplainTargetException::raise(
+                $kind . ':' . $selector,
+                array_map($this->candidateSummary(...), $matches),
                 $this->ambiguityMessage($kind . ':' . $selector, $matches),
+                $kind,
             );
         }
 
@@ -286,7 +286,10 @@ final class ExplainTargetResolver
 
         $rows = [];
         foreach ($this->graph->nodes() as $node) {
-            $subject = $this->subjectFromGraphNode($node);
+            $subject = $this->subjectFactory->fromGraphNode($node);
+            if (!$this->isExplainableSubject($subject)) {
+                continue;
+            }
             $rows[$subject->id] = $subject;
         }
 
@@ -315,19 +318,10 @@ final class ExplainTargetResolver
     {
         $rows = [];
         foreach ($this->artifacts->extensions() as $row) {
-            $name = trim((string) ($row['name'] ?? ''));
-            if ($name === '') {
-                continue;
+            $subject = is_array($row) ? $this->subjectFactory->fromExtensionRow($row) : null;
+            if ($subject !== null) {
+                $rows[] = $subject;
             }
-
-            $rows[] = new ExplainSubject(
-                kind: 'extension',
-                id: 'extension:' . $name,
-                label: $name,
-                graphNodeIds: [],
-                aliases: [$name],
-                metadata: $row,
-            );
         }
 
         return $rows;
@@ -340,56 +334,13 @@ final class ExplainTargetResolver
     {
         $rows = [];
         foreach ($this->artifacts->cliCommands() as $row) {
-            if (!is_array($row)) {
-                continue;
+            $subject = is_array($row) ? $this->subjectFactory->fromCommandRow($row) : null;
+            if ($subject !== null) {
+                $rows[] = $subject;
             }
-
-            $signature = trim((string) ($row['signature'] ?? ''));
-            if ($signature === '') {
-                continue;
-            }
-
-            $aliases = [$signature];
-            if (!str_contains($signature, ' ')) {
-                $aliases[] = $signature;
-            }
-
-            $rows[] = new ExplainSubject(
-                kind: 'command',
-                id: 'command:' . $signature,
-                label: $signature,
-                graphNodeIds: [],
-                aliases: ExplainSupport::uniqueStrings($aliases),
-                metadata: $row,
-            );
         }
 
         return $rows;
-    }
-
-    private function subjectFromGraphNode(GraphNode $node): ExplainSubject
-    {
-        $metadata = $node->payload();
-        $metadata['source_path'] = $node->sourcePath();
-        $metadata['source_region'] = $node->sourceRegion();
-        $metadata['graph_compatibility'] = $node->graphCompatibility();
-        $metadata['primary_node'] = $node->toArray();
-        $feature = ExplainSupport::featureFromNode($node);
-        if ($feature !== null) {
-            $metadata['feature'] = $feature;
-        }
-        if ($node->type() === 'route') {
-            $metadata['signature'] = ExplainSupport::normalizeRouteSignature((string) ($metadata['signature'] ?? ''));
-        }
-
-        return new ExplainSubject(
-            kind: ExplainSupport::subjectKindForNodeType($node->type()),
-            id: $node->id(),
-            label: ExplainSupport::nodeLabel($node),
-            graphNodeIds: [$node->id()],
-            aliases: ExplainSupport::nodeAliases($node),
-            metadata: $metadata,
-        );
     }
 
     /**
@@ -452,5 +403,10 @@ final class ExplainTargetResolver
         }
 
         return $candidate->kind . ':' . $selector;
+    }
+
+    private function isExplainableSubject(ExplainSubject $subject): bool
+    {
+        return in_array($subject->kind, ExplainTarget::SUPPORTED_KINDS, true);
     }
 }

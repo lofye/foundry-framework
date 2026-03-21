@@ -20,6 +20,7 @@ final class ExplainEngine implements ExplainEngineInterface
         private readonly ExplainTargetResolver $resolver,
         private readonly ExplainArtifactCatalog $artifacts,
         private readonly RuleBasedSummaryBuilder $summaryBuilder,
+        private readonly ExplanationPlanAssembler $planAssembler,
         private readonly array $collectors,
         private readonly array $analyzers,
         private readonly array $contributors,
@@ -82,15 +83,15 @@ final class ExplainEngine implements ExplainEngineInterface
             $relatedDocs = [];
         }
 
-        return new ExplanationPlan(
-            subject: $subject->toArray(),
+        return $this->planAssembler->assemble(
+            subject: $subject,
             summary: $summary,
             sections: $sections,
             relationships: $relationships,
             executionFlow: $executionFlow,
             diagnostics: $diagnostics,
-            relatedCommands: ExplainSupport::uniqueStrings($relatedCommands),
-            relatedDocs: $this->uniqueDocs($relatedDocs),
+            relatedCommands: $relatedCommands,
+            relatedDocs: $relatedDocs,
             metadata: $this->metadata($target, $options, $context),
         );
     }
@@ -178,28 +179,4 @@ final class ExplainEngine implements ExplainEngineInterface
         return $this->rowList($rows);
     }
 
-    /**
-     * @param array<int,array<string,mixed>> $rows
-     * @return array<int,array<string,mixed>>
-     */
-    private function uniqueDocs(array $rows): array
-    {
-        $unique = [];
-        foreach ($rows as $row) {
-            $id = trim((string) ($row['id'] ?? $row['path'] ?? $row['title'] ?? ''));
-            if ($id === '') {
-                $id = md5(serialize($row));
-            }
-
-            $unique[$id] = $row;
-        }
-
-        usort(
-            $unique,
-            static fn (array $left, array $right): int => strcmp((string) ($left['title'] ?? ''), (string) ($right['title'] ?? ''))
-                ?: strcmp((string) ($left['path'] ?? ''), (string) ($right['path'] ?? '')),
-        );
-
-        return array_values($unique);
-    }
 }
