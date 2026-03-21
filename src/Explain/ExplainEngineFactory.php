@@ -26,6 +26,7 @@ use Foundry\Explain\Collectors\EventContextCollector;
 use Foundry\Explain\Collectors\PipelineContextCollector;
 use Foundry\Explain\Collectors\SchemaContextCollector;
 use Foundry\Explain\Collectors\WorkflowContextCollector;
+use Foundry\Explain\Contributors\ExplainContributorInterface;
 use Foundry\Support\ApiSurfaceRegistry;
 use Foundry\Support\Paths;
 
@@ -33,6 +34,7 @@ final class ExplainEngineFactory
 {
     /**
      * @param array<int,array<string,mixed>> $extensionRows
+     * @param array<int,ExplainContributorInterface> $contributors
      */
     public static function create(
         ApplicationGraph $graph,
@@ -41,9 +43,11 @@ final class ExplainEngineFactory
         ImpactAnalyzer $impactAnalyzer,
         array $extensionRows = [],
         ?string $commandPrefix = null,
+        array $contributors = [],
     ): ExplainEngineInterface {
         $artifacts = new ExplainArtifactCatalog(
             new BuildLayout($paths),
+            $paths,
             $apiSurfaceRegistry,
             $extensionRows,
         );
@@ -77,7 +81,7 @@ final class ExplainEngineFactory
                 new ExtensionSubjectAnalyzer(),
                 new PipelineStageSubjectAnalyzer(),
             ],
-            contributors: [],
+            contributors: $contributors,
             commandPrefix: $commandPrefix ?? ExplainSupport::commandPrefix($paths),
         );
     }

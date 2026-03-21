@@ -18,6 +18,7 @@ use Foundry\Compiler\IR\SchemaNode;
 use Foundry\Compiler\IR\WorkflowNode;
 use Foundry\Explain\ExplainArtifactCatalog;
 use Foundry\Explain\ExplainContext;
+use Foundry\Explain\Contributors\ExplainContributorInterface;
 use Foundry\Explain\ExplainEngineFactory;
 use Foundry\Explain\ExplainOptions;
 use Foundry\Explain\ExplainSupport;
@@ -40,6 +41,7 @@ final class ExplainArchitectureCoverageTest extends TestCase
         $this->project = new TempProject();
         $this->paths = Paths::fromCwd($this->project->root);
         $this->writeArtifacts($this->project->root);
+        $this->writeDocs($this->project->root);
     }
 
     protected function tearDown(): void
@@ -77,6 +79,8 @@ final class ExplainArchitectureCoverageTest extends TestCase
         $this->assertSame('auth', $this->sectionItems($pipelineStage->sections, 'pipeline_stage')['name']);
         $this->assertSame('doctor', $this->sectionItems($command->sections, 'command')['signature']);
         $this->assertSame('test.explain', $this->sectionItems($extension->sections, 'extension')['name']);
+        $this->assertNotEmpty($feature->relatedDocs);
+        $this->assertNotEmpty($command->relatedDocs);
     }
 
     public function test_resolver_handles_exact_typed_fuzzy_and_ambiguous_targets(): void
@@ -84,7 +88,7 @@ final class ExplainArchitectureCoverageTest extends TestCase
         $graph = $this->graphFixture(includeSecondPublishFeature: true);
         $resolver = new ExplainTargetResolver(
             $graph,
-            new ExplainArtifactCatalog(new BuildLayout($this->paths), new ApiSurfaceRegistry(), $this->extensionRows()),
+            new ExplainArtifactCatalog(new BuildLayout($this->paths), $this->paths, new ApiSurfaceRegistry(), $this->extensionRows()),
         );
 
         $this->assertSame('feature:publish_post', $resolver->resolve(ExplainTarget::parse('feature:publish_post'))->id);
@@ -115,7 +119,7 @@ final class ExplainArchitectureCoverageTest extends TestCase
 
     public function test_artifacts_support_helpers_and_renderers_remain_plan_driven(): void
     {
-        $catalog = new ExplainArtifactCatalog(new BuildLayout($this->paths), new ApiSurfaceRegistry(), $this->extensionRows());
+        $catalog = new ExplainArtifactCatalog(new BuildLayout($this->paths), $this->paths, new ApiSurfaceRegistry(), $this->extensionRows());
         $this->assertArrayHasKey('publish_post', $catalog->featureIndex());
         $this->assertArrayHasKey('POST /posts', $catalog->routeIndex());
         $this->assertArrayHasKey('emit', $catalog->eventIndex());
@@ -128,6 +132,7 @@ final class ExplainArchitectureCoverageTest extends TestCase
         $this->assertArrayHasKey('order', $catalog->pipelineIndex());
         $this->assertSame([], $catalog->interceptorIndex());
         $this->assertSame(2, $catalog->diagnosticsReport()['summary']['total']);
+        $this->assertNotEmpty($catalog->docsPages());
         $this->assertNotEmpty($catalog->cliCommands());
         $this->assertCount(1, $catalog->extensions());
 
@@ -167,8 +172,99 @@ final class ExplainArchitectureCoverageTest extends TestCase
         $json = $factory->forFormat('json')->render($plan);
 
         $this->assertStringContainsString('Subject', $text);
+        $this->assertStringContainsString('Contracts', $text);
+        $this->assertStringContainsString('Related Docs', $text);
         $this->assertStringContainsString('## Subject', $markdown);
+        $this->assertStringContainsString('## Contracts', $markdown);
+        $this->assertStringContainsString('## Related Docs', $markdown);
         $this->assertStringContainsString('"subject"', $json);
+        $this->assertStringContainsString('"related_docs"', $json);
+    }
+
+    public function test_engine_accepts_contributors_and_merges_their_sections(): void
+    {
+        $contributor = new class implements ExplainContributorInterface
+        {
+            public function supports(\Foundry\Explain\ExplainSubject $subject): bool
+            {
+                return $subject->kind === 'feature';
+            }
+
+            public function contribute(\Foundry\Explain\ExplainSubject $subject, ExplainContext $context, \Foundry\Explain\ExplainOptions $options): array
+            {
+                return [
+                    'sections' => [
+                        ExplainSupport::section('contributor', 'Contributor', [
+                            'source' => 'fixture',
+                            'subject' => $subject->id,
+                        ]),
+                    ],
+                    'related_commands' => [
+                        $context->commandPrefix . ' inspect feature ' . $subject->label . ' --json',
+                    ],
+                    'related_docs' => [
+                        [
+                            'id' => 'fixture-doc',
+                            'title' => 'Fixture Explain Notes',
+                            'path' => 'docs/fixture-explain.md',
+                            'source' => 'fixture',
+                        ],
+                    ],
+                ];
+            }
+        };
+
+        file_put_contents($this->project->root . '/docs/fixture-explain.md', "# Fixture Explain Notes\n");
+
+        $engine = ExplainEngineFactory::create(
+            graph: $this->graphFixture(),
+            paths: $this->paths,
+            apiSurfaceRegistry: new ApiSurfaceRegistry(),
+            impactAnalyzer: new ImpactAnalyzer($this->paths),
+            extensionRows: $this->extensionRows(),
+            contributors: [$contributor],
+        );
+
+        $plan = $engine->explain(ExplainTarget::parse('feature:publish_post'), new ExplainOptions());
+
+        $this->assertSame('fixture', $this->sectionItems($plan->sections, 'contributor')['source']);
+        $this->assertContains('php vendor/bin/foundry inspect feature publish_post --json', $plan->relatedCommands);
+        $fixtureDocs = array_values(array_filter(
+            $plan->relatedDocs,
+            static fn (array $row): bool => (string) ($row['id'] ?? '') === 'fixture-doc',
+        ));
+        $this->assertCount(1, $fixtureDocs);
+    }
+
+    public function test_explain_output_is_deterministic_across_repeated_runs_and_rendering(): void
+    {
+        $engine = ExplainEngineFactory::create(
+            graph: $this->graphFixture(),
+            paths: $this->paths,
+            apiSurfaceRegistry: new ApiSurfaceRegistry(),
+            impactAnalyzer: new ImpactAnalyzer($this->paths),
+            extensionRows: $this->extensionRows(),
+        );
+
+        $options = new ExplainOptions(format: 'markdown', deep: true);
+        $first = $engine->explain(ExplainTarget::parse('feature:publish_post'), $options);
+        $second = $engine->explain(ExplainTarget::parse('feature:publish_post'), $options);
+
+        $this->assertSame($first->toArray(), $second->toArray());
+
+        $renderers = new ExplanationRendererFactory();
+        $this->assertSame(
+            $renderers->forFormat('text')->render($first),
+            $renderers->forFormat('text')->render($second),
+        );
+        $this->assertSame(
+            $renderers->forFormat('markdown')->render($first),
+            $renderers->forFormat('markdown')->render($second),
+        );
+        $this->assertSame(
+            $renderers->forFormat('json')->render($first),
+            $renderers->forFormat('json')->render($second),
+        );
     }
 
     private function graphFixture(bool $includeSecondPublishFeature = false): ApplicationGraph
@@ -384,6 +480,27 @@ final class ExplainArchitectureCoverageTest extends TestCase
                 ],
             ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
         );
+    }
+
+    private function writeDocs(string $root): void
+    {
+        @mkdir($root . '/docs/generated', 0777, true);
+
+        file_put_contents($root . '/docs/architecture-tools.md', "# Architecture Tools\n");
+        file_put_contents($root . '/docs/how-it-works.md', "# How It Works\n");
+        file_put_contents($root . '/docs/execution-pipeline.md', "# Execution Pipeline\n");
+        file_put_contents($root . '/docs/reference.md', "# Reference\n");
+        file_put_contents($root . '/docs/extension-author-guide.md', "# Extension Author Guide\n");
+        file_put_contents($root . '/docs/extensions-and-migrations.md', "# Extensions And Migrations\n");
+        file_put_contents($root . '/docs/public-api-policy.md', "# Public API Policy\n");
+        file_put_contents($root . '/docs/generated/graph-overview.md', "# Graph Overview\n");
+        file_put_contents($root . '/docs/generated/features.md', "# Feature Catalog\n");
+        file_put_contents($root . '/docs/generated/routes.md', "# Route Catalog\n");
+        file_put_contents($root . '/docs/generated/events.md', "# Event Registry\n");
+        file_put_contents($root . '/docs/generated/jobs.md', "# Job Registry\n");
+        file_put_contents($root . '/docs/generated/schemas.md', "# Schema Catalog\n");
+        file_put_contents($root . '/docs/generated/cli-reference.md', "# CLI Reference\n");
+        file_put_contents($root . '/docs/generated/api-surface.md', "# API Surface Policy\n");
     }
 
     /**

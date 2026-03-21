@@ -15,9 +15,23 @@ Stable hooks:
 - migration rules and definition formats
 - codemods
 - graph analyzers for `doctor`
+- explain contributors for `foundry explain`
 - pipeline stages and interceptors
 
 CLI-facing contributions should be declared through metadata, not inferred from runtime side effects.
+
+## Explain Contributions
+
+`foundry explain` is deterministic and plan-driven. Extensions can add explanation sections by implementing `Foundry\Explain\Contributors\ExplainContributorInterface`.
+
+Contributor rules:
+
+- only add deterministic data derived from graph, projections, diagnostics, or extension metadata
+- return structured sections, related commands, execution flow fragments, or related docs rows
+- do not render human-readable output directly
+- do not re-run broad diagnostics unless a contribution explicitly requires it for correctness
+
+This keeps `foundry explain` extensible without coupling renderer output to any single extension.
 
 ## Required Metadata
 

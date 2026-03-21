@@ -5,6 +5,7 @@ namespace Foundry\Pro;
 
 use Foundry\Compiler\ApplicationGraph;
 use Foundry\Compiler\Analysis\ImpactAnalyzer;
+use Foundry\Explain\Contributors\ExplainContributorInterface;
 use Foundry\Explain\ExplainEngineFactory;
 use Foundry\Explain\ExplainOptions;
 use Foundry\Explain\ExplainResponse;
@@ -17,12 +18,14 @@ final readonly class ArchitectureExplainer
 {
     /**
      * @param array<int,array<string,mixed>> $extensionRows
+     * @param array<int,ExplainContributorInterface> $contributors
      */
     public function __construct(
         private Paths $paths,
         private ImpactAnalyzer $impactAnalyzer,
         private ApiSurfaceRegistry $apiSurfaceRegistry,
         private array $extensionRows = [],
+        private array $contributors = [],
         private ?string $commandPrefix = null,
         private ?ExplanationRendererFactory $rendererFactory = null,
     ) {
@@ -38,6 +41,7 @@ final readonly class ArchitectureExplainer
             impactAnalyzer: $this->impactAnalyzer,
             extensionRows: $this->extensionRows,
             commandPrefix: $this->commandPrefix,
+            contributors: $this->contributors,
         );
 
         $plan = $engine->explain($resolvedTarget, $options);

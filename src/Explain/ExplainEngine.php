@@ -67,6 +67,8 @@ final class ExplainEngine implements ExplainEngineInterface
             $relatedDocs = array_merge($relatedDocs, $this->docRows($contribution['related_docs'] ?? []));
         }
 
+        $relatedDocs = array_merge($relatedDocs, $this->docRows($context->get('docs', [])));
+
         $summary = $this->summaryBuilder->build($subject, $context, $options);
         $relationships = $options->includeNeighbors ? $this->relationships($context) : ['depends_on' => [], 'depended_on_by' => [], 'neighbors' => []];
         $diagnostics = $options->includeDiagnostics ? $this->diagnostics($context) : ['summary' => ['error' => 0, 'warning' => 0, 'info' => 0, 'total' => 0], 'items' => []];

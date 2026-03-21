@@ -30,9 +30,18 @@ final class CLIProCommandsTest extends TestCase
         putenv('FOUNDRY_LICENSE_PATH');
         mkdir($this->project->root . '/.foundry-home', 0777, true);
         mkdir($this->project->root . '/app/platform/config', 0777, true);
+        mkdir($this->project->root . '/docs', 0777, true);
 
         $feature = $this->project->root . '/app/features/publish_post';
         mkdir($feature . '/tests', 0777, true);
+
+        file_put_contents($this->project->root . '/docs/architecture-tools.md', "# Architecture Tools\n");
+        file_put_contents($this->project->root . '/docs/execution-pipeline.md', "# Execution Pipeline\n");
+        file_put_contents($this->project->root . '/docs/how-it-works.md', "# How It Works\n");
+        file_put_contents($this->project->root . '/docs/reference.md', "# Reference\n");
+        file_put_contents($this->project->root . '/docs/extension-author-guide.md', "# Extension Author Guide\n");
+        file_put_contents($this->project->root . '/docs/extensions-and-migrations.md', "# Extensions And Migrations\n");
+        file_put_contents($this->project->root . '/docs/public-api-policy.md', "# Public API Policy\n");
 
         file_put_contents($feature . '/feature.yaml', <<<'YAML'
 version: 1
@@ -140,6 +149,7 @@ YAML);
         $this->assertSame('publish_post', $explain['payload']['execution_flow']['pipeline']['feature']);
         $this->assertNotEmpty($explain['payload']['execution_flow']['guards']);
         $this->assertNotEmpty($explain['payload']['execution_flow']['events']);
+        $this->assertNotEmpty($explain['payload']['related_docs']);
         $this->assertSame('publish_post', $explain['payload']['metadata']['target']['selector']);
 
         $trace = $this->runCommand($app, ['foundry', 'trace', 'publish', '--json']);
@@ -178,6 +188,7 @@ YAML);
         $markdown = $this->runCommandRaw($app, ['foundry', 'explain', 'POST', '/posts', '--type', 'route', '--markdown']);
         $this->assertSame(0, $markdown['status']);
         $this->assertStringContainsString('## Subject', $markdown['output']);
+        $this->assertStringContainsString('## Related Docs', $markdown['output']);
 
         $missing = $this->runCommand($app, ['foundry', 'explain', '--json']);
         $this->assertSame(1, $missing['status']);

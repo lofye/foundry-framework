@@ -32,6 +32,7 @@ Foundry Pro is optional and local-first:
 - Pro does not require SaaS connectivity, telemetry, or runtime calls to external services
 - Pro licensing is stored locally at `~/.foundry/license.json` by default
 - `generate` works in deterministic mode without any provider and otherwise uses whatever local/remote provider you configure in `app/platform/config/ai.php`
+- `explain` derives architecture explanations from the compiled graph, projections, diagnostics, and docs metadata, not from an LLM
 
 Enable Pro locally:
 
@@ -254,11 +255,14 @@ Pro command surface:
 php vendor/bin/foundry pro enable <license-key>
 php vendor/bin/foundry pro status --json
 php vendor/bin/foundry explain publish_post --json
+php vendor/bin/foundry explain route:POST /posts --markdown
 php vendor/bin/foundry diff --json
 php vendor/bin/foundry trace publish_post --json
 php vendor/bin/foundry generate "add bookmark support" --deterministic --dry-run --json
 php vendor/bin/foundry generate "add bookmark support" --provider=static --model=fixture-model --dry-run --json
 ```
+
+`explain` supports typed selectors such as `feature:publish_post`, `route:POST /posts`, `command:doctor`, `event:post.created`, `workflow:editorial`, and `extension:core`.
 
 Provider-backed generation is still optional. If no provider is configured, `generate` exits non-zero with a clear message and suggests `--deterministic`.
 

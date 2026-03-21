@@ -350,7 +350,7 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('pro', 'pro [status]', 'experimental', 'Inspect local Foundry Pro licensing status and available Pro commands.', 'pro'),
             $this->cliCommandEntry('pro enable', 'pro enable <license-key>', 'experimental', 'Validate and store a local Foundry Pro license key without any required network call.', 'pro'),
             $this->cliCommandEntry('pro status', 'pro status', 'experimental', 'Show the local Foundry Pro license status.', 'pro'),
-            $this->cliCommandEntry('explain', 'explain <target> [--type=<kind>] [--markdown] [--deep] [--no-diagnostics] [--no-neighbors] [--no-flow]', 'experimental', 'Explain architecture, pipeline, guard, event, and workflow relationships for a graph target.', 'pro'),
+            $this->cliCommandEntry('explain', 'explain <target> [--type=<kind>] [--markdown] [--deep] [--no-diagnostics] [--no-neighbors] [--no-flow]', 'experimental', 'Explain a framework or application subject from the compiled graph, projections, diagnostics, and docs metadata.', 'pro'),
             $this->cliCommandEntry('diff', 'diff', 'experimental', 'Compare the current graph against the last compiled baseline.', 'pro'),
             $this->cliCommandEntry('trace', 'trace [<target>]', 'experimental', 'Analyze local trace output for a feature, route, or free-form filter.', 'pro'),
             $this->cliCommandEntry('generate <prompt>', 'generate <prompt...> [--feature-context] [--dry-run] [--deterministic] [--provider=<name>] [--model=<name>] [--force]', 'experimental', 'Plan or generate graph-aware feature scaffolding from the current graph using deterministic or configured AI provider mode.', 'pro'),
@@ -549,6 +549,7 @@ final class ApiSurfaceRegistry
             $this->surfaceEntry('extension_hook', 'Foundry\\Compiler\\Migration\\DefinitionFormat', 'extension_api', 'stable', 'Definition format metadata contract.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Compiler\\Codemod\\Codemod', 'extension_api', 'stable', 'Codemod contract used by explicit source rewrite operations.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Compiler\\Analysis\\GraphAnalyzer', 'extension_api', 'stable', 'Analyzer contract registered through compiler extensions.'),
+            $this->surfaceEntry('extension_hook', 'Foundry\\Explain\\Contributors\\ExplainContributorInterface', 'extension_api', 'stable', 'Explain contribution contract for deterministic architecture explanation sections.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Pipeline\\PipelineStageDefinition', 'extension_api', 'stable', 'Pipeline stage definition contract for extension-registered stages.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Pipeline\\StageInterceptor', 'extension_api', 'stable', 'Pipeline interceptor contract for extension-registered interceptors.'),
         ];

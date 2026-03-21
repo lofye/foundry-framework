@@ -14,6 +14,7 @@ final class TextExplanationRenderer implements ExplanationRendererInterface
 
         $lines[] = 'Subject';
         $lines[] = '  ' . (string) ($payload['subject']['label'] ?? '');
+        $lines[] = '  id: ' . (string) ($payload['subject']['id'] ?? '');
         $lines[] = '  kind: ' . (string) ($payload['subject']['kind'] ?? '');
 
         $summary = trim((string) (($payload['summary']['text'] ?? '')));
@@ -21,6 +22,28 @@ final class TextExplanationRenderer implements ExplanationRendererInterface
             $lines[] = '';
             $lines[] = 'Summary';
             $lines[] = '  ' . $summary;
+        }
+
+        foreach ((array) ($payload['sections'] ?? []) as $section) {
+            if (!is_array($section)) {
+                continue;
+            }
+
+            $title = trim((string) ($section['title'] ?? ''));
+            if ($title === '') {
+                continue;
+            }
+
+            $lines[] = '';
+            $lines[] = $title;
+            foreach ((array) ($section['items'] ?? []) as $key => $value) {
+                $formatted = $this->formatValue($value);
+                if ($formatted === '') {
+                    continue;
+                }
+
+                $lines[] = '  ' . str_replace('_', ' ', (string) $key) . ': ' . $formatted;
+            }
         }
 
         $dependsOn = (array) ($payload['relationships']['depends_on'] ?? []);
@@ -82,6 +105,103 @@ final class TextExplanationRenderer implements ExplanationRendererInterface
             }
         }
 
+        $docs = (array) ($payload['related_docs'] ?? []);
+        if ($docs !== []) {
+            $lines[] = '';
+            $lines[] = 'Related Docs';
+            foreach ($docs as $row) {
+                if (!is_array($row)) {
+                    continue;
+                }
+
+                $label = trim((string) ($row['title'] ?? $row['id'] ?? ''));
+                $path = trim((string) ($row['path'] ?? ''));
+                $lines[] = '  ' . ($path !== '' ? $label . ' (' . $path . ')' : $label);
+            }
+        }
+
         return implode(PHP_EOL, $lines);
+    }
+
+    private function formatValue(mixed $value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+
+        if (is_scalar($value)) {
+            return trim((string) $value);
+        }
+
+        if (!is_array($value)) {
+            return '';
+        }
+
+        if ($value === []) {
+            return '';
+        }
+
+        $isList = array_is_list($value);
+        if ($isList) {
+            $items = [];
+            foreach ($value as $item) {
+                $rendered = $this->formatListItem($item);
+                if ($rendered !== '') {
+                    $items[] = $rendered;
+                }
+            }
+
+            return implode(', ', $items);
+        }
+
+        $parts = [];
+        foreach ($value as $key => $item) {
+            $rendered = $this->formatListItem($item);
+            if ($rendered !== '') {
+                $parts[] = (string) $key . '=' . $rendered;
+            }
+        }
+
+        return implode(', ', $parts);
+    }
+
+    private function formatListItem(mixed $item): string
+    {
+        if ($item === null) {
+            return '';
+        }
+
+        if (is_bool($item)) {
+            return $item ? 'true' : 'false';
+        }
+
+        if (is_scalar($item)) {
+            return trim((string) $item);
+        }
+
+        if (!is_array($item)) {
+            return '';
+        }
+
+        foreach (['label', 'title', 'name', 'resource', 'id', 'path'] as $key) {
+            $value = trim((string) ($item[$key] ?? ''));
+            if ($value !== '') {
+                return $value;
+            }
+        }
+
+        $parts = [];
+        foreach ($item as $key => $value) {
+            if (!is_scalar($value) || trim((string) $value) === '') {
+                continue;
+            }
+            $parts[] = (string) $key . '=' . trim((string) $value);
+        }
+
+        return implode(', ', $parts);
     }
 }

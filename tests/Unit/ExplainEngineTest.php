@@ -46,7 +46,7 @@ final class ExplainEngineTest extends TestCase
         $paths = Paths::fromCwd($this->project->root);
         $resolver = new ExplainTargetResolver(
             $graph,
-            new ExplainArtifactCatalog(new BuildLayout($paths), new ApiSurfaceRegistry()),
+            new ExplainArtifactCatalog(new BuildLayout($paths), $paths, new ApiSurfaceRegistry()),
         );
 
         $command = $resolver->resolve(ExplainTarget::parse('command:doctor'));
@@ -78,9 +78,18 @@ final class ExplainEngineTest extends TestCase
         $plan = $engine->explain(ExplainTarget::parse('publish_post'), new ExplainOptions());
         $payload = $plan->toArray();
 
+        $this->assertSame(
+            ['subject', 'summary', 'sections', 'relationships', 'execution_flow', 'diagnostics', 'related_commands', 'related_docs', 'metadata'],
+            array_keys($payload),
+        );
         $this->assertSame('feature', $payload['subject']['kind']);
         $this->assertSame('feature:publish_post', $payload['subject']['id']);
         $this->assertTrue($payload['summary']['deterministic']);
+        $this->assertArrayHasKey('graph_node_ids', $payload['subject']);
+        $this->assertArrayHasKey('schema_version', $payload['metadata']);
+        $this->assertArrayHasKey('target', $payload['metadata']);
+        $this->assertArrayHasKey('options', $payload['metadata']);
+        $this->assertArrayHasKey('graph', $payload['metadata']);
         $this->assertNotEmpty($payload['relationships']['depends_on']);
         $this->assertSame('publish_post', $payload['execution_flow']['pipeline']['feature']);
         $this->assertNotEmpty($payload['execution_flow']['guards']);

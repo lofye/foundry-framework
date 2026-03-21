@@ -162,13 +162,60 @@ Context extraction prioritizes feature matches by instruction tokens, route path
 
 ## Pro Explain, Diff, Trace, And Generate
 
-- `explain <target>` resolves a feature, route signature, or graph identifier into dependency, dependent, pipeline, guard, event, workflow, and impact context.
+- `explain <target>` resolves a typed selector, route signature, command name, exact node id, or deterministic alias into a canonical subject and explains it from compiled graph and projection metadata.
 - `diff` compares the last compiled baseline graph against the current source state without changing core runtime requirements.
 - `trace [<target>]` analyzes the local trace log and summarizes matching categories.
 - `generate "<prompt>"` reuses the graph-backed prompt bundle flow and materializes an inspectable feature/workflow plan.
 - `generate "<prompt>" --deterministic` is reproducible across runs because it derives its plan strictly from the prompt and compiled graph context.
 - provider-backed generation is pluggable through the AI provider registry; no provider is hard-coded.
 - generation compiles the graph again after writes and returns graph/contracts verification payloads so failures stay inspectable.
+
+`explain` surface:
+
+```bash
+php vendor/bin/foundry explain publish_post --json
+php vendor/bin/foundry explain feature:publish_post --markdown
+php vendor/bin/foundry explain route:POST /posts --json
+php vendor/bin/foundry explain command:doctor --json
+php vendor/bin/foundry explain event:post.created --json
+php vendor/bin/foundry explain workflow:editorial --json
+php vendor/bin/foundry explain auth --type=pipeline_stage --json
+```
+
+Supported subject kinds include:
+
+- `feature`
+- `route`
+- `command`
+- `pipeline_stage`
+- `workflow`
+- `event`
+- `job`
+- `schema`
+- `extension`
+
+`explain` output is deterministic and derived from:
+
+- the canonical application graph
+- compiled projections
+- diagnostics metadata
+- command metadata
+- extension metadata
+- docs metadata when available
+
+The JSON payload is plan-driven and suitable for docs generation, IDE tooling, and future AI integration. It currently remains experimental, but its structure is deliberate:
+
+- `subject`
+- `summary`
+- `sections`
+- `relationships`
+- `execution_flow`
+- `diagnostics`
+- `related_commands`
+- `related_docs`
+- `metadata`
+
+Extension and app integrations can enrich explanations by contributing deterministic `ExplainContributorInterface` sections before rendering.
 
 ## Extension Integration
 
