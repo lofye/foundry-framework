@@ -11,6 +11,7 @@ use Foundry\Explain\Analyzers\SubjectAnalysisResult;
 use Foundry\Explain\Analyzers\SubjectAnalyzerInterface;
 use Foundry\Explain\ExplainArtifactCatalog;
 use Foundry\Explain\ExplainContext;
+use Foundry\Explain\ExplainSection;
 use Foundry\Explain\ExplainOptions;
 use Foundry\Explain\ExplainSubject;
 use Foundry\Explain\ExplainSubjectFactory;
@@ -262,11 +263,11 @@ final class ExplainFoundationTest extends TestCase
         );
         $this->assertSame(
             ['notes', 'impact'],
-            array_values(array_map(static fn (array $section): string => (string) ($section['id'] ?? ''), $plan->sections)),
+            array_values(array_map(static fn (ExplainSection $section): string => $section->id(), $plan->sections)),
         );
         $this->assertCount(1, $plan->relatedCommands);
         $this->assertCount(1, $plan->relatedDocs);
-        $this->assertSame(['items' => [['kind' => 'feature', 'label' => 'account']]], $plan->dependencies);
+        $this->assertSame(['items' => [['kind' => 'feature', 'label' => 'account']]], $plan->dependencies->toArray());
         $this->assertStringContainsString('Publish post.', (string) $plan->summary['text']);
         $this->assertSame('feature', $plan->metadata['options']['type']);
     }

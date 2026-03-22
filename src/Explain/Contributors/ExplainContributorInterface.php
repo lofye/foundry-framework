@@ -11,8 +11,5 @@ interface ExplainContributorInterface
 {
     public function supports(ExplainSubject $subject): bool;
 
-    /**
-     * @return array<string,mixed>
-     */
-    public function contribute(ExplainSubject $subject, ExplainContext $context, ExplainOptions $options): array;
+    public function contribute(ExplainSubject $subject, ExplainContext $context, ExplainOptions $options): ExplainContribution;
 }

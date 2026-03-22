@@ -20,10 +20,18 @@ final class CommandSubjectAnalyzer implements SubjectAnalyzerInterface
         $signature = trim((string) ($command['signature'] ?? $subject->label));
         $usage = trim((string) ($command['usage'] ?? ''));
         $summary = trim((string) ($command['summary'] ?? ''));
+        $aliases = array_values(array_filter(array_map('strval', (array) ($command['aliases'] ?? []))));
+        $classification = trim((string) ($command['classification'] ?? ''));
 
         $responsibilities = ['Expose the ' . $signature . ' command in the Foundry CLI surface'];
         if ($summary !== '') {
             $responsibilities[] = rtrim($summary, '.');
+        }
+        if ($usage !== '') {
+            $responsibilities[] = 'Support the usage pattern: ' . $usage;
+        }
+        if ($classification !== '') {
+            $responsibilities[] = 'Participate in the ' . $classification . ' command category';
         }
 
         return new SubjectAnalysisResult(
@@ -32,7 +40,20 @@ final class CommandSubjectAnalyzer implements SubjectAnalyzerInterface
                 'signature' => $signature,
                 'usage' => $usage,
                 'summary' => $summary,
-                'classification' => $command['classification'] ?? null,
+                'classification' => $classification,
+                'aliases' => $aliases,
+            ],
+            sections: [
+                \Foundry\Explain\ExplainSupport::section(
+                    'command_surface',
+                    'Command Surface',
+                    array_filter([
+                        'signature' => $signature,
+                        'usage' => $usage,
+                        'classification' => $classification,
+                        'aliases' => $aliases,
+                    ], static fn (mixed $value): bool => $value !== [] && $value !== ''),
+                ),
             ],
         );
     }

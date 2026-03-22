@@ -5,21 +5,20 @@ namespace Foundry\Explain;
 
 use Foundry\Explain\Analyzers\SectionAnalyzerInterface;
 use Foundry\Explain\Analyzers\SubjectAnalyzerInterface;
-use Foundry\Explain\Contributors\ExplainContributorInterface;
+use Foundry\Explain\Contributors\ExplainContributorRegistry;
 
 final class ExplanationPlanAssembler
 {
     /**
      * @param array<int,SubjectAnalyzerInterface> $subjectAnalyzers
      * @param array<int,SectionAnalyzerInterface> $sectionAnalyzers
-     * @param array<int,ExplainContributorInterface> $contributors
      */
     public function __construct(
         private readonly SummarySectionBuilder $summaryBuilder,
         private readonly SuggestedFixesBuilder $suggestedFixesBuilder,
         private readonly array $subjectAnalyzers,
         private readonly array $sectionAnalyzers,
-        private readonly array $contributors = [],
+        private readonly ExplainContributorRegistry $contributors = new ExplainContributorRegistry(),
     ) {
     }
 
@@ -58,15 +57,10 @@ final class ExplanationPlanAssembler
 
         $contributorCommands = [];
         $contributorDocs = [];
-        foreach ($this->contributors as $contributor) {
-            if (!$contributor->supports($subject)) {
-                continue;
-            }
-
-            $contribution = $contributor->contribute($subject, $context, $options);
-            $sections = array_merge($sections, $this->normalizeSections($contribution['sections'] ?? []));
-            $contributorCommands = array_merge($contributorCommands, array_values(array_map('strval', (array) ($contribution['related_commands'] ?? []))));
-            $contributorDocs = array_merge($contributorDocs, $this->uniqueDocs($this->rowList($contribution['related_docs'] ?? [])));
+        foreach ($this->contributors->contributionsFor($subject, $context, $options) as $contribution) {
+            $sections = array_merge($sections, $this->normalizeSections($contribution->sections));
+            $contributorCommands = array_merge($contributorCommands, $contribution->relatedCommands);
+            $contributorDocs = array_merge($contributorDocs, $this->uniqueDocs($this->rowList($contribution->relatedDocs)));
         }
 
         $responsibilities = ExplainSupport::orderedUniqueStrings($responsibilities);
@@ -102,15 +96,15 @@ final class ExplanationPlanAssembler
             subject: $subject->toArray(),
             summary: $summary,
             responsibilities: ['items' => $responsibilities],
-            executionFlow: $this->normalizeExecutionFlow($sectionData['execution_flow'] ?? []),
-            dependencies: $this->normalizeRowsSection($sectionData['dependencies'] ?? []),
-            dependents: $this->normalizeRowsSection($sectionData['dependents'] ?? []),
+            executionFlow: new ExecutionFlowSection($this->normalizeExecutionFlow($sectionData['execution_flow'] ?? [])),
+            dependencies: new RelationshipSection($this->normalizeRowsSection($sectionData['dependencies'] ?? [])),
+            dependents: new RelationshipSection($this->normalizeRowsSection($sectionData['dependents'] ?? [])),
             emits: $this->normalizeRowsSection($sectionData['emits'] ?? []),
             triggers: $this->normalizeRowsSection($sectionData['triggers'] ?? []),
             permissions: $this->normalizePermissions($sectionData['permissions'] ?? []),
             schemaInteraction: $this->normalizeSchemaInteraction($sectionData['schema_interaction'] ?? []),
-            graphRelationships: $this->normalizeGraphRelationships($sectionData['graph_relationships'] ?? []),
-            diagnostics: $this->normalizeDiagnostics($sectionData['diagnostics'] ?? []),
+            graphRelationships: new GraphRelationshipsSection($this->normalizeGraphRelationships($sectionData['graph_relationships'] ?? [])),
+            diagnostics: new DiagnosticsSection($this->normalizeDiagnostics($sectionData['diagnostics'] ?? [])),
             relatedCommands: $relatedCommands,
             relatedDocs: $relatedDocs,
             suggestedFixes: $suggestedFixes,
@@ -121,36 +115,39 @@ final class ExplanationPlanAssembler
     }
 
     /**
-     * @param array<int,array<string,mixed>> $sections
-     * @return array<int,array<string,mixed>>
+     * @param array<int,ExplainSection|array<string,mixed>> $sections
+     * @return array<int,ExplainSection>
      */
     private function normalizeSections(array $sections): array
     {
         $rows = [];
         foreach ($sections as $index => $section) {
-            if (!$this->isSectionRenderable($section)) {
+            $normalized = $section instanceof ExplainSection ? $section : (is_array($section) ? ExplainSection::fromArray($section) : null);
+            if (!$normalized instanceof ExplainSection || !$normalized->isRenderable()) {
                 continue;
             }
 
-            $section['_render_index'] = $index;
-            $rows[] = $section;
+            $rows[] = [
+                'section' => $normalized,
+                'render_index' => $index,
+            ];
         }
 
         usort($rows, function (array $left, array $right): int {
-            $leftId = (string) ($left['id'] ?? '');
-            $rightId = (string) ($right['id'] ?? '');
+            /** @var ExplainSection $leftSection */
+            $leftSection = $left['section'];
+            /** @var ExplainSection $rightSection */
+            $rightSection = $right['section'];
 
-            return ($this->sectionPriority($leftId) <=> $this->sectionPriority($rightId))
-                ?: ((int) ($left['_render_index'] ?? 0) <=> (int) ($right['_render_index'] ?? 0))
-                ?: strcmp((string) ($left['title'] ?? ''), (string) ($right['title'] ?? ''));
+            return ($this->sectionPriority($leftSection->id()) <=> $this->sectionPriority($rightSection->id()))
+                ?: ((int) ($left['render_index'] ?? 0) <=> (int) ($right['render_index'] ?? 0))
+                ?: strcmp($leftSection->title(), $rightSection->title());
         });
 
-        foreach ($rows as &$row) {
-            unset($row['_render_index']);
-        }
-        unset($row);
-
-        return $rows;
+        return array_values(array_map(
+            static fn (array $row): ExplainSection => $row['section'],
+            $rows,
+        ));
     }
 
     /**
@@ -278,23 +275,6 @@ final class ExplanationPlanAssembler
         return array_values($unique);
     }
 
-    /**
-     * @param array<string,mixed> $section
-     */
-    private function isSectionRenderable(array $section): bool
-    {
-        if (!array_key_exists('items', $section)) {
-            return false;
-        }
-
-        $items = $section['items'];
-        if (is_array($items)) {
-            return $items !== [];
-        }
-
-        return $items !== null && $items !== '';
-    }
-
     private function sectionPriority(string $id): int
     {
         return match ($id) {
@@ -331,7 +311,7 @@ final class ExplanationPlanAssembler
      * @param array<int,array<string,mixed>> $relatedDocs
      * @param array<string,mixed> $diagnostics
      * @param array<int,string> $suggestedFixes
-     * @param array<int,array<string,mixed>> $sections
+     * @param array<int,ExplainSection> $sections
      * @return array<int,string>
      */
     private function sectionOrder(
@@ -375,7 +355,7 @@ final class ExplanationPlanAssembler
         }
 
         foreach ($sections as $section) {
-            $id = trim((string) ($section['id'] ?? ''));
+            $id = $section->id();
             if ($id !== '') {
                 $order[] = $id;
             }

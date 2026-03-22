@@ -22,12 +22,13 @@ CLI-facing contributions should be declared through metadata, not inferred from 
 
 ## Explain Contributions
 
-`foundry explain` is deterministic and plan-driven. Extensions can add explanation sections by implementing `Foundry\Explain\Contributors\ExplainContributorInterface`.
+`foundry explain` is deterministic and plan-driven. Extensions can add explanation sections by implementing `Foundry\Explain\Contributors\ExplainContributorInterface` and returning `Foundry\Explain\Contributors\ExplainContribution`.
 
 Contributor rules:
 
 - only add deterministic data derived from graph, projections, diagnostics, or extension metadata
 - return structured sections, related commands, execution flow fragments, or related docs rows
+- let `ExplainContributorRegistry` handle contributor selection and deterministic merge order
 - do not render human-readable output directly
 - do not re-run broad diagnostics unless a contribution explicitly requires it for correctness
 

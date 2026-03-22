@@ -17,9 +17,15 @@ final class ExtensionSubjectAnalyzer implements SubjectAnalyzerInterface
     public function analyze(ExplainSubject $subject, ExplainContext $context, ExplainOptions $options): SubjectAnalysisResult
     {
         $extension = is_array($context->extensions()['subject'] ?? null) ? $context->extensions()['subject'] : $subject->metadata;
+        $capabilities = $this->flattenProvides($extension['provides'] ?? []);
+        $packs = array_values(array_filter(array_map('strval', (array) ($extension['packs'] ?? []))));
+        $dependencies = array_values(array_filter(array_map('strval', (array) ($extension['dependencies'] ?? []))));
         $responsibilities = ['Register compiler capabilities for the application graph'];
-        foreach ($this->flattenProvides($extension['provides'] ?? []) as $capability) {
+        foreach ($capabilities as $capability) {
             $responsibilities[] = 'Provide capability: ' . $capability;
+        }
+        foreach ($packs as $pack) {
+            $responsibilities[] = 'Ship pack: ' . $pack;
         }
 
         return new SubjectAnalysisResult(
@@ -27,8 +33,21 @@ final class ExtensionSubjectAnalyzer implements SubjectAnalyzerInterface
             summaryInputs: [
                 'name' => $extension['name'] ?? $subject->label,
                 'description' => $extension['description'] ?? null,
-                'provides' => $extension['provides'] ?? [],
-                'packs' => $extension['packs'] ?? [],
+                'provides' => $capabilities,
+                'packs' => $packs,
+                'dependencies' => $dependencies,
+            ],
+            sections: [
+                \Foundry\Explain\ExplainSupport::section(
+                    'extension_capabilities',
+                    'Extension Capabilities',
+                    array_merge(
+                        array_map(static fn (string $capability): string => 'capability: ' . $capability, $capabilities),
+                        array_map(static fn (string $pack): string => 'pack: ' . $pack, $packs),
+                        array_map(static fn (string $dependency): string => 'dependency: ' . $dependency, $dependencies),
+                    ),
+                    'string_list',
+                ),
             ],
         );
     }

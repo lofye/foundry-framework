@@ -42,10 +42,10 @@ final class MarkdownExplanationRenderer implements ExplanationRendererInterface
                 $this->appendExecutionFlow($lines, $payload);
                 return;
             case 'dependencies':
-                $this->appendRowList($lines, 'Dependencies', (array) ($payload['dependencies']['items'] ?? []));
+                $this->appendRowList($lines, 'Dependencies', (array) ($payload['relationships']['dependsOn']['items'] ?? []));
                 return;
             case 'dependents':
-                $this->appendRowList($lines, 'Used By', (array) ($payload['dependents']['items'] ?? []));
+                $this->appendRowList($lines, 'Used By', (array) ($payload['relationships']['usedBy']['items'] ?? []));
                 return;
             case 'emits':
                 $this->appendRowList($lines, 'Emits', (array) ($payload['emits']['items'] ?? []));
@@ -63,7 +63,7 @@ final class MarkdownExplanationRenderer implements ExplanationRendererInterface
                 $this->appendGraphRelationships($lines, $payload);
                 return;
             case 'related_commands':
-                $this->appendCodeList($lines, 'Related Commands', (array) ($payload['related_commands'] ?? []));
+                $this->appendCodeList($lines, 'Related Commands', (array) ($payload['relatedCommands'] ?? []));
                 return;
             case 'related_docs':
                 $this->appendDocs($lines, $payload);
@@ -72,7 +72,7 @@ final class MarkdownExplanationRenderer implements ExplanationRendererInterface
                 $this->appendDiagnostics($lines, $payload);
                 return;
             case 'suggested_fixes':
-                $this->appendList($lines, 'Suggested Fixes', (array) ($payload['suggested_fixes'] ?? []));
+                $this->appendList($lines, 'Suggested Fixes', (array) ($payload['suggestedFixes'] ?? []));
                 return;
             default:
                 $this->appendExtraSection($lines, $payload, $sectionId);
@@ -139,7 +139,7 @@ final class MarkdownExplanationRenderer implements ExplanationRendererInterface
      */
     private function appendExecutionFlow(array &$lines, array $payload): void
     {
-        $entries = array_values(array_filter((array) ($payload['execution_flow']['entries'] ?? []), 'is_array'));
+        $entries = array_values(array_filter((array) ($payload['executionFlow']['entries'] ?? []), 'is_array'));
         if ($entries === []) {
             return;
         }
@@ -204,7 +204,7 @@ final class MarkdownExplanationRenderer implements ExplanationRendererInterface
      */
     private function appendSchemaInteraction(array &$lines, array $payload): void
     {
-        $interaction = is_array($payload['schema_interaction'] ?? null) ? $payload['schema_interaction'] : [];
+        $interaction = is_array($payload['schemaInteraction'] ?? null) ? $payload['schemaInteraction'] : [];
         $reads = array_values(array_filter((array) ($interaction['reads'] ?? []), 'is_array'));
         $writes = array_values(array_filter((array) ($interaction['writes'] ?? []), 'is_array'));
         $fields = array_values(array_filter((array) ($interaction['fields'] ?? []), 'is_array'));
@@ -240,7 +240,7 @@ final class MarkdownExplanationRenderer implements ExplanationRendererInterface
      */
     private function appendGraphRelationships(array &$lines, array $payload): void
     {
-        $relationships = is_array($payload['graph_relationships'] ?? null) ? $payload['graph_relationships'] : [];
+        $relationships = is_array($payload['relationships']['graph'] ?? null) ? $payload['relationships']['graph'] : [];
         $inbound = array_values(array_filter((array) ($relationships['inbound'] ?? []), 'is_array'));
         $outbound = array_values(array_filter((array) ($relationships['outbound'] ?? []), 'is_array'));
         $lateral = array_values(array_filter((array) ($relationships['lateral'] ?? []), 'is_array'));
@@ -289,7 +289,7 @@ final class MarkdownExplanationRenderer implements ExplanationRendererInterface
      */
     private function appendDocs(array &$lines, array $payload): void
     {
-        $docs = array_values(array_filter((array) ($payload['related_docs'] ?? []), 'is_array'));
+        $docs = array_values(array_filter((array) ($payload['relatedDocs'] ?? []), 'is_array'));
         if ($docs === []) {
             return;
         }
@@ -343,8 +343,8 @@ final class MarkdownExplanationRenderer implements ExplanationRendererInterface
 
             $lines[] = '';
             $lines[] = '### ' . trim((string) ($section['title'] ?? 'Details'));
-            foreach ($items as $key => $value) {
-                $lines[] = '- ' . (string) $key . ': ' . (is_array($value) ? json_encode($value, JSON_UNESCAPED_SLASHES) : (string) $value);
+            foreach ($this->sectionItemLines((string) ($section['shape'] ?? 'key_value'), $items) as $line) {
+                $lines[] = $line;
             }
             return;
         }
@@ -358,7 +358,7 @@ final class MarkdownExplanationRenderer implements ExplanationRendererInterface
     {
         $order = array_values(array_filter(array_map(
             static fn (mixed $id): string => trim((string) $id),
-            (array) ($payload['section_order'] ?? []),
+            (array) ($payload['sectionOrder'] ?? []),
         ), static fn (string $id): bool => $id !== ''));
 
         return $order !== [] ? $order : ['summary', 'diagnostics'];
@@ -410,5 +410,74 @@ final class MarkdownExplanationRenderer implements ExplanationRendererInterface
         }
 
         return $details;
+    }
+
+    /**
+     * @param array<string,mixed> $items
+     * @return array<int,string>
+     */
+    private function sectionItemLines(string $shape, array $items): array
+    {
+        return match ($shape) {
+            'string_list' => $this->stringListLines($items),
+            'row_list' => $this->rowListLines($items),
+            default => $this->keyValueLines($items),
+        };
+    }
+
+    /**
+     * @param array<string,mixed> $items
+     * @return array<int,string>
+     */
+    private function keyValueLines(array $items): array
+    {
+        $lines = [];
+        foreach ($items as $key => $value) {
+            if (is_array($value) && array_is_list($value)) {
+                $lines[] = '- ' . (string) $key . ': ' . implode(', ', array_values(array_map(
+                    fn (mixed $item): string => is_array($item) ? $this->rowLabel($item) : trim((string) $item),
+                    $value,
+                )));
+                continue;
+            }
+            if (is_array($value)) {
+                $lines[] = '- ' . (string) $key . ': ' . implode(', ', array_map(
+                    static fn (string $nestedKey, mixed $nestedValue): string => $nestedKey . '=' . trim((string) $nestedValue),
+                    array_keys($value),
+                    array_values($value),
+                ));
+                continue;
+            }
+
+            $lines[] = '- ' . (string) $key . ': ' . (string) $value;
+        }
+
+        return $lines;
+    }
+
+    /**
+     * @param array<string,mixed> $items
+     * @return array<int,string>
+     */
+    private function stringListLines(array $items): array
+    {
+        return array_values(array_map(
+            static fn (mixed $item): string => '- ' . trim((string) $item),
+            array_values($items),
+        ));
+    }
+
+    /**
+     * @param array<string,mixed> $items
+     * @return array<int,string>
+     */
+    private function rowListLines(array $items): array
+    {
+        $lines = [];
+        foreach (array_values(array_filter($items, 'is_array')) as $row) {
+            $lines[] = '- ' . $this->rowLabel($row);
+        }
+
+        return $lines;
     }
 }

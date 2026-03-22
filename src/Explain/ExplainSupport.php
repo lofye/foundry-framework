@@ -299,11 +299,12 @@ final class ExplainSupport
      * @param array<string,mixed> $items
      * @return array<string,mixed>
      */
-    public static function section(string $id, string $title, array $items): array
+    public static function section(string $id, string $title, array $items, ?string $shape = null): array
     {
         return [
             'id' => $id,
             'title' => $title,
+            'shape' => $shape ?? ExplainSection::inferShape($items),
             'items' => $items,
         ];
     }

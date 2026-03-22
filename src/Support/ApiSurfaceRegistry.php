@@ -550,6 +550,7 @@ final class ApiSurfaceRegistry
             $this->surfaceEntry('extension_hook', 'Foundry\\Compiler\\Codemod\\Codemod', 'extension_api', 'stable', 'Codemod contract used by explicit source rewrite operations.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Compiler\\Analysis\\GraphAnalyzer', 'extension_api', 'stable', 'Analyzer contract registered through compiler extensions.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Explain\\Contributors\\ExplainContributorInterface', 'extension_api', 'stable', 'Explain contribution contract for deterministic architecture explanation sections.'),
+            $this->surfaceEntry('extension_hook', 'Foundry\\Explain\\Contributors\\ExplainContribution', 'extension_api', 'stable', 'Structured contribution payload merged into explain plans before rendering.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Pipeline\\PipelineStageDefinition', 'extension_api', 'stable', 'Pipeline stage definition contract for extension-registered stages.'),
             $this->surfaceEntry('extension_hook', 'Foundry\\Pipeline\\StageInterceptor', 'extension_api', 'stable', 'Pipeline interceptor contract for extension-registered interceptors.'),
         ];

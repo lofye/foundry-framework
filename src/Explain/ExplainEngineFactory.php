@@ -38,6 +38,7 @@ use Foundry\Explain\Collectors\PipelineContextCollector;
 use Foundry\Explain\Collectors\SchemaContextCollector;
 use Foundry\Explain\Collectors\WorkflowContextCollector;
 use Foundry\Explain\Contributors\ExplainContributorInterface;
+use Foundry\Explain\Contributors\ExplainContributorRegistry;
 use Foundry\Support\ApiSurfaceRegistry;
 use Foundry\Support\Paths;
 
@@ -95,7 +96,7 @@ final class ExplainEngineFactory
                     new RelatedDocsAnalyzer(),
                     new DiagnosticsAnalyzer(),
                 ],
-                $contributors,
+                new ExplainContributorRegistry($contributors),
             ),
             collectors: [
                 new GraphNeighborhoodCollector($graph),

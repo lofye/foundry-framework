@@ -18,7 +18,9 @@ use Foundry\Compiler\IR\SchemaNode;
 use Foundry\Compiler\IR\WorkflowNode;
 use Foundry\Explain\ExplainArtifactCatalog;
 use Foundry\Explain\ExplainContext;
+use Foundry\Explain\ExplainSection;
 use Foundry\Explain\Contributors\ExplainContributorInterface;
+use Foundry\Explain\Contributors\ExplainContribution;
 use Foundry\Explain\ExplainEngineFactory;
 use Foundry\Explain\ExplainOptions;
 use Foundry\Explain\ExplainSupport;
@@ -196,7 +198,7 @@ final class ExplainArchitectureCoverageTest extends TestCase
         $this->assertStringContainsString('### Execution Flow (Detailed)', $deepMarkdown);
         $this->assertStringContainsString('### Graph Relationships', $deepMarkdown);
         $this->assertStringContainsString('"subject"', $json);
-        $this->assertStringContainsString('"related_docs"', $json);
+        $this->assertStringContainsString('"relatedDocs"', $json);
     }
 
     public function test_engine_accepts_contributors_and_merges_their_sections(): void
@@ -208,9 +210,9 @@ final class ExplainArchitectureCoverageTest extends TestCase
                 return $subject->kind === 'feature';
             }
 
-            public function contribute(\Foundry\Explain\ExplainSubject $subject, ExplainContext $context, \Foundry\Explain\ExplainOptions $options): array
+            public function contribute(\Foundry\Explain\ExplainSubject $subject, ExplainContext $context, \Foundry\Explain\ExplainOptions $options): ExplainContribution
             {
-                return [
+                return ExplainContribution::fromArray([
                     'sections' => [
                         ExplainSupport::section('contributor', 'Contributor', [
                             'source' => 'fixture',
@@ -228,7 +230,7 @@ final class ExplainArchitectureCoverageTest extends TestCase
                             'source' => 'fixture',
                         ],
                     ],
-                ];
+                ]);
             }
         };
 
@@ -300,8 +302,8 @@ final class ExplainArchitectureCoverageTest extends TestCase
 
         $this->assertSame(array_keys($shallow->toArray()), array_keys($deep->toArray()));
         $this->assertSame(
-            array_values(array_map(static fn (array $section): string => (string) ($section['id'] ?? ''), $shallow->sections)),
-            array_values(array_map(static fn (array $section): string => (string) ($section['id'] ?? ''), $deep->sections)),
+            array_values(array_map(static fn (ExplainSection $section): string => $section->id(), $shallow->sections)),
+            array_values(array_map(static fn (ExplainSection $section): string => $section->id(), $deep->sections)),
         );
 
         $renderers = new ExplanationRendererFactory();
@@ -570,17 +572,17 @@ final class ExplainArchitectureCoverageTest extends TestCase
     }
 
     /**
-     * @param array<int,array<string,mixed>> $sections
+     * @param array<int,ExplainSection> $sections
      * @return array<string,mixed>
      */
     private function sectionItems(array $sections, string $id): array
     {
         foreach ($sections as $section) {
-            if (!is_array($section) || (string) ($section['id'] ?? '') !== $id) {
+            if (!$section instanceof ExplainSection || $section->id() !== $id) {
                 continue;
             }
 
-            return is_array($section['items'] ?? null) ? $section['items'] : [];
+            return $section->items();
         }
 
         self::fail('Missing explain section: ' . $id);

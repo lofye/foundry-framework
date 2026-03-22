@@ -28,6 +28,6 @@ final class DiagnosticsAnalyzer implements SectionAnalyzerInterface
             ];
         }
 
-        return $context->diagnostics();
+        return $context->diagnostics()->toArray();
     }
 }

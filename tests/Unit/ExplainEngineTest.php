@@ -81,7 +81,7 @@ final class ExplainEngineTest extends TestCase
         $payload = $plan->toArray();
 
         $this->assertSame(
-            ['subject', 'summary', 'responsibilities', 'execution_flow', 'dependencies', 'dependents', 'emits', 'triggers', 'permissions', 'schema_interaction', 'graph_relationships', 'diagnostics', 'related_commands', 'related_docs', 'suggested_fixes', 'sections', 'section_order', 'metadata'],
+            ['subject', 'summary', 'responsibilities', 'executionFlow', 'relationships', 'emits', 'triggers', 'permissions', 'schemaInteraction', 'relatedCommands', 'relatedDocs', 'diagnostics', 'suggestedFixes', 'sections', 'sectionOrder', 'metadata'],
             array_keys($payload),
         );
         $this->assertSame('feature', $payload['subject']['kind']);
@@ -94,16 +94,16 @@ final class ExplainEngineTest extends TestCase
         $this->assertArrayHasKey('graph', $payload['metadata']);
         $this->assertArrayNotHasKey('compiled_at', $payload['metadata']['graph']);
         $this->assertNotEmpty($payload['responsibilities']['items']);
-        $this->assertNotEmpty($payload['dependencies']['items']);
-        $this->assertSame('publish_post', $payload['execution_flow']['action']['feature']);
-        $this->assertNotEmpty($payload['execution_flow']['guards']);
+        $this->assertNotEmpty($payload['relationships']['dependsOn']['items']);
+        $this->assertSame('publish_post', $payload['executionFlow']['action']['feature']);
+        $this->assertNotEmpty($payload['executionFlow']['guards']);
         $this->assertNotEmpty($payload['emits']['items']);
         $this->assertNotEmpty($payload['triggers']['items']);
         $this->assertContains('posts.create', $payload['permissions']['required']);
-        $this->assertNotEmpty($payload['schema_interaction']['items']);
-        $this->assertNotEmpty($payload['graph_relationships']['outbound']);
+        $this->assertNotEmpty($payload['schemaInteraction']['items']);
+        $this->assertNotEmpty($payload['relationships']['graph']['outbound']);
         $this->assertSame(1, $payload['diagnostics']['summary']['total']);
-        $this->assertContains('php vendor/bin/foundry inspect feature publish_post --json', $payload['related_commands']);
+        $this->assertContains('php vendor/bin/foundry inspect feature publish_post --json', $payload['relatedCommands']);
         $this->assertSame('publish_post', $payload['metadata']['impact']['affected_features'][0]);
     }
 

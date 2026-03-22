@@ -50,10 +50,10 @@ final class ProAnalysisToolsTest extends TestCase
 
             $this->assertSame('feature:publish_post', $payload['subject']['id']);
             $this->assertSame('feature', $payload['subject']['kind']);
-            $this->assertNotEmpty($payload['graph_relationships']['outbound']);
-            $this->assertSame('publish_post', $payload['execution_flow']['action']['feature']);
-            $this->assertNotEmpty($payload['execution_flow']['guards']);
-            $this->assertNotEmpty($payload['execution_flow']['events']);
+            $this->assertNotEmpty($payload['relationships']['graph']['outbound']);
+            $this->assertSame('publish_post', $payload['executionFlow']['action']['feature']);
+            $this->assertNotEmpty($payload['executionFlow']['guards']);
+            $this->assertNotEmpty($payload['executionFlow']['events']);
             $this->assertStringContainsString('Publish post.', $payload['summary']['text']);
             $this->assertStringContainsString('It triggers posts_review.', $payload['summary']['text']);
             $this->assertSame('post.created', $payload['emits']['items'][0]['label']);

@@ -221,15 +221,21 @@ The JSON payload is plan-driven and suitable for docs generation, IDE tooling, a
 
 - `subject`
 - `summary`
-- `sections`
 - `relationships`
-- `execution_flow`
+- `executionFlow`
+- `responsibilities`
+- `emits`
+- `triggers`
+- `permissions`
+- `schemaInteraction`
 - `diagnostics`
-- `related_commands`
-- `related_docs`
+- `relatedCommands`
+- `relatedDocs`
+- `suggestedFixes`
+- `sections`
 - `metadata`
 
-Extension and app integrations can enrich explanations by contributing deterministic `ExplainContributorInterface` sections before rendering.
+Extension and app integrations can enrich explanations by contributing deterministic `ExplainContributorInterface` sections through `ExplainContributorRegistry` before rendering. Contributor payloads stay structured and renderer-neutral via `ExplainContribution`.
 
 ## Extension Integration
 

@@ -10,32 +10,9 @@ final class ExplainContext
      */
     private array $subjectNode = [];
 
-    /**
-     * @var array<string,mixed>
-     */
-    private array $graphNeighborhood = [
-        'dependencies' => [],
-        'dependents' => [],
-        'inbound' => [],
-        'outbound' => [],
-        'neighbors' => [],
-    ];
+    private GraphNeighborhoodContext $graphNeighborhood;
 
-    /**
-     * @var array<string,mixed>
-     */
-    private array $pipeline = [
-        'feature' => null,
-        'route_signature' => null,
-        'execution_plan' => null,
-        'stages' => [],
-        'guards' => [],
-        'interceptors' => [],
-        'action' => null,
-        'jobs' => [],
-        'permissions' => [],
-        'definition' => [],
-    ];
+    private PipelineContextData $pipeline;
 
     /**
      * @var array<string,mixed>
@@ -82,20 +59,9 @@ final class ExplainContext
         'items' => [],
     ];
 
-    /**
-     * @var array<string,mixed>
-     */
-    private array $diagnostics = [
-        'summary' => ['error' => 0, 'warning' => 0, 'info' => 0, 'total' => 0],
-        'items' => [],
-    ];
+    private DiagnosticsContextData $diagnostics;
 
-    /**
-     * @var array<string,mixed>
-     */
-    private array $docs = [
-        'items' => [],
-    ];
+    private DocsContextData $docs;
 
     /**
      * @var array<string,mixed>|null
@@ -106,6 +72,10 @@ final class ExplainContext
         public readonly ExplainSubject $subject,
         public readonly string $commandPrefix,
     ) {
+        $this->graphNeighborhood = new GraphNeighborhoodContext();
+        $this->pipeline = new PipelineContextData();
+        $this->diagnostics = new DiagnosticsContextData();
+        $this->docs = new DocsContextData();
     }
 
     /**
@@ -129,13 +99,13 @@ final class ExplainContext
      */
     public function setGraphNeighborhood(array $graphNeighborhood): void
     {
-        $this->graphNeighborhood = array_replace_recursive($this->graphNeighborhood, $graphNeighborhood);
+        $this->graphNeighborhood = new GraphNeighborhoodContext(array_replace_recursive(
+            $this->graphNeighborhood->toArray(),
+            $graphNeighborhood,
+        ));
     }
 
-    /**
-     * @return array<string,mixed>
-     */
-    public function graphNeighborhood(): array
+    public function graphNeighborhood(): GraphNeighborhoodContext
     {
         return $this->graphNeighborhood;
     }
@@ -145,13 +115,13 @@ final class ExplainContext
      */
     public function setPipeline(array $pipeline): void
     {
-        $this->pipeline = array_replace_recursive($this->pipeline, $pipeline);
+        $this->pipeline = new PipelineContextData(array_replace_recursive(
+            $this->pipeline->toArray(),
+            $pipeline,
+        ));
     }
 
-    /**
-     * @return array<string,mixed>
-     */
-    public function pipeline(): array
+    public function pipeline(): PipelineContextData
     {
         return $this->pipeline;
     }
@@ -241,13 +211,13 @@ final class ExplainContext
      */
     public function setDiagnostics(array $diagnostics): void
     {
-        $this->diagnostics = array_replace_recursive($this->diagnostics, $diagnostics);
+        $this->diagnostics = new DiagnosticsContextData(array_replace_recursive(
+            $this->diagnostics->toArray(),
+            $diagnostics,
+        ));
     }
 
-    /**
-     * @return array<string,mixed>
-     */
-    public function diagnostics(): array
+    public function diagnostics(): DiagnosticsContextData
     {
         return $this->diagnostics;
     }
@@ -257,13 +227,13 @@ final class ExplainContext
      */
     public function setDocs(array $docs): void
     {
-        $this->docs = array_replace_recursive($this->docs, $docs);
+        $this->docs = new DocsContextData(array_replace_recursive(
+            $this->docs->toArray(),
+            $docs,
+        ));
     }
 
-    /**
-     * @return array<string,mixed>
-     */
-    public function docs(): array
+    public function docs(): DocsContextData
     {
         return $this->docs;
     }
@@ -291,15 +261,15 @@ final class ExplainContext
     {
         return [
             'subject_node' => $this->subjectNode,
-            'graph_neighborhood' => $this->graphNeighborhood,
-            'pipeline' => $this->pipeline,
+            'graph_neighborhood' => $this->graphNeighborhood->toArray(),
+            'pipeline' => $this->pipeline->toArray(),
             'commands' => $this->commands,
             'workflows' => $this->workflows,
             'events' => $this->events,
             'schemas' => $this->schemas,
             'extensions' => $this->extensions,
-            'diagnostics' => $this->diagnostics,
-            'docs' => $this->docs,
+            'diagnostics' => $this->diagnostics->toArray(),
+            'docs' => $this->docs->toArray(),
             'impact' => $this->impact,
         ];
     }

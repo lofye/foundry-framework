@@ -3,49 +3,71 @@ declare(strict_types=1);
 
 namespace Foundry\Explain;
 
-final readonly class ExplanationPlan
+final class ExplanationPlan
 {
     /**
      * @param array<string,mixed> $subject
      * @param array<string,mixed> $summary
      * @param array<string,mixed> $responsibilities
-     * @param array<string,mixed> $executionFlow
-     * @param array<string,mixed> $dependencies
-     * @param array<string,mixed> $dependents
+     * @param array<string,mixed>|ExecutionFlowSection $executionFlow
+     * @param array<string,mixed>|RelationshipSection $dependencies
+     * @param array<string,mixed>|RelationshipSection $dependents
      * @param array<string,mixed> $emits
      * @param array<string,mixed> $triggers
      * @param array<string,mixed> $permissions
      * @param array<string,mixed> $schemaInteraction
-     * @param array<string,mixed> $graphRelationships
-     * @param array<string,mixed> $diagnostics
+     * @param array<string,mixed>|GraphRelationshipsSection $graphRelationships
+     * @param array<string,mixed>|DiagnosticsSection $diagnostics
      * @param array<int,string> $relatedCommands
      * @param array<int,array<string,mixed>> $relatedDocs
      * @param array<int,string> $suggestedFixes
-     * @param array<int,array<string,mixed>> $sections
+     * @param array<int,ExplainSection|array<string,mixed>> $sections
      * @param array<int,string> $sectionOrder
      * @param array<string,mixed> $metadata
      */
     public function __construct(
-        public array $subject,
-        public array $summary,
-        public array $responsibilities,
-        public array $executionFlow,
-        public array $dependencies,
-        public array $dependents,
-        public array $emits,
-        public array $triggers,
-        public array $permissions,
-        public array $schemaInteraction,
-        public array $graphRelationships,
-        public array $diagnostics,
-        public array $relatedCommands,
-        public array $relatedDocs,
-        public array $suggestedFixes,
-        public array $sections,
-        public array $sectionOrder,
-        public array $metadata,
+        public readonly array $subject,
+        public readonly array $summary,
+        public readonly array $responsibilities,
+        array|ExecutionFlowSection $executionFlow,
+        array|RelationshipSection $dependencies,
+        array|RelationshipSection $dependents,
+        public readonly array $emits,
+        public readonly array $triggers,
+        public readonly array $permissions,
+        public readonly array $schemaInteraction,
+        array|GraphRelationshipsSection $graphRelationships,
+        array|DiagnosticsSection $diagnostics,
+        public readonly array $relatedCommands,
+        public readonly array $relatedDocs,
+        public readonly array $suggestedFixes,
+        array $sections,
+        public readonly array $sectionOrder,
+        public readonly array $metadata,
     ) {
+        $this->executionFlow = $executionFlow instanceof ExecutionFlowSection ? $executionFlow : new ExecutionFlowSection($executionFlow);
+        $this->dependencies = $dependencies instanceof RelationshipSection ? $dependencies : new RelationshipSection($dependencies);
+        $this->dependents = $dependents instanceof RelationshipSection ? $dependents : new RelationshipSection($dependents);
+        $this->graphRelationships = $graphRelationships instanceof GraphRelationshipsSection ? $graphRelationships : new GraphRelationshipsSection($graphRelationships);
+        $this->diagnostics = $diagnostics instanceof DiagnosticsSection ? $diagnostics : new DiagnosticsSection($diagnostics);
+        $this->sections = array_values(array_filter(array_map(
+            static fn (mixed $section): ?ExplainSection => $section instanceof ExplainSection
+                ? $section
+                : (is_array($section) ? ExplainSection::fromArray($section) : null),
+            $sections,
+        )));
     }
+
+    public readonly ExecutionFlowSection $executionFlow;
+    public readonly RelationshipSection $dependencies;
+    public readonly RelationshipSection $dependents;
+    public readonly GraphRelationshipsSection $graphRelationships;
+    public readonly DiagnosticsSection $diagnostics;
+
+    /**
+     * @var array<int,ExplainSection>
+     */
+    public readonly array $sections;
 
     /**
      * @return array<string,mixed>
@@ -56,20 +78,25 @@ final readonly class ExplanationPlan
             'subject' => $this->subject,
             'summary' => $this->summary,
             'responsibilities' => $this->responsibilities,
-            'execution_flow' => $this->executionFlow,
-            'dependencies' => $this->dependencies,
-            'dependents' => $this->dependents,
+            'executionFlow' => $this->executionFlow->toArray(),
+            'relationships' => [
+                'dependsOn' => $this->dependencies->toArray(),
+                'usedBy' => $this->dependents->toArray(),
+                'graph' => $this->graphRelationships->toArray(),
+            ],
             'emits' => $this->emits,
             'triggers' => $this->triggers,
             'permissions' => $this->permissions,
-            'schema_interaction' => $this->schemaInteraction,
-            'graph_relationships' => $this->graphRelationships,
-            'diagnostics' => $this->diagnostics,
-            'related_commands' => $this->relatedCommands,
-            'related_docs' => $this->relatedDocs,
-            'suggested_fixes' => $this->suggestedFixes,
-            'sections' => $this->sections,
-            'section_order' => $this->sectionOrder,
+            'schemaInteraction' => $this->schemaInteraction,
+            'relatedCommands' => $this->relatedCommands,
+            'relatedDocs' => $this->relatedDocs,
+            'diagnostics' => $this->diagnostics->toArray(),
+            'suggestedFixes' => $this->suggestedFixes,
+            'sections' => array_map(
+                static fn (ExplainSection $section): array => $section->toArray(),
+                $this->sections,
+            ),
+            'sectionOrder' => $this->sectionOrder,
             'metadata' => $this->metadata,
         ];
     }

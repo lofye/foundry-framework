@@ -128,10 +128,20 @@ final class SummarySectionBuilder
     {
         $signature = trim((string) ($summaryInputs['signature'] ?? $subject->label));
         $summary = trim((string) ($summaryInputs['summary'] ?? ''));
+        $classification = trim((string) ($summaryInputs['classification'] ?? ''));
+        $aliases = ExplainSupport::uniqueStrings(array_values(array_map('strval', (array) ($summaryInputs['aliases'] ?? []))));
 
-        return $summary !== ''
+        $parts = [$summary !== ''
             ? sprintf('%s is a CLI command in the Foundry command surface. %s', $signature, $summary)
-            : sprintf('%s is a CLI command in the Foundry command surface.', $signature);
+            : sprintf('%s is a CLI command in the Foundry command surface.', $signature)];
+        if ($classification !== '') {
+            $parts[] = 'It belongs to the ' . $classification . ' command category.';
+        }
+        if ($aliases !== []) {
+            $parts[] = 'It is also reachable as ' . implode(', ', array_slice($aliases, 0, 3)) . '.';
+        }
+
+        return implode(' ', $parts);
     }
 
     /**
@@ -151,8 +161,18 @@ final class SummarySectionBuilder
     {
         $path = trim((string) ($summaryInputs['path'] ?? $subject->label));
         $role = trim((string) ($summaryInputs['role'] ?? 'schema'));
+        $feature = trim((string) ($summaryInputs['feature'] ?? ''));
+        $fields = array_values(array_filter((array) ($summaryInputs['fields'] ?? []), 'is_array'));
 
-        return sprintf('%s is a %s schema in the compiled application graph.', $path, $role);
+        $parts = [sprintf('%s is a %s schema in the compiled application graph.', $path, $role)];
+        if ($feature !== '') {
+            $parts[] = 'It belongs to the ' . $feature . ' feature.';
+        }
+        if ($fields !== []) {
+            $parts[] = 'It exposes ' . count($fields) . ' compiled fields.';
+        }
+
+        return implode(' ', $parts);
     }
 
     /**
@@ -162,10 +182,20 @@ final class SummarySectionBuilder
     {
         $name = trim((string) ($summaryInputs['name'] ?? $subject->label));
         $description = trim((string) ($summaryInputs['description'] ?? ''));
+        $provides = ExplainSupport::uniqueStrings(array_values(array_map('strval', (array) ($summaryInputs['provides'] ?? []))));
+        $packs = ExplainSupport::uniqueStrings(array_values(array_map('strval', (array) ($summaryInputs['packs'] ?? []))));
 
-        return $description !== ''
+        $parts = [$description !== ''
             ? sprintf('%s is a registered compiler extension. %s', $name, $description)
-            : sprintf('%s is a registered compiler extension.', $name);
+            : sprintf('%s is a registered compiler extension.', $name)];
+        if ($provides !== []) {
+            $parts[] = 'It provides ' . implode(', ', array_slice($provides, 0, 3)) . '.';
+        }
+        if ($packs !== []) {
+            $parts[] = 'It ships ' . implode(', ', array_slice($packs, 0, 3)) . '.';
+        }
+
+        return implode(' ', $parts);
     }
 
     /**
@@ -174,8 +204,18 @@ final class SummarySectionBuilder
     private function jobSummary(ExplainSubject $subject, array $summaryInputs): string
     {
         $name = trim((string) ($summaryInputs['name'] ?? $subject->label));
+        $features = ExplainSupport::uniqueStrings(array_values(array_map('strval', (array) ($summaryInputs['features'] ?? []))));
+        $queues = ExplainSupport::uniqueStrings(array_values(array_map('strval', (array) ($summaryInputs['queues'] ?? []))));
 
-        return sprintf('%s is a background job definition in the compiled application graph.', $name);
+        $parts = [sprintf('%s is a background job definition in the compiled application graph.', $name)];
+        if ($features !== []) {
+            $parts[] = 'It serves ' . implode(', ', array_slice($features, 0, 3)) . '.';
+        }
+        if ($queues !== []) {
+            $parts[] = 'It runs on ' . implode(', ', array_slice($queues, 0, 3)) . '.';
+        }
+
+        return implode(' ', $parts);
     }
 
     /**

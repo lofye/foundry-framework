@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Foundry\Tests\Unit;
 
 use Foundry\Explain\ExplanationPlan;
+use Foundry\Explain\Renderers\JsonExplanationRenderer;
 use Foundry\Explain\Renderers\MarkdownExplanationRenderer;
 use Foundry\Explain\Renderers\TextExplanationRenderer;
 use PHPUnit\Framework\TestCase;
@@ -196,6 +197,7 @@ final class ExplainRenderersTest extends TestCase
 
         $text = (new TextExplanationRenderer())->render($plan);
         $markdown = (new MarkdownExplanationRenderer())->render($plan);
+        $json = (new JsonExplanationRenderer())->render($plan);
 
         $this->assertStringContainsString('Subject', $text);
         $this->assertStringContainsString('Execution Flow (Detailed)', $text);
@@ -219,7 +221,7 @@ final class ExplainRenderersTest extends TestCase
         $this->assertStringContainsString('workflow:streak.update', $text);
         $this->assertStringContainsString('field: title (string)', $text);
         $this->assertStringContainsString('ERROR Missing permission mapping.', $text);
-        $this->assertStringContainsString('affected_features: ["thresholds"]', $text);
+        $this->assertStringContainsString('affected_features: thresholds', $text);
 
         $this->assertStringContainsString('## thresholds.create', $markdown);
         $this->assertStringContainsString('### Summary', $markdown);
@@ -240,6 +242,11 @@ final class ExplainRenderersTest extends TestCase
         $this->assertStringContainsString('### Contributor Notes', $markdown);
         $this->assertStringContainsString('- /docs/features/thresholds', $markdown);
         $this->assertStringContainsString('- ERROR: Missing permission mapping.', $markdown);
+        $this->assertStringContainsString('"executionFlow"', $json);
+        $this->assertStringContainsString('"relationships"', $json);
+        $this->assertStringContainsString('"relatedCommands"', $json);
+        $this->assertStringContainsString('"relatedDocs"', $json);
+        $this->assertStringContainsString('"suggestedFixes"', $json);
     }
 
     public function test_renderers_handle_minimal_non_deep_plan(): void
@@ -336,7 +343,7 @@ final class ExplainRenderersTest extends TestCase
 
         $this->assertStringContainsString("  load graph\n  -> run diagnostics", $text);
         $this->assertStringContainsString('Impact', $text);
-        $this->assertStringContainsString('affected_features: ["publish_post"]', $text);
+        $this->assertStringContainsString('affected_features: publish_post', $text);
         $this->assertStringContainsString('Contributor Notes', $text);
         $this->assertStringContainsString('OK No issues detected', $text);
         $this->assertStringNotContainsString('Graph Relationships (Expanded)', $text);

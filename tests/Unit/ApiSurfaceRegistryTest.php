@@ -27,6 +27,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $public = $registry->classifyPhpSymbol('Foundry\\Feature\\FeatureAction');
         $extension = $registry->classifyPhpSymbol('Foundry\\Compiler\\Extensions\\CompilerExtension');
         $explainContributor = $registry->classifyPhpSymbol('Foundry\\Explain\\Contributors\\ExplainContributorInterface');
+        $explainContribution = $registry->classifyPhpSymbol('Foundry\\Explain\\Contributors\\ExplainContribution');
         $internal = $registry->classifyPhpSymbol('Foundry\\Compiler\\Passes\\ValidatePass');
         $experimental = $registry->classifyPhpSymbol('Foundry\\AI\\AIProvider');
 
@@ -36,6 +37,8 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('exact_symbol', $extension['matched_by']);
         $this->assertSame('extension_api', $explainContributor['classification']);
         $this->assertSame('exact_symbol', $explainContributor['matched_by']);
+        $this->assertSame('extension_api', $explainContribution['classification']);
+        $this->assertSame('exact_symbol', $explainContribution['matched_by']);
         $this->assertSame('internal_api', $internal['classification']);
         $this->assertSame('experimental_api', $experimental['classification']);
         $this->assertSame('experimental', $experimental['stability']);
