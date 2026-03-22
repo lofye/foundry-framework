@@ -27,12 +27,12 @@ CLI-facing contributions should be declared through metadata, not inferred from 
 Contributor rules:
 
 - only add deterministic data derived from graph, projections, diagnostics, or extension metadata
-- return structured sections, related commands, execution flow fragments, or related docs rows
+- return structured `ExplainSection` rows through `ExplainContribution`, plus related commands or related docs rows when needed
 - let `ExplainContributorRegistry` handle contributor selection and deterministic merge order
 - do not render human-readable output directly
 - do not re-run broad diagnostics unless a contribution explicitly requires it for correctness
 
-This keeps `foundry explain` extensible without coupling renderer output to any single extension.
+This keeps `foundry explain` extensible without coupling renderer output to any single extension. Canonical section ordering remains owned by the assembler; contributor sections render after the canonical sections according to `sectionOrder`.
 
 ## Required Metadata
 
