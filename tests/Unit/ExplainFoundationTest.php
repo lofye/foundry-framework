@@ -104,11 +104,11 @@ final class ExplainFoundationTest extends TestCase
         );
         $context = new ExplainContext(
             $subject,
-            'php vendor/bin/foundry',
+            'foundry',
         );
 
         $this->assertSame($subject, $context->subject);
-        $this->assertSame('php vendor/bin/foundry', $context->commandPrefix);
+        $this->assertSame('foundry', $context->commandPrefix);
         $this->assertArrayHasKey('subject_node', $context->all());
         $this->assertArrayHasKey('graph_neighborhood', $context->all());
         $this->assertArrayHasKey('pipeline', $context->all());
@@ -131,7 +131,7 @@ final class ExplainFoundationTest extends TestCase
             aliases: ['publish_post'],
             metadata: ['feature' => 'publish_post'],
         );
-        $context = new ExplainContext($subject, 'php vendor/bin/foundry');
+        $context = new ExplainContext($subject, 'foundry');
 
         $assembler = new ExplanationPlanAssembler(
             new SummarySectionBuilder(),
@@ -199,8 +199,8 @@ final class ExplainFoundationTest extends TestCase
                     {
                         return [
                             'items' => [
-                                'php vendor/bin/foundry doctor',
-                                'php vendor/bin/foundry doctor',
+                                'foundry doctor',
+                                'foundry doctor',
                             ],
                         ];
                     }

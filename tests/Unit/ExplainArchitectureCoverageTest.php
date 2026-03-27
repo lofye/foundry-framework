@@ -166,7 +166,7 @@ final class ExplainArchitectureCoverageTest extends TestCase
         ]));
         $this->assertSame(['a', 'b'], ExplainSupport::uniqueStrings(['b', 'a', 'a']));
         $this->assertSame(['b', 'a'], ExplainSupport::orderedUniqueStrings(['b', 'a', 'a']));
-        $this->assertSame('php vendor/bin/foundry', ExplainSupport::commandPrefix($this->paths));
+        $this->assertSame('foundry', ExplainSupport::commandPrefix($this->paths));
         $this->assertSame('Test', ExplainSupport::section('id', 'Test', [])['title']);
 
         $engine = ExplainEngineFactory::create(
@@ -248,7 +248,7 @@ final class ExplainArchitectureCoverageTest extends TestCase
         $plan = $engine->explain(ExplainTarget::parse('feature:publish_post'), new ExplainOptions());
 
         $this->assertSame('fixture', $this->sectionItems($plan->sections, 'contributor')['source']);
-        $this->assertContains('php vendor/bin/foundry inspect feature publish_post --json', $plan->relatedCommands);
+        $this->assertContains('foundry inspect feature publish_post --json', $plan->relatedCommands);
         $fixtureDocs = array_values(array_filter(
             $plan->relatedDocs,
             static fn (array $row): bool => (string) ($row['id'] ?? '') === 'fixture-doc',
@@ -380,7 +380,7 @@ final class ExplainArchitectureCoverageTest extends TestCase
             'feature' => 'publish_post',
             'document' => ['type' => 'object'],
         ]));
-        $graph->addNode(new PipelineStageNode('pipeline_stage:auth', 'app/platform/config/auth.php', [
+        $graph->addNode(new PipelineStageNode('pipeline_stage:auth', 'config/auth.php', [
             'name' => 'auth',
         ]));
 

@@ -3,7 +3,7 @@
 `examples/extensions-migrations` is the official extension example in the Foundry example set.
 
 Run these commands from the Foundry framework repository root with `php bin/foundry ...`.
-If you apply the same extension flow inside a generated app, switch to `php vendor/bin/foundry ...`.
+If you apply the same extension flow inside a generated app, switch to `foundry ...`.
 
 This directory demonstrates extension and migration foundations:
 

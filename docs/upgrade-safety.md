@@ -35,13 +35,13 @@ Upgrade-check surfaces these as upgrade warnings with the original source path a
 Migrate scripts and docs from:
 
 ```bash
-php vendor/bin/foundry init app <target>
+foundry init app <target>
 ```
 
 to:
 
 ```bash
-php vendor/bin/foundry new <target>
+foundry new [target]
 ```
 
 ## Feature Manifest V1

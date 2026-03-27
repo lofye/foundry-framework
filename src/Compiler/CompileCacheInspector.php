@@ -327,12 +327,12 @@ final class CompileCacheInspector
         ];
 
         foreach ($sourceHashes as $path => $hash) {
-            if ($path === 'foundry.extensions.php' || $path === 'app/platform/foundry/extensions.php') {
+            if ($path === 'foundry.extensions.php' || $path === 'config/foundry/extensions.php') {
                 $groups['extension_registrations'][$path] = $hash;
                 continue;
             }
 
-            if (str_starts_with($path, 'app/platform/config/') || str_starts_with($path, 'app/platform/bootstrap/')) {
+            if (str_starts_with($path, 'config/') || str_starts_with($path, 'bootstrap/')) {
                 $groups['platform_config'][$path] = $hash;
                 continue;
             }

@@ -3,5 +3,5 @@ declare(strict_types=1);
 
 return [
     'default' => 'local',
-    'root' => 'app/platform/tmp/storage',
+    'root' => 'storage/files',
 ];

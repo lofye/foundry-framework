@@ -29,8 +29,10 @@ final class DirectoryHealthCheck implements DoctorCheck
             ['path' => 'app/.foundry/build/manifests', 'required' => true],
             ['path' => 'app/.foundry/build/diagnostics', 'required' => true],
             ['path' => 'app/generated', 'required' => true],
-            ['path' => 'app/platform/logs', 'required' => false],
-            ['path' => 'app/platform/tmp', 'required' => false],
+            ['path' => 'database/migrations', 'required' => false],
+            ['path' => 'storage/files', 'required' => false],
+            ['path' => 'storage/logs', 'required' => false],
+            ['path' => 'storage/tmp', 'required' => false],
         ];
 
         $rows = [];

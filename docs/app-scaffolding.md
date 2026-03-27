@@ -19,8 +19,10 @@ Project scaffolds also emit first-run inspectability output under:
 ## New Commands
 
 Generate:
-- `php vendor/bin/foundry new my-app --starter=standard --json`
-- `php vendor/bin/foundry init app my-app --starter=minimal --json`
+- `foundry new --starter=standard --json`
+- `foundry new . --starter=standard --json`
+- `foundry new my-app --starter=standard --json`
+- `foundry init app my-app --starter=minimal --json`
 - `foundry generate starter server-rendered --json`
 - `foundry generate starter api --json`
 - `foundry generate resource <name> --definition=<file> --json`

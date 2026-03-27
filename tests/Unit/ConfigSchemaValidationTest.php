@@ -61,15 +61,15 @@ YAML);
         $this->assertArrayHasKey('definition.search_index', $schemas['schemas']);
         $this->assertArrayHasKey('extension.descriptor', $schemas['schemas']);
         $this->assertSame(0, $validation['summary']['error']);
-        $this->assertContains('app/platform/config/app.php', $validation['validated_sources']);
+        $this->assertContains('config/app.php', $validation['validated_sources']);
         $this->assertContains('app/features/list_posts/feature.yaml', $validation['validated_sources']);
     }
 
     public function test_compile_reports_actionable_invalid_config_errors(): void
     {
         $this->seedFeature('list_posts');
-        mkdir($this->project->root . '/app/platform/config', 0777, true);
-        file_put_contents($this->project->root . '/app/platform/config/queue.php', <<<'PHP'
+        mkdir($this->project->root . '/config', 0777, true);
+        file_put_contents($this->project->root . '/config/queue.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -99,9 +99,9 @@ PHP);
     public function test_compile_accepts_legacy_config_aliases_with_upgrade_warnings(): void
     {
         $this->seedFeature('list_posts');
-        mkdir($this->project->root . '/app/platform/config', 0777, true);
+        mkdir($this->project->root . '/config', 0777, true);
 
-        file_put_contents($this->project->root . '/app/platform/config/database.php', <<<'PHP'
+        file_put_contents($this->project->root . '/config/database.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -113,17 +113,17 @@ return [
 ];
 PHP);
 
-        file_put_contents($this->project->root . '/app/platform/config/storage.php', <<<'PHP'
+        file_put_contents($this->project->root . '/config/storage.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
 return [
     'default' => 'local',
-    'local_root' => 'app/platform/storage/files',
+    'local_root' => 'storage/files',
 ];
 PHP);
 
-        file_put_contents($this->project->root . '/app/platform/config/ai.php', <<<'PHP'
+        file_put_contents($this->project->root . '/config/ai.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -149,8 +149,8 @@ PHP);
 
     public function test_runtime_factory_rejects_invalid_config_with_structured_details(): void
     {
-        mkdir($this->project->root . '/app/platform/config', 0777, true);
-        file_put_contents($this->project->root . '/app/platform/config/storage.php', <<<'PHP'
+        mkdir($this->project->root . '/config', 0777, true);
+        file_put_contents($this->project->root . '/config/storage.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -176,10 +176,10 @@ PHP);
 
     private function seedCanonicalConfig(): void
     {
-        mkdir($this->project->root . '/app/platform/bootstrap', 0777, true);
-        mkdir($this->project->root . '/app/platform/config', 0777, true);
+        mkdir($this->project->root . '/bootstrap', 0777, true);
+        mkdir($this->project->root . '/config', 0777, true);
 
-        file_put_contents($this->project->root . '/app/platform/bootstrap/app.php', <<<'PHP'
+        file_put_contents($this->project->root . '/bootstrap/app.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -190,14 +190,14 @@ return [
 ];
 PHP);
 
-        file_put_contents($this->project->root . '/app/platform/bootstrap/providers.php', <<<'PHP'
+        file_put_contents($this->project->root . '/bootstrap/providers.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
 return [];
 PHP);
 
-        file_put_contents($this->project->root . '/app/platform/config/app.php', <<<'PHP'
+        file_put_contents($this->project->root . '/config/app.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -210,7 +210,7 @@ return [
 ];
 PHP);
 
-        file_put_contents($this->project->root . '/app/platform/config/auth.php', <<<'PHP'
+        file_put_contents($this->project->root . '/config/auth.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -225,7 +225,7 @@ return [
 ];
 PHP);
 
-        file_put_contents($this->project->root . '/app/platform/config/database.php', <<<'PHP'
+        file_put_contents($this->project->root . '/config/database.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -239,7 +239,7 @@ return [
 ];
 PHP);
 
-        file_put_contents($this->project->root . '/app/platform/config/cache.php', <<<'PHP'
+        file_put_contents($this->project->root . '/config/cache.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -248,7 +248,7 @@ return [
 ];
 PHP);
 
-        file_put_contents($this->project->root . '/app/platform/config/queue.php', <<<'PHP'
+        file_put_contents($this->project->root . '/config/queue.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -257,17 +257,17 @@ return [
 ];
 PHP);
 
-        file_put_contents($this->project->root . '/app/platform/config/storage.php', <<<'PHP'
+        file_put_contents($this->project->root . '/config/storage.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
 return [
     'default' => 'local',
-    'root' => 'app/platform/storage/files',
+    'root' => 'storage/files',
 ];
 PHP);
 
-        file_put_contents($this->project->root . '/app/platform/config/ai.php', <<<'PHP'
+        file_put_contents($this->project->root . '/config/ai.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 

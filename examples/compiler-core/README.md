@@ -1,7 +1,7 @@
 # Compiler Core Examples
 
 Run these commands from the Foundry framework repository root with `php bin/foundry ...`.
-If you copy the example slice into a generated app, switch the prefix to `php vendor/bin/foundry ...`.
+If you copy the example slice into a generated app, switch the prefix to `foundry ...`.
 
 ## Example A: Simple App Compile
 

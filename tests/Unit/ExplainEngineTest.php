@@ -103,7 +103,7 @@ final class ExplainEngineTest extends TestCase
         $this->assertNotEmpty($payload['schemaInteraction']['items']);
         $this->assertNotEmpty($payload['relationships']['graph']['outbound']);
         $this->assertSame(1, $payload['diagnostics']['summary']['total']);
-        $this->assertContains('php vendor/bin/foundry inspect feature publish_post --json', $payload['relatedCommands']);
+        $this->assertContains('foundry inspect feature publish_post --json', $payload['relatedCommands']);
         $this->assertSame('publish_post', $payload['metadata']['impact']['affected_features'][0]);
     }
 

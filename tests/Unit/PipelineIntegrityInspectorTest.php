@@ -26,9 +26,9 @@ final class PipelineIntegrityInspectorTest extends TestCase
         $graph->addNode(new FeatureNode('feature:publish_post', 'app/features/publish_post/feature.yaml', ['feature' => 'publish_post']));
         $graph->addNode(new RouteNode('route:POST /posts', 'app/features/publish_post/feature.yaml', ['feature' => 'publish_post', 'signature' => 'POST /posts']));
         $graph->addNode(new GuardNode('guard:auth:publish_post', 'app/features/publish_post/feature.yaml', ['feature' => 'publish_post']));
-        $graph->addNode(new InterceptorNode('interceptor:broken', 'app/platform/config/app.php', ['stage' => 'missing_stage']));
-        $graph->addNode(new PipelineStageNode('pipeline_stage:before_auth', 'app/platform/config/app.php', ['name' => 'before_auth']));
-        $graph->addNode(new PipelineStageNode('pipeline_stage:action', 'app/platform/config/app.php', ['name' => 'action']));
+        $graph->addNode(new InterceptorNode('interceptor:broken', 'config/app.php', ['stage' => 'missing_stage']));
+        $graph->addNode(new PipelineStageNode('pipeline_stage:before_auth', 'config/app.php', ['name' => 'before_auth']));
+        $graph->addNode(new PipelineStageNode('pipeline_stage:action', 'config/app.php', ['name' => 'action']));
 
         $report = (new PipelineIntegrityInspector())->inspect($graph, 'publish_post');
         $codes = array_values(array_map(

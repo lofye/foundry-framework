@@ -11,13 +11,13 @@ What it teaches:
 How to use it:
 
 1. Copy `examples/ai-pipeline/app/features/*` into a Foundry app's `app/features/` tree.
-2. Optionally copy `examples/ai-pipeline/app/platform/public/index.php`.
+2. Optionally copy `examples/ai-pipeline/public/index.php`.
 3. From that generated app, run:
 
 ```bash
-php vendor/bin/foundry compile graph --json
-php vendor/bin/foundry inspect graph --feature=submit_document --json
-php vendor/bin/foundry inspect graph --feature=fetch_ai_result --json
-php vendor/bin/foundry doctor --feature=classify_document --json
-php vendor/bin/foundry verify graph --json
+foundry compile graph --json
+foundry inspect graph --feature=submit_document --json
+foundry inspect graph --feature=fetch_ai_result --json
+foundry doctor --feature=classify_document --json
+foundry verify graph --json
 ```

@@ -67,7 +67,7 @@ final class AIGenerationService
                     'PRO_GENERATE_PROVIDER_NOT_CONFIGURED',
                     'validation',
                     ['provider' => $providerName],
-                    'No AI provider is configured for generation. Configure app/platform/config/ai.php or use --deterministic.',
+                    'No AI provider is configured for generation. Configure config/ai.php or use --deterministic.',
                 );
             }
 
@@ -171,7 +171,7 @@ final class AIGenerationService
                 'PRO_GENERATE_PROVIDER_NOT_CONFIGURED',
                 'validation',
                 [],
-                'No AI provider is configured for generation. Configure app/platform/config/ai.php or use --deterministic.',
+                'No AI provider is configured for generation. Configure config/ai.php or use --deterministic.',
             );
         }
 

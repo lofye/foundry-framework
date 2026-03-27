@@ -95,7 +95,7 @@ Foundry resolves each extension through these stages:
 ## Deterministic Loading Rules
 
 - built-in extensions load first
-- explicit registrations from `foundry.extensions.php` and `app/platform/foundry/extensions.php` load next
+- explicit registrations from `foundry.extensions.php` and `config/foundry/extensions.php` load next
 - duplicate extension ids keep the first discovered registration
 - duplicate pack ids keep the first discovered owner
 - required extension and pack dependencies must resolve

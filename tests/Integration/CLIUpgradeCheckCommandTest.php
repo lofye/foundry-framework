@@ -117,14 +117,14 @@ YAML);
 
     private function seedLegacyConfig(): void
     {
-        mkdir($this->project->root . '/app/platform/config', 0777, true);
-        file_put_contents($this->project->root . '/app/platform/config/storage.php', <<<'PHP'
+        mkdir($this->project->root . '/config', 0777, true);
+        file_put_contents($this->project->root . '/config/storage.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
 return [
     'default' => 'local',
-    'local_root' => 'app/platform/storage/files',
+    'local_root' => 'storage/files',
 ];
 PHP);
     }
@@ -141,7 +141,7 @@ PHP);
     "ext-pdo": "*"
   },
   "scripts": {
-    "bootstrap-app": "php vendor/bin/foundry init app demo-app --starter=minimal"
+    "bootstrap-app": "foundry init app demo-app --starter=minimal"
   }
 }
 JSON);

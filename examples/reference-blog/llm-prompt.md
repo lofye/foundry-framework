@@ -11,11 +11,11 @@ Requirements:
 - keep schemas, prompts, and tests colocated in each feature folder
 - add a workflow or equivalent editorial flow for draft to published content
 - integrate RSS generation using the installed `spatie/laravel-feed` Composer package
-- run and fix `php vendor/bin/foundry compile graph --json`
-- run and fix `php vendor/bin/foundry doctor --json`
-- run and fix `php vendor/bin/foundry verify graph --json`
-- run and fix `php vendor/bin/foundry verify pipeline --json`
-- run and fix `php vendor/bin/foundry verify contracts --json`
+- run and fix `foundry compile graph --json`
+- run and fix `foundry doctor --json`
+- run and fix `foundry verify graph --json`
+- run and fix `foundry verify pipeline --json`
+- run and fix `foundry verify contracts --json`
 - run and fix `php vendor/bin/phpunit`
 - keep all new code above 90% automated test coverage
 

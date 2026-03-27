@@ -14,7 +14,7 @@ final class AIConfigLoader
      */
     public function load(Paths $paths): array
     {
-        $path = $paths->join('app/platform/config/ai.php');
+        $path = $paths->join('config/ai.php');
         if (!is_file($path)) {
             return ['default' => 'static'];
         }

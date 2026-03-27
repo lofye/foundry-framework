@@ -31,7 +31,7 @@ Foundry Pro is optional and local-first:
 - Pro adds `doctor --deep`, `explain`, `diff`, `trace`, and `generate "<prompt>"`
 - Pro does not require SaaS connectivity, telemetry, or runtime calls to external services
 - Pro licensing is stored locally at `~/.foundry/license.json` by default
-- `generate` works in deterministic mode without any provider and otherwise uses whatever local/remote provider you configure in `app/platform/config/ai.php`
+- `generate` works in deterministic mode without any provider and otherwise uses whatever local/remote provider you configure in `config/ai.php`
 - `explain` derives architecture explanations from the compiled graph, projections, diagnostics, and docs metadata, not from an LLM
 
 Enable Pro locally:
@@ -59,7 +59,7 @@ cd my-foundry-app
 composer require lofye/foundry-framework
 
 # Initialize a new Foundry app in this folder
-php vendor/bin/foundry new . --starter=standard --name=acme/my-foundry-app
+foundry new --starter=standard --name=acme/my-foundry-app
 
 # Install project dependencies
 composer install
@@ -72,12 +72,21 @@ foundry doctor --json
 foundry verify graph --json
 foundry verify pipeline --json
 foundry verify contracts --json
-php -S 127.0.0.1:8000 app/platform/public/index.php
+php -S 127.0.0.1:8000 public/index.php
+```
+
+From a Foundry-enabled parent directory, you can also scaffold into a child folder directly:
+
+```bash
+composer require lofye/foundry-framework
+foundry new website --starter=standard --json
+cd website
+composer install
 ```
 
 ## Upgrade Foundry in an App
 ```bash
-composer update lofye/foundry
+composer update lofye/foundry-framework
 foundry compile graph --json
 foundry verify graph --json
 foundry verify contracts --json
@@ -178,11 +187,27 @@ app/
       projections/
       manifests/
       diagnostics/
-  platform/
-    bootstrap/
-    config/
-    migrations/
-    public/index.php
+bootstrap/
+  app.php
+  providers.php
+config/
+  app.php
+  auth.php
+  database.php
+  cache.php
+  queue.php
+  storage.php
+  ai.php
+database/
+  migrations/
+lang/
+  en/
+public/
+  index.php
+storage/
+  files/
+  logs/
+  tmp/
 ```
 
 Rules:
@@ -403,8 +428,8 @@ foundry verify api --json
 
 Runtime / planning:
 ```bash
-php vendor/bin/foundry new <path> [--starter=minimal|standard|api-first] [--name=vendor/app] [--version=^0.1] [--force]
-php vendor/bin/foundry init app <path> [--starter=minimal|standard|api-first] [--name=vendor/app] [--version=^0.1] [--force]
+foundry new [path] [--starter=minimal|standard|api-first] [--name=vendor/app] [--version=^0.1] [--force]
+foundry init app <path> [--starter=minimal|standard|api-first] [--name=vendor/app] [--version=^0.1] [--force]
 foundry serve
 foundry queue:work
 foundry queue:inspect --json

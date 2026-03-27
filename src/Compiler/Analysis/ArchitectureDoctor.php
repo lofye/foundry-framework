@@ -14,7 +14,7 @@ final readonly class ArchitectureDoctor
     public function __construct(
         private array $analyzers,
         private ImpactAnalyzer $impactAnalyzer,
-        private string $commandPrefix = 'php vendor/bin/foundry',
+        private string $commandPrefix = 'foundry',
     ) {
     }
 

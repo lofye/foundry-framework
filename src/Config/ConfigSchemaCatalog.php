@@ -34,7 +34,7 @@ final class ConfigSchemaCatalog
                     'debug' => ['type' => 'boolean'],
                     'starter' => ['type' => 'string', 'enum' => ['minimal', 'standard', 'api-first']],
                 ],
-                'x-foundry-path' => 'app/platform/bootstrap/app.php',
+                'x-foundry-path' => 'bootstrap/app.php',
                 'x-foundry-optional' => true,
             ],
             'bootstrap.providers' => [
@@ -43,7 +43,7 @@ final class ConfigSchemaCatalog
                 'type' => 'array',
                 'items' => ['type' => 'string', 'minLength' => 1],
                 'uniqueItems' => true,
-                'x-foundry-path' => 'app/platform/bootstrap/providers.php',
+                'x-foundry-path' => 'bootstrap/providers.php',
                 'x-foundry-optional' => true,
             ],
             'config.app' => [
@@ -63,7 +63,7 @@ final class ConfigSchemaCatalog
                         ],
                     ],
                 ],
-                'x-foundry-path' => 'app/platform/config/app.php',
+                'x-foundry-path' => 'config/app.php',
                 'x-foundry-optional' => true,
             ],
             'config.auth' => [
@@ -104,7 +104,7 @@ final class ConfigSchemaCatalog
                         ],
                     ],
                 ],
-                'x-foundry-path' => 'app/platform/config/auth.php',
+                'x-foundry-path' => 'config/auth.php',
                 'x-foundry-optional' => true,
             ],
             'config.database' => [
@@ -130,7 +130,7 @@ final class ConfigSchemaCatalog
                         ],
                     ],
                 ],
-                'x-foundry-path' => 'app/platform/config/database.php',
+                'x-foundry-path' => 'config/database.php',
                 'x-foundry-optional' => true,
             ],
             'config.cache' => [
@@ -162,7 +162,7 @@ final class ConfigSchemaCatalog
                         ],
                     ],
                 ],
-                'x-foundry-path' => 'app/platform/config/cache.php',
+                'x-foundry-path' => 'config/cache.php',
                 'x-foundry-optional' => true,
             ],
             'config.queue' => [
@@ -202,7 +202,7 @@ final class ConfigSchemaCatalog
                         ],
                     ],
                 ],
-                'x-foundry-path' => 'app/platform/config/queue.php',
+                'x-foundry-path' => 'config/queue.php',
                 'x-foundry-optional' => true,
             ],
             'config.storage' => [
@@ -215,7 +215,7 @@ final class ConfigSchemaCatalog
                     'default' => ['type' => 'string', 'enum' => ['local']],
                     'root' => ['type' => 'string', 'minLength' => 1],
                 ],
-                'x-foundry-path' => 'app/platform/config/storage.php',
+                'x-foundry-path' => 'config/storage.php',
                 'x-foundry-optional' => true,
             ],
             'config.ai' => [
@@ -245,7 +245,7 @@ final class ConfigSchemaCatalog
                         ],
                     ],
                 ],
-                'x-foundry-path' => 'app/platform/config/ai.php',
+                'x-foundry-path' => 'config/ai.php',
                 'x-foundry-optional' => true,
             ],
             'routing.route' => [

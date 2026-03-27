@@ -25,7 +25,7 @@ final class TraceCommand extends Command
         $target = trim(implode(' ', array_slice($args, 1)));
 
         $payload = (new TraceAnalyzer())->analyze(
-            $context->paths()->join('app/platform/logs/trace.log'),
+            $context->paths()->join('storage/logs/trace.log'),
             $target !== '' ? $target : null,
         );
         $payload['pro'] = ['license' => $license];

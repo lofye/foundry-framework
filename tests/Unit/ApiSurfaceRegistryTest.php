@@ -88,7 +88,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $registry = new ApiSurfaceRegistry();
 
         $manifest = $registry->classifyConfigurationArtifact('app/features/list_posts/feature.yaml');
-        $platformConfig = $registry->classifyConfigurationArtifact('app/platform/config/cache.php');
+        $platformConfig = $registry->classifyConfigurationArtifact('config/cache.php');
         $generated = $registry->classifyGeneratedMetadata('app/generated/routes.php');
         $cacheMetadata = $registry->classifyGeneratedMetadata('app/.foundry/build/manifests/compile_cache.json');
 

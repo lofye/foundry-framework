@@ -12,7 +12,7 @@ final readonly class GraphPromptBuilder
 {
     public function __construct(
         private ImpactAnalyzer $impactAnalyzer,
-        private string $commandPrefix = 'php vendor/bin/foundry',
+        private string $commandPrefix = 'foundry',
     )
     {
     }

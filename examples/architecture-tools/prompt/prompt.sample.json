@@ -23,9 +23,9 @@
         "routes_index.php"
       ],
       "recommended_verification": [
-        "php vendor/bin/foundry verify feature publish_post --json",
-        "php vendor/bin/foundry verify graph --json",
-        "php vendor/bin/foundry verify pipeline --json",
+        "foundry verify feature publish_post --json",
+        "foundry verify graph --json",
+        "foundry verify pipeline --json",
         "php vendor/bin/phpunit"
       ],
       "recommended_tests": [
@@ -42,25 +42,25 @@
       "Preserve existing graph node IDs and naming conventions when possible."
     ],
     "workflow": [
-      "php vendor/bin/foundry compile graph --json",
-      "php vendor/bin/foundry inspect execution-plan <feature> --json",
-      "php vendor/bin/foundry inspect impact --file=app/features/<feature>/feature.yaml --json",
-      "php vendor/bin/foundry verify graph --json",
-      "php vendor/bin/foundry verify pipeline --json",
-      "php vendor/bin/foundry verify contracts --json",
+      "foundry compile graph --json",
+      "foundry inspect execution-plan <feature> --json",
+      "foundry inspect impact --file=app/features/<feature>/feature.yaml --json",
+      "foundry verify graph --json",
+      "foundry verify pipeline --json",
+      "foundry verify contracts --json",
       "php vendor/bin/phpunit"
     ],
     "text": "Instruction:\nadd bookmark endpoint for posts\n\nRelevant features: delete_post, publish_post, list_posts, update_post, view_post\n...",
     "correction_template": "The previous attempt produced diagnostics.\nUse the diagnostic JSON as authoritative feedback.\nRevise only the impacted source-of-truth files.\nRe-run compile and verify commands after changes."
   },
   "recommended_commands": [
-    "php vendor/bin/foundry compile graph --json",
-    "php vendor/bin/foundry inspect execution-plan <feature> --json",
-    "php vendor/bin/foundry inspect impact --file=app/features/<feature>/feature.yaml --json",
-    "php vendor/bin/foundry verify feature publish_post --json",
-    "php vendor/bin/foundry verify graph --json",
-    "php vendor/bin/foundry verify pipeline --json",
-    "php vendor/bin/foundry verify contracts --json",
+    "foundry compile graph --json",
+    "foundry inspect execution-plan <feature> --json",
+    "foundry inspect impact --file=app/features/<feature>/feature.yaml --json",
+    "foundry verify feature publish_post --json",
+    "foundry verify graph --json",
+    "foundry verify pipeline --json",
+    "foundry verify contracts --json",
     "php vendor/bin/phpunit",
     "php vendor/bin/phpunit --filter=publish_post_auth_test",
     "php vendor/bin/phpunit --filter=publish_post_contract_test",

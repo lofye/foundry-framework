@@ -18,7 +18,7 @@ The root `app/*` tree is a framework-owned demo and smoke app used for compile a
 ## Command Rule
 
 - In this repository, use `php bin/foundry ...`
-- In generated Foundry apps, use `php vendor/bin/foundry ...`
+- In generated Foundry apps, use `foundry ...`
 - Prefer `--json` for inspect, verify, doctor, prompt, export, and generation commands when an agent is consuming the output
 
 ## Source Of Truth

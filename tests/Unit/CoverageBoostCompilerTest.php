@@ -155,11 +155,11 @@ final class CoverageBoostCompilerTest extends TestCase
         $outsideFeatureChange = $planner->plan(
             options: new CompileOptions(changedOnly: true),
             previousManifest: [
-                'source_files' => ['app/platform/config/runtime.yaml' => 'old'],
+                'source_files' => ['config/runtime.yaml' => 'old'],
                 'features' => ['a', 'b'],
                 'framework_version' => '1.0.0',
             ],
-            currentSourceHashes: ['app/platform/config/runtime.yaml' => 'new'],
+            currentSourceHashes: ['config/runtime.yaml' => 'new'],
             currentFeatures: ['a', 'b'],
             hasPreviousGraph: true,
             scanner: $scanner,
@@ -285,21 +285,21 @@ final class CoverageBoostCompilerTest extends TestCase
 
         $inputSchemaReport = $analyzer->reportForNode($graph, 'schema:app/features/f1/input.schema.json');
         $this->assertSame('high', $inputSchemaReport['risk']);
-        $this->assertContains('php vendor/bin/foundry verify contracts --json', $inputSchemaReport['recommended_verification']);
+        $this->assertContains('foundry verify contracts --json', $inputSchemaReport['recommended_verification']);
 
         $outputSchemaReport = $analyzer->reportForNode($graph, 'schema:app/features/f1/output.schema.json');
         $this->assertSame('medium', $outputSchemaReport['risk']);
 
         $authReport = $analyzer->reportForNode($graph, 'auth:f1');
         $this->assertSame('high', $authReport['risk']);
-        $this->assertContains('php vendor/bin/foundry verify auth --json', $authReport['recommended_verification']);
+        $this->assertContains('foundry verify auth --json', $authReport['recommended_verification']);
 
         $cacheReport = $analyzer->reportForNode($graph, 'cache:posts:list');
-        $this->assertContains('php vendor/bin/foundry verify cache --json', $cacheReport['recommended_verification']);
+        $this->assertContains('foundry verify cache --json', $cacheReport['recommended_verification']);
         $eventReport = $analyzer->reportForNode($graph, 'event:post.created');
-        $this->assertContains('php vendor/bin/foundry verify events --json', $eventReport['recommended_verification']);
+        $this->assertContains('foundry verify events --json', $eventReport['recommended_verification']);
         $jobReport = $analyzer->reportForNode($graph, 'job:notify_followers');
-        $this->assertContains('php vendor/bin/foundry verify jobs --json', $jobReport['recommended_verification']);
+        $this->assertContains('foundry verify jobs --json', $jobReport['recommended_verification']);
 
         $unknownFile = $analyzer->reportForFile($graph, 'app/features/none/feature.yaml');
         $this->assertSame('low', $unknownFile['risk']);

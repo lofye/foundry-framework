@@ -3,7 +3,7 @@
 This directory demonstrates compiler-visible runtime execution pipeline outputs.
 
 Run these commands from the Foundry framework repository root with `php bin/foundry ...`.
-If you copy the same example into a generated app, switch to `php vendor/bin/foundry ...`.
+If you copy the same example into a generated app, switch to `foundry ...`.
 
 - **Example A**: inspect canonical pipeline stages.
 - **Example B**: inspect a compiled feature execution plan.

@@ -3,7 +3,7 @@
 This directory demonstrates graph-native architecture tooling capabilities.
 
 Run these commands from the Foundry framework repository root with `php bin/foundry ...`.
-If you are trying the same flow inside a generated app, switch to `php vendor/bin/foundry ...`.
+If you are trying the same flow inside a generated app, switch to `foundry ...`.
 
 - **Example A**: `doctor` architecture diagnostics from the compiled graph.
 - **Example B**: graph visualization output derived from graph nodes/edges.

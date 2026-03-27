@@ -28,9 +28,9 @@ final class SourceScannerTest extends TestCase
     {
         $featureBase = $this->project->root . '/app/features/publish_post';
         mkdir($featureBase . '/tests', 0777, true);
-        mkdir($this->project->root . '/app/platform/config', 0777, true);
-        mkdir($this->project->root . '/app/platform/bootstrap', 0777, true);
-        mkdir($this->project->root . '/app/platform/foundry', 0777, true);
+        mkdir($this->project->root . '/config', 0777, true);
+        mkdir($this->project->root . '/bootstrap', 0777, true);
+        mkdir($this->project->root . '/config/foundry', 0777, true);
         mkdir($this->project->root . '/app/definitions/http', 0777, true);
 
         file_put_contents($featureBase . '/feature.yaml', "version: 1\nfeature: publish_post\n");
@@ -39,11 +39,11 @@ final class SourceScannerTest extends TestCase
         file_put_contents($featureBase . '/action.php', '<?php declare(strict_types=1);');
         file_put_contents($featureBase . '/tests/publish_post_feature_test.php', '<?php declare(strict_types=1);');
         file_put_contents($featureBase . '/context.manifest.json', '{"version":1,"feature":"publish_post","kind":"http"}');
-        file_put_contents($this->project->root . '/app/platform/config/cache.yaml', "version: 1\n");
-        file_put_contents($this->project->root . '/app/platform/config/runtime.php', '<?php return [];');
-        file_put_contents($this->project->root . '/app/platform/bootstrap/app.php', '<?php declare(strict_types=1);');
+        file_put_contents($this->project->root . '/config/cache.yaml', "version: 1\n");
+        file_put_contents($this->project->root . '/config/runtime.php', '<?php return [];');
+        file_put_contents($this->project->root . '/bootstrap/app.php', '<?php declare(strict_types=1);');
         file_put_contents($this->project->root . '/foundry.extensions.php', '<?php return [];');
-        file_put_contents($this->project->root . '/app/platform/foundry/extensions.php', '<?php return [];');
+        file_put_contents($this->project->root . '/config/foundry/extensions.php', '<?php return [];');
         file_put_contents($this->project->root . '/app/definitions/http/feature_manifest.yaml', "version: 1\n");
 
         $files = $this->scanner->sourceFiles();
@@ -56,10 +56,10 @@ final class SourceScannerTest extends TestCase
             'app/features/publish_post/input.schema.json',
             'app/features/publish_post/output.schema.json',
             'app/features/publish_post/tests/publish_post_feature_test.php',
-            'app/platform/bootstrap/app.php',
-            'app/platform/config/cache.yaml',
-            'app/platform/config/runtime.php',
-            'app/platform/foundry/extensions.php',
+            'bootstrap/app.php',
+            'config/cache.yaml',
+            'config/foundry/extensions.php',
+            'config/runtime.php',
             'foundry.extensions.php',
         ], $files);
 
@@ -90,4 +90,3 @@ final class SourceScannerTest extends TestCase
         );
     }
 }
-

@@ -5,7 +5,7 @@ return [
     'default' => 'sqlite',
     'connections' => [
         'sqlite' => [
-            'dsn' => 'sqlite::memory:',
+            'dsn' => 'sqlite:database/foundry.sqlite',
         ],
     ],
 ];

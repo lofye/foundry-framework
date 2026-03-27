@@ -69,8 +69,8 @@ YAML);
         file_put_contents($base . '/events.yaml', "version: 1\nemit: []\nsubscribe: []\n");
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch: []\n");
 
-        mkdir($this->project->root . '/app/platform/config', 0777, true);
-        file_put_contents($this->project->root . '/app/platform/config/queue.php', <<<'PHP'
+        mkdir($this->project->root . '/config', 0777, true);
+        file_put_contents($this->project->root . '/config/queue.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 

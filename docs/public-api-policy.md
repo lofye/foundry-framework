@@ -135,7 +135,7 @@ Stable application contracts include:
 Stable extension registration contracts include:
 
 - `foundry.extensions.php`
-- `app/platform/foundry/extensions.php`
+- `config/foundry/extensions.php`
 
 Internal generated metadata includes:
 

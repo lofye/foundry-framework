@@ -31,7 +31,7 @@ final class CLIScaffoldingCommandErrorsTest extends TestCase
 
         $newMissingPath = $this->runCommand($app, ['foundry', 'new', '--json']);
         $this->assertSame(1, $newMissingPath['status']);
-        $this->assertSame('CLI_INIT_APP_PATH_REQUIRED', $newMissingPath['payload']['error']['code']);
+        $this->assertSame('CLI_INIT_APP_TARGET_NOT_EMPTY', $newMissingPath['payload']['error']['code']);
 
         $invalidStarter = $this->runCommand($app, ['foundry', 'new', 'demo-app', '--starter=desktop', '--json']);
         $this->assertSame(1, $invalidStarter['status']);

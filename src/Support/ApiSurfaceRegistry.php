@@ -498,8 +498,8 @@ final class ApiSurfaceRegistry
     {
         return [
             $this->surfaceEntry('configuration_format', 'foundry.extensions.php', 'extension_api', 'stable', 'Root-level extension registration file for framework and app packs.'),
-            $this->surfaceEntry('configuration_format', 'app/platform/foundry/extensions.php', 'extension_api', 'stable', 'App-local extension registration file layered after the project root registration file.'),
-            $this->surfaceEntry('configuration_format', 'app/platform/config/*.php', 'experimental_api', 'experimental', 'Platform config files remain experimental until schema validation is finalized.'),
+            $this->surfaceEntry('configuration_format', 'config/foundry/extensions.php', 'extension_api', 'stable', 'App-local extension registration file layered after the project root registration file.'),
+            $this->surfaceEntry('configuration_format', 'config/*.php', 'experimental_api', 'experimental', 'Application config files remain experimental until schema validation is finalized.'),
             $this->surfaceEntry('configuration_format', 'definitions/*.api-resource.yaml', 'experimental_api', 'experimental', 'Definition files used by API resource generators remain experimental.'),
             $this->surfaceEntry('configuration_format', 'definitions/*.workflow.yaml', 'experimental_api', 'experimental', 'Definition files used by workflow generators remain experimental.'),
             $this->surfaceEntry('configuration_format', 'definitions/*.orchestration.yaml', 'experimental_api', 'experimental', 'Definition files used by orchestration generators remain experimental.'),

@@ -91,7 +91,7 @@ final class GeneratedFeatureApplier
      */
     private function writeWorkflowDefinition(array $workflow): string
     {
-        $dir = $this->paths->join('app/platform/tmp/foundry-ai');
+        $dir = $this->paths->join('storage/tmp/foundry-ai');
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }

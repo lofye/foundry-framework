@@ -85,7 +85,7 @@ YAML);
         $this->assertSame(0, $doctor['status']);
         $this->assertTrue($doctor['payload']['ok']);
         $this->assertSame(0, $doctor['payload']['exit_code']);
-        $this->assertSame('php vendor/bin/foundry', $doctor['payload']['command_prefix']);
+        $this->assertSame('foundry', $doctor['payload']['command_prefix']);
         $this->assertSame('list_posts', $doctor['payload']['feature_filter']);
         $this->assertArrayHasKey('checks', $doctor['payload']);
         $this->assertArrayHasKey('analyzers', $doctor['payload']);

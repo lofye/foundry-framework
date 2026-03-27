@@ -29,7 +29,7 @@ final class CLIProCommandsTest extends TestCase
         putenv('FOUNDRY_HOME=' . $this->project->root . '/.foundry-home');
         putenv('FOUNDRY_LICENSE_PATH');
         mkdir($this->project->root . '/.foundry-home', 0777, true);
-        mkdir($this->project->root . '/app/platform/config', 0777, true);
+        mkdir($this->project->root . '/config', 0777, true);
         mkdir($this->project->root . '/docs', 0777, true);
 
         $feature = $this->project->root . '/app/features/publish_post';
@@ -91,7 +91,7 @@ YAML);
         file_put_contents($feature . '/tests/publish_post_contract_test.php', '<?php declare(strict_types=1);');
         file_put_contents($feature . '/tests/publish_post_feature_test.php', '<?php declare(strict_types=1);');
         file_put_contents($feature . '/tests/publish_post_auth_test.php', '<?php declare(strict_types=1);');
-        file_put_contents($this->project->root . '/app/platform/logs/trace.log', "publish:started\npublish:finished\ncache:flush\n");
+        file_put_contents($this->project->root . '/storage/logs/trace.log', "publish:started\npublish:finished\ncache:flush\n");
 
         $paths = Paths::fromCwd($this->project->root);
         (new IndexGenerator($paths))->generate();
@@ -427,7 +427,7 @@ YAML);
     private function writeAiConfig(array $config): void
     {
         file_put_contents(
-            $this->project->root . '/app/platform/config/ai.php',
+            $this->project->root . '/config/ai.php',
             "<?php\ndeclare(strict_types=1);\n\nreturn " . var_export($config, true) . ";\n",
         );
     }

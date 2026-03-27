@@ -130,7 +130,7 @@ final class RuntimeFactory
      */
     private static function connection(Paths $paths, array $databaseConfig = []): Connection
     {
-        $dbDir = $paths->join('app/platform/storage');
+        $dbDir = $paths->database();
         if (!is_dir($dbDir)) {
             mkdir($dbDir, 0777, true);
         }
@@ -140,6 +140,7 @@ final class RuntimeFactory
         $connection = is_array($connections[$defaultConnection] ?? null) ? $connections[$defaultConnection] : [];
         $dsn = (string) ($connection['dsn'] ?? ('sqlite:' . $dbDir . '/foundry.sqlite'));
         $dsn = self::normalizeSqliteDsn($dsn, $paths);
+        self::ensureSqliteDirectory($dsn);
 
         $pdo = new \PDO($dsn);
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -257,7 +258,7 @@ final class RuntimeFactory
      */
     private static function storageRoot(Paths $paths, array $storageConfig): string
     {
-        $root = (string) ($storageConfig['root'] ?? 'app/platform/storage/files');
+        $root = (string) ($storageConfig['root'] ?? 'storage/files');
 
         return str_starts_with($root, '/')
             ? $root
@@ -276,6 +277,23 @@ final class RuntimeFactory
         }
 
         return 'sqlite:' . $paths->join($path);
+    }
+
+    private static function ensureSqliteDirectory(string $dsn): void
+    {
+        if (!str_starts_with($dsn, 'sqlite:')) {
+            return;
+        }
+
+        $path = substr($dsn, strlen('sqlite:'));
+        if ($path === '' || $path === ':memory:') {
+            return;
+        }
+
+        $dir = dirname($path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
     }
 
     private static function queryRegistry(Paths $paths): QueryRegistry

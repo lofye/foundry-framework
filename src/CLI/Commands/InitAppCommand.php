@@ -30,7 +30,11 @@ final class InitAppCommand extends Command
         $usingNewAlias = ($args[0] ?? null) === 'new';
         $targetIndex = $usingNewAlias ? 1 : 2;
         $targetArgument = (string) ($args[$targetIndex] ?? '');
-        if ($targetArgument === '') {
+        if ($usingNewAlias && ($targetArgument === '' || str_starts_with($targetArgument, '--'))) {
+            $targetArgument = '.';
+        }
+
+        if ($targetArgument === '' || str_starts_with($targetArgument, '--')) {
             throw new FoundryError(
                 'CLI_INIT_APP_PATH_REQUIRED',
                 'validation',
@@ -42,8 +46,13 @@ final class InitAppCommand extends Command
         $targetPath = $this->resolvePath($context->paths()->root(), $targetArgument);
         $force = in_array('--force', $args, true);
         $starterMode = $this->parseStarterMode($args);
-        $projectName = $this->parseOption($args, '--name') ?? $this->defaultProjectName($targetPath);
-        $frameworkVersion = $this->parseOption($args, '--version') ?? '^0.1';
+        $existingComposer = $this->loadComposerConfig($targetPath);
+        $projectName = $this->parseOption($args, '--name')
+            ?? $this->composerName($existingComposer)
+            ?? $this->defaultProjectName($targetPath);
+        $frameworkVersion = $this->parseOption($args, '--version')
+            ?? $this->composerFrameworkVersion($existingComposer)
+            ?? '^0.1';
         $frameworkRoot = $context->paths()->frameworkRoot();
 
         $this->prepareTargetDirectory($targetPath, $force);
@@ -74,7 +83,7 @@ final class InitAppCommand extends Command
         $payload = [
             'project_root' => $targetPath,
             'project_name' => $projectName,
-            'framework_package' => 'lofye/foundry',
+            'framework_package' => 'lofye/foundry-framework',
             'framework_version' => $frameworkVersion,
             'starter_mode' => $starterMode,
             'starter_label' => $this->starterLabel($starterMode),
@@ -190,7 +199,7 @@ final class InitAppCommand extends Command
             'type' => 'project',
             'require' => [
                 'php' => '^8.4',
-                'lofye/foundry' => $frameworkVersion,
+                'lofye/foundry-framework' => $frameworkVersion,
             ],
             'require-dev' => [
                 'phpunit/phpunit' => '^11.5',
@@ -206,12 +215,13 @@ final class InitAppCommand extends Command
                 'foundry:doctor' => '@php foundry doctor --json',
                 'foundry:docs' => '@php foundry generate docs --format=markdown --json && @php foundry generate inspect-ui --json',
                 'foundry:verify' => '@php foundry verify graph --json && @php foundry verify pipeline --json && @php foundry verify contracts --json',
-                'serve' => 'php -S 127.0.0.1:8000 app/platform/public/index.php',
+                'serve' => 'php -S 127.0.0.1:8000 public/index.php',
                 'test' => 'php vendor/bin/phpunit -c phpunit.xml.dist',
             ],
             'minimum-stability' => 'dev',
             'prefer-stable' => true,
         ];
+        $composer = $this->mergedComposerConfig($paths, $composer);
 
         $files = [
             '.gitignore' => <<<'TXT'
@@ -223,12 +233,13 @@ final class InitAppCommand extends Command
 /docs/inspect-ui/*
 !/docs/inspect-ui/.gitignore
 /app/.foundry/build/
-/app/platform/logs/*
-!/app/platform/logs/.gitignore
-/app/platform/tmp/*
-!/app/platform/tmp/.gitignore
-/app/platform/storage/*
-!/app/platform/storage/.gitignore
+/database/*.sqlite
+/storage/files/*
+!/storage/files/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+/storage/tmp/*
+!/storage/tmp/.gitignore
 TXT
             ,
             '.env.example' => $this->replace(<<<'ENV'
@@ -334,7 +345,7 @@ foundry verify graph --json
 foundry verify pipeline --json
 foundry verify contracts --json
 php vendor/bin/phpunit -c phpunit.xml.dist
-php -S 127.0.0.1:8000 app/platform/public/index.php
+php -S 127.0.0.1:8000 public/index.php
 ```
 
 ## Starter Routes
@@ -432,7 +443,7 @@ Use `app/definitions/inspect-ui/dev.inspect-ui.yaml` as the starter definition f
 MD, $placeholders),
             'docs/generated/.gitignore' => "*\n!.gitignore\n",
             'docs/inspect-ui/.gitignore' => "*\n!.gitignore\n",
-            'app/platform/public/index.php' => <<<'PHP'
+            'public/index.php' => <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -440,7 +451,7 @@ use Foundry\Core\RuntimeFactory;
 use Foundry\Http\ResponseEmitter;
 use Foundry\Support\Paths;
 
-$projectRoot = dirname(__DIR__, 3);
+$projectRoot = dirname(__DIR__);
 require $projectRoot . '/vendor/autoload.php';
 
 $paths = Paths::fromCwd($projectRoot);
@@ -451,7 +462,7 @@ $response = $kernel->handle($request);
 echo (new ResponseEmitter())->emit($response);
 PHP
             ,
-            'app/platform/bootstrap/app.php' => $this->replace(<<<'PHP'
+            'bootstrap/app.php' => $this->replace(<<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -462,8 +473,8 @@ return [
     'starter' => '{{STARTER_MODE}}',
 ];
 PHP, $placeholders),
-            'app/platform/bootstrap/providers.php' => "<?php\ndeclare(strict_types=1);\n\nreturn [];\n",
-            'app/platform/config/app.php' => $this->replace(<<<'PHP'
+            'bootstrap/providers.php' => "<?php\ndeclare(strict_types=1);\n\nreturn [];\n",
+            'config/app.php' => $this->replace(<<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -472,7 +483,7 @@ return [
     'starter' => '{{STARTER_MODE}}',
 ];
 PHP, $placeholders),
-            'app/platform/config/auth.php' => <<<'PHP'
+            'config/auth.php' => <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -487,7 +498,7 @@ return [
 ];
 PHP
             ,
-            'app/platform/config/database.php' => <<<'PHP'
+            'config/database.php' => <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -495,13 +506,13 @@ return [
     'default' => 'sqlite',
     'connections' => [
         'sqlite' => [
-            'dsn' => 'sqlite:app/platform/storage/foundry.sqlite',
+            'dsn' => 'sqlite:database/foundry.sqlite',
         ],
     ],
 ];
 PHP
             ,
-            'app/platform/config/cache.php' => <<<'PHP'
+            'config/cache.php' => <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -510,7 +521,7 @@ return [
 ];
 PHP
             ,
-            'app/platform/config/queue.php' => <<<'PHP'
+            'config/queue.php' => <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -519,17 +530,17 @@ return [
 ];
 PHP
             ,
-            'app/platform/config/storage.php' => <<<'PHP'
+            'config/storage.php' => <<<'PHP'
 <?php
 declare(strict_types=1);
 
 return [
     'default' => 'local',
-    'root' => 'app/platform/storage/files',
+    'root' => 'storage/files',
 ];
 PHP
             ,
-            'app/platform/config/ai.php' => <<<'PHP'
+            'config/ai.php' => <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -538,9 +549,19 @@ return [
 ];
 PHP
             ,
-            'app/platform/logs/.gitignore' => "*\n!.gitignore\n",
-            'app/platform/tmp/.gitignore' => "*\n!.gitignore\n",
-            'app/platform/storage/.gitignore' => "*\n!.gitignore\n",
+            'config/foundry/extensions.php' => "<?php\ndeclare(strict_types=1);\n\nreturn [];\n",
+            'database/migrations/.gitignore' => "*\n!.gitignore\n",
+            'lang/en/messages.php' => $this->replace(<<<'PHP'
+<?php
+declare(strict_types=1);
+
+return [
+    'app.title' => '{{DISPLAY_NAME}}',
+];
+PHP, $placeholders),
+            'storage/files/.gitignore' => "*\n!.gitignore\n",
+            'storage/logs/.gitignore' => "*\n!.gitignore\n",
+            'storage/tmp/.gitignore' => "*\n!.gitignore\n",
             'app/definitions/inspect-ui/dev.inspect-ui.yaml' => <<<'YAML'
 version: 1
 name: dev
@@ -1054,8 +1075,12 @@ PHP
      */
     private function nextSteps(string $targetPath): array
     {
-        return [
-            'cd ' . $targetPath,
+        $steps = [];
+        if (rtrim($targetPath, '/') !== rtrim(getcwd() ?: '.', '/')) {
+            $steps[] = 'cd ' . $targetPath;
+        }
+
+        return array_merge($steps, [
             'composer install',
             'foundry compile graph --json',
             'foundry inspect graph --json',
@@ -1067,8 +1092,8 @@ PHP
             'foundry verify pipeline --json',
             'foundry verify contracts --json',
             'php vendor/bin/phpunit -c phpunit.xml.dist',
-            'php -S 127.0.0.1:8000 app/platform/public/index.php',
-        ];
+            'php -S 127.0.0.1:8000 public/index.php',
+        ]);
     }
 
     /**
@@ -1139,7 +1164,7 @@ PHP
     private function usage(bool $usingNewAlias): string
     {
         return $usingNewAlias
-            ? 'foundry new <path> [--starter=minimal|standard|api-first] [--name=vendor/app] [--version=^0.1] [--force]'
+            ? 'foundry new [path] [--starter=minimal|standard|api-first] [--name=vendor/app] [--version=^0.1] [--force]'
             : 'foundry init app <path> [--starter=minimal|standard|api-first] [--name=vendor/app] [--version=^0.1] [--force]';
     }
 
@@ -1157,7 +1182,7 @@ PHP
         }
 
         $nonDotItems = array_values(array_filter($items, static fn (string $item): bool => $item !== '.' && $item !== '..'));
-        if ($nonDotItems !== [] && !$force) {
+        if ($nonDotItems !== [] && !$force && !$this->canBootstrapIntoExistingDirectory($nonDotItems)) {
             throw new FoundryError(
                 'CLI_INIT_APP_TARGET_NOT_EMPTY',
                 'validation',
@@ -1169,6 +1194,15 @@ PHP
 
     private function resolvePath(string $cwd, string $path): string
     {
+        $path = trim($path);
+        if ($path === '' || $path === '.') {
+            return rtrim($cwd, '/');
+        }
+
+        if (str_starts_with($path, './')) {
+            $path = substr($path, 2);
+        }
+
         if (str_starts_with($path, '/')) {
             return rtrim($path, '/');
         }
@@ -1186,6 +1220,124 @@ PHP
         }
 
         return 'acme/' . $slug;
+    }
+
+    /**
+     * @param array<int,string> $items
+     */
+    private function canBootstrapIntoExistingDirectory(array $items): bool
+    {
+        $allowed = ['composer.json', 'composer.lock', 'vendor', 'foundry', 'foundry.bat'];
+
+        foreach ($items as $item) {
+            if (str_starts_with($item, '.')) {
+                continue;
+            }
+
+            if (!in_array($item, $allowed, true)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return array<string,mixed>|null
+     */
+    private function loadComposerConfig(string $targetPath): ?array
+    {
+        $path = rtrim($targetPath, '/') . '/composer.json';
+        if (!is_file($path)) {
+            return null;
+        }
+
+        return Json::decodeAssoc((string) file_get_contents($path));
+    }
+
+    /**
+     * @param array<string,mixed>|null $composer
+     */
+    private function composerName(?array $composer): ?string
+    {
+        $name = trim((string) ($composer['name'] ?? ''));
+
+        return $name !== '' ? $name : null;
+    }
+
+    /**
+     * @param array<string,mixed>|null $composer
+     */
+    private function composerFrameworkVersion(?array $composer): ?string
+    {
+        $require = is_array($composer['require'] ?? null) ? $composer['require'] : [];
+
+        $version = trim((string) ($require['lofye/foundry-framework'] ?? ''));
+        if ($version !== '') {
+            return $version;
+        }
+
+        $legacyVersion = trim((string) ($require['lofye/foundry'] ?? ''));
+
+        return $legacyVersion !== '' ? $legacyVersion : null;
+    }
+
+    /**
+     * @param array<string,mixed> $scaffold
+     * @return array<string,mixed>
+     */
+    private function mergedComposerConfig(Paths $paths, array $scaffold): array
+    {
+        $existing = $this->loadComposerConfig($paths->root());
+        if ($existing === null) {
+            return $scaffold;
+        }
+
+        $merged = $existing;
+        $merged['name'] = trim((string) ($scaffold['name'] ?? '')) !== ''
+            ? (string) $scaffold['name']
+            : (string) ($existing['name'] ?? '');
+        $merged['description'] = (string) ($scaffold['description'] ?? ($existing['description'] ?? ''));
+        $merged['type'] = 'project';
+
+        $require = is_array($existing['require'] ?? null) ? $existing['require'] : [];
+        unset($require['lofye/foundry']);
+        foreach ((array) ($scaffold['require'] ?? []) as $package => $constraint) {
+            $require[(string) $package] = $constraint;
+        }
+        ksort($require);
+        $merged['require'] = $require;
+
+        $requireDev = is_array($existing['require-dev'] ?? null) ? $existing['require-dev'] : [];
+        foreach ((array) ($scaffold['require-dev'] ?? []) as $package => $constraint) {
+            $requireDev[(string) $package] = $constraint;
+        }
+        ksort($requireDev);
+        $merged['require-dev'] = $requireDev;
+
+        $autoload = is_array($existing['autoload'] ?? null) ? $existing['autoload'] : [];
+        $psr4 = is_array($autoload['psr-4'] ?? null) ? $autoload['psr-4'] : [];
+        $psr4['App\\'] = 'app/';
+        ksort($psr4);
+        $autoload['psr-4'] = $psr4;
+        $merged['autoload'] = $autoload;
+
+        $scripts = is_array($existing['scripts'] ?? null) ? $existing['scripts'] : [];
+        foreach ((array) ($scaffold['scripts'] ?? []) as $name => $command) {
+            $scripts[(string) $name] = $command;
+        }
+        ksort($scripts);
+        $merged['scripts'] = $scripts;
+
+        $merged['minimum-stability'] = (string) ($scaffold['minimum-stability'] ?? 'dev');
+        $merged['prefer-stable'] = (bool) ($scaffold['prefer-stable'] ?? true);
+
+        $lockPath = $paths->join('composer.lock');
+        if (is_file($lockPath)) {
+            @unlink($lockPath);
+        }
+
+        return $merged;
     }
 
     private function displayName(string $targetPath): string

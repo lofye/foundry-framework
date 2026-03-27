@@ -3,7 +3,7 @@
   "exit_code": 1,
   "feature_filter": "publish_post",
   "strict": true,
-  "command_prefix": "php vendor/bin/foundry",
+  "command_prefix": "foundry",
   "risk": "medium",
   "diagnostics_summary": {
     "error": 0,
@@ -61,9 +61,9 @@
       "routes_index.php"
     ],
     "recommended_verification": [
-      "php vendor/bin/foundry verify feature publish_post --json",
-      "php vendor/bin/foundry verify graph --json",
-      "php vendor/bin/foundry verify pipeline --json",
+      "foundry verify feature publish_post --json",
+      "foundry verify graph --json",
+      "foundry verify pipeline --json",
       "php vendor/bin/phpunit"
     ],
     "recommended_tests": [
@@ -73,11 +73,11 @@
     ]
   },
   "suggested_actions": [
-    "php vendor/bin/foundry compile graph --json",
-    "php vendor/bin/foundry inspect impact feature:publish_post --json",
-    "php vendor/bin/foundry verify contracts --json",
-    "php vendor/bin/foundry verify feature publish_post --json",
-    "php vendor/bin/foundry verify graph --json",
+    "foundry compile graph --json",
+    "foundry inspect impact feature:publish_post --json",
+    "foundry verify contracts --json",
+    "foundry verify feature publish_post --json",
+    "foundry verify graph --json",
     "php vendor/bin/phpunit"
   ]
 }

@@ -13,13 +13,13 @@ Then hand the generated app plus `examples/reference-blog/llm-prompt.md` to your
 After the prompt-driven edits are done, verify the result:
 
 ```bash
-php vendor/bin/foundry compile graph --json
-php vendor/bin/foundry inspect graph --feature=publish_post --json
-php vendor/bin/foundry inspect graph --feature=admin_login --json
-php vendor/bin/foundry doctor --json
-php vendor/bin/foundry verify graph --json
-php vendor/bin/foundry verify pipeline --json
-php vendor/bin/foundry verify contracts --json
+foundry compile graph --json
+foundry inspect graph --feature=publish_post --json
+foundry inspect graph --feature=admin_login --json
+foundry doctor --json
+foundry verify graph --json
+foundry verify pipeline --json
+foundry verify contracts --json
 php vendor/bin/phpunit
 ```
 

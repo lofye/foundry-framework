@@ -32,8 +32,8 @@ final class AIConfigLoaderTest extends TestCase
 
     public function test_load_normalizes_legacy_default_provider_key(): void
     {
-        mkdir($this->project->root . '/app/platform/config', 0777, true);
-        file_put_contents($this->project->root . '/app/platform/config/ai.php', <<<'PHP'
+        mkdir($this->project->root . '/config', 0777, true);
+        file_put_contents($this->project->root . '/config/ai.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -55,8 +55,8 @@ PHP);
 
     public function test_load_rejects_non_array_config_payloads(): void
     {
-        mkdir($this->project->root . '/app/platform/config', 0777, true);
-        file_put_contents($this->project->root . '/app/platform/config/ai.php', <<<'PHP'
+        mkdir($this->project->root . '/config', 0777, true);
+        file_put_contents($this->project->root . '/config/ai.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 

@@ -12,16 +12,16 @@ What it teaches:
 How to use it:
 
 1. Copy `examples/blog-api/app/features/*` into a Foundry app's `app/features/` tree.
-2. Copy `examples/blog-api/app/platform/public/index.php` into the app if you want the same tiny platform entrypoint.
+2. Copy `examples/blog-api/public/index.php` into the app if you want the same tiny platform entrypoint.
 3. From that generated app, run:
 
 ```bash
-php vendor/bin/foundry compile graph --json
-php vendor/bin/foundry inspect graph --command="GET /posts" --json
-php vendor/bin/foundry inspect graph --feature=publish_post --json
-php vendor/bin/foundry doctor --feature=list_posts --json
-php vendor/bin/foundry verify graph --json
-php vendor/bin/foundry verify contracts --json
+foundry compile graph --json
+foundry inspect graph --command="GET /posts" --json
+foundry inspect graph --feature=publish_post --json
+foundry doctor --feature=list_posts --json
+foundry verify graph --json
+foundry verify contracts --json
 ```
 
 Read these folders first:

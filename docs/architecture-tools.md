@@ -44,7 +44,7 @@ foundry generate "<prompt>" --provider=<name> --model=<name> --dry-run --json
 `generate` is intentionally optional:
 
 - `--deterministic` produces a reproducible plan from explicit prompt + graph inputs with no provider dependency.
-- provider-backed mode loads providers from `app/platform/config/ai.php`.
+- provider-backed mode loads providers from `config/ai.php`.
 - if no provider is configured, the command fails cleanly and points the user to `--deterministic`.
 
 ## Foundry Doctor

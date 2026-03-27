@@ -141,8 +141,8 @@ final class ExplainRenderersTest extends TestCase
                 ],
             ],
             relatedCommands: [
-                'php vendor/bin/foundry inspect pipeline --json',
-                'php vendor/bin/foundry doctor',
+                'foundry inspect pipeline --json',
+                'foundry doctor',
             ],
             relatedDocs: [
                 ['title' => 'Thresholds', 'path' => '/docs/features/thresholds'],

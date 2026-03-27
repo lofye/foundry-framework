@@ -13,16 +13,16 @@ How to use it:
 
 1. Copy `examples/workflow-events/app/features/*` into a Foundry app's `app/features/` tree.
 2. Copy `examples/workflow-events/app/definitions/workflows/*` into `app/definitions/workflows/`.
-3. Optionally copy `examples/workflow-events/app/platform/public/index.php`.
+3. Optionally copy `examples/workflow-events/public/index.php`.
 4. From that generated app, run:
 
 ```bash
-php vendor/bin/foundry compile graph --json
-php vendor/bin/foundry inspect graph --event=story.review_requested --json
-php vendor/bin/foundry graph inspect --workflow=editorial --json
-php vendor/bin/foundry inspect graph --feature=publish_story --json
-php vendor/bin/foundry doctor --feature=publish_story --json
-php vendor/bin/foundry verify graph --json
-php vendor/bin/foundry verify workflows --json
-php vendor/bin/foundry verify pipeline --json
+foundry compile graph --json
+foundry inspect graph --event=story.review_requested --json
+foundry graph inspect --workflow=editorial --json
+foundry inspect graph --feature=publish_story --json
+foundry doctor --feature=publish_story --json
+foundry verify graph --json
+foundry verify workflows --json
+foundry verify pipeline --json
 ```

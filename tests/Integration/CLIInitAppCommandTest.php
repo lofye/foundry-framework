@@ -52,8 +52,18 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertFileExists($target . '/foundry.bat');
         $this->assertFileExists($target . '/phpunit.xml.dist');
         $this->assertFileExists($target . '/tests/Smoke/AppBootTest.php');
-        $this->assertFileExists($target . '/app/platform/public/index.php');
-        $this->assertFileExists($target . '/app/platform/config/auth.php');
+        $this->assertFileExists($target . '/bootstrap/app.php');
+        $this->assertFileExists($target . '/bootstrap/providers.php');
+        $this->assertFileExists($target . '/public/index.php');
+        $this->assertFileExists($target . '/config/app.php');
+        $this->assertFileExists($target . '/config/auth.php');
+        $this->assertFileExists($target . '/config/database.php');
+        $this->assertFileExists($target . '/config/foundry/extensions.php');
+        $this->assertFileExists($target . '/database/migrations/.gitignore');
+        $this->assertFileExists($target . '/lang/en/messages.php');
+        $this->assertFileExists($target . '/storage/files/.gitignore');
+        $this->assertFileExists($target . '/storage/logs/.gitignore');
+        $this->assertFileExists($target . '/storage/tmp/.gitignore');
         $this->assertFileExists($target . '/app/definitions/inspect-ui/dev.inspect-ui.yaml');
         $this->assertFileExists($target . '/app/features/home/context.manifest.json');
         $this->assertFileExists($target . '/app/features/project_docs/feature.yaml');
@@ -84,8 +94,14 @@ final class CLIInitAppCommandTest extends TestCase
 
         /** @var array<string,mixed> $composer */
         $composer = json_decode((string) file_get_contents($target . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertSame('lofye/foundry-framework', array_key_first(array_filter(
+            $composer['require'],
+            static fn (string $constraint, string $package): bool => $package === 'lofye/foundry-framework',
+            ARRAY_FILTER_USE_BOTH,
+        )));
         $this->assertSame('@php foundry compile graph --json', $composer['scripts']['foundry:compile']);
         $this->assertSame('@php foundry doctor --json', $composer['scripts']['foundry:doctor']);
+        $this->assertSame('php -S 127.0.0.1:8000 public/index.php', $composer['scripts']['serve']);
 
         if (DIRECTORY_SEPARATOR !== '\\') {
             $permissions = fileperms($target . '/foundry');
@@ -162,6 +178,71 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertSame(0, $inspect['status']);
         $this->assertSame('GET /api/me', $inspect['payload']['command_filter']);
         $this->assertContains('api_me', $inspect['payload']['summary']['features']);
+    }
+
+    public function test_new_command_defaults_to_current_directory_when_path_is_omitted(): void
+    {
+        $app = new Application();
+        $target = $this->project->root . '/current-directory-app';
+        mkdir($target, 0777, true);
+
+        $result = $this->runCommand($app, ['foundry', 'new', '--starter=standard', '--json'], $target);
+        $resolvedTarget = realpath($target);
+        $this->assertIsString($resolvedTarget);
+
+        $this->assertSame(0, $result['status']);
+        $this->assertSame($resolvedTarget, $result['payload']['project_root']);
+        $this->assertSame('lofye/foundry-framework', $result['payload']['framework_package']);
+        $this->assertNotContains('cd ' . $resolvedTarget, $result['payload']['next_steps']);
+        $this->assertFileExists($target . '/public/index.php');
+        $this->assertFileExists($target . '/config/database.php');
+        $this->assertFileExists($target . '/database/migrations/.gitignore');
+        $this->assertFileExists($target . '/storage/logs/.gitignore');
+    }
+
+    public function test_new_command_merges_existing_composer_bootstrap_and_clears_stale_lockfile(): void
+    {
+        $app = new Application();
+        $target = $this->project->root . '/composer-first-app';
+        mkdir($target, 0777, true);
+        mkdir($target . '/vendor', 0777, true);
+
+        file_put_contents($target . '/composer.json', <<<'JSON'
+{
+  "require": {
+    "php": "^8.4",
+    "lofye/foundry-framework": "^0.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "Acme\\": "src/"
+    }
+  },
+  "scripts": {
+    "custom": "@php artisan custom"
+  }
+}
+JSON);
+        file_put_contents($target . '/composer.lock', "{}\n");
+
+        $result = $this->runCommand($app, ['foundry', 'new', '--starter=minimal', '--json'], $target);
+        $resolvedTarget = realpath($target);
+        $this->assertIsString($resolvedTarget);
+
+        $this->assertSame(0, $result['status']);
+        $this->assertSame($resolvedTarget, $result['payload']['project_root']);
+        $this->assertSame('^0.9', $result['payload']['framework_version']);
+        $this->assertFileDoesNotExist($target . '/composer.lock');
+
+        /** @var array<string,mixed> $composer */
+        $composer = json_decode((string) file_get_contents($target . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertSame('^0.9', $composer['require']['lofye/foundry-framework']);
+        $this->assertArrayNotHasKey('lofye/foundry', $composer['require']);
+        $this->assertSame('app/', $composer['autoload']['psr-4']['App\\']);
+        $this->assertSame('src/', $composer['autoload']['psr-4']['Acme\\']);
+        $this->assertSame('@php artisan custom', $composer['scripts']['custom']);
+        $this->assertSame('php -S 127.0.0.1:8000 public/index.php', $composer['scripts']['serve']);
+        $this->assertNotContains('cd ' . $resolvedTarget, $result['payload']['next_steps']);
     }
 
     /**

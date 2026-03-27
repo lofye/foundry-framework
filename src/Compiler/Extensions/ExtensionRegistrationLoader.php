@@ -70,7 +70,7 @@ final class ExtensionRegistrationLoader
     {
         return [
             $paths->join('foundry.extensions.php'),
-            $paths->join('app/platform/foundry/extensions.php'),
+            $paths->join('config/foundry/extensions.php'),
         ];
     }
 

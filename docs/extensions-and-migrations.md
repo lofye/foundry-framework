@@ -15,7 +15,7 @@ The compiler core established Foundry as a semantic compiler with a canonical gr
 Foundry loads extension classes from explicit registration files (if present):
 
 - `foundry.extensions.php`
-- `app/platform/foundry/extensions.php`
+- `config/foundry/extensions.php`
 
 The file must return class names implementing `Foundry\Compiler\Extensions\CompilerExtension`.
 

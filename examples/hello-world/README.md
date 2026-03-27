@@ -12,14 +12,14 @@ What it teaches:
 How to use it:
 
 1. Copy `examples/hello-world/app/features/say_hello` into a Foundry app's `app/features/` tree.
-2. Optionally copy `examples/hello-world/app/platform/public/index.php`.
+2. Optionally copy `examples/hello-world/public/index.php`.
 3. From that generated app, run:
 
 ```bash
-php vendor/bin/foundry compile graph --json
-php vendor/bin/foundry inspect graph --command="GET /hello" --json
-php vendor/bin/foundry inspect graph --feature=say_hello --json
-php vendor/bin/foundry doctor --feature=say_hello --json
-php vendor/bin/foundry verify graph --json
-php vendor/bin/foundry verify pipeline --json
+foundry compile graph --json
+foundry inspect graph --command="GET /hello" --json
+foundry inspect graph --feature=say_hello --json
+foundry doctor --feature=say_hello --json
+foundry verify graph --json
+foundry verify pipeline --json
 ```

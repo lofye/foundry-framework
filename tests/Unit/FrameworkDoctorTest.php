@@ -101,7 +101,7 @@ final class FrameworkDoctorTest extends TestCase
             architectureDoctor: new ArchitectureDoctor(
                 analyzers: [],
                 impactAnalyzer: $compiler->impactAnalyzer(),
-                commandPrefix: 'php vendor/bin/foundry',
+                commandPrefix: 'foundry',
             ),
         );
     }
@@ -125,7 +125,7 @@ final class FrameworkDoctorTest extends TestCase
             extensionRegistry: $extensionRegistry,
             extensionReport: $extensionReport,
             featureFilter: null,
-            commandPrefix: 'php vendor/bin/foundry',
+            commandPrefix: 'foundry',
             composerPath: $this->project->root . '/composer.json',
             composerConfig: $composerConfig,
         );

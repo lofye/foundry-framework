@@ -41,7 +41,7 @@ final readonly class SourceScanner
             }
         }
 
-        $projectDefinitionFiles = glob($this->paths->join('app/platform/config/*.yaml')) ?: [];
+        $projectDefinitionFiles = glob($this->paths->join('config/*.yaml')) ?: [];
         sort($projectDefinitionFiles);
         foreach ($projectDefinitionFiles as $file) {
             $relative = $this->relativePath($file);
@@ -50,7 +50,7 @@ final readonly class SourceScanner
             }
         }
 
-        $platformConfigFiles = glob($this->paths->join('app/platform/config/*.php')) ?: [];
+        $platformConfigFiles = glob($this->paths->join('config/*.php')) ?: [];
         sort($platformConfigFiles);
         foreach ($platformConfigFiles as $file) {
             $relative = $this->relativePath($file);
@@ -59,7 +59,7 @@ final readonly class SourceScanner
             }
         }
 
-        $bootstrapFiles = glob($this->paths->join('app/platform/bootstrap/*.php')) ?: [];
+        $bootstrapFiles = glob($this->paths->join('bootstrap/*.php')) ?: [];
         sort($bootstrapFiles);
         foreach ($bootstrapFiles as $file) {
             $relative = $this->relativePath($file);
@@ -70,7 +70,7 @@ final readonly class SourceScanner
 
         foreach ([
             $this->paths->join('foundry.extensions.php'),
-            $this->paths->join('app/platform/foundry/extensions.php'),
+            $this->paths->join('config/foundry/extensions.php'),
         ] as $file) {
             if (!is_file($file)) {
                 continue;

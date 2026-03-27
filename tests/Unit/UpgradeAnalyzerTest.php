@@ -53,7 +53,7 @@ final class UpgradeAnalyzerTest extends TestCase
 
         $configIssue = $this->firstIssueByCode((array) $payload['issues'], 'FDY1704_CONFIG_COMPATIBILITY_ALIAS_USED');
         $this->assertNotNull($configIssue);
-        $this->assertSame('app/platform/config/storage.php', $configIssue['affected']['source_path']);
+        $this->assertSame('config/storage.php', $configIssue['affected']['source_path']);
         $this->assertSame('0.4.0', $configIssue['introduced_in']);
         $this->assertSame('1.0.0', $configIssue['target_version']);
         $this->assertStringContainsString('Compatibility aliases keep older config keys working today', (string) $configIssue['why_it_matters']);
@@ -88,12 +88,12 @@ final class UpgradeAnalyzerTest extends TestCase
         $report = $analyzer->analyze();
 
         $this->assertSame($expectedTarget, $report->targetVersion);
-        $this->assertSame('php vendor/bin/foundry', $report->commandPrefix);
+        $this->assertSame('foundry', $report->commandPrefix);
     }
 
     public function test_analyzer_reports_readme_agents_and_legacy_projection_fallbacks(): void
     {
-        file_put_contents($this->project->root . '/README.md', "Run `php vendor/bin/foundry init app demo-app`.\n");
+        file_put_contents($this->project->root . '/README.md', "Run `foundry init app demo-app`.\n");
         file_put_contents($this->project->root . '/AGENTS.md', "Use `foundry init app demo-app` while bootstrapping.\n");
         if (!is_dir($this->project->root . '/app/generated')) {
             mkdir($this->project->root . '/app/generated', 0777, true);
@@ -225,15 +225,15 @@ YAML);
 
     private function seedLegacyConfig(): void
     {
-        mkdir($this->project->root . '/app/platform/config', 0777, true);
+        mkdir($this->project->root . '/config', 0777, true);
 
-        file_put_contents($this->project->root . '/app/platform/config/storage.php', <<<'PHP'
+        file_put_contents($this->project->root . '/config/storage.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
 return [
     'default' => 'local',
-    'local_root' => 'app/platform/storage/files',
+    'local_root' => 'storage/files',
 ];
 PHP);
     }
@@ -250,7 +250,7 @@ PHP);
     "ext-pdo": "*"
   },
   "scripts": {
-    "bootstrap-app": "php vendor/bin/foundry init app demo-app --starter=minimal"
+    "bootstrap-app": "foundry init app demo-app --starter=minimal"
   }
 }
 JSON);
