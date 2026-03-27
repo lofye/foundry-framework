@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Foundry\CLI\Commands;
 
+use Foundry\CLI\Application;
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
+use Foundry\CLI\CliSurfaceVerifier;
 use Foundry\CLI\Commands\Concerns\InteractsWithGraphInspection;
 use Foundry\Compiler\ApplicationGraph;
 use Foundry\Compiler\CompileOptions;
@@ -44,7 +46,37 @@ final class InspectGraphCommand extends Command
         'migrations',
         'definition-format',
         'api-surface',
+        'cli-surface',
     ];
+
+    #[\Override]
+    public function supportedSignatures(): array
+    {
+        return [
+            'graph inspect',
+            'inspect graph',
+            'inspect build',
+            'inspect node',
+            'inspect dependencies',
+            'inspect dependents',
+            'inspect pipeline',
+            'inspect execution-plan',
+            'inspect guards',
+            'inspect interceptors',
+            'inspect impact',
+            'inspect affected-tests',
+            'inspect affected-features',
+            'inspect extensions',
+            'inspect extension',
+            'inspect packs',
+            'inspect pack',
+            'inspect compatibility',
+            'inspect migrations',
+            'inspect definition-format',
+            'inspect api-surface',
+            'inspect cli-surface',
+        ];
+    }
 
     #[\Override]
     public function matches(array $args): bool
@@ -62,10 +94,14 @@ final class InspectGraphCommand extends Command
             return false;
         }
 
-        if (in_array($target, ['dependencies', 'dependents', 'node', 'affected-tests', 'affected-features'], true)) {
+        if (in_array($target, ['dependents', 'node', 'affected-tests', 'affected-features'], true)) {
             $nodeId = (string) ($args[2] ?? '');
 
             return str_contains($nodeId, ':');
+        }
+
+        if ($target === 'dependencies') {
+            return (string) ($args[2] ?? '') !== '';
         }
 
         if ($target === 'execution-plan') {
@@ -148,6 +184,7 @@ final class InspectGraphCommand extends Command
             ],
             'definition-format' => $this->inspectDefinitionFormat($context, (string) ($args[2] ?? '')),
             'api-surface' => $this->inspectApiSurface($args, $context),
+            'cli-surface' => $this->inspectCliSurface($context),
             'build' => $this->inspectBuild($context),
             default => $this->inspectGraphSurface($args, $context),
         };
@@ -170,7 +207,7 @@ final class InspectGraphCommand extends Command
             'guards' => $this->inspectGuards($graph, (string) ($args[2] ?? '')),
             'interceptors' => $this->inspectInterceptors($graph, $this->extractOption($args, '--stage')),
             'node' => $this->inspectNode($graph, (string) ($args[2] ?? ''), $context),
-            'dependencies' => $this->inspectDependencies($graph, (string) ($args[2] ?? '')),
+            'dependencies' => $this->inspectDependencies($graph, (string) ($args[2] ?? ''), $context),
             'dependents' => $this->inspectDependents($graph, (string) ($args[2] ?? '')),
             'impact' => $this->inspectImpact($args, $graph, $context),
             'affected-tests' => $this->inspectAffectedTests($graph, (string) ($args[2] ?? ''), $context),
@@ -368,6 +405,26 @@ final class InspectGraphCommand extends Command
         ];
     }
 
+    private function inspectCliSurface(CommandContext $context): array
+    {
+        $payload = (new CliSurfaceVerifier(
+            $context->apiSurfaceRegistry(),
+            Application::registeredCommands(),
+        ))->inspect();
+        $summary = is_array($payload['summary'] ?? null) ? $payload['summary'] : [];
+        $status = ((int) ($summary['invalid'] ?? 0) > 0
+            || (int) ($summary['ambiguous'] ?? 0) > 0
+            || (int) ($summary['orphan_handlers'] ?? 0) > 0)
+            ? 1
+            : 0;
+
+        return [
+            'status' => $status,
+            'message' => null,
+            'payload' => $payload,
+        ];
+    }
+
     private function inspectNode(ApplicationGraph $graph, string $nodeId, CommandContext $context): array
     {
         if ($nodeId === '') {
@@ -393,12 +450,27 @@ final class InspectGraphCommand extends Command
         ];
     }
 
-    private function inspectDependencies(ApplicationGraph $graph, string $nodeId): array
+    private function inspectDependencies(ApplicationGraph $graph, string $target, CommandContext $context): array
     {
-        if ($nodeId === '') {
-            throw new FoundryError('CLI_NODE_REQUIRED', 'validation', [], 'Node ID required.');
+        if ($target === '') {
+            throw new FoundryError('CLI_NODE_REQUIRED', 'validation', [], 'Node ID or feature required.');
         }
 
+        if (!str_contains($target, ':')) {
+            $manifest = $context->featureLoader()->contextManifest($target);
+
+            return [
+                'status' => 0,
+                'message' => null,
+                'payload' => [
+                    'feature' => $target,
+                    'upstream' => $manifest?->upstreamDependencies ?? [],
+                    'downstream' => $manifest?->downstreamDependents ?? [],
+                ],
+            ];
+        }
+
+        $nodeId = $target;
         if ($graph->node($nodeId) === null) {
             throw new FoundryError('GRAPH_NODE_NOT_FOUND', 'not_found', ['node_id' => $nodeId], 'Graph node not found.');
         }

@@ -10,9 +10,15 @@ use Foundry\Support\FoundryError;
 final class InspectFeatureCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['inspect feature', 'inspect auth', 'inspect cache', 'inspect events', 'inspect jobs', 'inspect context'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
-        return ($args[0] ?? null) === 'inspect' && in_array(($args[1] ?? ''), ['feature', 'auth', 'cache', 'events', 'jobs', 'context', 'dependencies'], true);
+        return ($args[0] ?? null) === 'inspect' && $this->supportsSignature('inspect ' . (string) ($args[1] ?? ''));
     }
 
     #[\Override]
@@ -75,15 +81,6 @@ final class InspectFeatureCommand extends Command
                 'status' => 0,
                 'message' => null,
                 'payload' => $manifest?->toArray() ?? ['feature' => $featureName, 'missing' => true],
-            ],
-            'dependencies' => [
-                'status' => 0,
-                'message' => null,
-                'payload' => [
-                    'feature' => $featureName,
-                    'upstream' => $manifest?->upstreamDependencies ?? [],
-                    'downstream' => $manifest?->downstreamDependents ?? [],
-                ],
             ],
             default => throw new FoundryError('CLI_INSPECT_KIND_INVALID', 'validation', ['kind' => $kind], 'Unsupported inspect target.'),
         };

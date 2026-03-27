@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Foundry\CLI\Commands;
 
+use Foundry\CLI\Application;
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
+use Foundry\CLI\CliSurfaceVerifier;
 use Foundry\Compiler\Analysis\ArchitectureDoctor;
 use Foundry\Compiler\CompileOptions;
 use Foundry\Doctor\Checks\CompileHealthCheck;
@@ -19,6 +21,8 @@ use Foundry\Doctor\DoctorContext as FrameworkDoctorContext;
 use Foundry\Doctor\DoctorSummary;
 use Foundry\Doctor\FrameworkDoctor;
 use Foundry\Pipeline\PipelineIntegrityInspector;
+use Foundry\Pro\CLI\Concerns\InteractsWithPro;
+use Foundry\Pro\DeepDiagnosticsBuilder;
 use Foundry\Support\CliCommandPrefix;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Json;
@@ -26,6 +30,14 @@ use Foundry\Support\Paths;
 
 final class DoctorCommand extends Command
 {
+    use InteractsWithPro;
+
+    #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['doctor'];
+    }
+
     #[\Override]
     public function matches(array $args): bool
     {
@@ -35,7 +47,7 @@ final class DoctorCommand extends Command
     #[\Override]
     public function run(array $args, CommandContext $context): array
     {
-        [$feature, $strict] = $this->parseOptions($args);
+        [$feature, $strict, $includeCli, $deep] = $this->parseOptions($args);
         if ($feature !== null && $feature !== '' && !$this->featureExists($context, $feature)) {
             throw new FoundryError(
                 'FEATURE_NOT_FOUND',
@@ -44,6 +56,7 @@ final class DoctorCommand extends Command
                 'Feature not found.',
             );
         }
+        $deepLicense = $deep ? $this->requirePro('doctor --deep', ['deep_diagnostics']) : null;
 
         $paths = $context->paths();
         $commandPrefix = $this->commandPrefix($paths);
@@ -99,14 +112,13 @@ final class DoctorCommand extends Command
         }
 
         $payload = [
-            'ok' => $status === 0,
-            'exit_code' => $status,
             'graph_version' => $compileResult->graph->graphVersion(),
             'framework_version' => $compileResult->graph->frameworkVersion(),
             'compiled_at' => $compileResult->graph->compiledAt(),
             'source_hash' => $compileResult->graph->sourceHash(),
             'feature_filter' => $feature,
             'strict' => $strict,
+            'cli' => $includeCli,
             'command_prefix' => $commandPrefix,
             'project_type' => $paths->root() === $paths->frameworkRoot() ? 'framework_repository' : 'application',
             'risk' => DoctorSummary::risk($combinedSummary),
@@ -129,6 +141,33 @@ final class DoctorCommand extends Command
             'impact_preview' => $analysis['impact_preview'] ?? null,
             'suggested_actions' => $analysis['suggested_actions'] ?? [],
         ];
+        if ($deep && is_array($deepLicense)) {
+            $payload['deep'] = true;
+            $payload['pro'] = [
+                'license' => $deepLicense,
+                'deep_diagnostics' => (new DeepDiagnosticsBuilder())->build(
+                    $compileResult->graph,
+                    $feature,
+                ),
+            ];
+        }
+
+        if ($includeCli) {
+            $payload['cli_surface'] = (new CliSurfaceVerifier(
+                $context->apiSurfaceRegistry(),
+                Application::registeredCommands(),
+            ))->verify();
+
+            $cliSurface = is_array($payload['cli_surface']) ? $payload['cli_surface'] : [];
+            if ((int) ($cliSurface['invalid'] ?? 0) > 0
+                || (int) ($cliSurface['ambiguous'] ?? 0) > 0
+                || (int) ($cliSurface['orphan_handlers'] ?? 0) > 0) {
+                $status = 1;
+            }
+        }
+
+        $payload['ok'] = $status === 0;
+        $payload['exit_code'] = $status;
 
         return [
             'status' => $status,
@@ -139,16 +178,28 @@ final class DoctorCommand extends Command
 
     /**
      * @param array<int,string> $args
-     * @return array{0:?string,1:bool}
+     * @return array{0:?string,1:bool,2:bool,3:bool}
      */
     private function parseOptions(array $args): array
     {
         $feature = null;
         $strict = false;
+        $includeCli = false;
+        $deep = false;
 
         foreach ($args as $index => $arg) {
             if ($arg === '--strict') {
                 $strict = true;
+                continue;
+            }
+
+            if ($arg === '--cli') {
+                $includeCli = true;
+                continue;
+            }
+
+            if ($arg === '--deep') {
+                $deep = true;
                 continue;
             }
 
@@ -169,7 +220,7 @@ final class DoctorCommand extends Command
             $feature = null;
         }
 
-        return [$feature, $strict];
+        return [$feature, $strict, $includeCli, $deep];
     }
 
     private function featureExists(CommandContext $context, string $feature): bool
@@ -230,7 +281,14 @@ final class DoctorCommand extends Command
             : ['error' => 0, 'warning' => 0, 'info' => 0, 'total' => 0];
 
         $headline = 'Foundry doctor passed.';
-        if ((int) ($summary['error'] ?? 0) > 0) {
+        if (($payload['deep'] ?? false) === true) {
+            $headline = 'Foundry doctor completed with deep diagnostics.';
+            if ((int) ($summary['error'] ?? 0) > 0) {
+                $headline = 'Foundry doctor found issues during deep diagnostics.';
+            } elseif ((int) ($summary['warning'] ?? 0) > 0) {
+                $headline = 'Foundry doctor completed with warnings and deep diagnostics.';
+            }
+        } elseif ((int) ($summary['error'] ?? 0) > 0) {
             $headline = 'Foundry doctor found issues.';
         } elseif ((int) ($summary['warning'] ?? 0) > 0) {
             $headline = 'Foundry doctor completed with warnings.';
@@ -247,6 +305,56 @@ final class DoctorCommand extends Command
         $featureFilter = trim((string) ($payload['feature_filter'] ?? ''));
         if ($featureFilter !== '') {
             $lines[] = 'Feature filter: ' . $featureFilter;
+        }
+
+        $cliSurface = is_array($payload['cli_surface'] ?? null) ? $payload['cli_surface'] : null;
+        if ($cliSurface !== null) {
+            $lines[] = '';
+            $lines[] = 'CLI surface:';
+            $lines[] = sprintf('Coverage: %.2f%%', ((float) ($cliSurface['coverage'] ?? 0.0)) * 100);
+
+            $invalid = array_values(array_filter(array_map('strval', (array) (($cliSurface['details']['invalid'] ?? [])))));
+            if ($invalid !== []) {
+                $lines[] = '- invalid signatures: ' . implode(', ', $invalid);
+            }
+
+            $ambiguous = array_values(array_filter(array_map('strval', (array) (($cliSurface['details']['ambiguous'] ?? [])))));
+            if ($ambiguous !== []) {
+                $lines[] = '- ambiguous mappings: ' . implode(', ', $ambiguous);
+            }
+
+            $orphans = array_values(array_filter(array_map('strval', (array) (($cliSurface['details']['orphan_handlers'] ?? [])))));
+            if ($orphans !== []) {
+                $lines[] = '- orphan handlers: ' . implode(', ', $orphans);
+            }
+        }
+
+        $deep = is_array($payload['pro']['deep_diagnostics'] ?? null)
+            ? $payload['pro']['deep_diagnostics']
+            : [];
+        $graph = is_array($deep['graph'] ?? null) ? $deep['graph'] : [];
+        if (($payload['deep'] ?? false) === true) {
+            $lines[] = sprintf(
+                'Graph: %d node(s), %d edge(s).',
+                (int) ($graph['node_count'] ?? 0),
+                (int) ($graph['edge_count'] ?? 0),
+            );
+
+            $hotspots = array_values(array_filter(
+                (array) ($deep['hotspots'] ?? []),
+                static fn (mixed $row): bool => is_array($row),
+            ));
+            if ($hotspots !== []) {
+                $lines[] = 'Top hotspots:';
+                foreach (array_slice($hotspots, 0, 5) as $row) {
+                    $lines[] = sprintf(
+                        '- %s (%s, %d connection(s))',
+                        (string) ($row['label'] ?? $row['node_id'] ?? 'unknown'),
+                        (string) ($row['type'] ?? 'node'),
+                        (int) ($row['connections'] ?? 0),
+                    );
+                }
+            }
         }
 
         $checks = is_array($payload['checks'] ?? null) ? $payload['checks'] : [];

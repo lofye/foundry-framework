@@ -10,6 +10,12 @@ use Foundry\Support\FoundryError;
 final class VerifyFeatureCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['verify feature'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'verify' && ($args[1] ?? null) === 'feature';

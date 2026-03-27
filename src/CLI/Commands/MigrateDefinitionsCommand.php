@@ -9,6 +9,12 @@ use Foundry\CLI\CommandContext;
 final class MigrateDefinitionsCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['migrate definitions'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'migrate' && ($args[1] ?? null) === 'definitions';

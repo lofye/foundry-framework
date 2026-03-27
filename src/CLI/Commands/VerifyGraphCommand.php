@@ -9,6 +9,12 @@ use Foundry\CLI\CommandContext;
 final class VerifyGraphCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['verify graph'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'verify' && ($args[1] ?? null) === 'graph';

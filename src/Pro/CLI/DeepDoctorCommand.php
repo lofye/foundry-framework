@@ -15,6 +15,12 @@ final class DeepDoctorCommand extends Command
     use InteractsWithPro;
 
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['doctor'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'doctor' && in_array('--deep', $args, true);

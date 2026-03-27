@@ -11,15 +11,19 @@ use Foundry\Support\FoundryError;
 final class GenerateIntegrationCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['generate notification', 'generate api-resource', 'generate docs'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         if (($args[0] ?? null) !== 'generate') {
             return false;
         }
 
-        $target = (string) ($args[1] ?? '');
-
-        return in_array($target, ['notification', 'api-resource', 'docs'], true);
+        return $this->supportsSignature('generate ' . (string) ($args[1] ?? ''));
     }
 
     #[\Override]

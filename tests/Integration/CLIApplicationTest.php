@@ -162,6 +162,27 @@ YAML);
         $this->assertSame(0, $apiSurface['status']);
         $this->assertSame('compile graph', $apiSurface['payload']['matches']['cli_command']['signature']);
         $this->assertSame('stable', $apiSurface['payload']['matches']['cli_command']['stability']);
+
+        $cliSurfaceHelp = $this->runCommand($app, ['foundry', 'help', 'inspect', 'cli-surface', '--json']);
+        $this->assertSame(0, $cliSurfaceHelp['status']);
+        $this->assertSame('inspect cli-surface', $cliSurfaceHelp['payload']['command']['signature']);
+
+        $inspectCliSurface = $this->runCommand($app, ['foundry', 'inspect', 'cli-surface', '--json']);
+        $this->assertSame(0, $inspectCliSurface['status']);
+        $this->assertGreaterThan(0, (int) $inspectCliSurface['payload']['summary']['total_signatures']);
+        $helpRow = array_find(
+            $inspectCliSurface['payload']['signatures'],
+            static fn (array $row): bool => (string) ($row['signature'] ?? '') === 'help',
+        );
+        $this->assertIsArray($helpRow);
+        $this->assertSame('Application::helpResult', $helpRow['handler']);
+
+        $verifyCliSurface = $this->runCommand($app, ['foundry', 'verify', 'cli-surface', '--json']);
+        $this->assertSame(0, $verifyCliSurface['status']);
+        $this->assertSame(0, $verifyCliSurface['payload']['invalid']);
+        $this->assertSame(0, $verifyCliSurface['payload']['ambiguous']);
+        $this->assertSame(0, $verifyCliSurface['payload']['orphan_handlers']);
+        $this->assertSame(1, $verifyCliSurface['payload']['coverage']);
     }
 
     public function test_non_json_cache_commands_emit_human_readable_output(): void

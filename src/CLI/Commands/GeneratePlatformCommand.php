@@ -11,15 +11,29 @@ use Foundry\Support\FoundryError;
 final class GeneratePlatformCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return [
+            'generate billing',
+            'generate workflow',
+            'generate orchestration',
+            'generate search-index',
+            'generate stream',
+            'generate locale',
+            'generate roles',
+            'generate policy',
+            'generate inspect-ui',
+        ];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         if (($args[0] ?? null) !== 'generate') {
             return false;
         }
 
-        $target = (string) ($args[1] ?? '');
-
-        return in_array($target, ['billing', 'workflow', 'orchestration', 'search-index', 'stream', 'locale', 'roles', 'policy', 'inspect-ui'], true);
+        return $this->supportsSignature('generate ' . (string) ($args[1] ?? ''));
     }
 
     #[\Override]

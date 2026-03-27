@@ -41,6 +41,12 @@ final class GenerateCommand extends Command
     ];
 
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['generate <prompt>'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         if (($args[0] ?? null) !== 'generate') {

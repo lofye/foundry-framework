@@ -12,6 +12,12 @@ use Foundry\Support\FoundryError;
 final class InspectResourceCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['inspect resource'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'inspect' && ($args[1] ?? null) === 'resource';

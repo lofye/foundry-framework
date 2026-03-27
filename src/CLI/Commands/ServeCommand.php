@@ -9,6 +9,12 @@ use Foundry\CLI\CommandContext;
 final class ServeCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['serve'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'serve';

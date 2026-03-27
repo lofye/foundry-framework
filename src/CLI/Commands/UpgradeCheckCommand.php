@@ -10,6 +10,12 @@ use Foundry\Support\FoundryError;
 final class UpgradeCheckCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['upgrade-check'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'upgrade-check';

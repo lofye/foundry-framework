@@ -12,13 +12,19 @@ use Foundry\Support\FoundryError;
 final class InspectPlatformCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['inspect billing', 'inspect workflow', 'inspect orchestration', 'inspect search', 'inspect streams', 'inspect locales', 'inspect roles'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         if (($args[0] ?? null) !== 'inspect') {
             return false;
         }
 
-        return in_array((string) ($args[1] ?? ''), ['billing', 'workflow', 'orchestration', 'search', 'streams', 'locales', 'roles'], true);
+        return $this->supportsSignature('inspect ' . (string) ($args[1] ?? ''));
     }
 
     #[\Override]

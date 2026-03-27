@@ -3,22 +3,47 @@ declare(strict_types=1);
 
 namespace Foundry\CLI\Commands;
 
+use Foundry\CLI\Application;
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
+use Foundry\CLI\CliSurfaceVerifier;
 use Foundry\Support\FoundryError;
 
 final class VerifyContractsCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['verify contracts', 'verify cli-surface', 'verify auth', 'verify cache', 'verify events', 'verify jobs', 'verify migrations'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
-        return ($args[0] ?? null) === 'verify' && in_array(($args[1] ?? ''), ['contracts', 'auth', 'cache', 'events', 'jobs', 'migrations'], true);
+        return ($args[0] ?? null) === 'verify' && $this->supportsSignature('verify ' . (string) ($args[1] ?? ''));
     }
 
     #[\Override]
     public function run(array $args, CommandContext $context): array
     {
         $target = (string) ($args[1] ?? '');
+        if ($target === 'cli-surface') {
+            $payload = (new CliSurfaceVerifier(
+                $context->apiSurfaceRegistry(),
+                Application::registeredCommands(),
+            ))->verify();
+            $status = ((int) ($payload['invalid'] ?? 0) > 0
+                || (int) ($payload['ambiguous'] ?? 0) > 0
+                || (int) ($payload['orphan_handlers'] ?? 0) > 0)
+                ? 1
+                : 0;
+
+            return [
+                'status' => $status,
+                'message' => $status === 0 ? 'CLI surface verification passed.' : 'CLI surface verification failed.',
+                'payload' => $payload,
+            ];
+        }
 
         $result = match ($target) {
             'contracts' => $context->contractsVerifier()->verify(),

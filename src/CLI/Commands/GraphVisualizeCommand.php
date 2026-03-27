@@ -18,6 +18,12 @@ final class GraphVisualizeCommand extends Command
     private array $allowedFormats = ['mermaid', 'dot', 'json', 'svg'];
 
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['graph visualize'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'graph' && ($args[1] ?? null) === 'visualize';

@@ -15,6 +15,12 @@ final class CLIApplicationEdgeCasesTest extends TestCase
         $app = new Application([
             new class extends Command {
                 #[\Override]
+                public function supportedSignatures(): array
+                {
+                    return ['anything'];
+                }
+
+                #[\Override]
                 public function matches(array $args): bool
                 {
                     return true;
@@ -44,6 +50,12 @@ final class CLIApplicationEdgeCasesTest extends TestCase
         $app = new Application([
             new class extends Command {
                 #[\Override]
+                public function supportedSignatures(): array
+                {
+                    return ['anything'];
+                }
+
+                #[\Override]
                 public function matches(array $args): bool
                 {
                     return true;
@@ -69,6 +81,12 @@ final class CLIApplicationEdgeCasesTest extends TestCase
     {
         $app = new Application([
             new class extends Command {
+                #[\Override]
+                public function supportedSignatures(): array
+                {
+                    return ['anything'];
+                }
+
                 #[\Override]
                 public function matches(array $args): bool
                 {

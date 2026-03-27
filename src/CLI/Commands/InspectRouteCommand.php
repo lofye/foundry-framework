@@ -10,6 +10,12 @@ use Foundry\Support\FoundryError;
 final class InspectRouteCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['inspect route'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'inspect' && ($args[1] ?? null) === 'route';

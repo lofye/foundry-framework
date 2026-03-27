@@ -17,6 +17,12 @@ final class ExplainCommand extends Command
     use InteractsWithPro;
 
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['explain'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'explain';

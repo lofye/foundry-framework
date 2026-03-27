@@ -13,6 +13,12 @@ use Foundry\Support\FoundryError;
 final class PromptCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['prompt'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'prompt';

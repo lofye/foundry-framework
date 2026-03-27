@@ -12,6 +12,12 @@ use Foundry\Support\FoundryError;
 final class InspectNotificationCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['inspect notification'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'inspect' && ($args[1] ?? null) === 'notification';

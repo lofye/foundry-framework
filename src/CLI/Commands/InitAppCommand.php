@@ -18,6 +18,12 @@ use Foundry\Support\Paths;
 final class InitAppCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['new', 'init app'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'new'

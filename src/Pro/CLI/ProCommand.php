@@ -24,6 +24,12 @@ final class ProCommand extends Command
     ];
 
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['pro', 'pro enable', 'pro status'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'pro';

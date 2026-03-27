@@ -10,9 +10,15 @@ use Foundry\Support\FoundryError;
 final class VerifyIntegrationCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['verify notifications', 'verify api'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
-        return ($args[0] ?? null) === 'verify' && in_array((string) ($args[1] ?? ''), ['notifications', 'api'], true);
+        return ($args[0] ?? null) === 'verify' && $this->supportsSignature('verify ' . (string) ($args[1] ?? ''));
     }
 
     #[\Override]

@@ -10,15 +10,19 @@ use Foundry\Support\FoundryError;
 final class GenerateScaffoldCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['generate starter', 'generate resource', 'generate admin-resource', 'generate uploads'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         if (($args[0] ?? null) !== 'generate') {
             return false;
         }
 
-        $target = (string) ($args[1] ?? '');
-
-        return in_array($target, ['starter', 'resource', 'admin-resource', 'uploads'], true);
+        return $this->supportsSignature('generate ' . (string) ($args[1] ?? ''));
     }
 
     #[\Override]

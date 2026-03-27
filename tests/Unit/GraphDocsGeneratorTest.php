@@ -89,6 +89,8 @@ final class GraphDocsGeneratorTest extends TestCase
         $this->assertStringContainsString('graph inspect [stable]', $cliReferenceMd);
         $this->assertStringContainsString('graph visualize [stable]', $cliReferenceMd);
         $this->assertStringContainsString('export graph [stable]', $cliReferenceMd);
+        $this->assertStringContainsString('inspect cli-surface [stable]', $cliReferenceMd);
+        $this->assertStringContainsString('verify cli-surface [stable]', $cliReferenceMd);
         $this->assertStringContainsString('# Upgrade Reference', $upgradeReferenceMd);
         $this->assertStringContainsString('foundry upgrade-check --json', $upgradeReferenceMd);
         $this->assertStringContainsString('Config compatibility aliases', $upgradeReferenceMd);

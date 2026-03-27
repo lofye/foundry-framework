@@ -3,8 +3,19 @@ declare(strict_types=1);
 
 namespace Foundry\CLI;
 
-abstract class Command
+abstract class Command implements SupportsSignatures
 {
+    /**
+     * @return list<string>
+     */
+    abstract public function supportedSignatures(): array;
+
+    #[\Override]
+    public function supportsSignature(string $signature): bool
+    {
+        return in_array($signature, $this->supportedSignatures(), true);
+    }
+
     /**
      * @param array<int,string> $args
      */

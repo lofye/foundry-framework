@@ -9,10 +9,16 @@ use Foundry\CLI\CommandContext;
 final class VerifyCompatibilityCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['verify extensions', 'verify compatibility'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'verify'
-            && in_array((string) ($args[1] ?? ''), ['extensions', 'compatibility'], true);
+            && $this->supportsSignature('verify ' . (string) ($args[1] ?? ''));
     }
 
     #[\Override]

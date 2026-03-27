@@ -18,6 +18,12 @@ final class ExportGraphCommand extends Command
     private array $allowedFormats = ['json', 'dot', 'mermaid', 'svg'];
 
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['export graph'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'export' && ($args[1] ?? null) === 'graph';

@@ -102,6 +102,13 @@ YAML);
         $this->assertSame(1, $doctorMissingFeature['status']);
         $this->assertSame('FEATURE_NOT_FOUND', $doctorMissingFeature['payload']['error']['code']);
 
+        $doctorCli = $this->runCommand($app, ['foundry', 'doctor', '--feature=list_posts', '--cli', '--json']);
+        $this->assertSame(0, $doctorCli['status']);
+        $this->assertSame(1, $doctorCli['payload']['cli_surface']['coverage']);
+        $this->assertSame(0, $doctorCli['payload']['cli_surface']['invalid']);
+        $this->assertSame(0, $doctorCli['payload']['cli_surface']['ambiguous']);
+        $this->assertSame(0, $doctorCli['payload']['cli_surface']['orphan_handlers']);
+
         $visualize = $this->runCommand($app, ['foundry', 'graph', 'visualize', '--events', '--format=dot', '--json']);
         $this->assertSame(0, $visualize['status']);
         $this->assertSame('events', $visualize['payload']['view']);

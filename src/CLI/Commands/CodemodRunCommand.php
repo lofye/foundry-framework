@@ -9,6 +9,12 @@ use Foundry\CLI\CommandContext;
 final class CodemodRunCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['codemod run'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'codemod'

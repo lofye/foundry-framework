@@ -9,9 +9,15 @@ use Foundry\CLI\CommandContext;
 final class ScheduleRunCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['schedule:run', 'trace:tail'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
-        return in_array(($args[0] ?? ''), ['schedule:run', 'trace:tail'], true);
+        return $this->supportsSignature((string) ($args[0] ?? ''));
     }
 
     #[\Override]

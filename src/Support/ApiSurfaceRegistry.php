@@ -342,7 +342,7 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('compile graph', 'compile graph [--feature=<feature>] [--changed-only] [--no-cache]', 'stable', 'Compile source-of-truth files into the canonical application graph.'),
             $this->cliCommandEntry('cache inspect', 'cache inspect', 'stable', 'Inspect deterministic compile cache state, keys, and invalidation reasons.'),
             $this->cliCommandEntry('cache clear', 'cache clear', 'stable', 'Clear deterministic compile cache artifacts and generated projections.'),
-            $this->cliCommandEntry('doctor', 'doctor [--feature=<feature>] [--strict] [--deep]', 'experimental', 'Diagnose environment, install, build, and architecture issues from current Foundry state. Deep diagnostics require Foundry Pro.'),
+            $this->cliCommandEntry('doctor', 'doctor [--feature=<feature>] [--strict] [--cli] [--deep]', 'experimental', 'Diagnose environment, install, build, and architecture issues from current Foundry state. Deep diagnostics require Foundry Pro.'),
             $this->cliCommandEntry('upgrade-check', 'upgrade-check [--target=<version>]', 'stable', 'Assess whether the current app is ready for a target framework upgrade.'),
             $this->cliCommandEntry('graph inspect', 'graph inspect [--view=<view>|--events|--routes|--caches|--pipeline|--workflows|--extensions] [--feature=<feature>] [--extension=<extension>] [--pipeline-stage=<stage>] [--command=<target>] [--event=<name>] [--workflow=<name>] [--format=mermaid|dot|svg|json]', 'stable', 'Inspect graph summaries and filtered architecture slices through the stable graph surface.'),
             $this->cliCommandEntry('graph visualize', 'graph visualize [--view=<view>|--events|--routes|--caches|--pipeline|--workflows|--extensions] [--feature=<feature>] [--extension=<extension>] [--pipeline-stage=<stage>] [--command=<target>] [--event=<name>] [--workflow=<name>] [--format=mermaid|dot|svg|json]', 'stable', 'Render graph slices through the stable graph inspection surface.'),
@@ -391,6 +391,7 @@ final class ApiSurfaceRegistry
             'migrations' => ['experimental', 'Inspect registered definition formats, migrations, and codemods.'],
             'definition-format' => ['experimental', 'Inspect a registered definition format contract.'],
             'api-surface' => ['stable', 'Inspect the classified public, extension, experimental, and internal API registry.'],
+            'cli-surface' => ['stable', 'Inspect CLI signature coverage, handler mappings, and dispatch integrity.'],
         ] as $target => [$stability, $summary]) {
             $usage = match ($target) {
                 'graph' => 'inspect graph [--view=<view>|--events|--routes|--caches|--pipeline|--workflows|--extensions] [--feature=<feature>] [--extension=<extension>] [--pipeline-stage=<stage>] [--command=<target>] [--event=<name>] [--workflow=<name>] [--format=mermaid|dot|svg|json]',
@@ -403,6 +404,7 @@ final class ApiSurfaceRegistry
                 'impact' => 'inspect impact <node-id>|--file=<path>',
                 'extension', 'pack', 'definition-format' => 'inspect ' . $target . ' <name>',
                 'api-surface' => 'inspect api-surface [--php=<symbol>] [--command=<signature>] [--path=<artifact>]',
+                'cli-surface' => 'inspect cli-surface',
                 default => 'inspect ' . $target,
             };
 
@@ -474,6 +476,7 @@ final class ApiSurfaceRegistry
             'locales' => ['stable', 'verify locales', 'Verify locale bundle contracts.'],
             'policies' => ['stable', 'verify policies', 'Verify role and policy contracts.'],
             'contracts' => ['stable', 'verify contracts', 'Verify aggregate application contracts.'],
+            'cli-surface' => ['stable', 'verify cli-surface', 'Verify CLI signature coverage, dispatch determinism, and handler integrity.'],
             'auth' => ['stable', 'verify auth', 'Verify auth declarations.'],
             'cache' => ['stable', 'verify cache', 'Verify cache declarations.'],
             'events' => ['stable', 'verify events', 'Verify event declarations.'],

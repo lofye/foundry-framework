@@ -11,6 +11,12 @@ use Foundry\Pipeline\PipelineIntegrityInspector;
 final class VerifyPipelineCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['verify pipeline'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'verify' && ($args[1] ?? null) === 'pipeline';

@@ -10,6 +10,12 @@ use Foundry\Support\FoundryError;
 final class VerifyResourceCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['verify resource'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'verify' && ($args[1] ?? null) === 'resource';

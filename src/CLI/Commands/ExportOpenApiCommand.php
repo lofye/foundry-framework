@@ -11,6 +11,12 @@ use Foundry\Support\FoundryError;
 final class ExportOpenApiCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['export openapi'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'export' && ($args[1] ?? null) === 'openapi';

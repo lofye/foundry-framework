@@ -10,6 +10,12 @@ use Foundry\Compiler\CompileOptions;
 final class CompileGraphCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['compile graph'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'compile' && ($args[1] ?? null) === 'graph';

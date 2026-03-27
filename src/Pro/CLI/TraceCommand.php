@@ -13,6 +13,12 @@ final class TraceCommand extends Command
     use InteractsWithPro;
 
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['trace'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'trace';

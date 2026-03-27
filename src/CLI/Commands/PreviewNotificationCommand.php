@@ -10,6 +10,12 @@ use Foundry\Support\FoundryError;
 final class PreviewNotificationCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['preview notification'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'preview' && ($args[1] ?? null) === 'notification';

@@ -239,7 +239,9 @@ Stable CLI commands and the API surface registry are inspectable:
 foundry help --json
 foundry help compile graph --json
 foundry inspect api-surface --json
+foundry inspect cli-surface --json
 foundry inspect api-surface --php=Foundry\\Feature\\FeatureAction --json
+foundry verify cli-surface --json
 ```
 
 Policy details live in `docs/public-api-policy.md` and are also emitted into generated docs as `docs/generated/api-surface.md` and `docs/generated/cli-reference.md`.
@@ -255,6 +257,15 @@ The build compiles the root app graph, merges `docs/*.md` with generated referen
 
 ## CLI Surface
 All inspection, verification, and planning commands support `--json`.
+The authoritative CLI catalog is derived from `ApiSurfaceRegistry` and exposed through:
+
+```bash
+foundry help --json
+foundry inspect cli-surface --json
+foundry verify cli-surface --json
+```
+
+The examples below are representative entry points; the generated `docs/generated/cli-reference.md` remains the exhaustive source-of-truth list.
 
 Compile:
 ```bash
@@ -268,6 +279,7 @@ Architecture analysis:
 foundry doctor --json
 foundry doctor --strict --json
 foundry doctor --feature=<feature> --json
+foundry doctor --cli --json
 foundry doctor --deep --json
 ```
 
@@ -341,14 +353,16 @@ foundry upgrade-check --json
 foundry upgrade-check --target=1.0.0 --json
 ```
 
-Inspect:
+Representative inspect commands:
 ```bash
 foundry help --json
 foundry help inspect graph --json
+foundry help inspect cli-surface --json
 foundry inspect graph --json
+foundry inspect cli-surface --json
 foundry inspect build --json
 foundry inspect node <node-id> --json
-foundry inspect dependencies <node-id> --json
+foundry inspect dependencies <feature|node-id> --json
 foundry inspect dependents <node-id> --json
 foundry inspect pipeline --json
 foundry inspect execution-plan <feature|route> --json
@@ -378,10 +392,9 @@ foundry inspect cache <feature> --json
 foundry inspect events <feature> --json
 foundry inspect jobs <feature> --json
 foundry inspect context <feature> --json
-foundry inspect dependencies <feature> --json
 ```
 
-Generate:
+Representative generate commands:
 ```bash
 foundry generate feature <definition.yaml> --json
 foundry generate starter server-rendered --json
@@ -402,17 +415,18 @@ foundry generate migration <definition.yaml> --json
 foundry generate context <feature> --json
 ```
 
-Export:
+Representative export commands:
 ```bash
 foundry export openapi --format=json --json
 foundry export openapi --format=yaml --json
 ```
 
-Verify:
+Representative verify commands:
 ```bash
 foundry verify feature <feature> --json
 foundry verify graph --json
 foundry verify pipeline --json
+foundry verify cli-surface --json
 foundry verify extensions --json
 foundry verify compatibility --json
 foundry verify contracts --json
@@ -426,7 +440,7 @@ foundry verify notifications --json
 foundry verify api --json
 ```
 
-Runtime / planning:
+Representative runtime / planning commands:
 ```bash
 foundry new [path] [--starter=minimal|standard|api-first] [--name=vendor/app] [--version=^0.1] [--force]
 foundry init app <path> [--starter=minimal|standard|api-first] [--name=vendor/app] [--version=^0.1] [--force]

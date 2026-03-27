@@ -11,9 +11,15 @@ use Foundry\Support\FoundryError;
 final class ImpactCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['affected-files', 'impacted-features'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
-        return in_array(($args[0] ?? ''), ['affected-files', 'impacted-features'], true);
+        return $this->supportsSignature((string) ($args[0] ?? ''));
     }
 
     #[\Override]

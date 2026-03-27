@@ -9,6 +9,12 @@ use Foundry\CLI\CommandContext;
 final class CacheClearCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['cache clear'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
         return ($args[0] ?? null) === 'cache' && ($args[1] ?? null) === 'clear';

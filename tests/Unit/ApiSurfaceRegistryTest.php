@@ -56,6 +56,8 @@ final class ApiSurfaceRegistryTest extends TestCase
         $graphExport = $registry->classifyCliCommand(['export', 'graph']);
         $proExplain = $registry->classifyCliCommand(['explain', 'publish_post']);
         $proGenerate = $registry->classifyCliCommand(['generate', 'Add', 'bookmarks']);
+        $inspectCliSurface = $registry->classifyCliCommand(['inspect', 'cli-surface']);
+        $verifyCliSurface = $registry->classifyCliCommand(['verify', 'cli-surface']);
         $internal = $registry->classifyCliCommand(['queue:work']);
 
         $this->assertNotNull($stable);
@@ -66,6 +68,8 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertNotNull($graphExport);
         $this->assertNotNull($proExplain);
         $this->assertNotNull($proGenerate);
+        $this->assertNotNull($inspectCliSurface);
+        $this->assertNotNull($verifyCliSurface);
         $this->assertNotNull($internal);
         $this->assertSame('stable', $stable['stability']);
         $this->assertSame('stable', $cacheInspect['stability']);
@@ -80,7 +84,20 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('generate <prompt>', $proGenerate['signature']);
         $this->assertStringContainsString('--deterministic', $proGenerate['usage']);
         $this->assertStringContainsString('--provider=<name>', $proGenerate['usage']);
+        $this->assertSame('stable', $inspectCliSurface['stability']);
+        $this->assertSame('stable', $verifyCliSurface['stability']);
         $this->assertSame('internal', $internal['stability']);
+    }
+
+    public function test_cli_command_signatures_are_unique(): void
+    {
+        $registry = new ApiSurfaceRegistry();
+        $signatures = array_values(array_map(
+            static fn (array $entry): string => (string) ($entry['signature'] ?? ''),
+            $registry->cliCommands(),
+        ));
+
+        $this->assertSame($signatures, array_values(array_unique($signatures)));
     }
 
     public function test_classifies_configuration_and_generated_metadata_paths(): void

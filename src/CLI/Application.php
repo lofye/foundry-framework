@@ -40,7 +40,6 @@ use Foundry\CLI\Commands\VerifyFeatureCommand;
 use Foundry\CLI\Commands\VerifyIntegrationCommand;
 use Foundry\CLI\Commands\VerifyPlatformCommand;
 use Foundry\CLI\Commands\VerifyResourceCommand;
-use Foundry\Pro\CLI\DeepDoctorCommand;
 use Foundry\Pro\CLI\DiffCommand;
 use Foundry\Pro\CLI\ExplainCommand;
 use Foundry\Pro\CLI\GenerateCommand as ProGenerateCommand;
@@ -60,12 +59,20 @@ final class Application
 
     public function __construct(?array $commands = null)
     {
-        $this->commands = $commands ?? [
+        $this->commands = $commands ?? self::registeredCommands();
+        $this->apiSurfaceRegistry = new ApiSurfaceRegistry();
+    }
+
+    /**
+     * @return list<Command>
+     */
+    public static function registeredCommands(): array
+    {
+        return [
             new CompileGraphCommand(),
             new CacheInspectCommand(),
             new CacheClearCommand(),
             new InspectGraphCommand(),
-            new DeepDoctorCommand(),
             new DoctorCommand(),
             new ExplainCommand(),
             new DiffCommand(),
@@ -105,7 +112,6 @@ final class Application
             new ScheduleRunCommand(),
             new ImpactCommand(),
         ];
-        $this->apiSurfaceRegistry = new ApiSurfaceRegistry();
     }
 
     /**

@@ -11,9 +11,15 @@ use Foundry\Support\Yaml;
 final class GenerateFeatureCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['generate feature', 'generate tests', 'generate context'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
-        return ($args[0] ?? null) === 'generate' && in_array(($args[1] ?? ''), ['feature', 'tests', 'context'], true);
+        return ($args[0] ?? null) === 'generate' && $this->supportsSignature('generate ' . (string) ($args[1] ?? ''));
     }
 
     #[\Override]

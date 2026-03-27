@@ -10,9 +10,15 @@ use Foundry\Support\FoundryError;
 final class GenerateIndexesCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['generate indexes', 'generate migration'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
-        return ($args[0] ?? null) === 'generate' && in_array(($args[1] ?? ''), ['indexes', 'migration'], true);
+        return ($args[0] ?? null) === 'generate' && $this->supportsSignature('generate ' . (string) ($args[1] ?? ''));
     }
 
     #[\Override]

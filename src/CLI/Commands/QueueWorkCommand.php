@@ -9,9 +9,15 @@ use Foundry\CLI\CommandContext;
 final class QueueWorkCommand extends Command
 {
     #[\Override]
+    public function supportedSignatures(): array
+    {
+        return ['queue:work', 'queue:inspect'];
+    }
+
+    #[\Override]
     public function matches(array $args): bool
     {
-        return in_array(($args[0] ?? ''), ['queue:work', 'queue:inspect'], true);
+        return $this->supportsSignature((string) ($args[0] ?? ''));
     }
 
     #[\Override]
