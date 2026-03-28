@@ -643,8 +643,85 @@ final class ApiSurfaceRegistry
         $entry['signature'] = $signature;
         $entry['usage'] = $usage;
         $entry['availability'] = $availability;
+        $entry['category'] = $this->cliCommandCategory($signature);
+        $entry['command_type'] = $this->cliCommandType($signature);
+        $entry['supports_pipeline_stage_filter'] = $this->supportsPipelineStageFilter($signature, $usage);
+        $entry['supports_extension_filter'] = $this->supportsExtensionFilter($signature, $usage);
 
         return $entry;
+    }
+
+    private function cliCommandCategory(string $signature): string
+    {
+        return match (true) {
+            in_array($signature, ['help', 'inspect api-surface', 'inspect cli-surface', 'verify cli-surface'], true) => 'Reference',
+            in_array($signature, ['generate docs', 'export openapi'], true) => 'Docs',
+            in_array($signature, ['cache inspect', 'cache clear'], true) => 'Build',
+            in_array($signature, ['observe:trace', 'observe:profile', 'observe:compare', 'history', 'regressions'], true) => 'Observability',
+            in_array($signature, ['serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail'], true) => 'Runtime',
+            in_array($signature, ['pro', 'pro enable', 'pro status', 'generate <prompt>'], true) => 'Pro',
+            in_array($signature, ['new', 'init app', 'preview notification'], true)
+                || str_starts_with($signature, 'generate ')
+                => 'App Scaffolding',
+            in_array($signature, ['upgrade-check', 'verify graph', 'verify graph-integrity', 'verify pipeline', 'verify extensions', 'verify compatibility', 'verify feature', 'verify resource', 'verify notifications', 'verify api', 'verify billing', 'verify workflows', 'verify orchestrations', 'verify search', 'verify streams', 'verify locales', 'verify policies', 'verify contracts', 'verify cli-surface', 'verify auth', 'verify cache', 'verify events', 'verify jobs', 'verify migrations'], true)
+                => 'Verification',
+            in_array($signature, ['migrate definitions', 'codemod run', 'inspect extensions', 'inspect extension', 'inspect packs', 'inspect pack', 'inspect compatibility', 'inspect migrations', 'inspect definition-format', 'generate migration'], true)
+                => 'Extensions',
+            default => 'Architecture',
+        };
+    }
+
+    private function cliCommandType(string $signature): string
+    {
+        return match (true) {
+            str_starts_with($signature, 'observe:') => 'observe',
+            str_starts_with($signature, 'queue:') => 'queue',
+            str_starts_with($signature, 'schedule:') => 'schedule',
+            str_starts_with($signature, 'trace:') => 'trace',
+            str_starts_with($signature, 'cache ') => 'cache',
+            str_starts_with($signature, 'graph ') => 'graph',
+            str_starts_with($signature, 'pro') => 'pro',
+            default => trim((string) strtok($signature, ' ')),
+        };
+    }
+
+    private function supportsPipelineStageFilter(string $signature, string $usage): bool
+    {
+        return str_contains($usage, '--pipeline-stage=<stage>')
+            || in_array($signature, [
+                'verify pipeline',
+                'inspect pipeline',
+                'inspect execution-plan',
+                'inspect guards',
+                'inspect interceptors',
+                'observe:trace',
+                'observe:profile',
+                'doctor',
+                'prompt',
+                'explain',
+                'diff',
+                'trace',
+            ], true);
+    }
+
+    private function supportsExtensionFilter(string $signature, string $usage): bool
+    {
+        return str_contains($usage, '--extension=<extension>')
+            || in_array($signature, [
+                'doctor',
+                'migrate definitions',
+                'codemod run',
+                'inspect extensions',
+                'inspect extension',
+                'inspect packs',
+                'inspect pack',
+                'inspect compatibility',
+                'inspect migrations',
+                'inspect definition-format',
+                'generate migration',
+                'verify extensions',
+                'verify compatibility',
+            ], true);
     }
 
     private function semverPolicy(string $classification, string $stability): string

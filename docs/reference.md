@@ -4,6 +4,7 @@ Foundry’s reference section mixes generated and curated material.
 
 Generated pages:
 
+- [Interactive CLI Index](cli-index.html)
 - [Command Playground](command-playground.html)
 - [Architecture Explorer](architecture-explorer.html)
 - [Graph Overview](graph-overview.md)

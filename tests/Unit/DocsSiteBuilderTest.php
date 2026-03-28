@@ -37,7 +37,7 @@ MD);
         file_put_contents($this->project->root . '/docs/quick-tour.md', <<<'MD'
 # Quick Tour
 
-Jump from [Intro](intro.md) to [Graph Overview](graph-overview.md).
+Jump from [Intro](intro.md) to [Interactive CLI Index](cli-index.html) and [Graph Overview](graph-overview.md).
 MD);
         file_put_contents($this->project->root . '/docs/how-it-works.md', <<<'MD'
 # How It Works
@@ -47,7 +47,7 @@ MD);
         file_put_contents($this->project->root . '/docs/reference.md', <<<'MD'
 # Reference
 
-See the [CLI Reference](cli-reference.md) and [Feature Catalog](features.md).
+See the [Interactive CLI Index](cli-index.html), [CLI Reference](cli-reference.md), and [Feature Catalog](features.md).
 MD);
         file_put_contents($this->project->root . '/docs/app-scaffolding.md', "# App Scaffolding\n");
         file_put_contents($this->project->root . '/docs/example-applications.md', <<<'MD'
@@ -100,6 +100,7 @@ MD);
         $this->assertFileExists($this->project->root . '/public/docs/features.html');
         $this->assertFileExists($this->project->root . '/public/docs/graph-overview.html');
         $this->assertFileExists($this->project->root . '/public/docs/architecture-explorer.html');
+        $this->assertFileExists($this->project->root . '/public/docs/cli-index.html');
         $this->assertFileExists($this->project->root . '/public/docs/command-playground.html');
         $this->assertFileExists($this->project->root . '/public/docs/example-hello-world.html');
         $this->assertFileExists($this->project->root . '/public/docs/versions/index.html');
@@ -114,6 +115,7 @@ MD);
         $this->assertSame('v0.4.0', $manifest['versions'][1]['version']);
         $this->assertContains('guided-learning-paths.html', array_column((array) $manifest['pages'], 'path'));
         $this->assertContains('architecture-explorer.html', array_column((array) $manifest['pages'], 'path'));
+        $this->assertContains('cli-index.html', array_column((array) $manifest['pages'], 'path'));
         $this->assertContains('command-playground.html', array_column((array) $manifest['pages'], 'path'));
 
         $home = (string) file_get_contents($this->project->root . '/public/docs/index.html');
@@ -127,6 +129,7 @@ MD);
 
         $quickTour = (string) file_get_contents($this->project->root . '/public/docs/quick-tour.html');
         $this->assertStringContainsString('href="guided-learning-paths.html"', $quickTour);
+        $this->assertStringContainsString('href="cli-index.html"', $quickTour);
 
         $graphOverview = (string) file_get_contents($this->project->root . '/public/docs/graph-overview.html');
         $this->assertStringContainsString('inspect graph --json', $graphOverview);
@@ -138,6 +141,7 @@ MD);
         $this->assertStringContainsString('GET /posts', $features);
 
         $reference = (string) file_get_contents($this->project->root . '/public/docs/reference.html');
+        $this->assertStringContainsString('href="cli-index.html"', $reference);
         $this->assertStringContainsString('href="command-playground.html"', $reference);
 
         $examples = (string) file_get_contents($this->project->root . '/public/docs/example-applications.html');
@@ -157,6 +161,16 @@ MD);
         $this->assertStringContainsString('Sample JSON Output', $playground);
         $this->assertStringContainsString('command:compile graph', $playground);
         $this->assertStringContainsString('architecture-explorer.html?node=feature%3Alist_posts', $playground);
+
+        $cliIndex = (string) file_get_contents($this->project->root . '/public/docs/cli-index.html');
+        $this->assertStringContainsString('Interactive CLI Index', $cliIndex);
+        $this->assertStringContainsString('cli-index-data', $cliIndex);
+        $this->assertStringContainsString('Search command name, description, or category', $cliIndex);
+        $this->assertStringContainsString('Pipeline Stage', $cliIndex);
+        $this->assertStringContainsString('Command Type', $cliIndex);
+        $this->assertStringContainsString('command-playground.html?command=compile%20graph', $cliIndex);
+        $this->assertStringContainsString('command:compile graph', $cliIndex);
+        $this->assertStringContainsString('architecture-tools.html', $cliIndex);
 
         $learningPaths = (string) file_get_contents($this->project->root . '/public/docs/guided-learning-paths.html');
         $this->assertStringContainsString('Guided Learning Paths', $learningPaths);

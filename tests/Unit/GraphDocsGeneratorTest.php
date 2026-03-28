@@ -79,6 +79,7 @@ final class GraphDocsGeneratorTest extends TestCase
         $featuresHtml = file_get_contents($this->project->root . '/docs/generated/features.html') ?: '';
 
         $this->assertStringContainsString('# Graph Overview', $graphOverviewMd);
+        $this->assertStringContainsString('Interactive CLI Index', $graphOverviewMd);
         $this->assertStringContainsString('Architecture Explorer', $graphOverviewMd);
         $this->assertStringContainsString('Command Playground', $graphOverviewMd);
         $this->assertStringContainsString('inspect graph --json', $graphOverviewMd);
@@ -96,6 +97,8 @@ final class GraphDocsGeneratorTest extends TestCase
         $this->assertStringContainsString('export graph [stable]', $cliReferenceMd);
         $this->assertStringContainsString('inspect cli-surface [stable]', $cliReferenceMd);
         $this->assertStringContainsString('verify cli-surface [stable]', $cliReferenceMd);
+        $this->assertStringContainsString('cli-index.html', $cliReferenceMd);
+        $this->assertStringContainsString('cli-index.html?command=compile%20graph', $cliReferenceMd);
         $this->assertStringContainsString('command-playground.html', $cliReferenceMd);
         $this->assertStringContainsString('command-playground.html?command=compile%20graph', $cliReferenceMd);
         $this->assertStringContainsString('# Upgrade Reference', $upgradeReferenceMd);

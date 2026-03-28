@@ -105,6 +105,7 @@ final class GraphDocsGenerator
             '- Features remain the authored source-of-truth units; routes, schemas, caches, jobs, and events are derived graph surfaces.',
             '- Generated docs are built from the same compiled graph used by inspect, export, verify, and runtime projection flows.',
             '- CLI reference pages are derived from the same API surface registry used by `help --json` and command classification.',
+            '- Interactive CLI index: [Open Interactive CLI Index](cli-index.html)',
             '- Interactive architecture explorer: [Open Architecture Explorer](architecture-explorer.html)',
             '- Interactive command playground: [Open Command Playground](command-playground.html)',
             '',
@@ -413,6 +414,7 @@ final class GraphDocsGenerator
         $lines = [
             '# CLI Reference',
             '',
+            '- Interactive CLI index: [Open Interactive CLI Index](cli-index.html)',
             '- Interactive command playground: [Open Command Playground](command-playground.html)',
             '',
         ];
@@ -430,6 +432,7 @@ final class GraphDocsGenerator
                     . ' [' . (string) ($entry['stability'] ?? '') . ']'
                     . ': ' . (string) ($entry['summary'] ?? '')
                     . ' Usage: ' . (string) ($entry['usage'] ?? '')
+                    . ' Index: [Open in CLI Index](cli-index.html?command=' . rawurlencode((string) ($entry['signature'] ?? '')) . ')'
                     . ' Playground: ' . $this->commandPlaygroundLink((string) ($entry['signature'] ?? ''));
             }
 

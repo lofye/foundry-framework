@@ -41,6 +41,7 @@ final class DocsSiteBuilder
         $currentPages = $this->loadCurrentPages($generated);
         $currentPages['guided-learning-paths'] = $this->guidedLearningPathsPage();
         $currentPages['architecture-explorer'] = $this->architectureExplorerPage($graph);
+        $currentPages['cli-index'] = $this->cliIndexPage($graph);
         $currentPages['command-playground'] = $this->commandPlaygroundPage($graph);
         $snapshotVersions = $this->loadSnapshotVersions();
         $versions = $this->versionRows($version, array_keys($snapshotVersions));
@@ -1139,6 +1140,25 @@ HTML;
     /**
      * @return array<string,mixed>
      */
+    private function cliIndexPage(ApplicationGraph $graph): array
+    {
+        $catalog = $this->catalogBySlug()['cli-index'] ?? [];
+
+        return [
+            'slug' => 'cli-index',
+            'title' => (string) ($catalog['title'] ?? 'Interactive CLI Index'),
+            'section' => (string) ($catalog['section'] ?? 'Reference'),
+            'main_navigation' => false,
+            'order' => (int) ($catalog['order'] ?? 0),
+            'type' => 'html',
+            'source_path' => 'generated/cli-index.html',
+            'content' => (new CliIndexPage($this->paths, $this->apiSurfaceRegistry))->content($graph),
+        ];
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
     private function commandPlaygroundPage(ApplicationGraph $graph): array
     {
         $catalog = $this->catalogBySlug()['command-playground'] ?? [];
@@ -1661,6 +1681,7 @@ HTML;
             ['slug' => 'architecture-tools', 'title' => 'Architecture Tools', 'section' => 'Architecture', 'source' => 'docs/architecture-tools.md'],
             ['slug' => 'contributor-vocabulary', 'title' => 'Contributor Vocabulary', 'section' => 'Architecture', 'source' => 'docs/contributor-vocabulary.md'],
             ['slug' => 'reference', 'title' => 'Reference', 'section' => 'Reference', 'source' => 'docs/reference.md', 'main_navigation' => true],
+            ['slug' => 'cli-index', 'title' => 'Interactive CLI Index', 'section' => 'Reference', 'source' => 'generated_html:cli-index'],
             ['slug' => 'command-playground', 'title' => 'Command Playground', 'section' => 'Reference', 'source' => 'generated_html:command-playground'],
             ['slug' => 'graph-overview', 'title' => 'Graph Overview', 'section' => 'Reference', 'source' => 'generated:graph-overview'],
             ['slug' => 'features', 'title' => 'Feature Catalog', 'section' => 'Reference', 'source' => 'generated:features'],

@@ -110,11 +110,22 @@ YAML);
         $this->assertSame(0, $helpIndex['status']);
         $this->assertArrayHasKey('commands', $helpIndex['payload']);
         $this->assertGreaterThan(0, (int) $helpIndex['payload']['summary']['stable']);
+        $compileGraph = array_find(
+            $helpIndex['payload']['commands']['stable'],
+            static fn(array $row): bool => (string) ($row['signature'] ?? '') === 'compile graph',
+        );
+        $this->assertIsArray($compileGraph);
+        $this->assertSame('Architecture', $compileGraph['category']);
+        $this->assertSame('compile', $compileGraph['command_type']);
 
         $commandHelp = $this->runCommand($app, ['foundry', 'help', 'graph', 'visualize', '--json']);
         $this->assertSame(0, $commandHelp['status']);
         $this->assertSame('graph visualize', $commandHelp['payload']['command']['signature']);
         $this->assertSame('stable', $commandHelp['payload']['command']['stability']);
+        $this->assertSame('Architecture', $commandHelp['payload']['command']['category']);
+        $this->assertSame('graph', $commandHelp['payload']['command']['command_type']);
+        $this->assertTrue($commandHelp['payload']['command']['supports_pipeline_stage_filter']);
+        $this->assertTrue($commandHelp['payload']['command']['supports_extension_filter']);
 
         $inspectHelp = $this->runCommand($app, ['foundry', 'help', 'graph', 'inspect', '--json']);
         $this->assertSame(0, $inspectHelp['status']);
@@ -130,6 +141,8 @@ YAML);
         $this->assertSame(0, $newHelp['status']);
         $this->assertSame('new', $newHelp['payload']['command']['signature']);
         $this->assertSame('stable', $newHelp['payload']['command']['stability']);
+        $this->assertSame('App Scaffolding', $newHelp['payload']['command']['category']);
+        $this->assertSame('new', $newHelp['payload']['command']['command_type']);
 
         $upgradeHelp = $this->runCommand($app, ['foundry', 'help', 'upgrade-check', '--json']);
         $this->assertSame(0, $upgradeHelp['status']);
@@ -146,6 +159,9 @@ YAML);
         $this->assertSame('explain', $explainHelp['payload']['command']['signature']);
         $this->assertSame('pro', $explainHelp['payload']['command']['availability']);
         $this->assertStringContainsString('--neighbors', $explainHelp['payload']['command']['usage']);
+        $this->assertSame('Architecture', $explainHelp['payload']['command']['category']);
+        $this->assertSame('explain', $explainHelp['payload']['command']['command_type']);
+        $this->assertTrue($explainHelp['payload']['command']['supports_pipeline_stage_filter']);
 
         $proHelp = $this->runCommand($app, ['foundry', 'help', 'pro', '--json']);
         $this->assertSame(0, $proHelp['status']);

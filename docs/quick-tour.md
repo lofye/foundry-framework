@@ -8,7 +8,7 @@ If you prefer a fixed onboarding sequence, start with [Guided Learning Paths](gu
 
 1. Start with [Intro](intro.md).
 2. Read [How It Works](how-it-works.md).
-3. Inspect the generated [Graph Overview](graph-overview.md), [Architecture Explorer](architecture-explorer.html), [Command Playground](command-playground.html), and [CLI Reference](cli-reference.md).
+3. Inspect the generated [Graph Overview](graph-overview.md), [Interactive CLI Index](cli-index.html), [Architecture Explorer](architecture-explorer.html), [Command Playground](command-playground.html), and [CLI Reference](cli-reference.md).
 4. Use [App Scaffolding](app-scaffolding.md) and [Example Applications](example-applications.md) when you want concrete app shapes.
 
 ## Core commands
