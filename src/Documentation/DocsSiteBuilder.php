@@ -40,6 +40,7 @@ final class DocsSiteBuilder
         $generated = $this->graphDocsGenerator->documents($graph);
         $currentPages = $this->loadCurrentPages($generated);
         $currentPages['architecture-explorer'] = $this->architectureExplorerPage($graph);
+        $currentPages['command-playground'] = $this->commandPlaygroundPage($graph);
         $snapshotVersions = $this->loadSnapshotVersions();
         $versions = $this->versionRows($version, array_keys($snapshotVersions));
         $outputRoot = $this->paths->join('public/docs');
@@ -1118,6 +1119,25 @@ HTML;
     /**
      * @return array<string,mixed>
      */
+    private function commandPlaygroundPage(ApplicationGraph $graph): array
+    {
+        $catalog = $this->catalogBySlug()['command-playground'] ?? [];
+
+        return [
+            'slug' => 'command-playground',
+            'title' => (string) ($catalog['title'] ?? 'Command Playground'),
+            'section' => (string) ($catalog['section'] ?? 'Reference'),
+            'main_navigation' => false,
+            'order' => (int) ($catalog['order'] ?? 0),
+            'type' => 'html',
+            'source_path' => 'generated/command-playground.html',
+            'content' => (new CommandPlaygroundPage($this->paths, $this->apiSurfaceRegistry))->content($graph),
+        ];
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
     private function architectureExplorerData(ApplicationGraph $graph): array
     {
         return [
@@ -1620,6 +1640,7 @@ HTML;
             ['slug' => 'architecture-tools', 'title' => 'Architecture Tools', 'section' => 'Architecture', 'source' => 'docs/architecture-tools.md'],
             ['slug' => 'contributor-vocabulary', 'title' => 'Contributor Vocabulary', 'section' => 'Architecture', 'source' => 'docs/contributor-vocabulary.md'],
             ['slug' => 'reference', 'title' => 'Reference', 'section' => 'Reference', 'source' => 'docs/reference.md', 'main_navigation' => true],
+            ['slug' => 'command-playground', 'title' => 'Command Playground', 'section' => 'Reference', 'source' => 'generated_html:command-playground'],
             ['slug' => 'graph-overview', 'title' => 'Graph Overview', 'section' => 'Reference', 'source' => 'generated:graph-overview'],
             ['slug' => 'features', 'title' => 'Feature Catalog', 'section' => 'Reference', 'source' => 'generated:features'],
             ['slug' => 'routes', 'title' => 'Route Catalog', 'section' => 'Reference', 'source' => 'generated:routes'],

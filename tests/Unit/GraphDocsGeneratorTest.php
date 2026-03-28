@@ -80,6 +80,7 @@ final class GraphDocsGeneratorTest extends TestCase
 
         $this->assertStringContainsString('# Graph Overview', $graphOverviewMd);
         $this->assertStringContainsString('Architecture Explorer', $graphOverviewMd);
+        $this->assertStringContainsString('Command Playground', $graphOverviewMd);
         $this->assertStringContainsString('inspect graph --json', $graphOverviewMd);
         $this->assertStringContainsString('# Feature Catalog', $featuresMd);
         $this->assertStringContainsString('## list_posts', $featuresMd);
@@ -95,6 +96,8 @@ final class GraphDocsGeneratorTest extends TestCase
         $this->assertStringContainsString('export graph [stable]', $cliReferenceMd);
         $this->assertStringContainsString('inspect cli-surface [stable]', $cliReferenceMd);
         $this->assertStringContainsString('verify cli-surface [stable]', $cliReferenceMd);
+        $this->assertStringContainsString('command-playground.html', $cliReferenceMd);
+        $this->assertStringContainsString('command-playground.html?command=compile%20graph', $cliReferenceMd);
         $this->assertStringContainsString('# Upgrade Reference', $upgradeReferenceMd);
         $this->assertStringContainsString('foundry upgrade-check --json', $upgradeReferenceMd);
         $this->assertStringContainsString('Config compatibility aliases', $upgradeReferenceMd);

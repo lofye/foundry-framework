@@ -4,6 +4,7 @@ Foundry’s reference section mixes generated and curated material.
 
 Generated pages:
 
+- [Command Playground](command-playground.html)
 - [Architecture Explorer](architecture-explorer.html)
 - [Graph Overview](graph-overview.md)
 - [Feature Catalog](features.md)

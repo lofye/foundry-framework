@@ -106,6 +106,7 @@ final class GraphDocsGenerator
             '- Generated docs are built from the same compiled graph used by inspect, export, verify, and runtime projection flows.',
             '- CLI reference pages are derived from the same API surface registry used by `help --json` and command classification.',
             '- Interactive architecture explorer: [Open Architecture Explorer](architecture-explorer.html)',
+            '- Interactive command playground: [Open Command Playground](command-playground.html)',
             '',
             '## CLI Output Snapshots',
             '### inspect graph --json',
@@ -311,6 +312,11 @@ final class GraphDocsGenerator
         return '[Open in Architecture Explorer](architecture-explorer.html?node=' . rawurlencode($nodeId) . ')';
     }
 
+    private function commandPlaygroundLink(string $signature): string
+    {
+        return '[Open in Command Playground](command-playground.html?command=' . rawurlencode($signature) . ')';
+    }
+
     private function llmWorkflowDoc(): string
     {
         $commandPrefix = CliCommandPrefix::foundry($this->paths);
@@ -407,6 +413,8 @@ final class GraphDocsGenerator
         $lines = [
             '# CLI Reference',
             '',
+            '- Interactive command playground: [Open Command Playground](command-playground.html)',
+            '',
         ];
 
         $groups = is_array($help['commands'] ?? null) ? $help['commands'] : [];
@@ -421,7 +429,8 @@ final class GraphDocsGenerator
                 $lines[] = '- ' . (string) ($entry['signature'] ?? '')
                     . ' [' . (string) ($entry['stability'] ?? '') . ']'
                     . ': ' . (string) ($entry['summary'] ?? '')
-                    . ' Usage: ' . (string) ($entry['usage'] ?? '');
+                    . ' Usage: ' . (string) ($entry['usage'] ?? '')
+                    . ' Playground: ' . $this->commandPlaygroundLink((string) ($entry['signature'] ?? ''));
             }
 
             $lines[] = '';
