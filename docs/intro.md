@@ -4,6 +4,7 @@ Foundry’s documentation is split between curated architecture writing and gene
 
 Use these entry points when you are orienting yourself:
 
+- [Guided Learning Paths](guided-learning-paths.html) for curated sequences like "Learn Foundry in 30 minutes", extension onboarding, and pipeline study.
 - [Quick Tour](quick-tour.md) for the shortest path through compile, inspect, verify, and docs generation.
 - [How It Works](how-it-works.md) for the graph, pipeline, and architecture model.
 - [Reference](reference.md) for generated feature, schema, graph, and CLI pages.

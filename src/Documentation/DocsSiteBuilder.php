@@ -39,6 +39,7 @@ final class DocsSiteBuilder
         $version = $this->normalizeVersion($currentVersion ?? $graph->frameworkVersion());
         $generated = $this->graphDocsGenerator->documents($graph);
         $currentPages = $this->loadCurrentPages($generated);
+        $currentPages['guided-learning-paths'] = $this->guidedLearningPathsPage();
         $currentPages['architecture-explorer'] = $this->architectureExplorerPage($graph);
         $currentPages['command-playground'] = $this->commandPlaygroundPage($graph);
         $snapshotVersions = $this->loadSnapshotVersions();
@@ -1119,6 +1120,25 @@ HTML;
     /**
      * @return array<string,mixed>
      */
+    private function guidedLearningPathsPage(): array
+    {
+        $catalog = $this->catalogBySlug()['guided-learning-paths'] ?? [];
+
+        return [
+            'slug' => 'guided-learning-paths',
+            'title' => (string) ($catalog['title'] ?? 'Guided Learning Paths'),
+            'section' => (string) ($catalog['section'] ?? 'Getting Started'),
+            'main_navigation' => (bool) ($catalog['main_navigation'] ?? true),
+            'order' => (int) ($catalog['order'] ?? 0),
+            'type' => 'html',
+            'source_path' => 'generated/guided-learning-paths.html',
+            'content' => (new LearningPathsPage())->content(),
+        ];
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
     private function commandPlaygroundPage(ApplicationGraph $graph): array
     {
         $catalog = $this->catalogBySlug()['command-playground'] ?? [];
@@ -1631,6 +1651,7 @@ HTML;
         return [
             ['slug' => 'index', 'title' => 'Intro', 'section' => 'Getting Started', 'source' => 'docs/intro.md', 'main_navigation' => true],
             ['slug' => 'quick-tour', 'title' => 'Quick Tour', 'section' => 'Getting Started', 'source' => 'docs/quick-tour.md', 'main_navigation' => true],
+            ['slug' => 'guided-learning-paths', 'title' => 'Guided Learning Paths', 'section' => 'Getting Started', 'source' => 'generated_html:guided-learning-paths', 'main_navigation' => true],
             ['slug' => 'app-scaffolding', 'title' => 'App Scaffolding', 'section' => 'Getting Started', 'source' => 'docs/app-scaffolding.md'],
             ['slug' => 'example-applications', 'title' => 'Example Applications', 'section' => 'Getting Started', 'source' => 'docs/example-applications.md'],
             ['slug' => 'how-it-works', 'title' => 'How It Works', 'section' => 'Architecture', 'source' => 'docs/how-it-works.md', 'main_navigation' => true],

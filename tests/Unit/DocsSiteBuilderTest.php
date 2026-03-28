@@ -95,6 +95,7 @@ MD);
         $this->assertSame('website_repo', $result['deprecation']['authoritative_publisher']);
         $this->assertSame('v0.4.1', $result['current_version']);
         $this->assertFileExists($this->project->root . '/public/docs/index.html');
+        $this->assertFileExists($this->project->root . '/public/docs/guided-learning-paths.html');
         $this->assertFileExists($this->project->root . '/public/docs/reference.html');
         $this->assertFileExists($this->project->root . '/public/docs/features.html');
         $this->assertFileExists($this->project->root . '/public/docs/graph-overview.html');
@@ -111,6 +112,7 @@ MD);
         $this->assertSame('v0.4.1', $manifest['current_version']);
         $this->assertSame('v0.4.1', $manifest['versions'][0]['version']);
         $this->assertSame('v0.4.0', $manifest['versions'][1]['version']);
+        $this->assertContains('guided-learning-paths.html', array_column((array) $manifest['pages'], 'path'));
         $this->assertContains('architecture-explorer.html', array_column((array) $manifest['pages'], 'path'));
         $this->assertContains('command-playground.html', array_column((array) $manifest['pages'], 'path'));
 
@@ -121,6 +123,10 @@ MD);
         $this->assertStringContainsString('href="reference.html"', $home);
         $this->assertStringContainsString('href="versions/index.html"', $home);
         $this->assertStringContainsString('Getting Started', $home);
+        $this->assertStringContainsString('href="guided-learning-paths.html"', $home);
+
+        $quickTour = (string) file_get_contents($this->project->root . '/public/docs/quick-tour.html');
+        $this->assertStringContainsString('href="guided-learning-paths.html"', $quickTour);
 
         $graphOverview = (string) file_get_contents($this->project->root . '/public/docs/graph-overview.html');
         $this->assertStringContainsString('inspect graph --json', $graphOverview);
@@ -151,6 +157,17 @@ MD);
         $this->assertStringContainsString('Sample JSON Output', $playground);
         $this->assertStringContainsString('command:compile graph', $playground);
         $this->assertStringContainsString('architecture-explorer.html?node=feature%3Alist_posts', $playground);
+
+        $learningPaths = (string) file_get_contents($this->project->root . '/public/docs/guided-learning-paths.html');
+        $this->assertStringContainsString('Guided Learning Paths', $learningPaths);
+        $this->assertStringContainsString('learning-paths-data', $learningPaths);
+        $this->assertStringContainsString('Learn Foundry in 30 minutes', $learningPaths);
+        $this->assertStringContainsString('Build your first extension', $learningPaths);
+        $this->assertStringContainsString('Understand the execution pipeline', $learningPaths);
+        $this->assertStringContainsString('Previous Step', $learningPaths);
+        $this->assertStringContainsString('Next Step', $learningPaths);
+        $this->assertStringContainsString('command-playground.html?command=compile%20graph', $learningPaths);
+        $this->assertStringContainsString('architecture-tools.html', $learningPaths);
     }
 
     public function test_uses_legacy_snapshot_sources_for_archived_preview_versions(): void

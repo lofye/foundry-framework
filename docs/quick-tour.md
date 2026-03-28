@@ -2,6 +2,8 @@
 
 The framework docs are organized around the same lifecycle the framework uses internally: author source-of-truth files, compile the graph, inspect reality, verify contracts, and refresh generated reference docs.
 
+If you prefer a fixed onboarding sequence, start with [Guided Learning Paths](guided-learning-paths.html).
+
 ## Short path
 
 1. Start with [Intro](intro.md).
