@@ -32,7 +32,7 @@ final class PlatformCompilerExtension extends AbstractCompilerExtension
             version: $this->version(),
             description: 'Graph-native billing, workflows, orchestration, search, streams, locales, roles/policies, and inspect-ui foundations.',
             frameworkVersionConstraint: '*',
-            graphVersionConstraint: '^1',
+            graphVersionConstraint: '^2',
             providedNodeTypes: ['billing', 'workflow', 'orchestration', 'search_index', 'stream', 'locale_bundle', 'role', 'policy', 'inspect_ui'],
             providedPasses: ['platform_definitions'],
             providedPacks: [

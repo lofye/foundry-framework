@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Foundry\Compiler\IR;
 
+use Foundry\Compiler\GraphSpec\CanonicalGraphSpecification;
+use Foundry\Compiler\GraphSpec\GraphCompatibility;
+
 interface GraphNode
 {
     public function id(): string;
@@ -36,6 +39,11 @@ interface GraphNode
 abstract class AbstractNode implements GraphNode
 {
     /**
+     * @var array<int,int>
+     */
+    private readonly array $graphCompatibility;
+
+    /**
      * @param array<string,mixed> $payload
      * @param array{line_start:int|null,line_end:int|null}|null $sourceRegion
      * @param array<int,int> $graphCompatibility
@@ -45,8 +53,13 @@ abstract class AbstractNode implements GraphNode
         private readonly string $sourcePath,
         private readonly array $payload,
         private readonly ?array $sourceRegion = null,
-        private readonly array $graphCompatibility = [1],
-    ) {}
+        array $graphCompatibility = [1],
+    ) {
+        $this->graphCompatibility = GraphCompatibility::normalizeVersions(
+            $graphCompatibility,
+            CanonicalGraphSpecification::instance()->currentGraphVersion(),
+        );
+    }
 
     final public function id(): string
     {
@@ -385,45 +398,15 @@ final class NodeFactory
             'line_start' => isset($sourceRegionRaw['line_start']) ? (int) $sourceRegionRaw['line_start'] : null,
             'line_end' => isset($sourceRegionRaw['line_end']) ? (int) $sourceRegionRaw['line_end'] : null,
         ] : null;
-        $compatibility = array_values(array_map('intval', (array) ($row['graph_compatibility'] ?? [1])));
+        $compatibility = array_values(array_map('intval', (array) ($row['graph_compatibility'] ?? [])));
 
-        return match ($type) {
-            'feature' => new FeatureNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'route' => new RouteNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'schema' => new SchemaNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'permission' => new PermissionNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'query' => new QueryNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'event' => new EventNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'job' => new JobNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'cache' => new CacheNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'scheduler' => new SchedulerNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'webhook' => new WebhookNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'test' => new TestNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'context_manifest' => new ContextManifestNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'auth' => new AuthNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'rate_limit' => new RateLimitNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'pipeline_stage' => new PipelineStageNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'guard' => new GuardNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'interceptor' => new InterceptorNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'execution_plan' => new ExecutionPlanNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'starter_kit' => new StarterKitNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'resource' => new ResourceNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'admin_resource' => new AdminResourceNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'upload_profile' => new UploadProfileNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'listing_config' => new ListingConfigNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'form_definition' => new FormDefinitionNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'notification' => new NotificationNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'api_resource' => new ApiResourceNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'billing' => new BillingNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'workflow' => new WorkflowNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'orchestration' => new OrchestrationNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'search_index' => new SearchIndexNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'stream' => new StreamNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'locale_bundle' => new LocaleBundleNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'role' => new RoleNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'policy' => new PolicyNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            'inspect_ui' => new InspectUiNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-            default => new FeatureNode($id, $sourcePath, $payload, $sourceRegion, $compatibility),
-        };
+        return CanonicalGraphSpecification::instance()->instantiateNode(
+            type: $type,
+            id: $id,
+            sourcePath: $sourcePath,
+            payload: $payload,
+            sourceRegion: $sourceRegion,
+            graphCompatibility: $compatibility,
+        );
     }
 }

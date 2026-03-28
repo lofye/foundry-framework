@@ -44,7 +44,7 @@ final class CoreCompilerExtension extends AbstractCompilerExtension
             version: $this->version(),
             description: 'Foundry core compiler extension with baseline graph projections and feature manifest migration.',
             frameworkVersionConstraint: '*',
-            graphVersionConstraint: '^1',
+            graphVersionConstraint: '^2',
             providedNodeTypes: [
                 'feature',
                 'route',
@@ -206,7 +206,7 @@ final class CoreCompilerExtension extends AbstractCompilerExtension
                 providedCapabilities: ['compiler.core', 'graph.runtime_projections', 'runtime.pipeline'],
                 requiredCapabilities: [],
                 frameworkVersionConstraint: '*',
-                graphVersionConstraint: '^1',
+                graphVersionConstraint: '^2',
                 generators: ['generate feature', 'generate indexes'],
                 definitionFormats: ['feature_manifest'],
                 migrationRules: ['FDY_MIGRATE_FEATURE_MANIFEST_V2'],

@@ -11,10 +11,12 @@ use Foundry\CLI\CommandContext;
 use Foundry\CLI\Commands\Concerns\InteractsWithGraphInspection;
 use Foundry\Compiler\ApplicationGraph;
 use Foundry\Compiler\CompileOptions;
+use Foundry\Compiler\Diagnostics\DiagnosticBag;
 use Foundry\Compiler\Extensions\ExtensionDescriptor;
 use Foundry\Compiler\Extensions\PackDefinition;
 use Foundry\Compiler\GraphCompiler;
 use Foundry\Compiler\GraphEdge;
+use Foundry\Compiler\GraphSpec\CanonicalGraphSpecification;
 use Foundry\Compiler\IR\GraphNode;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Json;
@@ -46,6 +48,11 @@ final class InspectGraphCommand extends Command
         'compatibility',
         'migrations',
         'definition-format',
+        'graph-spec',
+        'node-types',
+        'edge-types',
+        'subgraph',
+        'graph-integrity',
         'api-surface',
         'cli-surface',
     ];
@@ -74,6 +81,11 @@ final class InspectGraphCommand extends Command
             'inspect compatibility',
             'inspect migrations',
             'inspect definition-format',
+            'inspect graph-spec',
+            'inspect node-types',
+            'inspect edge-types',
+            'inspect subgraph',
+            'inspect graph-integrity',
             'inspect api-surface',
             'inspect cli-surface',
         ];
@@ -99,6 +111,10 @@ final class InspectGraphCommand extends Command
             $nodeId = (string) ($args[2] ?? '');
 
             return str_contains($nodeId, ':');
+        }
+
+        if ($target === 'subgraph') {
+            return (string) ($args[2] ?? '') !== '';
         }
 
         if ($target === 'dependencies') {
@@ -184,6 +200,35 @@ final class InspectGraphCommand extends Command
                 ],
             ],
             'definition-format' => $this->inspectDefinitionFormat($context, (string) ($args[2] ?? '')),
+            'graph-spec' => [
+                'status' => 0,
+                'message' => null,
+                'payload' => CanonicalGraphSpecification::instance()->toArray(),
+            ],
+            'node-types' => [
+                'status' => 0,
+                'message' => null,
+                'payload' => [
+                    'graph_spec_version' => CanonicalGraphSpecification::instance()->specVersion(),
+                    'graph_version' => CanonicalGraphSpecification::instance()->currentGraphVersion(),
+                    'node_types' => array_values(array_map(
+                        static fn($definition): array => $definition->toArray(),
+                        CanonicalGraphSpecification::instance()->nodeTypes(),
+                    )),
+                ],
+            ],
+            'edge-types' => [
+                'status' => 0,
+                'message' => null,
+                'payload' => [
+                    'graph_spec_version' => CanonicalGraphSpecification::instance()->specVersion(),
+                    'graph_version' => CanonicalGraphSpecification::instance()->currentGraphVersion(),
+                    'edge_types' => array_values(array_map(
+                        static fn($definition): array => $definition->toArray(),
+                        CanonicalGraphSpecification::instance()->edgeTypes(),
+                    )),
+                ],
+            ],
             'api-surface' => $this->inspectApiSurface($args, $context),
             'cli-surface' => $this->inspectCliSurface($context),
             'build' => $this->inspectBuild($context),
@@ -213,6 +258,8 @@ final class InspectGraphCommand extends Command
             'impact' => $this->inspectImpact($args, $graph, $context),
             'affected-tests' => $this->inspectAffectedTests($graph, (string) ($args[2] ?? ''), $context),
             'affected-features' => $this->inspectAffectedFeatures($graph, (string) ($args[2] ?? ''), $context),
+            'subgraph' => $this->inspectSubgraph($graph, (string) ($args[2] ?? '')),
+            'graph-integrity' => $this->inspectGraphIntegrity($context),
             default => throw new FoundryError('CLI_INSPECT_TARGET_INVALID', 'validation', ['target' => $target], 'Unsupported inspect target.'),
         };
     }
@@ -226,6 +273,8 @@ final class InspectGraphCommand extends Command
         $diagnostics = $this->readJson($layout->diagnosticsPath()) ?? [];
 
         $verification = $context->graphVerifier()->verify();
+        $artifactVerification = $context->graphVerifier()->verifyArtifacts();
+        $graphIntegrity = $context->graphVerifier()->verifyGraphIntegrity();
 
         return [
             'status' => $verification->ok ? 0 : 1,
@@ -237,6 +286,8 @@ final class InspectGraphCommand extends Command
                 'integrity_hashes' => $integrity,
                 'diagnostics' => $diagnostics,
                 'verification' => $verification->toArray(),
+                'artifact_verification' => $artifactVerification->toArray(),
+                'graph_integrity' => $graphIntegrity->toArray(),
             ],
         ];
     }
@@ -272,6 +323,7 @@ final class InspectGraphCommand extends Command
 
         $graph ??= $this->loadOrCompileGraph($context->graphCompiler());
         $payload = $this->buildGraphInspectionPayload($context, $options);
+        $payload['graph_spec_version'] = CanonicalGraphSpecification::instance()->specVersion();
         $payload['node_counts'] = $graph->nodeCountsByType();
         $payload['edge_counts'] = $graph->edgeCountsByType();
         $payload['diagnostics_summary'] = $this->diagnosticsSummary($context->graphCompiler());
@@ -423,6 +475,48 @@ final class InspectGraphCommand extends Command
             'status' => $status,
             'message' => null,
             'payload' => $payload,
+        ];
+    }
+
+    private function inspectSubgraph(ApplicationGraph $graph, string $feature): array
+    {
+        $feature = trim($feature);
+        if ($feature === '') {
+            throw new FoundryError('CLI_SUBGRAPH_FEATURE_REQUIRED', 'validation', [], 'Feature required for inspect subgraph.');
+        }
+
+        $subgraph = $graph->featureSubgraph($feature);
+        $ownership = $graph->ownershipSubgraph($feature);
+        $execution = $graph->executionSubgraph($feature);
+        $observability = $graph->observabilitySubgraph($feature);
+
+        return [
+            'status' => 0,
+            'message' => null,
+            'payload' => [
+                'feature' => $feature,
+                'graph_spec_version' => CanonicalGraphSpecification::instance()->specVersion(),
+                'subgraph' => $subgraph->toArray(new DiagnosticBag()),
+                'ownership_subgraph' => $ownership->toArray(new DiagnosticBag()),
+                'execution_subgraph' => $execution->toArray(new DiagnosticBag()),
+                'observability_subgraph' => $observability->toArray(new DiagnosticBag()),
+                'fingerprints' => [
+                    'graph' => $subgraph->fingerprint(),
+                    'topology' => $subgraph->topologyFingerprint(),
+                    'payload_structure' => $subgraph->payloadStructureFingerprint(),
+                ],
+            ],
+        ];
+    }
+
+    private function inspectGraphIntegrity(CommandContext $context): array
+    {
+        $report = $context->graphVerifier()->verifyGraphIntegrity();
+
+        return [
+            'status' => $report->ok ? 0 : 1,
+            'message' => null,
+            'payload' => $report->toArray(),
         ];
     }
 

@@ -20,7 +20,7 @@ use Foundry\Support\Paths;
 
 final class GraphCompiler
 {
-    public const GRAPH_VERSION = 1;
+    public const GRAPH_VERSION = 2;
 
     private readonly BuildLayout $layout;
     private readonly SourceScanner $sourceScanner;

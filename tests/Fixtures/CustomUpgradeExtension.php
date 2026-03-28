@@ -27,7 +27,7 @@ final class CustomUpgradeExtension extends AbstractCompilerExtension
             version: $this->version(),
             description: 'Fixture extension used by upgrade-check tests.',
             frameworkVersionConstraint: '^0.4',
-            graphVersionConstraint: '^1',
+            graphVersionConstraint: '^2',
             providedPacks: ['tests.custom_upgrade_pack'],
         );
     }
@@ -41,7 +41,7 @@ final class CustomUpgradeExtension extends AbstractCompilerExtension
                 extension: $this->name(),
                 description: 'Fixture pack used by upgrade-check tests.',
                 frameworkVersionConstraint: '^0.4',
-                graphVersionConstraint: '^1',
+                graphVersionConstraint: '^2',
             ),
         ];
     }

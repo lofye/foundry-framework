@@ -54,7 +54,11 @@ final class GraphCompilerTest extends TestCase
         $this->assertIsString($graphRaw);
         $graph = Json::decodeAssoc($graphRaw);
 
-        $this->assertSame(1, $graph['graph_version']);
+        $this->assertSame(2, $graph['graph_version']);
+        $this->assertSame(1, $graph['graph_spec_version']);
+        $this->assertArrayHasKey('graph_metadata', $graph);
+        $this->assertArrayHasKey('integrity', $graph);
+        $this->assertArrayHasKey('compatibility', $graph);
         $nodeIds = array_values(array_map(
             static fn(array $row): string => (string) ($row['id'] ?? ''),
             (array) ($graph['nodes'] ?? []),

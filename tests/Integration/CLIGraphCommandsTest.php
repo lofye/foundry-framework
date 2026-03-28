@@ -93,7 +93,22 @@ YAML);
 
         $inspectGraph = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--json']);
         $this->assertSame(0, $inspectGraph['status']);
-        $this->assertSame(1, $inspectGraph['payload']['graph_version']);
+        $this->assertSame(2, $inspectGraph['payload']['graph_version']);
+        $this->assertSame(1, $inspectGraph['payload']['graph_spec_version']);
+
+        $inspectGraphSpec = $this->runCommand($app, ['foundry', 'inspect', 'graph-spec', '--json']);
+        $this->assertSame(0, $inspectGraphSpec['status']);
+        $this->assertArrayHasKey('node_types', $inspectGraphSpec['payload']);
+        $this->assertArrayHasKey('edge_types', $inspectGraphSpec['payload']);
+        $this->assertArrayHasKey('artifact_schema', $inspectGraphSpec['payload']);
+
+        $inspectNodeTypes = $this->runCommand($app, ['foundry', 'inspect', 'node-types', '--json']);
+        $this->assertSame(0, $inspectNodeTypes['status']);
+        $this->assertNotEmpty($inspectNodeTypes['payload']['node_types']);
+
+        $inspectEdgeTypes = $this->runCommand($app, ['foundry', 'inspect', 'edge-types', '--json']);
+        $this->assertSame(0, $inspectEdgeTypes['status']);
+        $this->assertNotEmpty($inspectEdgeTypes['payload']['edge_types']);
 
         $inspectNode = $this->runCommand($app, ['foundry', 'inspect', 'node', 'feature:publish_post', '--json']);
         $this->assertSame(0, $inspectNode['status']);
@@ -125,6 +140,17 @@ YAML);
         $inspectInterceptors = $this->runCommand($app, ['foundry', 'inspect', 'interceptors', '--stage=auth', '--json']);
         $this->assertSame(0, $inspectInterceptors['status']);
         $this->assertIsArray($inspectInterceptors['payload']['interceptors']);
+
+        $inspectSubgraph = $this->runCommand($app, ['foundry', 'inspect', 'subgraph', 'publish_post', '--json']);
+        $this->assertSame(0, $inspectSubgraph['status']);
+        $this->assertSame('publish_post', $inspectSubgraph['payload']['feature']);
+        $this->assertArrayHasKey('subgraph', $inspectSubgraph['payload']);
+        $this->assertArrayHasKey('execution_subgraph', $inspectSubgraph['payload']);
+        $this->assertArrayHasKey('ownership_subgraph', $inspectSubgraph['payload']);
+
+        $inspectGraphIntegrity = $this->runCommand($app, ['foundry', 'inspect', 'graph-integrity', '--json']);
+        $this->assertSame(0, $inspectGraphIntegrity['status']);
+        $this->assertTrue($inspectGraphIntegrity['payload']['ok']);
 
         $impactNode = $this->runCommand($app, ['foundry', 'inspect', 'impact', 'feature:publish_post', '--json']);
         $this->assertSame(0, $impactNode['status']);
@@ -184,6 +210,14 @@ YAML);
         $verifyGraph = $this->runCommand($app, ['foundry', 'verify', 'graph', '--json']);
         $this->assertSame(0, $verifyGraph['status']);
         $this->assertTrue($verifyGraph['payload']['ok']);
+        $this->assertArrayHasKey('artifact_verification', $verifyGraph['payload']);
+        $this->assertArrayHasKey('graph_integrity', $verifyGraph['payload']);
+
+        $verifyGraphIntegrity = $this->runCommand($app, ['foundry', 'verify', 'graph-integrity', '--json']);
+        $this->assertSame(0, $verifyGraphIntegrity['status']);
+        $this->assertTrue($verifyGraphIntegrity['payload']['ok']);
+        $this->assertSame(2, $verifyGraphIntegrity['payload']['graph_version']);
+        $this->assertSame(1, $verifyGraphIntegrity['payload']['graph_spec_version']);
 
         $verifyPipeline = $this->runCommand($app, ['foundry', 'verify', 'pipeline', '--json']);
         $this->assertSame(0, $verifyPipeline['status']);
@@ -218,6 +252,12 @@ YAML);
         $this->assertArrayHasKey('manifest', $inspectBuild['payload']);
         $this->assertArrayHasKey('cache', $inspectBuild['payload']);
         $this->assertArrayHasKey('cache_status', $inspectBuild['payload']);
+        $this->assertArrayHasKey('graph_integrity', $inspectBuild['payload']);
+
+        $doctorGraph = $this->runCommand($app, ['foundry', 'doctor', '--graph', '--json']);
+        $this->assertSame(0, $doctorGraph['status']);
+        $this->assertTrue($doctorGraph['payload']['graph_mode']);
+        $this->assertArrayHasKey('graph_integrity', $doctorGraph['payload']['checks']);
     }
 
     public function test_cache_inspect_clear_and_no_cache_compile_commands(): void

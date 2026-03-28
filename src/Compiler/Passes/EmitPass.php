@@ -125,6 +125,7 @@ final class EmitPass implements CompilerPass
 
         $manifest = [
             'graph_version' => $state->graph->graphVersion(),
+            'graph_spec_version' => \Foundry\Compiler\GraphSpec\CanonicalGraphSpecification::instance()->specVersion(),
             'framework_version' => $state->graph->frameworkVersion(),
             'compiled_at' => $state->graph->compiledAt(),
             'source_hash' => $state->graph->sourceHash(),

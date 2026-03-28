@@ -9,6 +9,7 @@ use Foundry\Compiler\Extensions\CompatibilityChecker;
 use Foundry\Compiler\Extensions\ExtensionDescriptor;
 use Foundry\Compiler\Extensions\ExtensionRegistry;
 use Foundry\Compiler\Extensions\PackDefinition;
+use Foundry\Compiler\GraphCompiler;
 use Foundry\Compiler\Migration\DefinitionFormat;
 use PHPUnit\Framework\TestCase;
 
@@ -120,11 +121,11 @@ final class CompatibilityCheckerTest extends TestCase
         ]);
 
         $checker = new CompatibilityChecker($registry, $registry->packRegistry());
-        $report = $checker->check('1.0.0', 1);
+        $report = $checker->check('1.0.0', GraphCompiler::GRAPH_VERSION);
 
         $this->assertTrue($report->ok);
         $this->assertSame([], $report->diagnostics);
-        $this->assertSame(1, $report->versionMatrix['graph_version']);
+        $this->assertSame(GraphCompiler::GRAPH_VERSION, $report->versionMatrix['graph_version']);
         $this->assertSame(['core'], $report->loadOrder);
     }
 

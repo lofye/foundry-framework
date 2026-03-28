@@ -4,6 +4,11 @@ Use this file when working in the Foundry framework repository itself.
 
 For generated Foundry application repos, use the scaffolded app-level `AGENTS.md`, not this file.
 
+## Philosophy
+
+The philosophy behind the Foundry Framework is in docs/philosophy/foundry-philosophy.md
+If you haven't already read it during this session, read it now, then proceed.
+
 ## Scope
 
 This repository owns framework internals:
@@ -119,5 +124,23 @@ Never let implementation drift from spec.
 Determinism and contract stability are required.
 If a change would surprise a user or break tooling, it is a contract change.
 
-There is additional important information in docs/philosophy/foundry-philosophy.md
-If you haven't already read it in this session, go read it now.
+## Docs
+
+### Source of truth
+
+•	The framework/ submodule is the canonical source of framework documentation.
+•	In the framework repo, everything under docs/ is authored canonical content unless explicitly marked otherwise.
+•	The website repo is the presentation layer and may contain:
+•	content/docs/authored/ for website-only docs
+•	content/docs/imported/ for docs synced from framework/docs/
+•	public/docs/ for generated output
+•	Do not create duplicate canonical framework docs in content/docs/authored/.
+•	Do not edit imported docs manually.
+•	Website HTML pages in public/*.html belong to the website repo, not the framework repo.
+•	Before moving or deleting docs, audit which docs are actually used by the build pipeline.
+
+### Docs mental model
+•	framework/docs/ = truth
+•	website/content/docs/imported/ = synced copy
+•	website/content/docs/authored/ = website-only authored docs
+•	website/public/docs/ = generated output

@@ -70,6 +70,11 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'pack', 'core.foundation']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'compatibility']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'definition-format', 'feature_manifest']));
+        $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'graph-spec']));
+        $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'node-types']));
+        $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'edge-types']));
+        $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'subgraph', 'publish_post']));
+        $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'graph-integrity']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'api-surface']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'cli-surface']));
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'pipeline']));
@@ -110,6 +115,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new DoctorCommand())->matches(['doctor']));
         $this->assertTrue((new DoctorCommand())->matches(['doctor', '--cli']));
         $this->assertTrue((new DoctorCommand())->matches(['doctor', '--deep']));
+        $this->assertTrue((new DoctorCommand())->matches(['doctor', '--graph']));
         $this->assertTrue((new DoctorCommand())->matches(['doctor', '--quality']));
         $this->assertTrue((new ExplainCommand())->matches(['explain', 'publish_post']));
         $this->assertTrue((new DiffCommand())->matches(['diff']));
@@ -145,6 +151,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new VerifyContractsCommand())->matches(['verify', 'contracts']));
         $this->assertTrue((new VerifyContractsCommand())->matches(['verify', 'cli-surface']));
         $this->assertTrue((new VerifyGraphCommand())->matches(['verify', 'graph']));
+        $this->assertTrue((new VerifyGraphCommand())->matches(['verify', 'graph-integrity']));
         $this->assertTrue((new VerifyPipelineCommand())->matches(['verify', 'pipeline']));
         $this->assertTrue((new VerifyCompatibilityCommand())->matches(['verify', 'extensions']));
         $this->assertTrue((new VerifyCompatibilityCommand())->matches(['verify', 'compatibility']));

@@ -50,7 +50,7 @@ final class DoctorCommand extends Command
     #[\Override]
     public function run(array $args, CommandContext $context): array
     {
-        [$feature, $strict, $includeCli, $deep, $staticMode, $styleMode, $qualityMode, $includeTests] = $this->parseOptions($args);
+        [$feature, $strict, $includeCli, $deep, $staticMode, $styleMode, $qualityMode, $includeTests, $graphMode] = $this->parseOptions($args);
         $runStatic = $qualityMode || $staticMode;
         $runStyle = $qualityMode || $styleMode;
 
@@ -82,7 +82,7 @@ final class DoctorCommand extends Command
         [$composerConfig, $composerError] = $this->loadComposerConfig($paths->join('composer.json'));
 
         $doctor = new FrameworkDoctor(
-            checks: array_merge($this->builtInChecks(), $extensionRegistry->doctorChecks()),
+            checks: array_merge($this->builtInChecks($graphMode), $graphMode ? [] : $extensionRegistry->doctorChecks()),
             architectureDoctor: new ArchitectureDoctor(
                 analyzers: $extensionRegistry->graphAnalyzers(),
                 impactAnalyzer: $compiler->impactAnalyzer(),
@@ -167,6 +167,7 @@ final class DoctorCommand extends Command
             'source_hash' => $compileResult->graph->sourceHash(),
             'feature_filter' => $feature,
             'strict' => $strict,
+            'graph_mode' => $graphMode,
             'cli' => $includeCli,
             'command_prefix' => $commandPrefix,
             'quality_mode' => [
@@ -252,7 +253,7 @@ final class DoctorCommand extends Command
 
     /**
      * @param array<int,string> $args
-     * @return array{0:?string,1:bool,2:bool,3:bool,4:bool,5:bool,6:bool,7:bool}
+     * @return array{0:?string,1:bool,2:bool,3:bool,4:bool,5:bool,6:bool,7:bool,8:bool}
      */
     private function parseOptions(array $args): array
     {
@@ -264,6 +265,7 @@ final class DoctorCommand extends Command
         $styleMode = false;
         $qualityMode = false;
         $includeTests = false;
+        $graphMode = false;
 
         foreach ($args as $index => $arg) {
             if ($arg === '--strict') {
@@ -301,6 +303,11 @@ final class DoctorCommand extends Command
                 continue;
             }
 
+            if ($arg === '--graph') {
+                $graphMode = true;
+                continue;
+            }
+
             if (str_starts_with($arg, '--feature=')) {
                 $feature = substr($arg, strlen('--feature='));
                 continue;
@@ -318,7 +325,7 @@ final class DoctorCommand extends Command
             $feature = null;
         }
 
-        return [$feature, $strict, $includeCli, $deep, $staticMode, $styleMode, $qualityMode, $includeTests];
+        return [$feature, $strict, $includeCli, $deep, $staticMode, $styleMode, $qualityMode, $includeTests, $graphMode];
     }
 
     private function featureExists(CommandContext $context, string $feature): bool
@@ -329,8 +336,16 @@ final class DoctorCommand extends Command
     /**
      * @return array<int,\Foundry\Doctor\DoctorCheck>
      */
-    private function builtInChecks(): array
+    private function builtInChecks(bool $graphMode = false): array
     {
+        if ($graphMode) {
+            return [
+                new CompileHealthCheck(),
+                new GraphIntegrityCheck(),
+                new PipelineConsistencyCheck(new PipelineIntegrityInspector()),
+            ];
+        }
+
         return [
             new CompileHealthCheck(),
             new DirectoryHealthCheck(),

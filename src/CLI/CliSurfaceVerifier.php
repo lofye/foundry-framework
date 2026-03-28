@@ -256,6 +256,7 @@ final class CliSurfaceVerifier
             'inspect extension' => ['inspect', 'extension', 'example'],
             'inspect pack' => ['inspect', 'pack', 'example'],
             'inspect definition-format' => ['inspect', 'definition-format', 'example'],
+            'inspect subgraph' => ['inspect', 'subgraph', 'example_feature'],
             'inspect route' => ['inspect', 'route', 'GET', '/example'],
             default => array_values(array_filter(explode(' ', $signature), static fn(string $part): bool => $part !== '')),
         };

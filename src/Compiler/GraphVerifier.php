@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Foundry\Compiler;
 
+use Foundry\Compiler\GraphSpec\GraphIntegrityReport;
+use Foundry\Compiler\GraphSpec\GraphIntegrityVerifier;
 use Foundry\Support\Json;
 use Foundry\Support\Paths;
 use Foundry\Verification\VerificationResult;
@@ -16,6 +18,20 @@ final class GraphVerifier
     ) {}
 
     public function verify(): VerificationResult
+    {
+        $artifactVerification = $this->verifyArtifacts();
+        $graphIntegrity = $this->verifyGraphIntegrity()->toVerificationResult();
+
+        $errors = array_values(array_unique(array_merge($artifactVerification->errors, $graphIntegrity->errors)));
+        $warnings = array_values(array_unique(array_merge($artifactVerification->warnings, $graphIntegrity->warnings)));
+
+        sort($errors);
+        sort($warnings);
+
+        return new VerificationResult($errors === [], $errors, $warnings);
+    }
+
+    public function verifyArtifacts(): VerificationResult
     {
         $errors = [];
         $warnings = [];
@@ -125,7 +141,15 @@ final class GraphVerifier
             }
         }
 
+        sort($errors);
+        sort($warnings);
+
         return new VerificationResult($errors === [], $errors, $warnings);
+    }
+
+    public function verifyGraphIntegrity(): GraphIntegrityReport
+    {
+        return (new GraphIntegrityVerifier($this->paths, $this->layout))->verify();
     }
 
     /**

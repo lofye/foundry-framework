@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Foundry\Doctor\Checks;
 
 use Foundry\Compiler\Diagnostics\DiagnosticBag;
+use Foundry\Compiler\GraphVerifier;
 use Foundry\Doctor\DoctorCheck;
 use Foundry\Doctor\DoctorContext;
 use Foundry\Doctor\DoctorSummary;
@@ -19,7 +20,7 @@ final class GraphIntegrityCheck implements DoctorCheck
 
     public function description(): string
     {
-        return 'Verifies emitted build artifacts, projection files, and integrity hashes.';
+        return 'Verifies emitted build artifacts, projection files, integrity hashes, and canonical graph structure.';
     }
 
     public function check(DoctorContext $context, DiagnosticBag $diagnostics): array
@@ -124,6 +125,44 @@ final class GraphIntegrityCheck implements DoctorCheck
             );
         }
 
+        $integrityReport = (new GraphVerifier($context->paths, $context->layout))->verifyGraphIntegrity();
+        foreach ($integrityReport->issues as $issue) {
+            if (!is_array($issue)) {
+                continue;
+            }
+
+            $code = (string) ($issue['code'] ?? 'FDY9199_GRAPH_INTEGRITY');
+            $message = (string) ($issue['message'] ?? 'Graph integrity issue detected.');
+            $details = is_array($issue['details'] ?? null) ? $issue['details'] : [];
+            $sourcePath = isset($details['path']) && is_string($details['path'])
+                ? $details['path']
+                : null;
+            $severity = (string) ($issue['severity'] ?? 'error');
+
+            if ($severity === 'warning') {
+                $diagnostics->warning(
+                    code: $code,
+                    category: 'graph',
+                    message: $message,
+                    sourcePath: $sourcePath,
+                    pass: 'doctor.graph_integrity',
+                    whyItMatters: 'Graph integrity problems make inspection, impact analysis, and runtime projection behavior harder to trust.',
+                    details: $details,
+                );
+                continue;
+            }
+
+            $diagnostics->error(
+                code: $code,
+                category: 'graph',
+                message: $message,
+                sourcePath: $sourcePath,
+                pass: 'doctor.graph_integrity',
+                whyItMatters: 'Graph integrity problems can hide contract drift or corrupt the canonical application model.',
+                details: $details,
+            );
+        }
+
         $summary = $diagnostics->summary();
 
         return [
@@ -132,6 +171,7 @@ final class GraphIntegrityCheck implements DoctorCheck
             'artifact_count' => count($artifacts),
             'integrity_hash_count' => count($context->compileResult->integrityHashes),
             'json_artifacts_checked' => $checkedJsonArtifacts,
+            'graph_integrity' => $integrityReport->toArray(),
         ];
     }
 

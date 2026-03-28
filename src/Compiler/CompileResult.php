@@ -45,6 +45,7 @@ final readonly class CompileResult
             'cache' => $this->cache,
             'graph' => [
                 'graph_version' => $this->graph->graphVersion(),
+                'graph_spec_version' => \Foundry\Compiler\GraphSpec\CanonicalGraphSpecification::instance()->specVersion(),
                 'framework_version' => $this->graph->frameworkVersion(),
                 'compiled_at' => $this->graph->compiledAt(),
                 'source_hash' => $this->graph->sourceHash(),
