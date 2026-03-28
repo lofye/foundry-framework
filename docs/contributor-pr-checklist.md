@@ -2,6 +2,8 @@
 
 Use this checklist before merging any framework change.
 
+Start with [Contributor Portal](contributor-portal.md) when you need the architecture model, safe edit loop, extension guidance, or roadmap context behind these checks.
+
 ## Contract Safety
 - [ ] Does this change affect a documented user-facing contract?
 - [ ] If yes, were docs updated first or in the same change?

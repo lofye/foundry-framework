@@ -7,6 +7,7 @@ Use these entry points when you are orienting yourself:
 - [Guided Learning Paths](guided-learning-paths.html) for curated sequences like "Learn Foundry in 30 minutes", extension onboarding, and pipeline study.
 - [Quick Tour](quick-tour.md) for the shortest path through compile, inspect, verify, and docs generation.
 - [How It Works](how-it-works.md) for the graph, pipeline, and architecture model.
+- [Contributor Portal](contributor-portal.md) for framework architecture, extension hooks, workflow rules, and the PR checklist.
 - [Reference](reference.md) for generated feature, schema, graph, and CLI pages.
 
 Refresh generated reference source files in the framework repo with:

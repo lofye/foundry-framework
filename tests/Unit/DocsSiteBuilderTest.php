@@ -32,7 +32,7 @@ final class DocsSiteBuilderTest extends TestCase
         file_put_contents($this->project->root . '/docs/intro.md', <<<'MD'
 # Foundry Docs
 
-Read the [Quick Tour](quick-tour.md), [How It Works](how-it-works.md), and [Reference](reference.md).
+Read the [Quick Tour](quick-tour.md), [How It Works](how-it-works.md), [Contributor Portal](contributor-portal.md), and [Reference](reference.md).
 MD);
         file_put_contents($this->project->root . '/docs/quick-tour.md', <<<'MD'
 # Quick Tour
@@ -42,7 +42,7 @@ MD);
         file_put_contents($this->project->root . '/docs/how-it-works.md', <<<'MD'
 # How It Works
 
-The graph-backed docs system mirrors the compiler structure.
+The graph-backed docs system mirrors the compiler structure. Contributors should start with [Contributor Portal](contributor-portal.md).
 MD);
         file_put_contents($this->project->root . '/docs/reference.md', <<<'MD'
 # Reference
@@ -59,6 +59,16 @@ MD);
         file_put_contents($this->project->root . '/docs/execution-pipeline.md', "# Execution Pipeline\n");
         file_put_contents($this->project->root . '/docs/architecture-tools.md', "# Architecture Tools\n");
         file_put_contents($this->project->root . '/docs/contributor-vocabulary.md', "# Contributor Vocabulary\n");
+        file_put_contents($this->project->root . '/docs/contributor-portal.md', <<<'MD'
+# Contributor Portal
+
+Follow the `collect -> analyze -> assemble -> render` model, then use the [Extension Author Guide](extension-author-guide.md) and [Contributor PR Checklist](contributor-pr-checklist.md).
+MD);
+        file_put_contents($this->project->root . '/docs/contributor-pr-checklist.md', <<<'MD'
+# Contributor PR Checklist
+
+Use this with [Contributor Portal](contributor-portal.md).
+MD);
         file_put_contents($this->project->root . '/docs/public-api-policy.md', "# Public API Policy\n");
         file_put_contents($this->project->root . '/docs/extension-author-guide.md', "# Extension Author Guide\n");
         file_put_contents($this->project->root . '/docs/extensions-and-migrations.md', "# Extensions And Migrations\n");
@@ -100,6 +110,8 @@ MD);
         $this->assertFileExists($this->project->root . '/public/docs/features.html');
         $this->assertFileExists($this->project->root . '/public/docs/graph-overview.html');
         $this->assertFileExists($this->project->root . '/public/docs/architecture-explorer.html');
+        $this->assertFileExists($this->project->root . '/public/docs/contributor-portal.html');
+        $this->assertFileExists($this->project->root . '/public/docs/contributor-pr-checklist.html');
         $this->assertFileExists($this->project->root . '/public/docs/cli-index.html');
         $this->assertFileExists($this->project->root . '/public/docs/command-playground.html');
         $this->assertFileExists($this->project->root . '/public/docs/example-hello-world.html');
@@ -115,6 +127,7 @@ MD);
         $this->assertSame('v0.4.0', $manifest['versions'][1]['version']);
         $this->assertContains('guided-learning-paths.html', array_column((array) $manifest['pages'], 'path'));
         $this->assertContains('architecture-explorer.html', array_column((array) $manifest['pages'], 'path'));
+        $this->assertContains('contributor-portal.html', array_column((array) $manifest['pages'], 'path'));
         $this->assertContains('cli-index.html', array_column((array) $manifest['pages'], 'path'));
         $this->assertContains('command-playground.html', array_column((array) $manifest['pages'], 'path'));
 
@@ -122,6 +135,7 @@ MD);
         $this->assertStringContainsString('Legacy local preview only.', $home);
         $this->assertStringContainsString('href="quick-tour.html"', $home);
         $this->assertStringContainsString('href="how-it-works.html"', $home);
+        $this->assertStringContainsString('href="contributor-portal.html"', $home);
         $this->assertStringContainsString('href="reference.html"', $home);
         $this->assertStringContainsString('href="versions/index.html"', $home);
         $this->assertStringContainsString('Getting Started', $home);
@@ -143,6 +157,12 @@ MD);
         $reference = (string) file_get_contents($this->project->root . '/public/docs/reference.html');
         $this->assertStringContainsString('href="cli-index.html"', $reference);
         $this->assertStringContainsString('href="command-playground.html"', $reference);
+
+        $contributorPortal = (string) file_get_contents($this->project->root . '/public/docs/contributor-portal.html');
+        $this->assertStringContainsString('Contributor Portal', $contributorPortal);
+        $this->assertStringContainsString('collect -&gt; analyze -&gt; assemble -&gt; render', $contributorPortal);
+        $this->assertStringContainsString('href="extension-author-guide.html"', $contributorPortal);
+        $this->assertStringContainsString('href="contributor-pr-checklist.html"', $contributorPortal);
 
         $examples = (string) file_get_contents($this->project->root . '/public/docs/example-applications.html');
         $this->assertStringContainsString('href="example-hello-world.html"', $examples);

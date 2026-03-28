@@ -2,6 +2,8 @@
 
 Foundry 1.0 treats extensions and packs as a stable ecosystem surface. Extension authors should depend on the `extension_api` policy, not on compiler internals outside the documented contract.
 
+For the broader framework contributor workflow, architecture model, and PR checklist, start with [Contributor Portal](contributor-portal.md).
+
 ## Stable Extension Contract
 
 Implement `Foundry\Compiler\Extensions\CompilerExtension` or extend `AbstractCompilerExtension`.
@@ -17,6 +19,8 @@ Stable hooks:
 - graph analyzers for `doctor`
 - explain contributors for `foundry explain`
 - pipeline stages and interceptors
+
+Explain context collectors are currently framework-owned inputs wired through `src/Explain/ExplainEngineFactory.php`. Add a collector there only when extending core explain inputs; extension-facing customization remains section contributions through `ExplainContributorInterface`.
 
 CLI-facing contributions should be declared through metadata, not inferred from runtime side effects.
 

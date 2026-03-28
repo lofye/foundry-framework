@@ -1680,6 +1680,8 @@ HTML;
             ['slug' => 'execution-pipeline', 'title' => 'Execution Pipeline', 'section' => 'Architecture', 'source' => 'docs/execution-pipeline.md'],
             ['slug' => 'architecture-tools', 'title' => 'Architecture Tools', 'section' => 'Architecture', 'source' => 'docs/architecture-tools.md'],
             ['slug' => 'contributor-vocabulary', 'title' => 'Contributor Vocabulary', 'section' => 'Architecture', 'source' => 'docs/contributor-vocabulary.md'],
+            ['slug' => 'contributor-portal', 'title' => 'Contributor Portal', 'section' => 'Contributors', 'source' => 'docs/contributor-portal.md', 'main_navigation' => true],
+            ['slug' => 'contributor-pr-checklist', 'title' => 'Contributor PR Checklist', 'section' => 'Contributors', 'source' => 'docs/contributor-pr-checklist.md'],
             ['slug' => 'reference', 'title' => 'Reference', 'section' => 'Reference', 'source' => 'docs/reference.md', 'main_navigation' => true],
             ['slug' => 'cli-index', 'title' => 'Interactive CLI Index', 'section' => 'Reference', 'source' => 'generated_html:cli-index'],
             ['slug' => 'command-playground', 'title' => 'Command Playground', 'section' => 'Reference', 'source' => 'generated_html:command-playground'],

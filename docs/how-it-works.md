@@ -2,6 +2,8 @@
 
 Foundry’s docs system is intentionally graph-native. The same compiler output that powers runtime projections and verification also feeds generated documentation.
 
+If you are contributing to the framework itself, start with [Contributor Portal](contributor-portal.md) before drilling into the subsystem pages below.
+
 Read these pages in order when you want the architecture model:
 
 - [Semantic Compiler](semantic-compiler.md)

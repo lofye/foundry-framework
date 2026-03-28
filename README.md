@@ -249,6 +249,7 @@ Policy details live in `docs/public-api-policy.md` and are also emitted into gen
 ## Documentation Boundary
 Canonical framework docs are authored in `docs/` in this repository.
 The website repo imports that authored content plus generated reference material and is the canonical renderer/publisher of public docs and version snapshots.
+Framework contributors should start with `docs/contributor-portal.md` for architecture, extension, workflow, and checklist guidance.
 
 Refresh framework-side generated reference source files with:
 
