@@ -1,12 +1,12 @@
 version: 2
 feature: publish_story
 kind: http
-description: Publish a reviewed story and emit the final public event.
+description: Publish a reviewed story, emit the public event, and dispatch the feed refresh job.
 owners:
   - examples
 route:
   method: POST
-  path: /editorial/stories/publish
+  path: /editorial/stories/{story_id}/publish
 input:
   schema: app/features/publish_story/input.schema.json
 output:
@@ -15,11 +15,12 @@ auth:
   required: true
   strategies:
     - bearer
-  permissions:
-    - editorial.publish
+  permissions: []
 database:
-  reads: []
-  writes: []
+  reads:
+    - stories
+  writes:
+    - stories
   transactions: required
   queries: []
 cache:
@@ -35,20 +36,13 @@ events:
 jobs:
   dispatch:
     - refresh_story_feed
-rate_limit:
-  strategy: user
-  bucket: publish_story
-  cost: 1
 observability:
   audit: true
   trace: true
   log_level: info
 tests:
   required:
-    - auth
-    - contract
     - feature
 llm:
   editable: true
   risk_level: medium
-  notes_file: prompts.md

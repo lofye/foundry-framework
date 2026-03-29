@@ -3,9 +3,33 @@
   "title": "list_posts_output",
   "type": "object",
   "additionalProperties": false,
-  "required": ["ok", "feature"],
+  "required": ["feature", "returned", "posts"],
   "properties": {
-    "ok": {"type": "boolean"},
-    "feature": {"type": "string"}
+    "feature": {
+      "type": "string"
+    },
+    "returned": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "posts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "state"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        }
+      }
+    }
   }
 }

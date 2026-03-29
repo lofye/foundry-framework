@@ -1,7 +1,7 @@
 version: 2
 feature: say_hello
 kind: http
-description: Minimal hello-world route for onboarding and architecture inspection.
+description: Smallest current Foundry route for learning feature-local structure and inspect or verify flow.
 owners:
   - examples
 route:
@@ -21,25 +21,13 @@ database:
   writes: []
   transactions: optional
   queries: []
-cache:
-  reads: []
-  writes: []
-  invalidate: []
-events:
-  emit: []
-  subscribe: []
-jobs:
-  dispatch: []
-rate_limit: {}
 observability:
   audit: false
   trace: true
   log_level: info
 tests:
   required:
-    - contract
     - feature
 llm:
   editable: true
   risk_level: low
-  notes_file: prompts.md

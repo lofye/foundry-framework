@@ -1,26 +1,25 @@
-# Official Example Applications
+# Framework Examples
 
-Foundry examples are split into two groups:
+Foundry examples are split into three groups:
 
-- focused app examples that show one application shape clearly
-- framework/tooling examples that document compiler, extension, and CLI surfaces
+- canonical app examples you can study or copy into `app/*`
+- reference packs that help you plan a richer app or extension
+- framework surface examples for compiler, CLI, and tooling behavior
 
-The focused app examples are intentionally small and are best treated as copyable `app/*` trees plus companion docs. They are not standalone Composer projects.
+The canonical app examples are intentionally small and keep only authored source files. They are not standalone Composer projects, and they do not commit `app/generated/*`.
 
-## Official Set
+## Canonical App Examples
 
-- [Hello World](hello-world/README.md): the smallest readable Foundry app, showing one feature folder, schemas, context manifests, doctor usage, and graph inspection.
-- [API-First](blog-api/README.md): a route-first CRUD slice showing how to organize an HTTP API around feature folders and contract files.
-- [Extension Example](extensions-migrations/README.md): the canonical extension, pack, migration, and codemod example.
-- [Workflow And Events](workflow-events/README.md): a compact event-driven editorial flow with workflow definitions and graph inspection commands.
-- [Reference Blog](reference-blog/README.md): the full reference-app kit with exact commands, an LLM prompt, and starter content for a blog with admin login and RSS.
+- [Hello World](hello-world/README.md): the smallest readable Foundry app, showing one feature folder, schemas, context manifests, and the inspect/doctor/verify loop.
+- [Blog API](blog-api/README.md): the canonical HTTP slice with one collection read, one item read, and one protected write.
+- [Workflow And Events](workflow-events/README.md): a compact editorial flow showing workflows, event edges, route params, and job dispatch.
 
-## Supplemental App Examples
+## Reference Packs
 
-- [Dashboard](dashboard/README.md): authenticated dashboard-style routes and profile/media patterns.
-- [AI Pipeline](ai-pipeline/README.md): AI-oriented feature grouping and prompt/schema organization.
+- [Extensions And Migrations](extensions-migrations/README.md): extension registration, pack metadata, migrations, and codemod examples.
+- [Reference Blog](reference-blog/README.md): a richer build kit with exact commands, an LLM prompt, and starter content for a blog with admin login and RSS.
 
-## Framework And Tooling Examples
+## Framework Surface Examples
 
 - [Compiler Core](compiler-core/README.md)
 - [Architecture Tools](architecture-tools/README.md)
@@ -30,4 +29,4 @@ The focused app examples are intentionally small and are best treated as copyabl
 
 ## Thresholds
 
-Thresholds should be treated as the richer real-app reference. The examples in this directory stay intentionally smaller so they can teach one architecture idea at a time without hiding the underlying Foundry patterns.
+Thresholds is the richer real-app reference. The examples in this directory stay smaller and more explicit so they teach one architecture idea at a time without hiding the underlying Foundry model.

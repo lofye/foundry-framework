@@ -1,3 +1,13 @@
 version: 1
-emit: []
+emit:
+  - name: post.published
+    schema:
+      type: object
+      additionalProperties: false
+      required: [post_id, author_id]
+      properties:
+        post_id:
+          type: string
+        author_id:
+          type: string
 subscribe: []

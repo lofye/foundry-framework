@@ -1,50 +1,34 @@
 version: 2
 feature: view_post
 kind: http
-description: view_post endpoint for blog-api.
+description: Read one published post through an explicit route-param feature.
 owners:
-  - blog-api
+  - examples
 route:
   method: GET
-  path: /posts/{id}
+  path: /posts/{post_id}
 input:
   schema: app/features/view_post/input.schema.json
 output:
   schema: app/features/view_post/output.schema.json
 auth:
-  required: true
-  strategies:
-    - bearer
-  permissions:
-    - view_post.execute
+  required: false
+  public: true
+  strategies: []
+  permissions: []
 database:
-  reads: []
+  reads:
+    - posts
   writes: []
-  transactions: required
+  transactions: optional
   queries: []
-cache:
-  reads: []
-  writes: []
-  invalidate: []
-events:
-  emit: []
-  subscribe: []
-jobs:
-  dispatch: []
-rate_limit:
-  strategy: user
-  bucket: view_post
-  cost: 1
 observability:
-  audit: true
+  audit: false
   trace: true
   log_level: info
 tests:
   required:
-    - contract
     - feature
-    - auth
 llm:
   editable: true
   risk_level: low
-  notes_file: prompts.md

@@ -1,6 +1,6 @@
 # Reference Blog Kit
 
-`examples/reference-blog` is the richer reference-app kit. It is intentionally documentation-first: instead of committing a large generated app tree to this repository, it gives users the exact commands, prompt, and starter content needed to build a blog app with admin login and RSS.
+`examples/reference-blog` is the richer reference pack for a documentation-first blog build. Instead of committing a large app tree to this repository, it gives you the exact commands, prompt, and starter content needed to build a blog app with admin login and RSS.
 
 Included materials:
 

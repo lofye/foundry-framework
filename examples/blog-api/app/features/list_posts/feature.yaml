@@ -1,9 +1,9 @@
 version: 2
 feature: list_posts
 kind: http
-description: list_posts endpoint for blog-api.
+description: List the published posts exposed by the canonical example API.
 owners:
-  - blog-api
+  - examples
 route:
   method: GET
   path: /posts
@@ -12,39 +12,23 @@ input:
 output:
   schema: app/features/list_posts/output.schema.json
 auth:
-  required: true
-  strategies:
-    - bearer
-  permissions:
-    - list_posts.execute
+  required: false
+  public: true
+  strategies: []
+  permissions: []
 database:
-  reads: []
+  reads:
+    - posts
   writes: []
-  transactions: required
+  transactions: optional
   queries: []
-cache:
-  reads: []
-  writes: []
-  invalidate: []
-events:
-  emit: []
-  subscribe: []
-jobs:
-  dispatch: []
-rate_limit:
-  strategy: user
-  bucket: list_posts
-  cost: 1
 observability:
-  audit: true
+  audit: false
   trace: true
   log_level: info
 tests:
   required:
-    - contract
     - feature
-    - auth
 llm:
   editable: true
   risk_level: low
-  notes_file: prompts.md

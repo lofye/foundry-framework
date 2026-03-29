@@ -1,9 +1,9 @@
 version: 2
 feature: publish_post
 kind: http
-description: publish_post endpoint for blog-api.
+description: Publish a post through a protected route and emit a visible graph event.
 owners:
-  - blog-api
+  - examples
 route:
   method: POST
   path: /posts
@@ -15,36 +15,30 @@ auth:
   required: true
   strategies:
     - bearer
-  permissions:
-    - publish_post.execute
+  permissions: []
 database:
-  reads: []
-  writes: []
+  reads:
+    - posts
+  writes:
+    - posts
   transactions: required
   queries: []
 cache:
   reads: []
   writes: []
-  invalidate: []
+  invalidate:
+    - posts:list
 events:
-  emit: []
+  emit:
+    - post.published
   subscribe: []
-jobs:
-  dispatch: []
-rate_limit:
-  strategy: user
-  bucket: publish_post
-  cost: 1
 observability:
   audit: true
   trace: true
   log_level: info
 tests:
   required:
-    - contract
     - feature
-    - auth
 llm:
   editable: true
   risk_level: low
-  notes_file: prompts.md

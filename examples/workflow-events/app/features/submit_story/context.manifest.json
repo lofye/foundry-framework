@@ -7,13 +7,8 @@
         "app/features/submit_story/action.php",
         "app/features/submit_story/input.schema.json",
         "app/features/submit_story/output.schema.json",
-        "app/features/submit_story/permissions.yaml",
-        "app/features/submit_story/cache.yaml",
         "app/features/submit_story/events.yaml",
-        "app/features/submit_story/jobs.yaml",
-        "app/features/submit_story/tests/submit_story_contract_test.php",
-        "app/features/submit_story/tests/submit_story_feature_test.php",
-        "app/features/submit_story/tests/submit_story_auth_test.php"
+        "app/features/submit_story/tests/submit_story_feature_test.php"
     ],
     "generated_files": [
         "app/.foundry/build/graph/app_graph.json",
@@ -49,8 +44,6 @@
         "output": "app/features/submit_story/output.schema.json"
     },
     "tests": [
-        "submit_story_auth_test",
-        "submit_story_contract_test",
         "submit_story_feature_test"
     ],
     "forbidden_paths": [

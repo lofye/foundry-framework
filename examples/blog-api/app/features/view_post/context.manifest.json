@@ -7,13 +7,7 @@
         "app/features/view_post/action.php",
         "app/features/view_post/input.schema.json",
         "app/features/view_post/output.schema.json",
-        "app/features/view_post/permissions.yaml",
-        "app/features/view_post/cache.yaml",
-        "app/features/view_post/events.yaml",
-        "app/features/view_post/jobs.yaml",
-        "app/features/view_post/tests/view_post_contract_test.php",
-        "app/features/view_post/tests/view_post_feature_test.php",
-        "app/features/view_post/tests/view_post_auth_test.php"
+        "app/features/view_post/tests/view_post_feature_test.php"
     ],
     "generated_files": [
         "app/.foundry/build/graph/app_graph.json",
@@ -47,9 +41,7 @@
         "output": "app/features/view_post/output.schema.json"
     },
     "tests": [
-        "view_post_contract_test",
-        "view_post_feature_test",
-        "view_post_auth_test"
+        "view_post_feature_test"
     ],
     "forbidden_paths": [
         "src/Core",

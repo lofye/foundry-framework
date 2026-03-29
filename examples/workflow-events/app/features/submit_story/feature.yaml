@@ -1,7 +1,7 @@
 version: 2
 feature: submit_story
 kind: http
-description: Create a draft story and emit the initial editorial event.
+description: Create a story, move it into review, and emit the first editorial event.
 owners:
   - examples
 route:
@@ -15,38 +15,30 @@ auth:
   required: true
   strategies:
     - bearer
-  permissions:
-    - editorial.submit
+  permissions: []
 database:
-  reads: []
-  writes: []
+  reads:
+    - stories
+  writes:
+    - stories
   transactions: required
   queries: []
 cache:
   reads: []
   writes: []
   invalidate:
-    - stories:list
+    - editorial:stories
 events:
   emit:
     - story.submitted
   subscribe: []
-jobs:
-  dispatch: []
-rate_limit:
-  strategy: user
-  bucket: submit_story
-  cost: 1
 observability:
   audit: true
   trace: true
   log_level: info
 tests:
   required:
-    - auth
-    - contract
     - feature
 llm:
   editable: true
   risk_level: low
-  notes_file: prompts.md

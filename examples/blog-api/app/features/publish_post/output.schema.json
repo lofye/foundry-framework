@@ -3,9 +3,35 @@
   "title": "publish_post_output",
   "type": "object",
   "additionalProperties": false,
-  "required": ["ok", "feature"],
+  "required": ["feature", "event", "post"],
   "properties": {
-    "ok": {"type": "boolean"},
-    "feature": {"type": "string"}
+    "feature": {
+      "type": "string"
+    },
+    "event": {
+      "type": "string"
+    },
+    "post": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "summary", "state", "author_id"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "author_id": {
+          "type": "string"
+        }
+      }
+    }
   }
 }

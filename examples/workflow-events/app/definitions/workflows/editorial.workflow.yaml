@@ -2,13 +2,15 @@ version: 1
 resource: editorial
 states: [draft, review, published]
 transitions:
-  submit:
+  submit_story:
     from: [draft]
     to: review
-    permission: editorial.submit
     emit: [story.submitted]
-  publish:
+  review_story:
+    from: [review]
+    to: review
+    emit: [story.review_requested]
+  publish_story:
     from: [review]
     to: published
-    permission: editorial.publish
     emit: [story.published]

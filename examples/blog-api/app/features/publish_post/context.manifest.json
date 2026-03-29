@@ -7,13 +7,8 @@
         "app/features/publish_post/action.php",
         "app/features/publish_post/input.schema.json",
         "app/features/publish_post/output.schema.json",
-        "app/features/publish_post/permissions.yaml",
-        "app/features/publish_post/cache.yaml",
         "app/features/publish_post/events.yaml",
-        "app/features/publish_post/jobs.yaml",
-        "app/features/publish_post/tests/publish_post_contract_test.php",
-        "app/features/publish_post/tests/publish_post_feature_test.php",
-        "app/features/publish_post/tests/publish_post_auth_test.php"
+        "app/features/publish_post/tests/publish_post_feature_test.php"
     ],
     "generated_files": [
         "app/.foundry/build/graph/app_graph.json",
@@ -39,7 +34,9 @@
         "app/generated/query_index.php"
     ],
     "upstream_dependencies": [
-        "auth"
+        "auth",
+        "events",
+        "cache"
     ],
     "downstream_dependents": [],
     "contracts": {
@@ -47,9 +44,7 @@
         "output": "app/features/publish_post/output.schema.json"
     },
     "tests": [
-        "publish_post_contract_test",
-        "publish_post_feature_test",
-        "publish_post_auth_test"
+        "publish_post_feature_test"
     ],
     "forbidden_paths": [
         "src/Core",

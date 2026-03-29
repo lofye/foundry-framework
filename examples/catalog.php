@@ -18,26 +18,14 @@ return [
         ],
         [
             'slug' => 'blog-api',
-            'title' => 'API-First',
+            'title' => 'Blog API',
             'path' => 'examples/blog-api',
             'kind' => 'focused-app',
             'teaches' => [
-                'resource-style HTTP features',
-                'auth and permissions',
-                'graph inspection by command',
-                'contract and graph verification',
-            ],
-        ],
-        [
-            'slug' => 'extensions-migrations',
-            'title' => 'Extension Example',
-            'path' => 'examples/extensions-migrations',
-            'kind' => 'framework-example',
-            'teaches' => [
-                'extension registration',
-                'pack metadata',
-                'migrations',
-                'codemod usage',
+                'route-per-feature HTTP design',
+                'public versus protected endpoints',
+                'route-param inspection',
+                'event-backed write flows',
             ],
         ],
         [
@@ -52,11 +40,25 @@ return [
                 'doctor and verify loops',
             ],
         ],
+    ],
+    'reference' => [
+        [
+            'slug' => 'extensions-migrations',
+            'title' => 'Extensions And Migrations',
+            'path' => 'examples/extensions-migrations',
+            'kind' => 'reference-pack',
+            'teaches' => [
+                'extension registration',
+                'pack metadata',
+                'definition migrations',
+                'codemod dry runs',
+            ],
+        ],
         [
             'slug' => 'reference-blog',
             'title' => 'Reference Blog',
             'path' => 'examples/reference-blog',
-            'kind' => 'reference-kit',
+            'kind' => 'reference-pack',
             'teaches' => [
                 'full blog planning',
                 'admin login flow',
@@ -65,34 +67,12 @@ return [
             ],
         ],
     ],
-    'supplemental' => [
-        [
-            'slug' => 'dashboard',
-            'title' => 'Dashboard',
-            'path' => 'examples/dashboard',
-            'kind' => 'focused-app',
-            'teaches' => [
-                'authenticated endpoints',
-                'profile-style routes',
-                'media upload flows',
-            ],
-        ],
-        [
-            'slug' => 'ai-pipeline',
-            'title' => 'AI Pipeline',
-            'path' => 'examples/ai-pipeline',
-            'kind' => 'focused-app',
-            'teaches' => [
-                'AI-oriented feature grouping',
-                'multi-step application slices',
-                'prompt and schema organization',
-            ],
-        ],
+    'framework' => [
         [
             'slug' => 'compiler-core',
             'title' => 'Compiler Core',
             'path' => 'examples/compiler-core',
-            'kind' => 'framework-example',
+            'kind' => 'framework-surface',
             'teaches' => [
                 'compile outputs',
                 'impact analysis',
@@ -103,7 +83,7 @@ return [
             'slug' => 'architecture-tools',
             'title' => 'Architecture Tools',
             'path' => 'examples/architecture-tools',
-            'kind' => 'framework-example',
+            'kind' => 'framework-surface',
             'teaches' => [
                 'doctor',
                 'graph visualize',
@@ -114,7 +94,7 @@ return [
             'slug' => 'execution-pipeline',
             'title' => 'Execution Pipeline',
             'path' => 'examples/execution-pipeline',
-            'kind' => 'framework-example',
+            'kind' => 'framework-surface',
             'teaches' => [
                 'pipeline topology',
                 'execution-plan inspection',
@@ -124,7 +104,7 @@ return [
             'slug' => 'app-scaffolding',
             'title' => 'App Scaffolding',
             'path' => 'examples/app-scaffolding',
-            'kind' => 'framework-example',
+            'kind' => 'framework-surface',
             'teaches' => [
                 'starter generation',
                 'resource definitions',
@@ -135,7 +115,7 @@ return [
             'slug' => 'integration-tooling',
             'title' => 'Integration Tooling',
             'path' => 'examples/integration-tooling',
-            'kind' => 'framework-example',
+            'kind' => 'framework-surface',
             'teaches' => [
                 'notifications',
                 'API resources',

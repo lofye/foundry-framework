@@ -4,8 +4,10 @@ emit:
     schema:
       type: object
       additionalProperties: false
-      required: [title]
+      required: [story_id, title]
       properties:
+        story_id:
+          type: string
         title:
           type: string
 subscribe: []

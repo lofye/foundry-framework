@@ -7,11 +7,6 @@
         "app/features/say_hello/action.php",
         "app/features/say_hello/input.schema.json",
         "app/features/say_hello/output.schema.json",
-        "app/features/say_hello/permissions.yaml",
-        "app/features/say_hello/cache.yaml",
-        "app/features/say_hello/events.yaml",
-        "app/features/say_hello/jobs.yaml",
-        "app/features/say_hello/tests/say_hello_contract_test.php",
         "app/features/say_hello/tests/say_hello_feature_test.php"
     ],
     "generated_files": [
@@ -46,7 +41,6 @@
         "output": "app/features/say_hello/output.schema.json"
     },
     "tests": [
-        "say_hello_contract_test",
         "say_hello_feature_test"
     ],
     "forbidden_paths": [

@@ -1,6 +1,0 @@
-version: 1
-permissions:
-  - fetch_ai_result.execute
-rules:
-  fetch_ai_result.execute:
-    description: Execute fetch_ai_result.

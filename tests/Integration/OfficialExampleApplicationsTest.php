@@ -40,6 +40,9 @@ final class OfficialExampleApplicationsTest extends TestCase
         $this->assertSame('GET /hello', $inspect['payload']['command_filter']);
         $this->assertContains('say_hello', $inspect['payload']['summary']['features']);
 
+        $feature = $this->runCommand($app, ['foundry', 'inspect', 'feature', 'say_hello', '--json']);
+        $this->assertSame(0, $feature['status']);
+
         $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=say_hello', '--json']);
         $this->assertSame(0, $doctor['status']);
         $this->assertTrue($doctor['payload']['ok']);
@@ -48,7 +51,7 @@ final class OfficialExampleApplicationsTest extends TestCase
         $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'pipeline', '--json'])['status']);
     }
 
-    public function test_blog_api_example_compiles_and_supports_command_and_doctor_inspection(): void
+    public function test_blog_api_example_compiles_and_supports_modern_api_inspection(): void
     {
         $this->importExampleApp('blog-api');
         $app = new Application();
@@ -62,11 +65,15 @@ final class OfficialExampleApplicationsTest extends TestCase
         $this->assertSame('GET /posts', $inspect['payload']['command_filter']);
         $this->assertContains('list_posts', $inspect['payload']['summary']['features']);
 
+        $feature = $this->runCommand($app, ['foundry', 'inspect', 'feature', 'publish_post', '--json']);
+        $this->assertSame(0, $feature['status']);
+
         $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=list_posts', '--json']);
         $this->assertSame(0, $doctor['status']);
         $this->assertTrue($doctor['payload']['ok']);
 
         $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'graph', '--json'])['status']);
+        $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'pipeline', '--json'])['status']);
         $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'contracts', '--json'])['status']);
     }
 
@@ -89,56 +96,15 @@ final class OfficialExampleApplicationsTest extends TestCase
         $this->assertSame('editorial', $workflow['payload']['workflow_filter']);
         $this->assertContains('editorial', $workflow['payload']['summary']['workflows']);
 
+        $feature = $this->runCommand($app, ['foundry', 'inspect', 'feature', 'publish_story', '--json']);
+        $this->assertSame(0, $feature['status']);
+
         $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=publish_story', '--json']);
         $this->assertSame(0, $doctor['status']);
         $this->assertTrue($doctor['payload']['ok']);
 
         $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'graph', '--json'])['status']);
         $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'workflows', '--json'])['status']);
-        $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'pipeline', '--json'])['status']);
-    }
-
-    public function test_dashboard_example_compiles_and_supports_architecture_commands(): void
-    {
-        $this->importExampleApp('dashboard');
-        $app = new Application();
-
-        $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json']);
-        $this->assertSame(0, $compile['status']);
-
-        $inspect = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--command', 'POST /login', '--json']);
-        $this->assertSame(0, $inspect['status']);
-        $this->assertSame('command', $inspect['payload']['view']);
-        $this->assertSame('POST /login', $inspect['payload']['command_filter']);
-        $this->assertContains('login', $inspect['payload']['summary']['features']);
-
-        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=login', '--json']);
-        $this->assertSame(0, $doctor['status']);
-        $this->assertTrue($doctor['payload']['ok']);
-
-        $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'graph', '--json'])['status']);
-        $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'pipeline', '--json'])['status']);
-    }
-
-    public function test_ai_pipeline_example_compiles_and_supports_architecture_commands(): void
-    {
-        $this->importExampleApp('ai-pipeline');
-        $app = new Application();
-
-        $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json']);
-        $this->assertSame(0, $compile['status']);
-
-        $inspect = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--feature', 'submit_document', '--json']);
-        $this->assertSame(0, $inspect['status']);
-        $this->assertSame('dependencies', $inspect['payload']['view']);
-        $this->assertSame('submit_document', $inspect['payload']['feature_filter']);
-        $this->assertContains('submit_document', $inspect['payload']['summary']['features']);
-
-        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=classify_document', '--json']);
-        $this->assertSame(0, $doctor['status']);
-        $this->assertTrue($doctor['payload']['ok']);
-
-        $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'graph', '--json'])['status']);
         $this->assertSame(0, $this->runCommand($app, ['foundry', 'verify', 'pipeline', '--json'])['status']);
     }
 

@@ -506,25 +506,23 @@ Coverage note:
 ## Examples
 Start with `docs/example-applications.md` or `examples/README.md`.
 
-Official example set:
+Canonical app examples:
 - `examples/hello-world`
 - `examples/blog-api`
-- `examples/extensions-migrations`
 - `examples/workflow-events`
+
+Reference packs:
+- `examples/extensions-migrations`
 - `examples/reference-blog`
 
-Supplemental app examples:
-- `examples/dashboard`
-- `examples/ai-pipeline`
-
-Framework/tooling examples:
+Framework surface examples:
 - `examples/compiler-core`
 - `examples/architecture-tools`
 - `examples/execution-pipeline`
 - `examples/app-scaffolding`
 - `examples/integration-tooling`
 
-Thresholds should be treated as the richer real-app reference; the smaller examples stay focused on one teachable pattern at a time.
+The canonical app examples keep authored source only and do not commit `app/generated/*`; compile them after copying into an app. Thresholds remains the richer real-app reference, while these examples stay focused on one teachable pattern at a time.
 
 ## Additional Docs
 - `ARCHITECTURE.md`

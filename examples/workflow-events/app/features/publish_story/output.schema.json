@@ -6,6 +6,8 @@
   "required": [
     "feature",
     "state",
+    "story_id",
+    "job",
     "event"
   ],
   "properties": {
@@ -15,7 +17,13 @@
     "state": {
       "type": "string"
     },
+    "story_id": {
+      "type": "string"
+    },
     "event": {
+      "type": "string"
+    },
+    "job": {
       "type": "string"
     }
   }

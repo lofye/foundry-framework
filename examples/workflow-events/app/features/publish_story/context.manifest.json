@@ -7,13 +7,9 @@
         "app/features/publish_story/action.php",
         "app/features/publish_story/input.schema.json",
         "app/features/publish_story/output.schema.json",
-        "app/features/publish_story/permissions.yaml",
-        "app/features/publish_story/cache.yaml",
         "app/features/publish_story/events.yaml",
         "app/features/publish_story/jobs.yaml",
-        "app/features/publish_story/tests/publish_story_contract_test.php",
-        "app/features/publish_story/tests/publish_story_feature_test.php",
-        "app/features/publish_story/tests/publish_story_auth_test.php"
+        "app/features/publish_story/tests/publish_story_feature_test.php"
     ],
     "generated_files": [
         "app/.foundry/build/graph/app_graph.json",
@@ -52,8 +48,6 @@
         "output": "app/features/publish_story/output.schema.json"
     },
     "tests": [
-        "publish_story_auth_test",
-        "publish_story_contract_test",
         "publish_story_feature_test"
     ],
     "forbidden_paths": [

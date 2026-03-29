@@ -7,13 +7,8 @@
         "app/features/review_story/action.php",
         "app/features/review_story/input.schema.json",
         "app/features/review_story/output.schema.json",
-        "app/features/review_story/permissions.yaml",
-        "app/features/review_story/cache.yaml",
         "app/features/review_story/events.yaml",
-        "app/features/review_story/jobs.yaml",
-        "app/features/review_story/tests/review_story_contract_test.php",
-        "app/features/review_story/tests/review_story_feature_test.php",
-        "app/features/review_story/tests/review_story_auth_test.php"
+        "app/features/review_story/tests/review_story_feature_test.php"
     ],
     "generated_files": [
         "app/.foundry/build/graph/app_graph.json",
@@ -48,8 +43,6 @@
         "output": "app/features/review_story/output.schema.json"
     },
     "tests": [
-        "review_story_auth_test",
-        "review_story_contract_test",
         "review_story_feature_test"
     ],
     "forbidden_paths": [

@@ -1,6 +1,0 @@
-version: 1
-permissions:
-  - editorial.review
-rules:
-  editorial.review:
-    description: Move a submitted story into editorial review.
