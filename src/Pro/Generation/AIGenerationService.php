@@ -64,7 +64,7 @@ final class AIGenerationService
             $providers = $this->providerRegistry->providersFromConfig($config);
             if (!isset($providers[$providerName])) {
                 throw new FoundryError(
-                    'PRO_GENERATE_PROVIDER_NOT_CONFIGURED',
+                    'GENERATE_PROVIDER_NOT_CONFIGURED',
                     'validation',
                     ['provider' => $providerName],
                     'No AI provider is configured for generation. Configure config/ai.php or use --deterministic.',
@@ -168,7 +168,7 @@ final class AIGenerationService
         $provider = trim((string) ($options['provider'] ?? ($config['default'] ?? '')));
         if ($provider === '') {
             throw new FoundryError(
-                'PRO_GENERATE_PROVIDER_NOT_CONFIGURED',
+                'GENERATE_PROVIDER_NOT_CONFIGURED',
                 'validation',
                 [],
                 'No AI provider is configured for generation. Configure config/ai.php or use --deterministic.',
@@ -178,7 +178,7 @@ final class AIGenerationService
         $providerConfig = is_array(($config['providers'] ?? [])[$provider] ?? null)
             ? (array) (($config['providers'] ?? [])[$provider] ?? [])
             : [];
-        $model = trim((string) ($options['model'] ?? ($providerConfig['model'] ?? 'foundry-pro-generator')));
+        $model = trim((string) ($options['model'] ?? ($providerConfig['model'] ?? 'foundry-generator')));
 
         return [$config, $provider, $model];
     }

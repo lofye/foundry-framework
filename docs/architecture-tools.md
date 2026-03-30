@@ -18,21 +18,22 @@ The compiler core established a canonical semantic compiler and graph. The exten
 - Diagnostics use the existing `DiagnosticBag` shape and severity model.
 - CLI outputs remain deterministic and support `--json`.
 
-## Foundry Pro Layer
+## Licensed Architecture Tools
 
-Foundry Pro is an optional layer on top of the same local graph and build artifacts used by core Foundry.
+Licensed architecture tools are an optional layer on top of the same local graph and build artifacts used by core Foundry.
 
-- Core Foundry remains fully usable without Pro.
-- Pro features are additive and do not change compile, runtime, or verification semantics for unlicensed installs.
-- Pro licensing is local-first and stored in `~/.foundry/license.json` by default.
-- Pro does not require telemetry or mandatory network calls.
-- Pro commands remain visible in CLI help and fail with a clear non-zero response when no valid license is present.
+- Core Foundry remains fully usable without a license.
+- Licensed features are additive and do not change compile, runtime, or verification semantics for unlicensed installs.
+- Licensing is local-first and stored in `~/.foundry/license.json` by default.
+- No background network calls are performed.
+- Licensed commands remain visible in CLI help and fail with a clear non-zero response when no valid license is present.
 
-Current Pro command surface:
+Current licensed command surface:
 
 ```bash
-foundry pro enable <license-key>
-foundry pro status --json
+foundry license activate --key=<license-key>
+foundry license status --json
+foundry license deactivate --json
 foundry doctor --deep --json
 foundry explain <target> --json
 foundry diff --json
@@ -92,7 +93,7 @@ Current built-in doctor checks:
 - route/pipeline consistency
 
 `--strict` fails on warnings and errors; default mode fails on errors only.
-`--deep` adds Pro-only hotspot and graph topology diagnostics on top of the standard doctor payload.
+`--deep` adds licensed hotspot and graph topology diagnostics on top of the standard doctor payload.
 
 ## Graph Visualization And Export
 
@@ -160,7 +161,7 @@ Prompt flow:
 
 Context extraction prioritizes feature matches by instruction tokens, route paths, events, cache keys, and permissions. If no match exists, deterministic fallback selects a bounded feature subset.
 
-## Pro Explain, Diff, Trace, And Generate
+## Licensed Explain, Diff, Trace, And Generate
 
 - `explain <target>` resolves a typed selector, route signature, command name, exact node id, or deterministic alias into a canonical subject and explains it from compiled graph and projection metadata.
 - `diff` compares the last compiled baseline graph against the current source state without changing core runtime requirements.
@@ -773,12 +774,12 @@ Use a more specific target, or prefix with type:
 ```json
 {
   "error": {
-    "code": "PRO_LICENSE_REQUIRED",
+    "code": "LICENSE_REQUIRED",
     "category": "authorization",
-    "message": "Foundry Pro is not enabled. Run `foundry pro enable <license-key>` to enable Pro features.",
+    "message": "No active license. Some features require a license. Use `foundry license activate --key=<license-key>`.",
     "details": {
       "command": "explain",
-      "required_features": ["architecture_explanation"]
+      "required_features": ["feature.pro.explain_plus"]
     }
   }
 }

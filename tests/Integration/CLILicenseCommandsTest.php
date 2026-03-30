@@ -45,7 +45,7 @@ final class CLILicenseCommandsTest extends TestCase
     {
         $app = new Application();
 
-        $status = $this->runCommand($app, ['foundry', 'license:status', '--json']);
+        $status = $this->runCommand($app, ['foundry', 'license', 'status', '--json']);
         $this->assertSame(0, $status['status']);
         $this->assertFalse($status['payload']['license']['valid']);
         $this->assertSame('none', $status['payload']['license']['source']);
@@ -55,23 +55,23 @@ final class CLILicenseCommandsTest extends TestCase
         $this->assertSame('license', $help['payload']['group']['name']);
         $licenseStatus = array_find(
             $help['payload']['group']['commands']['experimental'],
-            static fn(array $row): bool => (string) ($row['signature'] ?? '') === 'license:status',
+            static fn(array $row): bool => (string) ($row['signature'] ?? '') === 'license status',
         );
         $this->assertIsArray($licenseStatus);
-        $this->assertSame('Pro', $licenseStatus['category']);
+        $this->assertSame('Monetization', $licenseStatus['category']);
 
-        $activate = $this->runCommand($app, ['foundry', 'license:activate', $this->validKey(), '--json']);
+        $activate = $this->runCommand($app, ['foundry', 'license', 'activate', '--key=' . $this->validKey(), '--json']);
         $this->assertSame(0, $activate['status']);
         $this->assertTrue($activate['payload']['license']['valid']);
         $this->assertSame('file', $activate['payload']['license']['source']);
-        $this->assertSame('foundry license:status', $activate['payload']['license']['upgrade']['status_command']);
+        $this->assertSame('foundry license status', $activate['payload']['license']['upgrade']['status_command']);
+        $this->assertContains('license deactivate', $activate['payload']['commands']);
 
         $legacy = $this->runCommand($app, ['foundry', 'pro', 'status', '--json']);
-        $this->assertSame(0, $legacy['status']);
-        $this->assertTrue($legacy['payload']['license']['valid']);
-        $this->assertContains('license:deactivate', $legacy['payload']['license_commands']);
+        $this->assertSame(1, $legacy['status']);
+        $this->assertSame('CLI_COMMAND_NOT_FOUND', $legacy['payload']['error']['code']);
 
-        $deactivate = $this->runCommand($app, ['foundry', 'license:deactivate', '--json']);
+        $deactivate = $this->runCommand($app, ['foundry', 'license', 'deactivate', '--json']);
         $this->assertSame(0, $deactivate['status']);
         $this->assertTrue($deactivate['payload']['license']['deactivated']);
         $this->assertFalse($deactivate['payload']['license']['valid']);
@@ -83,12 +83,12 @@ final class CLILicenseCommandsTest extends TestCase
         $app = new Application();
         putenv('FOUNDRY_LICENSE_KEY=' . $this->validKey());
 
-        $status = $this->runCommand($app, ['foundry', 'license:status', '--json']);
+        $status = $this->runCommand($app, ['foundry', 'license', 'status', '--json']);
         $this->assertSame(0, $status['status']);
         $this->assertTrue($status['payload']['license']['valid']);
         $this->assertSame('environment', $status['payload']['license']['source']);
 
-        $deactivate = $this->runCommand($app, ['foundry', 'license:deactivate', '--json']);
+        $deactivate = $this->runCommand($app, ['foundry', 'license', 'deactivate', '--json']);
         $this->assertSame(0, $deactivate['status']);
         $this->assertTrue($deactivate['payload']['license']['valid']);
         $this->assertSame('environment', $deactivate['payload']['license']['source']);

@@ -12,7 +12,7 @@ use Foundry\Support\Yaml;
 use Foundry\Tests\Fixtures\TempProject;
 use PHPUnit\Framework\TestCase;
 
-final class CLIProCommandsTest extends TestCase
+final class CLILicensedCommandsTest extends TestCase
 {
     private TempProject $project;
     private string $cwd;
@@ -108,37 +108,38 @@ YAML);
         $this->project->cleanup();
     }
 
-    public function test_pro_commands_are_gated_without_license(): void
+    public function test_licensed_commands_are_gated_without_license(): void
     {
         $app = new Application();
 
-        $status = $this->runCommand($app, ['foundry', 'pro', 'status', '--json']);
+        $status = $this->runCommand($app, ['foundry', 'license', 'status', '--json']);
         $this->assertSame(0, $status['status']);
         $this->assertFalse($status['payload']['license']['valid']);
 
         $explain = $this->runCommand($app, ['foundry', 'explain', 'publish_post', '--json']);
         $this->assertSame(1, $explain['status']);
-        $this->assertSame('PRO_LICENSE_REQUIRED', $explain['payload']['error']['code']);
+        $this->assertSame('LICENSE_REQUIRED', $explain['payload']['error']['code']);
 
         $deep = $this->runCommand($app, ['foundry', 'doctor', '--deep', '--json']);
         $this->assertSame(1, $deep['status']);
-        $this->assertSame('PRO_LICENSE_REQUIRED', $deep['payload']['error']['code']);
+        $this->assertSame('LICENSE_REQUIRED', $deep['payload']['error']['code']);
 
         $generate = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--json']);
         $this->assertSame(1, $generate['status']);
-        $this->assertSame('PRO_LICENSE_REQUIRED', $generate['payload']['error']['code']);
+        $this->assertSame('LICENSE_REQUIRED', $generate['payload']['error']['code']);
 
         $help = $this->runCommandRaw($app, ['foundry', 'help']);
         $this->assertSame(0, $help['status']);
-        $this->assertStringContainsString(' [Pro]', $help['output']);
-        $this->assertStringContainsString('generate <prompt> [Pro]', $help['output']);
+        $this->assertStringContainsString(' [Licensed]', $help['output']);
+        $this->assertStringContainsString('generate <prompt> [Licensed]', $help['output']);
+        $this->assertStringNotContainsString('[Pro]', $help['output']);
     }
 
     public function test_explain_trace_deep_and_diff_run_with_valid_local_license(): void
     {
         $app = new Application();
 
-        $this->enablePro($app);
+        $this->activateLicense($app);
 
         $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json']);
         $this->assertSame(0, $compile['status']);
@@ -160,7 +161,7 @@ YAML);
         $deep = $this->runCommand($app, ['foundry', 'doctor', '--deep', '--json']);
         $this->assertSame(0, $deep['status']);
         $this->assertTrue($deep['payload']['deep']);
-        $this->assertArrayHasKey('deep_diagnostics', $deep['payload']['pro']);
+        $this->assertArrayHasKey('deep_diagnostics', $deep['payload']['monetization']);
 
         file_put_contents(
             $this->project->root . '/app/features/publish_post/feature.yaml',
@@ -175,7 +176,7 @@ YAML);
     public function test_explain_supports_type_markdown_and_disable_flags(): void
     {
         $app = new Application();
-        $this->enablePro($app);
+        $this->activateLicense($app);
 
         $this->assertSame(0, $this->runCommand($app, ['foundry', 'compile', 'graph', '--json'])['status']);
 
@@ -213,7 +214,7 @@ YAML);
     public function test_explain_reports_unsupported_kind_and_ambiguous_targets_cleanly(): void
     {
         $app = new Application();
-        $this->enablePro($app);
+        $this->activateLicense($app);
 
         $feature = $this->project->root . '/app/features/publish_profile';
         mkdir($feature . '/tests', 0777, true);
@@ -283,18 +284,18 @@ YAML);
     public function test_generate_requires_provider_or_deterministic_mode(): void
     {
         $app = new Application();
-        $this->enablePro($app);
+        $this->activateLicense($app);
 
         $generate = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--dry-run', '--json']);
 
         $this->assertSame(1, $generate['status']);
-        $this->assertSame('PRO_GENERATE_PROVIDER_NOT_CONFIGURED', $generate['payload']['error']['code']);
+        $this->assertSame('GENERATE_PROVIDER_NOT_CONFIGURED', $generate['payload']['error']['code']);
     }
 
     public function test_deterministic_generate_dry_run_is_repeatable_and_graph_aware(): void
     {
         $app = new Application();
-        $this->enablePro($app);
+        $this->activateLicense($app);
 
         $first = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--feature-context', '--deterministic', '--dry-run', '--json']);
         $second = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--feature-context', '--deterministic', '--dry-run', '--json']);
@@ -303,7 +304,7 @@ YAML);
         $this->assertSame(0, $second['status']);
         $this->assertSame($first['payload']['plan'], $second['payload']['plan']);
         $this->assertSame($first['payload']['predicted_files'], $second['payload']['predicted_files']);
-        $this->assertSame('pro_generate', $first['payload']['mode']);
+        $this->assertSame('generate', $first['payload']['mode']);
         $this->assertTrue($first['payload']['deterministic']);
         $this->assertSame('deterministic', $first['payload']['provider']['mode']);
         $this->assertSame('bookmark_post', $first['payload']['plan']['feature']['feature']);
@@ -315,7 +316,7 @@ YAML);
     public function test_provider_backed_generate_uses_local_provider_config(): void
     {
         $app = new Application();
-        $this->enablePro($app);
+        $this->activateLicense($app);
         $this->writeAiConfig([
             'default' => 'static',
             'providers' => [
@@ -367,7 +368,7 @@ YAML);
     public function test_deterministic_generate_writes_feature_and_verifies_graph(): void
     {
         $app = new Application();
-        $this->enablePro($app);
+        $this->activateLicense($app);
 
         $generate = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--deterministic', '--json']);
 
@@ -397,15 +398,15 @@ YAML);
     public function test_generate_emits_human_readable_messages_without_json(): void
     {
         $app = new Application();
-        $this->enablePro($app);
+        $this->activateLicense($app);
 
         $dryRun = $this->runCommandRaw($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--deterministic', '--dry-run']);
         $this->assertSame(0, $dryRun['status']);
-        $this->assertStringContainsString('Foundry Pro generation plan prepared for bookmark_post.', $dryRun['output']);
+        $this->assertStringContainsString('Foundry generation plan prepared for bookmark_post.', $dryRun['output']);
 
         $generated = $this->runCommandRaw($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--deterministic']);
         $this->assertSame(0, $generated['status']);
-        $this->assertStringContainsString('Foundry Pro generated bookmark_post using deterministic mode and wrote', $generated['output']);
+        $this->assertStringContainsString('Foundry generated bookmark_post using deterministic mode and wrote', $generated['output']);
     }
 
     private function validKey(): string
@@ -415,9 +416,9 @@ YAML);
         return $body . '-' . strtoupper(substr(hash('sha256', 'foundry-pro:' . $body), 0, 8));
     }
 
-    private function enablePro(Application $app): void
+    private function activateLicense(Application $app): void
     {
-        $enable = $this->runCommand($app, ['foundry', 'pro', 'enable', $this->validKey(), '--json']);
+        $enable = $this->runCommand($app, ['foundry', 'license', 'activate', '--key=' . $this->validKey(), '--json']);
         $this->assertSame(0, $enable['status']);
         $this->assertTrue($enable['payload']['license']['valid']);
     }

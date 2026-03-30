@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Foundry\Pro;
+namespace Foundry\Monetization;
 
 use Foundry\Support\Json;
 
@@ -60,8 +60,8 @@ final class LicenseStore
                 'status' => 'missing',
                 'source' => 'none',
                 'license_path' => $path,
-                'product' => 'foundry-pro',
-                'plan' => null,
+                'product' => 'foundry',
+                'tier' => FeatureFlags::TIER_FREE,
                 'key_hint' => null,
                 'fingerprint' => null,
                 'feature_flags' => [],
@@ -70,31 +70,31 @@ final class LicenseStore
                 'validated_at' => null,
                 'remote_validation' => null,
                 'activated_via' => null,
-                'message' => 'Foundry Pro is not enabled.',
+                'message' => 'No active license.',
             ];
         }
 
         $json = file_get_contents($path);
         if ($json === false) {
-            return $this->invalidStatus($path, 'The stored Foundry Pro license could not be read.');
+            return $this->invalidStatus($path, 'The stored license could not be read.');
         }
 
         try {
             /** @var array<string,mixed> $payload */
             $payload = Json::decodeAssoc($json);
         } catch (\Throwable) {
-            return $this->invalidStatus($path, 'The stored Foundry Pro license file is not valid JSON.');
+            return $this->invalidStatus($path, 'The stored license file is not valid JSON.');
         }
 
         $licenseKey = trim((string) ($payload['license_key'] ?? ''));
         if ($licenseKey === '') {
-            return $this->invalidStatus($path, 'The stored Foundry Pro license file is missing the license key.');
+            return $this->invalidStatus($path, 'The stored license file is missing the license key.');
         }
 
         try {
             $validated = $this->validator()->validate($licenseKey);
         } catch (\Throwable $error) {
-            return $this->invalidStatus($path, 'The stored Foundry Pro license is invalid: ' . $error->getMessage());
+            return $this->invalidStatus($path, 'The stored license is invalid: ' . $error->getMessage());
         }
 
         $featureFlags = array_values(array_map('strval', (array) ($payload['feature_flags'] ?? $payload['features'] ?? $validated['features'] ?? [])));
@@ -105,8 +105,8 @@ final class LicenseStore
             'status' => 'enabled',
             'source' => 'file',
             'license_path' => $path,
-            'product' => (string) ($payload['product'] ?? ($validated['product'] ?? 'foundry-pro')),
-            'plan' => (string) ($payload['plan'] ?? ($validated['plan'] ?? 'pro')),
+            'product' => (string) ($payload['product'] ?? ($validated['product'] ?? 'foundry')),
+            'tier' => (string) ($payload['tier'] ?? ($validated['tier'] ?? FeatureFlags::TIER_PRO)),
             'key_hint' => (string) ($validated['key_hint'] ?? ''),
             'fingerprint' => (string) ($validated['fingerprint'] ?? ''),
             'feature_flags' => $featureFlags,
@@ -115,7 +115,7 @@ final class LicenseStore
             'validated_at' => (string) ($validated['validated_at'] ?? ''),
             'remote_validation' => is_array($payload['remote_validation'] ?? null) ? $payload['remote_validation'] : null,
             'activated_via' => (string) ($payload['activated_via'] ?? 'file'),
-            'message' => 'Foundry Pro is enabled.',
+            'message' => 'License is active.',
         ];
     }
 
@@ -155,8 +155,8 @@ final class LicenseStore
             'status' => 'invalid',
             'source' => 'file',
             'license_path' => $path,
-            'product' => 'foundry-pro',
-            'plan' => null,
+            'product' => 'foundry',
+            'tier' => FeatureFlags::TIER_FREE,
             'key_hint' => null,
             'fingerprint' => null,
             'feature_flags' => [],

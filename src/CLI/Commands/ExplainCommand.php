@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Foundry\Pro\CLI;
+namespace Foundry\CLI\Commands;
 
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
+use Foundry\CLI\Commands\Concerns\InteractsWithLicensing;
 use Foundry\Compiler\CompileOptions;
 use Foundry\Explain\ExplainOptions;
 use Foundry\Explain\ExplainTarget;
 use Foundry\Monetization\FeatureFlags;
 use Foundry\Pro\ArchitectureExplainer;
-use Foundry\Pro\CLI\Concerns\InteractsWithPro;
 use Foundry\Support\FoundryError;
 
 final class ExplainCommand extends Command
 {
-    use InteractsWithPro;
+    use InteractsWithLicensing;
 
     #[\Override]
     public function supportedSignatures(): array
@@ -33,7 +33,7 @@ final class ExplainCommand extends Command
     #[\Override]
     public function run(array $args, CommandContext $context): array
     {
-        $this->requirePro('explain', [FeatureFlags::PRO_EXPLAIN_PLUS]);
+        $this->requireLicensedFeatures('explain', [FeatureFlags::PRO_EXPLAIN_PLUS]);
         [$target, $targetKind, $options] = $this->parseExplainArgs($args);
 
         if ($target === '') {

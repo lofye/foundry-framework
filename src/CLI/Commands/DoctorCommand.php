@@ -23,7 +23,7 @@ use Foundry\Doctor\DoctorSummary;
 use Foundry\Doctor\FrameworkDoctor;
 use Foundry\Monetization\FeatureFlags;
 use Foundry\Pipeline\PipelineIntegrityInspector;
-use Foundry\Pro\CLI\Concerns\InteractsWithPro;
+use Foundry\CLI\Commands\Concerns\InteractsWithLicensing;
 use Foundry\Pro\DeepDiagnosticsBuilder;
 use Foundry\Quality\QualityToolRunner;
 use Foundry\Support\CliCommandPrefix;
@@ -34,7 +34,7 @@ use Foundry\Tooling\BuildArtifactStore;
 
 final class DoctorCommand extends Command
 {
-    use InteractsWithPro;
+    use InteractsWithLicensing;
 
     #[\Override]
     public function supportedSignatures(): array
@@ -63,7 +63,7 @@ final class DoctorCommand extends Command
                 'Feature not found.',
             );
         }
-        $deepLicense = $deep ? $this->requirePro('doctor --deep', [FeatureFlags::PRO_DEEP_DIAGNOSTICS]) : null;
+        $deepLicense = $deep ? $this->requireLicensedFeatures('doctor --deep', [FeatureFlags::PRO_DEEP_DIAGNOSTICS]) : null;
 
         $paths = $context->paths();
         $commandPrefix = $this->commandPrefix($paths);
@@ -211,7 +211,7 @@ final class DoctorCommand extends Command
         ];
         if ($deep && is_array($deepLicense)) {
             $payload['deep'] = true;
-            $payload['pro'] = [
+            $payload['monetization'] = [
                 'license' => $deepLicense,
                 'deep_diagnostics' => (new DeepDiagnosticsBuilder())->build(
                     $compileResult->graph,
@@ -465,8 +465,8 @@ final class DoctorCommand extends Command
             );
         }
 
-        $deep = is_array($payload['pro']['deep_diagnostics'] ?? null)
-            ? $payload['pro']['deep_diagnostics']
+        $deep = is_array($payload['monetization']['deep_diagnostics'] ?? null)
+            ? $payload['monetization']['deep_diagnostics']
             : [];
         $graph = is_array($deep['graph'] ?? null) ? $deep['graph'] : [];
         if (($payload['deep'] ?? false) === true) {

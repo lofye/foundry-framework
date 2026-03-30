@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Foundry\Pro;
-
-use Foundry\Monetization\MonetizationService;
+namespace Foundry\Monetization;
 
 final readonly class FeatureGate
 {

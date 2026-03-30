@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Foundry\Pro\CLI;
+namespace Foundry\CLI\Commands;
 
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
-use Foundry\Monetization\FeatureFlags;
+use Foundry\CLI\Commands\Concerns\InteractsWithLicensing;
 use Foundry\Compiler\CompileOptions;
-use Foundry\Pro\CLI\Concerns\InteractsWithPro;
+use Foundry\Monetization\FeatureFlags;
 use Foundry\Pro\GraphDiffAnalyzer;
 
 final class DiffCommand extends Command
 {
-    use InteractsWithPro;
+    use InteractsWithLicensing;
 
     #[\Override]
     public function supportedSignatures(): array
@@ -30,14 +30,14 @@ final class DiffCommand extends Command
     #[\Override]
     public function run(array $args, CommandContext $context): array
     {
-        $license = $this->requirePro('diff', [FeatureFlags::PRO_GRAPH_DIFF]);
+        $license = $this->requireLicensedFeatures('diff', [FeatureFlags::PRO_GRAPH_DIFF]);
 
         $compiler = $context->graphCompiler();
         $baseline = $compiler->loadGraph();
         $current = $compiler->compile(new CompileOptions(emit: false, useCache: false))->graph;
 
         $payload = (new GraphDiffAnalyzer())->diff($baseline, $current);
-        $payload['pro'] = ['license' => $license];
+        $payload['monetization'] = ['license' => $license];
 
         return [
             'status' => 0,

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Foundry\Monetization;
 
-use Foundry\Pro\LicenseStore;
-use Foundry\Pro\LicenseValidator;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Json;
 
@@ -23,21 +21,23 @@ final class MonetizationService
     public function activate(string $licenseKey): array
     {
         $license = $this->validator()->validate($licenseKey);
-        $featureFlags = array_values(array_map('strval', (array) ($license['features'] ?? [])));
+        $tier = $this->normalizeTier((string) ($license['tier'] ?? FeatureFlags::TIER_PRO));
+        $featureFlags = $this->enabledFeaturesForTier($tier);
 
         $metadata = [
-            'activated_via' => 'license:activate',
+            'activated_via' => 'license activate',
+            'tier' => $tier,
             'feature_flags' => $featureFlags,
             'features' => $featureFlags,
         ];
 
         $remoteValidation = $this->remoteValidationMetadata($license);
         if ($remoteValidation !== null) {
-            $remoteFeatureFlags = array_values(array_map('strval', (array) ($remoteValidation['feature_flags'] ?? [])));
+            $remoteTier = $this->normalizeTier((string) ($remoteValidation['tier'] ?? $tier));
             $metadata['remote_validation'] = $remoteValidation;
-            $metadata['product'] = (string) ($remoteValidation['product'] ?? ($license['product'] ?? 'foundry-pro'));
-            $metadata['plan'] = (string) ($remoteValidation['plan'] ?? ($license['plan'] ?? 'pro'));
-            $metadata['feature_flags'] = $remoteFeatureFlags !== [] ? $remoteFeatureFlags : $featureFlags;
+            $metadata['product'] = (string) ($remoteValidation['product'] ?? ($license['product'] ?? 'foundry'));
+            $metadata['tier'] = $remoteTier;
+            $metadata['feature_flags'] = $this->enabledFeaturesForTier($remoteTier);
             $metadata['features'] = $metadata['feature_flags'];
         }
 
@@ -55,17 +55,27 @@ final class MonetizationService
 
         if (($status['source'] ?? null) === 'environment' && ($status['valid'] ?? false) === true) {
             $status['message'] = $removed
-                ? 'Local license file removed. Environment-based licensing remains active until FOUNDRY_LICENSE_KEY or FOUNDRY_PRO_LICENSE_KEY is cleared.'
-                : 'Environment-based licensing remains active. Clear FOUNDRY_LICENSE_KEY or FOUNDRY_PRO_LICENSE_KEY to fully deactivate.';
+                ? 'Local license file removed. Environment-based licensing remains active until FOUNDRY_LICENSE_KEY is cleared.'
+                : 'Environment-based licensing remains active. Clear FOUNDRY_LICENSE_KEY to fully deactivate.';
 
             return $status;
         }
 
         $status['message'] = $removed
-            ? 'Foundry Pro license deactivated.'
+            ? 'License deactivated.'
             : 'No local Foundry license file was active.';
 
         return $status;
+    }
+
+    public function getTier(): string
+    {
+        return $this->resolveTier($this->status());
+    }
+
+    public function isEnabled(string $feature): bool
+    {
+        return $this->featureEnabledForStatus($feature, $this->status());
     }
 
     /**
@@ -78,8 +88,8 @@ final class MonetizationService
 
         if (($status['valid'] ?? false) !== true) {
             $code = ($status['status'] ?? 'missing') === 'invalid'
-                ? 'PRO_LICENSE_INVALID'
-                : 'PRO_LICENSE_REQUIRED';
+                ? 'LICENSE_INVALID'
+                : 'LICENSE_REQUIRED';
 
             throw new FoundryError(
                 $code,
@@ -90,33 +100,36 @@ final class MonetizationService
                     'license_path' => $status['license_path'] ?? $this->licenses()->path(),
                     'source' => $status['source'] ?? 'none',
                 ],
-                ($status['message'] ?? 'Foundry Pro is not enabled.')
-                    . ' Run `foundry license:activate <license-key>` to enable Pro features. `foundry pro enable <license-key>` remains supported as a legacy alias.',
+                ($status['message'] ?? 'No active license.')
+                    . ' Some features require a license. Use `foundry license activate --key=<license-key>`.',
             );
         }
 
-        $availableFeatures = array_values(array_map('strval', (array) ($status['feature_flags'] ?? $status['features'] ?? [])));
-        $missingFeatures = array_values(array_diff($requiredFeatures, $availableFeatures));
+        $missingFeatures = array_values(array_filter(
+            $requiredFeatures,
+            fn(string $feature): bool => !$this->isEnabled($feature),
+        ));
 
         if ($missingFeatures !== []) {
             throw new FoundryError(
-                'PRO_FEATURE_NOT_ENABLED',
+                'MONETIZED_FEATURE_NOT_ENABLED',
                 'authorization',
                 [
                     'command' => $command,
                     'required_features' => $requiredFeatures,
                     'missing_features' => $missingFeatures,
+                    'tier' => $this->resolveTier($status),
                     'license_path' => $status['license_path'] ?? $this->licenses()->path(),
                     'source' => $status['source'] ?? 'none',
                 ],
-                'The current Foundry Pro license does not enable the requested feature set.',
+                'The current license tier does not enable the requested feature set.',
             );
         }
 
         $this->usageTracker()->record([
             'command' => $command,
-            'product' => (string) ($status['product'] ?? 'foundry-pro'),
-            'plan' => (string) ($status['plan'] ?? 'pro'),
+            'product' => (string) ($status['product'] ?? 'foundry'),
+            'tier' => $this->resolveTier($status),
             'source' => (string) ($status['source'] ?? 'file'),
             'fingerprint' => (string) ($status['fingerprint'] ?? ''),
             'feature_flags' => array_values($requiredFeatures),
@@ -145,7 +158,8 @@ final class MonetizationService
     {
         try {
             $validated = $this->validator()->validate($licenseKey);
-            $featureFlags = array_values(array_map('strval', (array) ($validated['features'] ?? [])));
+            $tier = $this->normalizeTier((string) ($validated['tier'] ?? FeatureFlags::TIER_PRO));
+            $featureFlags = $this->enabledFeaturesForTier($tier);
 
             return [
                 'enabled' => true,
@@ -153,8 +167,8 @@ final class MonetizationService
                 'status' => 'enabled',
                 'source' => 'environment',
                 'license_path' => $this->licenses()->path(),
-                'product' => (string) ($validated['product'] ?? 'foundry-pro'),
-                'plan' => (string) ($validated['plan'] ?? 'pro'),
+                'product' => (string) ($validated['product'] ?? 'foundry'),
+                'tier' => $tier,
                 'key_hint' => (string) ($validated['key_hint'] ?? ''),
                 'fingerprint' => (string) ($validated['fingerprint'] ?? ''),
                 'feature_flags' => $featureFlags,
@@ -163,7 +177,7 @@ final class MonetizationService
                 'validated_at' => (string) ($validated['validated_at'] ?? ''),
                 'remote_validation' => null,
                 'activated_via' => 'environment',
-                'message' => 'Foundry Pro is enabled via the environment.',
+                'message' => 'License is active via the environment.',
             ];
         } catch (\Throwable $error) {
             return [
@@ -172,8 +186,8 @@ final class MonetizationService
                 'status' => 'invalid',
                 'source' => 'environment',
                 'license_path' => $this->licenses()->path(),
-                'product' => 'foundry-pro',
-                'plan' => null,
+                'product' => 'foundry',
+                'tier' => FeatureFlags::TIER_FREE,
                 'key_hint' => $this->validator()->keyHint($licenseKey),
                 'fingerprint' => null,
                 'feature_flags' => [],
@@ -182,7 +196,7 @@ final class MonetizationService
                 'validated_at' => null,
                 'remote_validation' => null,
                 'activated_via' => 'environment',
-                'message' => 'The environment-provided Foundry license is invalid: ' . $error->getMessage(),
+                'message' => 'The environment-provided license is invalid: ' . $error->getMessage(),
             ];
         }
     }
@@ -198,24 +212,28 @@ final class MonetizationService
             return null;
         }
 
+        $tier = $this->normalizeTier((string) ($license['tier'] ?? FeatureFlags::TIER_PRO));
+
         $response = $this->requestRemoteValidation($url, [
-            'product' => (string) ($license['product'] ?? 'foundry-pro'),
-            'plan' => (string) ($license['plan'] ?? 'pro'),
+            'product' => (string) ($license['product'] ?? 'foundry'),
+            'tier' => $tier,
             'license_key' => (string) ($license['license_key'] ?? ''),
             'fingerprint' => (string) ($license['fingerprint'] ?? ''),
-            'feature_flags' => array_values(array_map('strval', (array) ($license['features'] ?? []))),
+            'feature_flags' => $this->enabledFeaturesForTier($tier),
         ]);
 
         if (($response['valid'] ?? false) !== true) {
             $message = trim((string) ($response['message'] ?? ''));
 
             throw new FoundryError(
-                'PRO_LICENSE_REMOTE_VALIDATION_FAILED',
+                'LICENSE_REMOTE_VALIDATION_FAILED',
                 'authorization',
                 ['validation_url' => $this->redactValidationUrl($url)],
                 $message !== '' ? $message : 'Remote license validation rejected the supplied key.',
             );
         }
+
+        $validatedTier = $this->normalizeTier((string) ($response['tier'] ?? ($response['plan'] ?? $tier)));
 
         return [
             'enabled' => true,
@@ -223,9 +241,9 @@ final class MonetizationService
             'endpoint' => $this->redactValidationUrl($url),
             'validated_at' => gmdate(DATE_ATOM),
             'message' => (string) ($response['message'] ?? 'Remote license validation succeeded.'),
-            'product' => (string) ($response['product'] ?? ($license['product'] ?? 'foundry-pro')),
-            'plan' => (string) ($response['plan'] ?? ($license['plan'] ?? 'pro')),
-            'feature_flags' => array_values(array_map('strval', (array) ($response['feature_flags'] ?? $response['features'] ?? ($license['features'] ?? [])))),
+            'product' => (string) ($response['product'] ?? ($license['product'] ?? 'foundry')),
+            'tier' => $validatedTier,
+            'feature_flags' => $this->enabledFeaturesForTier($validatedTier),
         ];
     }
 
@@ -255,7 +273,7 @@ final class MonetizationService
 
         if ($json === false) {
             throw new FoundryError(
-                'PRO_LICENSE_REMOTE_VALIDATION_FAILED',
+                'LICENSE_REMOTE_VALIDATION_FAILED',
                 'runtime',
                 ['validation_url' => $this->redactValidationUrl($url)],
                 'Remote license validation could not be completed.',
@@ -269,7 +287,7 @@ final class MonetizationService
             return $decoded;
         } catch (\Throwable) {
             throw new FoundryError(
-                'PRO_LICENSE_REMOTE_VALIDATION_FAILED',
+                'LICENSE_REMOTE_VALIDATION_FAILED',
                 'runtime',
                 ['validation_url' => $this->redactValidationUrl($url)],
                 'Remote license validation returned invalid JSON.',
@@ -283,8 +301,12 @@ final class MonetizationService
      */
     private function decorateStatus(array $status): array
     {
-        $featureFlags = array_values(array_map('strval', (array) ($status['feature_flags'] ?? $status['features'] ?? [])));
+        $tier = $this->resolveTier($status);
+        $featureFlags = (($status['valid'] ?? false) === true)
+            ? $this->enabledFeaturesForTier($tier)
+            : [];
 
+        $status['tier'] = $tier;
         $status['feature_flags'] = $featureFlags;
         $status['features'] = $featureFlags;
         $status['source'] = (string) ($status['source'] ?? (
@@ -294,21 +316,55 @@ final class MonetizationService
         ));
         $status['usage_tracking'] = $this->usageTracker()->status();
         $status['upgrade'] = [
-            'status_command' => 'foundry license:status',
-            'activate_command' => 'foundry license:activate <license-key>',
-            'deactivate_command' => 'foundry license:deactivate',
-            'legacy_aliases' => [
-                'foundry pro status',
-                'foundry pro enable <license-key>',
-            ],
+            'status_command' => 'foundry license status',
+            'activate_command' => 'foundry license activate --key=<license-key>',
+            'deactivate_command' => 'foundry license deactivate',
         ];
 
         return $status;
     }
 
+    private function resolveTier(array $status): string
+    {
+        $tier = (string) ($status['tier'] ?? '');
+        if ($tier === '') {
+            $tier = (($status['valid'] ?? false) === true)
+                ? FeatureFlags::TIER_PRO
+                : FeatureFlags::TIER_FREE;
+        }
+
+        return $this->normalizeTier($tier);
+    }
+
+    private function featureEnabledForStatus(string $feature, array $status): bool
+    {
+        if (($status['valid'] ?? false) !== true) {
+            return false;
+        }
+
+        $requiredTiers = FeatureFlags::requiredTiers();
+
+        return in_array($this->resolveTier($status), $requiredTiers[$feature] ?? [], true);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function enabledFeaturesForTier(string $tier): array
+    {
+        return FeatureFlags::enabledForTier($this->normalizeTier($tier));
+    }
+
+    private function normalizeTier(string $tier): string
+    {
+        return in_array($tier, [FeatureFlags::TIER_FREE, FeatureFlags::TIER_PRO], true)
+            ? $tier
+            : FeatureFlags::TIER_FREE;
+    }
+
     private function environmentLicenseKey(): ?string
     {
-        foreach (['FOUNDRY_LICENSE_KEY', 'FOUNDRY_PRO_LICENSE_KEY'] as $name) {
+        foreach (['FOUNDRY_LICENSE_KEY'] as $name) {
             $value = getenv($name);
             if (!is_string($value) || trim($value) === '') {
                 continue;

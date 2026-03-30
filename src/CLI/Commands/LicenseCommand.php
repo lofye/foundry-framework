@@ -6,6 +6,7 @@ namespace Foundry\CLI\Commands;
 
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
+use Foundry\Monetization\FeatureFlags;
 use Foundry\Monetization\MonetizationService;
 use Foundry\Support\FoundryError;
 
@@ -15,41 +16,34 @@ final class LicenseCommand extends Command
      * @var list<string>
      */
     private const LICENSE_COMMANDS = [
-        'license:status',
-        'license:activate <license-key>',
-        'license:deactivate',
-    ];
-
-    /**
-     * @var list<string>
-     */
-    private const LEGACY_ALIASES = [
-        'pro status',
-        'pro enable <license-key>',
+        'license status',
+        'license activate [--key=<license-key>]',
+        'license deactivate',
     ];
 
     #[\Override]
     public function supportedSignatures(): array
     {
-        return ['license:status', 'license:activate', 'license:deactivate'];
+        return ['license status', 'license activate', 'license deactivate'];
     }
 
     #[\Override]
     public function matches(array $args): bool
     {
-        return in_array($args[0] ?? null, ['license:status', 'license:activate', 'license:deactivate'], true);
+        return ($args[0] ?? null) === 'license'
+            && in_array($args[1] ?? null, ['status', 'activate', 'deactivate'], true);
     }
 
     #[\Override]
     public function run(array $args, CommandContext $context): array
     {
-        $subcommand = (string) ($args[0] ?? 'license:status');
+        $subcommand = (string) ($args[1] ?? '');
         $service = new MonetizationService();
 
         return match ($subcommand) {
-            'license:status' => $this->result($context, $service->status()),
-            'license:activate' => $this->activate($args, $context, $service),
-            'license:deactivate' => $this->result($context, $service->deactivate()),
+            'status' => $this->result($context, $service->status()),
+            'activate' => $this->activate($args, $context, $service),
+            'deactivate' => $this->result($context, $service->deactivate()),
             default => throw new FoundryError(
                 'CLI_LICENSE_SUBCOMMAND_NOT_FOUND',
                 'not_found',
@@ -65,13 +59,30 @@ final class LicenseCommand extends Command
      */
     private function activate(array $args, CommandContext $context, MonetizationService $service): array
     {
-        $licenseKey = trim((string) ($args[1] ?? ''));
+        $licenseKey = '';
+
+        foreach ($args as $index => $arg) {
+            if (str_starts_with($arg, '--key=')) {
+                $licenseKey = trim(substr($arg, strlen('--key=')));
+                break;
+            }
+
+            if ($arg === '--key') {
+                $licenseKey = trim((string) ($args[$index + 1] ?? ''));
+                break;
+            }
+        }
+
+        if ($licenseKey === '') {
+            $licenseKey = trim((string) ($args[2] ?? ''));
+        }
+
         if ($licenseKey === '') {
             throw new FoundryError(
-                'PRO_LICENSE_KEY_REQUIRED',
+                'LICENSE_KEY_REQUIRED',
                 'validation',
                 [],
-                'A Foundry Pro license key is required.',
+                'A Foundry license key is required.',
             );
         }
 
@@ -87,7 +98,6 @@ final class LicenseCommand extends Command
         $payload = [
             'license' => $license,
             'commands' => self::LICENSE_COMMANDS,
-            'legacy_aliases' => self::LEGACY_ALIASES,
         ];
 
         return [
@@ -103,6 +113,7 @@ final class LicenseCommand extends Command
     private function renderStatus(array $license): string
     {
         $lines = [(string) ($license['message'] ?? 'Foundry license status unavailable.')];
+        $lines[] = 'Tier: ' . (string) ($license['tier'] ?? FeatureFlags::TIER_FREE);
         $lines[] = 'Source: ' . (string) ($license['source'] ?? 'none');
         $lines[] = 'License path: ' . (string) ($license['license_path'] ?? '');
 
@@ -119,7 +130,6 @@ final class LicenseCommand extends Command
         $tracking = is_array($license['usage_tracking'] ?? null) ? $license['usage_tracking'] : [];
         $lines[] = 'Usage tracking: ' . (((bool) ($tracking['enabled'] ?? false)) ? 'enabled' : 'disabled');
         $lines[] = 'Commands: ' . implode(', ', self::LICENSE_COMMANDS);
-        $lines[] = 'Legacy aliases: ' . implode(', ', self::LEGACY_ALIASES);
 
         return implode(PHP_EOL, $lines);
     }

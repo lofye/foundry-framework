@@ -4,8 +4,8 @@ Foundry is a production-minded, explicit, deterministic, LLM-first PHP framework
 Visit [FoundryFramework.org](https://foundryframework.org) for extensive documentation.
 
 Core Foundry remains MIT-licensed and fully usable without restriction.
-Foundry Pro is an optional, additive layer for deeper diagnostics, architecture understanding, trace analysis, graph diffing, and AI-assisted workflows.
-The monetization layer is opt-in, local-first, and isolated from core compile, inspect, verify, scaffold, and runtime flows.
+Licensed features add deeper diagnostics, architecture understanding, trace analysis, graph diffing, and AI-assisted workflows.
+The monetization system is opt-in, local-first, and isolated from core compile, inspect, verify, scaffold, and runtime flows.
 
 It is optimized for:
 - explicit contracts
@@ -39,35 +39,28 @@ Architect: ChatGPT-5.3
 Engineer: GPT-5.3-Codex (Extra High)
 License: MIT.
 
-## Foundry Pro
+## Licensing
 
-Foundry Pro is optional and local-first:
+Foundry is fully usable without a license, and licensed features remain local-first:
 
-- core compile, inspect, verify, scaffold, runtime, and prompt flows remain available without Pro
-- Pro adds `doctor --deep`, `explain`, `diff`, `trace`, and `generate "<prompt>"`
-- Pro does not require SaaS connectivity, telemetry, or runtime calls to external services
-- Pro licensing is stored locally at `~/.foundry/license.json` by default and may also be supplied through `FOUNDRY_LICENSE_KEY`
+- core compile, inspect, verify, scaffold, runtime, and prompt flows remain available without a license
+- licensed features add `doctor --deep`, `explain`, `diff`, `trace`, and `generate "<prompt>"`
+- licensing is stored locally at `~/.foundry/license.json` by default and may also be supplied through `FOUNDRY_LICENSE_KEY`
 - `generate` works in deterministic mode without any provider and otherwise uses whatever local/remote provider you configure in `config/ai.php`
 - `explain` derives architecture explanations from the compiled graph, projections, diagnostics, and docs metadata, not from an LLM
 - usage tracking stays off unless you explicitly opt in with `FOUNDRY_USAGE_TRACKING=1`
-- optional remote validation runs only during `license:activate` when `FOUNDRY_LICENSE_VALIDATION_URL` is configured
+- no background network calls are performed
+- optional remote validation runs only during `license activate` when `FOUNDRY_LICENSE_VALIDATION_URL` is configured
 
 Manage licensing locally:
 
 ```bash
-foundry license:activate <license-key>
-foundry license:status --json
-foundry license:deactivate --json
+foundry license activate --key=YOUR_KEY
+foundry license status --json
+foundry license deactivate --json
 ```
 
-Legacy aliases remain available for upgrade-friendly workflows:
-
-```bash
-foundry pro enable <license-key>
-foundry pro status --json
-```
-
-Without a valid license, Pro commands stay visible in help, return a clear message, and exit non-zero without affecting core framework behavior.
+Without a valid license, licensed commands stay visible in help, return a clear message, and exit non-zero without affecting core framework behavior.
 
 ## Runtime and Language
 - PHP `^8.4`
@@ -285,18 +278,17 @@ foundry doctor --cli --json
 foundry doctor --deep --json
 ```
 
-Core vs Pro:
+Core vs Licensed:
 
 - Free/core: `compile`, `inspect`, `verify`, `doctor`, `prompt`, scaffold generators, runtime commands
-- Pro: `doctor --deep`, `explain <target>`, `diff`, `trace [<target>]`, `generate "<prompt>"`, `license:status`, `license:activate`, `license:deactivate`
+- Licensed: `doctor --deep`, `explain <target>`, `diff`, `trace [<target>]`, `generate "<prompt>"`, `license status`, `license activate`, `license deactivate`
 
-Pro command surface:
+Licensed command surface:
 
 ```bash
-foundry license:activate <license-key>
-foundry license:status --json
-foundry license:deactivate --json
-foundry pro status --json
+foundry license activate --key=YOUR_KEY
+foundry license status --json
+foundry license deactivate --json
 foundry explain publish_post --json
 foundry explain publish_post --deep
 foundry explain route:POST /posts --markdown

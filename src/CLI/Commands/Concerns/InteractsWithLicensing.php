@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Foundry\Pro\CLI\Concerns;
+namespace Foundry\CLI\Commands\Concerns;
 
+use Foundry\Monetization\FeatureGate;
+use Foundry\Monetization\LicenseStore;
 use Foundry\Monetization\MonetizationService;
-use Foundry\Pro\FeatureGate;
-use Foundry\Pro\LicenseStore;
 
-trait InteractsWithPro
+trait InteractsWithLicensing
 {
     /**
      * @param array<int,string> $requiredFeatures
      * @return array<string,mixed>
      */
-    protected function requirePro(string $command, array $requiredFeatures = []): array
+    protected function requireLicensedFeatures(string $command, array $requiredFeatures = []): array
     {
         return (new FeatureGate($this->licenseStore()))->require($command, $requiredFeatures);
     }
@@ -22,7 +22,7 @@ trait InteractsWithPro
     /**
      * @return array<string,mixed>
      */
-    protected function proStatus(): array
+    protected function licenseStatus(): array
     {
         return $this->monetizationService()->status();
     }

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Foundry\Pro\CLI;
+namespace Foundry\CLI\Commands;
 
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
+use Foundry\CLI\Commands\Concerns\InteractsWithLicensing;
 use Foundry\Monetization\FeatureFlags;
-use Foundry\Pro\CLI\Concerns\InteractsWithPro;
 use Foundry\Pro\Generation\AIGenerationService;
 use Foundry\Support\FoundryError;
 
 final class GenerateCommand extends Command
 {
-    use InteractsWithPro;
+    use InteractsWithLicensing;
 
     /**
      * @var array<int,string>
@@ -66,12 +66,12 @@ final class GenerateCommand extends Command
     #[\Override]
     public function run(array $args, CommandContext $context): array
     {
-        $license = $this->requirePro('generate <prompt>', [FeatureFlags::PRO_GENERATE]);
+        $license = $this->requireLicensedFeatures('generate <prompt>', [FeatureFlags::PRO_GENERATE]);
         [$prompt, $options] = $this->parse($args);
 
         if ($prompt === '') {
             throw new FoundryError(
-                'PRO_GENERATE_PROMPT_REQUIRED',
+                'GENERATE_PROMPT_REQUIRED',
                 'validation',
                 [],
                 'A generation prompt is required.',
@@ -89,8 +89,8 @@ final class GenerateCommand extends Command
         ))->generate($prompt, $options);
 
         $payload = is_array($result['payload'] ?? null) ? $result['payload'] : [];
-        $payload['mode'] = 'pro_generate';
-        $payload['pro'] = ['license' => $license];
+        $payload['mode'] = 'generate';
+        $payload['monetization'] = ['license' => $license];
 
         return [
             'status' => (int) ($result['status'] ?? 0),
@@ -185,14 +185,14 @@ final class GenerateCommand extends Command
     {
         $feature = trim((string) ($payload['plan']['feature']['feature'] ?? 'generated_feature'));
         if (($payload['dry_run'] ?? false) === true) {
-            return 'Foundry Pro generation plan prepared for ' . $feature . '.';
+            return 'Foundry generation plan prepared for ' . $feature . '.';
         }
 
         $files = count((array) ($payload['generated']['files'] ?? []));
         $providerMode = (string) ($payload['provider']['mode'] ?? 'provider');
 
         return sprintf(
-            'Foundry Pro generated %s using %s mode and wrote %d file(s).',
+            'Foundry generated %s using %s mode and wrote %d file(s).',
             $feature,
             $providerMode,
             $files,

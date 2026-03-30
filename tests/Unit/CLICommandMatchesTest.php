@@ -27,6 +27,7 @@ use Foundry\CLI\Commands\InspectNotificationCommand;
 use Foundry\CLI\Commands\InspectPlatformCommand;
 use Foundry\CLI\Commands\InspectResourceCommand;
 use Foundry\CLI\Commands\InspectRouteCommand;
+use Foundry\CLI\Commands\LicenseCommand;
 use Foundry\CLI\Commands\MigrateDefinitionsCommand;
 use Foundry\CLI\Commands\ObserveCommand;
 use Foundry\CLI\Commands\PreviewNotificationCommand;
@@ -44,12 +45,11 @@ use Foundry\CLI\Commands\VerifyIntegrationCommand;
 use Foundry\CLI\Commands\VerifyPipelineCommand;
 use Foundry\CLI\Commands\VerifyPlatformCommand;
 use Foundry\CLI\Commands\VerifyResourceCommand;
-use Foundry\Pro\CLI\DeepDoctorCommand;
-use Foundry\Pro\CLI\DiffCommand;
-use Foundry\Pro\CLI\ExplainCommand;
-use Foundry\Pro\CLI\GenerateCommand as ProGenerateCommand;
-use Foundry\Pro\CLI\ProCommand;
-use Foundry\Pro\CLI\TraceCommand;
+use Foundry\CLI\Commands\DeepDoctorCommand;
+use Foundry\CLI\Commands\DiffCommand;
+use Foundry\CLI\Commands\ExplainCommand;
+use Foundry\CLI\Commands\GenerateCommand as PromptGenerateCommand;
+use Foundry\CLI\Commands\TraceCommand;
 use PHPUnit\Framework\TestCase;
 
 final class CLICommandMatchesTest extends TestCase
@@ -125,8 +125,8 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new ObserveCommand())->matches(['observe:compare', 'trace-a', 'trace-b']));
         $this->assertTrue((new HistoryCommand())->matches(['history']));
         $this->assertTrue((new RegressionsCommand())->matches(['regressions']));
-        $this->assertTrue((new ProCommand())->matches(['pro', 'enable', 'key']));
-        $this->assertTrue((new ProGenerateCommand())->matches(['generate', 'add', 'bookmark', 'support']));
+        $this->assertTrue((new LicenseCommand())->matches(['license', 'activate', 'key']));
+        $this->assertTrue((new PromptGenerateCommand())->matches(['generate', 'add', 'bookmark', 'support']));
         $this->assertTrue((new UpgradeCheckCommand())->matches(['upgrade-check']));
         $this->assertTrue((new GraphVisualizeCommand())->matches(['graph', 'visualize']));
         $this->assertTrue((new PromptCommand())->matches(['prompt', 'add', 'feature']));

@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Foundry\Pro\CLI;
+namespace Foundry\CLI\Commands;
 
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
-use Foundry\CLI\Commands\DoctorCommand;
+use Foundry\CLI\Commands\Concerns\InteractsWithLicensing;
 use Foundry\Compiler\CompileOptions;
 use Foundry\Monetization\FeatureFlags;
-use Foundry\Pro\CLI\Concerns\InteractsWithPro;
 use Foundry\Pro\DeepDiagnosticsBuilder;
 
 final class DeepDoctorCommand extends Command
 {
-    use InteractsWithPro;
+    use InteractsWithLicensing;
 
     #[\Override]
     public function supportedSignatures(): array
@@ -31,7 +30,7 @@ final class DeepDoctorCommand extends Command
     #[\Override]
     public function run(array $args, CommandContext $context): array
     {
-        $license = $this->requirePro('doctor --deep', [FeatureFlags::PRO_DEEP_DIAGNOSTICS]);
+        $license = $this->requireLicensedFeatures('doctor --deep', [FeatureFlags::PRO_DEEP_DIAGNOSTICS]);
 
         $baseArgs = array_values(array_filter(
             $args,
@@ -54,7 +53,7 @@ final class DeepDoctorCommand extends Command
         ))->graph;
 
         $payload['deep'] = true;
-        $payload['pro'] = [
+        $payload['monetization'] = [
             'license' => $license,
             'deep_diagnostics' => (new DeepDiagnosticsBuilder())->build(
                 $graph,
@@ -77,8 +76,8 @@ final class DeepDoctorCommand extends Command
         $summary = is_array($payload['diagnostics_summary'] ?? null)
             ? $payload['diagnostics_summary']
             : ['error' => 0, 'warning' => 0, 'info' => 0];
-        $deep = is_array($payload['pro']['deep_diagnostics'] ?? null)
-            ? $payload['pro']['deep_diagnostics']
+        $deep = is_array($payload['monetization']['deep_diagnostics'] ?? null)
+            ? $payload['monetization']['deep_diagnostics']
             : [];
         $graph = is_array($deep['graph'] ?? null) ? $deep['graph'] : [];
 

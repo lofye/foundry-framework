@@ -190,21 +190,22 @@ YAML);
         $explainHelp = $this->runCommand($app, ['foundry', 'help', 'explain', '--json']);
         $this->assertSame(0, $explainHelp['status']);
         $this->assertSame('explain', $explainHelp['payload']['command']['signature']);
-        $this->assertSame('pro', $explainHelp['payload']['command']['availability']);
+        $this->assertSame('licensed', $explainHelp['payload']['command']['availability']);
         $this->assertStringContainsString('--neighbors', $explainHelp['payload']['command']['usage']);
         $this->assertSame('Architecture', $explainHelp['payload']['command']['category']);
         $this->assertSame('explain', $explainHelp['payload']['command']['command_type']);
         $this->assertTrue($explainHelp['payload']['command']['supports_pipeline_stage_filter']);
 
-        $proHelp = $this->runCommand($app, ['foundry', 'help', 'pro', '--json']);
-        $this->assertSame(0, $proHelp['status']);
-        $this->assertSame('pro', $proHelp['payload']['command']['signature']);
-        $this->assertSame('pro', $proHelp['payload']['command']['availability']);
+        $licenseHelp = $this->runCommand($app, ['foundry', 'help', 'license', 'status', '--json']);
+        $this->assertSame(0, $licenseHelp['status']);
+        $this->assertSame('license status', $licenseHelp['payload']['command']['signature']);
+        $this->assertSame('Monetization', $licenseHelp['payload']['command']['category']);
+        $this->assertSame('license', $licenseHelp['payload']['command']['command_type']);
 
         $generatePromptHelp = $this->runCommand($app, ['foundry', 'help', 'generate', 'Add', '--json']);
         $this->assertSame(0, $generatePromptHelp['status']);
         $this->assertSame('generate <prompt>', $generatePromptHelp['payload']['command']['signature']);
-        $this->assertSame('pro', $generatePromptHelp['payload']['command']['availability']);
+        $this->assertSame('licensed', $generatePromptHelp['payload']['command']['availability']);
         $this->assertStringContainsString('--deterministic', $generatePromptHelp['payload']['command']['usage']);
         $this->assertStringContainsString('--provider=<name>', $generatePromptHelp['payload']['command']['usage']);
 

@@ -9,9 +9,12 @@ use Foundry\CLI\Commands\CacheInspectCommand;
 use Foundry\CLI\Commands\CodemodRunCommand;
 use Foundry\CLI\Commands\CompileGraphCommand;
 use Foundry\CLI\Commands\DoctorCommand;
+use Foundry\CLI\Commands\DiffCommand;
 use Foundry\CLI\Commands\ExportGraphCommand;
 use Foundry\CLI\Commands\ExportOpenApiCommand;
+use Foundry\CLI\Commands\ExplainCommand;
 use Foundry\CLI\Commands\GenerateFeatureCommand;
+use Foundry\CLI\Commands\GenerateCommand as PromptGenerateCommand;
 use Foundry\CLI\Commands\GenerateIndexesCommand;
 use Foundry\CLI\Commands\GenerateIntegrationCommand;
 use Foundry\CLI\Commands\GeneratePlatformCommand;
@@ -45,11 +48,7 @@ use Foundry\CLI\Commands\VerifyIntegrationCommand;
 use Foundry\CLI\Commands\VerifyPipelineCommand;
 use Foundry\CLI\Commands\VerifyPlatformCommand;
 use Foundry\CLI\Commands\VerifyResourceCommand;
-use Foundry\Pro\CLI\DiffCommand;
-use Foundry\Pro\CLI\ExplainCommand;
-use Foundry\Pro\CLI\GenerateCommand as ProGenerateCommand;
-use Foundry\Pro\CLI\ProCommand;
-use Foundry\Pro\CLI\TraceCommand;
+use Foundry\CLI\Commands\TraceCommand;
 use Foundry\Support\ApiSurfaceRegistry;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Json;
@@ -102,8 +101,7 @@ final class Application
             new InspectRouteCommand(),
             new InitAppCommand(),
             new LicenseCommand(),
-            new ProCommand(),
-            new ProGenerateCommand(),
+            new PromptGenerateCommand(),
             new GenerateScaffoldCommand(),
             new GenerateIntegrationCommand(),
             new GeneratePlatformCommand(),
@@ -258,13 +256,14 @@ final class Application
                 }
 
                 $availability = (string) ($entry['availability'] ?? 'core');
-                $suffix = $availability === 'pro' ? ' [Pro]' : '';
+                $suffix = $availability === 'licensed' ? ' [Licensed]' : '';
 
                 $lines[] = '- ' . (string) ($entry['signature'] ?? '') . $suffix . ': ' . (string) ($entry['summary'] ?? '');
             }
             $lines[] = '';
         }
 
+        $lines[] = 'Some features require a license. Use `foundry license activate --key=<license-key>`.';
         $lines[] = 'Use `foundry help <command>` for usage, stability, and semver details.';
         $lines[] = 'Use `foundry help inspect`, `foundry help verify`, or `foundry help generate` to browse a command family.';
 
@@ -276,15 +275,20 @@ final class Application
      */
     private function renderCommandHelp(array $command): string
     {
+        $availability = (string) ($command['availability'] ?? 'core');
         $lines = [
             'Command: ' . (string) ($command['signature'] ?? ''),
             'Usage: ' . (string) ($command['usage'] ?? ''),
             'Stability: ' . (string) ($command['stability'] ?? 'internal'),
-            'Availability: ' . (((string) ($command['availability'] ?? 'core')) === 'pro' ? 'Foundry Pro' : 'Core'),
+            'Availability: ' . ($availability === 'licensed' ? 'Licensed' : 'Core'),
             'Classification: ' . (string) ($command['classification'] ?? 'internal_api'),
             'Summary: ' . (string) ($command['summary'] ?? ''),
             'Semver: ' . (string) ($command['semver_policy'] ?? ''),
         ];
+
+        if ($availability === 'licensed') {
+            $lines[] = 'License: Some features require a license. Use `foundry license activate --key=<license-key>`.';
+        }
 
         return implode(PHP_EOL, $lines);
     }
@@ -370,7 +374,7 @@ final class Application
             'graph' => 'Inspect or render graph slices through the graph command family.',
             'init' => 'Browse the legacy scaffolding alias family.',
             'inspect' => 'Inspect compiled graph, feature, integration, and reference surfaces.',
-            'license' => 'Inspect or manage local monetization licensing state.',
+            'license' => 'Inspect or manage local license state for monetized features.',
             'observe' => 'Capture or compare graph-aware trace and profile summaries.',
             'queue' => 'Browse local development queue commands.',
             'schedule' => 'Browse local development scheduler commands.',
@@ -405,12 +409,13 @@ final class Application
                 }
 
                 $availability = (string) ($entry['availability'] ?? 'core');
-                $suffix = $availability === 'pro' ? ' [Pro]' : '';
+                $suffix = $availability === 'licensed' ? ' [Licensed]' : '';
                 $lines[] = '- ' . (string) ($entry['signature'] ?? '') . $suffix . ': ' . (string) ($entry['summary'] ?? '');
             }
             $lines[] = '';
         }
 
+        $lines[] = 'Some features require a license. Use `foundry license activate --key=<license-key>`.';
         $lines[] = 'Use `foundry help <full command>` for exact usage, stability, and semver details.';
 
         return implode(PHP_EOL, $lines);

@@ -169,6 +169,12 @@ final class ApiSurfaceRegistry
 
         return match ($first) {
             'help', 'new', 'serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail', 'affected-files', 'impacted-features', 'upgrade-check', 'explain', 'diff', 'trace', 'observe:trace', 'observe:profile', 'observe:compare', 'history', 'regressions' => $first,
+            'license' => match ($second) {
+                'status' => 'license status',
+                'activate' => 'license activate',
+                'deactivate' => 'license deactivate',
+                default => null,
+            },
             'compile', 'graph', 'export', 'preview', 'init', 'migrate', 'codemod', 'cache' => match ($first) {
                 'compile' => $second === 'graph' ? 'compile graph' : null,
                 'graph' => match ($second) {
@@ -193,12 +199,6 @@ final class ApiSurfaceRegistry
                 default => null,
             },
             'doctor', 'prompt' => $first,
-            'pro' => match ($second) {
-                '' => 'pro',
-                'status' => 'pro status',
-                'enable' => 'pro enable',
-                default => 'pro',
-            },
             'inspect', 'verify' => $second !== '' ? $first . ' ' . $second : null,
             'generate' => $second === '' || str_starts_with($second, '--')
                 ? null
@@ -347,7 +347,7 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('compile graph', 'compile graph [--feature=<feature>] [--changed-only] [--no-cache]', 'stable', 'Compile source-of-truth files into the canonical application graph.'),
             $this->cliCommandEntry('cache inspect', 'cache inspect', 'stable', 'Inspect deterministic compile cache state, keys, and invalidation reasons.'),
             $this->cliCommandEntry('cache clear', 'cache clear', 'stable', 'Clear deterministic compile cache artifacts and generated projections.'),
-            $this->cliCommandEntry('doctor', 'doctor [--feature=<feature>] [--graph] [--strict] [--cli] [--deep] [--static] [--style] [--quality] [--tests]', 'experimental', 'Diagnose environment, install, build, architecture, and optional quality-tool issues from current Foundry state. Use --graph to focus on canonical graph health. Deep diagnostics require Foundry Pro.'),
+            $this->cliCommandEntry('doctor', 'doctor [--feature=<feature>] [--graph] [--strict] [--cli] [--deep] [--static] [--style] [--quality] [--tests]', 'experimental', 'Diagnose environment, install, build, architecture, and optional quality-tool issues from current Foundry state. Use --graph to focus on canonical graph health. Deep diagnostics require an active license.'),
             $this->cliCommandEntry('upgrade-check', 'upgrade-check [--target=<version>]', 'stable', 'Assess whether the current app is ready for a target framework upgrade.'),
             $this->cliCommandEntry('observe:trace', 'observe:trace [<feature>] [--feature=<feature>] [--route=<METHOD PATH>]', 'experimental', 'Capture a graph-aware execution trace summary mapped to features, execution plans, guards, and interceptors.'),
             $this->cliCommandEntry('observe:profile', 'observe:profile [<feature>] [--feature=<feature>] [--route=<METHOD PATH>]', 'experimental', 'Capture graph-aware timing, memory, and hotspot summaries for current execution plans.'),
@@ -357,16 +357,13 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('graph inspect', 'graph inspect [--view=<view>|--events|--routes|--caches|--pipeline|--workflows|--extensions] [--feature=<feature>] [--extension=<extension>] [--pipeline-stage=<stage>] [--command=<target>] [--event=<name>] [--workflow=<name>] [--format=mermaid|dot|svg|json]', 'stable', 'Inspect graph summaries and filtered architecture slices through the stable graph surface.'),
             $this->cliCommandEntry('graph visualize', 'graph visualize [--view=<view>|--events|--routes|--caches|--pipeline|--workflows|--extensions] [--feature=<feature>] [--extension=<extension>] [--pipeline-stage=<stage>] [--command=<target>] [--event=<name>] [--workflow=<name>] [--format=mermaid|dot|svg|json]', 'stable', 'Render graph slices through the stable graph inspection surface.'),
             $this->cliCommandEntry('prompt', 'prompt <instruction...> [--feature-context] [--dry-run]', 'experimental', 'Build structured AI-edit prompts from current graph state.'),
-            $this->cliCommandEntry('license:status', 'license:status', 'experimental', 'Show the effective Foundry monetization license status from the environment or local store.'),
-            $this->cliCommandEntry('license:activate', 'license:activate <license-key>', 'experimental', 'Validate and store a local Foundry license key. Optional remote validation runs only when explicitly configured.'),
-            $this->cliCommandEntry('license:deactivate', 'license:deactivate', 'experimental', 'Remove the locally stored Foundry license file. Environment-provided keys remain active until the environment is cleared.'),
-            $this->cliCommandEntry('pro', 'pro [status]', 'experimental', 'Inspect local Foundry Pro licensing status and available Pro commands.', 'pro'),
-            $this->cliCommandEntry('pro enable', 'pro enable <license-key>', 'experimental', 'Legacy alias for `license:activate <license-key>`.', 'pro'),
-            $this->cliCommandEntry('pro status', 'pro status', 'experimental', 'Legacy alias for `license:status` plus the Pro command catalog.', 'pro'),
-            $this->cliCommandEntry('explain', 'explain <target> [--type=<kind>] [--markdown] [--deep] [--neighbors|--no-neighbors] [--no-diagnostics] [--no-flow]', 'experimental', 'Explain a framework or application subject from the compiled graph, projections, diagnostics, and docs metadata.', 'pro'),
-            $this->cliCommandEntry('diff', 'diff', 'experimental', 'Compare the current graph against the last compiled baseline.', 'pro'),
-            $this->cliCommandEntry('trace', 'trace [<target>]', 'experimental', 'Analyze local trace output for a feature, route, or free-form filter.', 'pro'),
-            $this->cliCommandEntry('generate <prompt>', 'generate <prompt...> [--feature-context] [--dry-run] [--deterministic] [--provider=<name>] [--model=<name>] [--force]', 'experimental', 'Plan or generate graph-aware feature scaffolding from the current graph using deterministic or configured AI provider mode.', 'pro'),
+            $this->cliCommandEntry('license status', 'license status', 'experimental', 'Show the effective Foundry license status from the environment or local store.'),
+            $this->cliCommandEntry('license activate', 'license activate [--key=<license-key>]', 'experimental', 'Validate and store a local Foundry license key. Optional remote validation runs only when explicitly configured.'),
+            $this->cliCommandEntry('license deactivate', 'license deactivate', 'experimental', 'Remove the locally stored Foundry license file. Environment-provided keys remain active until the environment is cleared.'),
+            $this->cliCommandEntry('explain', 'explain <target> [--type=<kind>] [--markdown] [--deep] [--neighbors|--no-neighbors] [--no-diagnostics] [--no-flow]', 'experimental', 'Explain a framework or application subject from the compiled graph, projections, diagnostics, and docs metadata.', 'licensed'),
+            $this->cliCommandEntry('diff', 'diff', 'experimental', 'Compare the current graph against the last compiled baseline.', 'licensed'),
+            $this->cliCommandEntry('trace', 'trace [<target>]', 'experimental', 'Analyze local trace output for a feature, route, or free-form filter.', 'licensed'),
+            $this->cliCommandEntry('generate <prompt>', 'generate <prompt...> [--feature-context] [--dry-run] [--deterministic] [--provider=<name>] [--model=<name>] [--force]', 'experimental', 'Plan or generate graph-aware feature scaffolding from the current graph using deterministic or configured AI provider mode.', 'licensed'),
             $this->cliCommandEntry('serve', 'serve', 'internal', 'Emit the lightweight local PHP server hint used in development.'),
             $this->cliCommandEntry('queue:work', 'queue:work [<queue>]', 'internal', 'Run the local queue worker loop.'),
             $this->cliCommandEntry('queue:inspect', 'queue:inspect [<queue>]', 'internal', 'Inspect queued jobs for local development.'),
@@ -666,7 +663,7 @@ final class ApiSurfaceRegistry
             in_array($signature, ['cache inspect', 'cache clear'], true) => 'Build',
             in_array($signature, ['observe:trace', 'observe:profile', 'observe:compare', 'history', 'regressions'], true) => 'Observability',
             in_array($signature, ['serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail'], true) => 'Runtime',
-            in_array($signature, ['license:status', 'license:activate', 'license:deactivate', 'pro', 'pro enable', 'pro status', 'generate <prompt>'], true) => 'Pro',
+            in_array($signature, ['license status', 'license activate', 'license deactivate'], true) => 'Monetization',
             in_array($signature, ['new', 'init app', 'preview notification'], true)
                 || str_starts_with($signature, 'generate ')
                 => 'App Scaffolding',
@@ -687,8 +684,7 @@ final class ApiSurfaceRegistry
             str_starts_with($signature, 'trace:') => 'trace',
             str_starts_with($signature, 'cache ') => 'cache',
             str_starts_with($signature, 'graph ') => 'graph',
-            str_starts_with($signature, 'license:') => 'license',
-            str_starts_with($signature, 'pro') => 'pro',
+            str_starts_with($signature, 'license ') => 'license',
             default => trim((string) strtok($signature, ' ')),
         };
     }
