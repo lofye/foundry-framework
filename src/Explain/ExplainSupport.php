@@ -6,11 +6,44 @@ namespace Foundry\Explain;
 
 use Foundry\Compiler\ApplicationGraph;
 use Foundry\Compiler\IR\GraphNode;
+use Foundry\Support\FoundryError;
 use Foundry\Support\CliCommandPrefix;
 use Foundry\Support\Paths;
 
 final class ExplainSupport
 {
+    public static function defaultTarget(ApplicationGraph $graph): string
+    {
+        $target = self::defaultTargetOrNull($graph);
+        if ($target !== null) {
+            return $target;
+        }
+
+        throw new FoundryError(
+            'EXPLAIN_TARGET_REQUIRED',
+            'validation',
+            [],
+            'Explain target is required because no explainable feature or route is available in this project.',
+        );
+    }
+
+    public static function defaultTargetOrNull(ApplicationGraph $graph): ?string
+    {
+        $features = $graph->features();
+        if ($features !== []) {
+            return 'feature:' . $features[0];
+        }
+
+        foreach ($graph->nodesByType('route') as $node) {
+            $signature = trim((string) ($node->payload()['signature'] ?? ''));
+            if ($signature !== '') {
+                return 'route:' . $signature;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Map raw graph node types to the canonical explain subject kinds.
      */

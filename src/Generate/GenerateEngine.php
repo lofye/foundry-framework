@@ -9,10 +9,14 @@ use Foundry\Compiler\ApplicationGraph;
 use Foundry\Compiler\CompileOptions;
 use Foundry\Compiler\Extensions\ExtensionRegistry;
 use Foundry\Compiler\GraphCompiler;
+use Foundry\Explain\Diff\ExplainDiffService;
 use Foundry\Explain\ExplainModel;
 use Foundry\Explain\ExplainOptions;
 use Foundry\Explain\ExplainOrigin;
+use Foundry\Explain\ExplainResponse;
+use Foundry\Explain\ExplainSupport;
 use Foundry\Explain\ExplainTarget;
+use Foundry\Explain\Snapshot\ExplainSnapshotService;
 use Foundry\Generation\ContextManifestGenerator;
 use Foundry\Generation\FeatureGenerator;
 use Foundry\Generation\TestGenerator;
@@ -28,16 +32,22 @@ final class GenerateEngine
     private readonly PackManager $packManager;
     private readonly CodeWriter $codeWriter;
     private readonly ApiSurfaceRegistry $apiSurfaceRegistry;
+    private readonly ExplainSnapshotService $snapshotService;
+    private readonly ExplainDiffService $diffService;
 
     public function __construct(
         private readonly Paths $paths,
         ?PackManager $packManager = null,
         ?CodeWriter $codeWriter = null,
         ?ApiSurfaceRegistry $apiSurfaceRegistry = null,
+        ?ExplainSnapshotService $snapshotService = null,
+        ?ExplainDiffService $diffService = null,
     ) {
         $this->packManager = $packManager ?? new PackManager($paths);
         $this->codeWriter = $codeWriter ?? new CodeWriter();
         $this->apiSurfaceRegistry = $apiSurfaceRegistry ?? new ApiSurfaceRegistry();
+        $this->snapshotService = $snapshotService ?? new ExplainSnapshotService($paths, $this->apiSurfaceRegistry);
+        $this->diffService = $diffService ?? new ExplainDiffService($paths, $this->snapshotService);
     }
 
     /**
@@ -48,100 +58,117 @@ final class GenerateEngine
         $initialExtensions = ExtensionRegistry::forPaths($this->paths);
         $requirementResolver = new PackRequirementResolver();
         $initialRequirements = $requirementResolver->resolve($intent, $initialExtensions->packRegistry());
+        $preSnapshot = null;
+        if (!$intent->dryRun) {
+            $initialCompiler = new GraphCompiler($this->paths, $initialExtensions);
+            $initialCompile = $initialCompiler->compile(new CompileOptions(emit: true));
+            $preSnapshot = $this->snapshotService->capture(
+                'pre-generate',
+                $initialCompile->graph,
+                $initialExtensions,
+                GeneratorRegistry::forExtensions($initialExtensions),
+                $this->resolveTarget($intent, $initialCompile->graph, $initialExtensions),
+            );
+        }
 
-        if ($initialRequirements['suggested_packs'] !== []) {
-            if ($intent->dryRun || !$intent->allowPackInstall) {
+        $packsInstalled = [];
+        $packSnapshots = $intent->dryRun
+            ? []
+            : $this->codeWriter->snapshot([$this->paths->join('.foundry/packs/installed.json')]);
+        $iterationSnapshots = $intent->dryRun
+            ? []
+            : $this->codeWriter->snapshot([
+                $this->snapshotService->snapshotPath('post-generate'),
+                $this->diffService->lastDiffPath(),
+            ]);
+        $fileSnapshots = [];
+
+        try {
+            if ($initialRequirements['suggested_packs'] !== []) {
+                if ($intent->dryRun || !$intent->allowPackInstall) {
+                    throw new FoundryError(
+                        'GENERATE_PACK_INSTALL_REQUIRED',
+                        'validation',
+                        [
+                            'missing_capabilities' => $initialRequirements['missing_capabilities'],
+                            'suggested_packs' => $initialRequirements['suggested_packs'],
+                        ],
+                        'Required packs are not installed. Re-run with --allow-pack-install or install them first.',
+                    );
+                }
+
+                foreach ($initialRequirements['suggested_packs'] as $pack) {
+                    $packsInstalled[] = $this->packManager->install($pack);
+                }
+            }
+
+            $extensions = ExtensionRegistry::forPaths($this->paths);
+            $compiler = new GraphCompiler($this->paths, $extensions);
+            $compile = $compiler->compile(new CompileOptions(emit: true));
+
+            if ($compile->diagnostics->hasErrors() && $intent->mode !== 'repair' && !$intent->allowRisky) {
                 throw new FoundryError(
-                    'GENERATE_PACK_INSTALL_REQUIRED',
+                    'GENERATE_PRECONDITION_FAILED',
                     'validation',
-                    [
-                        'missing_capabilities' => $initialRequirements['missing_capabilities'],
-                        'suggested_packs' => $initialRequirements['suggested_packs'],
-                    ],
-                    'Required packs are not installed. Re-run with --allow-pack-install or install them first.',
+                    ['compile' => $compile->toArray()],
+                    'The current graph has errors. Repair the system first or re-run with --allow-risky.',
                 );
             }
 
-            $packsInstalled = [];
-            foreach ($initialRequirements['suggested_packs'] as $pack) {
-                $packsInstalled[] = $this->packManager->install($pack);
-            }
-        } else {
-            $packsInstalled = [];
-        }
-
-        $extensions = ExtensionRegistry::forPaths($this->paths);
-        $compiler = new GraphCompiler($this->paths, $extensions);
-        $compile = $compiler->compile(new CompileOptions(emit: true));
-
-        if ($compile->diagnostics->hasErrors() && $intent->mode !== 'repair' && !$intent->allowRisky) {
-            throw new FoundryError(
-                'GENERATE_PRECONDITION_FAILED',
-                'validation',
-                ['compile' => $compile->toArray()],
-                'The current graph has errors. Repair the system first or re-run with --allow-risky.',
-            );
-        }
-
-        $target = $this->resolveTarget($intent, $compile->graph, $extensions);
-        $model = $this->buildExplainModel($compiler, $extensions, $compile->graph, $target);
-        $generatorRegistry = GeneratorRegistry::forExtensions($extensions);
-        $requirements = $requirementResolver->resolve($intent, $extensions->packRegistry());
-        $context = new GenerationContextPacket(
-            intent: $intent,
-            model: $model,
-            targets: [
-                [
-                    'requested' => $intent->target,
-                    'resolved' => $target,
-                    'subject' => [
-                        'id' => $model->subject['id'] ?? 'system:root',
-                        'kind' => $model->subject['kind'] ?? 'system',
-                        'origin' => $model->subject['origin'] ?? 'core',
-                        'extension' => $model->subject['extension'] ?? null,
+            $target = $this->resolveTarget($intent, $compile->graph, $extensions);
+            $model = $this->buildExplainModel($compiler, $extensions, $compile->graph, $target);
+            $generatorRegistry = GeneratorRegistry::forExtensions($extensions);
+            $requirements = $requirementResolver->resolve($intent, $extensions->packRegistry());
+            $context = new GenerationContextPacket(
+                intent: $intent,
+                model: $model,
+                targets: [
+                    [
+                        'requested' => $intent->target,
+                        'resolved' => $target,
+                        'subject' => [
+                            'id' => $model->subject['id'] ?? 'system:root',
+                            'kind' => $model->subject['kind'] ?? 'system',
+                            'origin' => $model->subject['origin'] ?? 'core',
+                            'extension' => $model->subject['extension'] ?? null,
+                        ],
                     ],
                 ],
-            ],
-            graphRelationships: is_array($model->relationships['graph'] ?? null) ? $model->relationships['graph'] : [],
-            constraints: $this->constraintsFor($intent, $model),
-            docs: array_values(array_filter((array) ($model->docs['related'] ?? []), 'is_array')),
-            validationSteps: ['compile_graph', 'doctor', 'verify_graph', 'verify_contracts'],
-            availableGenerators: array_values(array_map(
-                static fn(RegisteredGenerator $generator): array => $generator->toArray(),
-                $generatorRegistry->all(),
-            )),
-            installedPacks: $extensions->packRegistry()->inspectRows(),
-            missingCapabilities: $requirements['missing_capabilities'],
-            suggestedPacks: $requirements['suggested_packs'],
-        );
-
-        $plan = (new GenerationPlanner($generatorRegistry))->plan($context);
-        (new PlanValidator())->validate($plan, $intent);
-
-        if ($intent->dryRun) {
-            return $this->buildPayload(
-                intent: $intent,
-                plan: $plan,
-                actionsTaken: [],
-                verificationResults: ['skipped' => true, 'ok' => true],
-                errors: [],
-                context: $context,
-                packsInstalled: $packsInstalled,
+                graphRelationships: is_array($model->relationships['graph'] ?? null) ? $model->relationships['graph'] : [],
+                constraints: $this->constraintsFor($intent, $model),
+                docs: array_values(array_filter((array) ($model->docs['related'] ?? []), 'is_array')),
+                validationSteps: ['compile_graph', 'doctor', 'verify_graph', 'verify_contracts'],
+                availableGenerators: array_values(array_map(
+                    static fn(RegisteredGenerator $generator): array => $generator->toArray(),
+                    $generatorRegistry->all(),
+                )),
+                installedPacks: $extensions->packRegistry()->inspectRows(),
+                missingCapabilities: $requirements['missing_capabilities'],
+                suggestedPacks: $requirements['suggested_packs'],
             );
-        }
 
-        $snapshots = $this->codeWriter->snapshot($this->absolutePaths($plan->affectedFiles));
+            $plan = (new GenerationPlanner($generatorRegistry))->plan($context);
+            (new PlanValidator())->validate($plan, $intent);
 
-        try {
+            if ($intent->dryRun) {
+                return $this->buildPayload(
+                    intent: $intent,
+                    plan: $plan,
+                    actionsTaken: [],
+                    verificationResults: ['skipped' => true, 'ok' => true],
+                    errors: [],
+                    context: $context,
+                    packsInstalled: $packsInstalled,
+                );
+            }
+
+            $fileSnapshots = $this->codeWriter->snapshot($this->absolutePaths($plan->affectedFiles));
             $actionsTaken = $this->executePlan($plan, $intent);
             $verificationResults = $intent->skipVerify
                 ? ['skipped' => true, 'ok' => true]
                 : $this->runVerification($plan);
 
             if (($verificationResults['ok'] ?? false) !== true) {
-                $this->codeWriter->restore($snapshots);
-                $this->rebuildAfterRestore();
-
                 throw new FoundryError(
                     'GENERATE_VERIFICATION_FAILED',
                     'validation',
@@ -152,22 +179,55 @@ final class GenerateEngine
                     'Generation was rolled back because verification failed.',
                 );
             }
+
+            $postExtensions = ExtensionRegistry::forPaths($this->paths);
+            $postCompiler = new GraphCompiler($this->paths, $postExtensions);
+            $postCompile = $postCompiler->compile(new CompileOptions(emit: true));
+            $postTarget = $this->postGenerateTarget($plan, $context, $postCompile->graph);
+            $postSnapshot = $this->snapshotService->capture(
+                'post-generate',
+                $postCompile->graph,
+                $postExtensions,
+                GeneratorRegistry::forExtensions($postExtensions),
+                $postTarget,
+            );
+            $architectureDiff = $preSnapshot !== null
+                ? $this->diffService->compare($preSnapshot, $postSnapshot)
+                : null;
+            if ($architectureDiff !== null) {
+                $this->diffService->storeLast($architectureDiff);
+            }
+
+            $postExplain = null;
+            $postExplainRendered = null;
+            if ($intent->explainAfter) {
+                $response = $this->buildExplainResponse($postCompiler, $postExtensions, $postCompile->graph, $postTarget);
+                $postExplain = $response?->toArray();
+                $postExplainRendered = $response?->rendered;
+            }
+
+            return $this->buildPayload(
+                intent: $intent,
+                plan: $plan,
+                actionsTaken: $actionsTaken,
+                verificationResults: $verificationResults,
+                errors: [],
+                context: $context,
+                packsInstalled: $packsInstalled,
+                snapshots: [
+                    'pre' => $this->relativePath($this->snapshotService->snapshotPath('pre-generate')),
+                    'post' => $this->relativePath($this->snapshotService->snapshotPath('post-generate')),
+                    'diff' => $this->relativePath($this->diffService->lastDiffPath()),
+                ],
+                architectureDiff: $architectureDiff,
+                postExplain: $postExplain,
+                postExplainRendered: $postExplainRendered,
+            );
         } catch (\Throwable $error) {
-            $this->codeWriter->restore($snapshots);
-            $this->rebuildAfterRestore();
+            $this->restoreGenerateState($packSnapshots, $fileSnapshots, $iterationSnapshots);
 
             throw $error;
         }
-
-        return $this->buildPayload(
-            intent: $intent,
-            plan: $plan,
-            actionsTaken: $actionsTaken,
-            verificationResults: $verificationResults,
-            errors: [],
-            context: $context,
-            packsInstalled: $packsInstalled,
-        );
     }
 
     /**
@@ -181,6 +241,10 @@ final class GenerateEngine
         array $errors,
         GenerationContextPacket $context,
         array $packsInstalled,
+        array $snapshots = [],
+        ?array $architectureDiff = null,
+        ?array $postExplain = null,
+        ?string $postExplainRendered = null,
     ): array {
         $packsUsed = $plan->extension !== null ? [$plan->extension] : [];
 
@@ -197,6 +261,10 @@ final class GenerateEngine
                 'target' => $context->targets[0] ?? null,
                 'context' => $context->toArray(),
             ],
+            'snapshots' => $snapshots,
+            'architecture_diff' => $architectureDiff,
+            'post_explain' => $postExplain,
+            'post_explain_rendered' => $postExplainRendered,
             'packs_used' => $packsUsed,
             'packs_installed' => $packsInstalled,
         ];
@@ -243,6 +311,40 @@ final class GenerateEngine
         ))->explain($graph, ExplainTarget::parse($target), new ExplainOptions());
 
         return $response->plan->model;
+    }
+
+    private function buildExplainResponse(
+        GraphCompiler $compiler,
+        ExtensionRegistry $extensions,
+        ApplicationGraph $graph,
+        ?string $target,
+    ): ?ExplainResponse {
+        $resolvedTarget = $target ?? ExplainSupport::defaultTargetOrNull($graph);
+        if ($resolvedTarget === null || trim($resolvedTarget) === '') {
+            return null;
+        }
+
+        return (new ArchitectureExplainer(
+            paths: $this->paths,
+            impactAnalyzer: $compiler->impactAnalyzer(),
+            apiSurfaceRegistry: $this->apiSurfaceRegistry,
+            extensionRows: $extensions->inspectRows(),
+        ))->explain($graph, ExplainTarget::parse($resolvedTarget), new ExplainOptions());
+    }
+
+    private function postGenerateTarget(GenerationPlan $plan, GenerationContextPacket $context, ApplicationGraph $graph): ?string
+    {
+        $feature = trim((string) ($plan->metadata['feature'] ?? ''));
+        if ($feature !== '') {
+            return 'feature:' . $feature;
+        }
+
+        $resolved = trim((string) ($context->targets[0]['resolved'] ?? ''));
+        if ($resolved !== '') {
+            return $resolved;
+        }
+
+        return ExplainSupport::defaultTargetOrNull($graph);
     }
 
     /**
@@ -572,6 +674,22 @@ final class GenerateEngine
             metadata: ['target' => ['raw' => 'system:root', 'kind' => null, 'selector' => 'system:root']],
             extensions: $extensionRows,
         );
+    }
+
+    /**
+     * @param array<string,array{exists:bool,content:?string}> $packSnapshots
+     * @param array<string,array{exists:bool,content:?string}> $fileSnapshots
+     * @param array<string,array{exists:bool,content:?string}> $iterationSnapshots
+     */
+    private function restoreGenerateState(array $packSnapshots, array $fileSnapshots, array $iterationSnapshots): void
+    {
+        $snapshots = $packSnapshots + $fileSnapshots + $iterationSnapshots;
+        if ($snapshots === []) {
+            return;
+        }
+
+        $this->codeWriter->restore($snapshots);
+        $this->rebuildAfterRestore();
     }
 
     private function relativePath(string $absolute): string

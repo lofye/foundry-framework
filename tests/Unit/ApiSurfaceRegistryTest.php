@@ -116,12 +116,14 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('experimental', $explain['stability']);
         $this->assertSame('core', $explain['availability']);
         $this->assertStringContainsString('--neighbors', $explain['usage']);
+        $this->assertStringContainsString('--diff', $explain['usage']);
         $this->assertSame('Architecture', $explain['category']);
         $this->assertSame('explain', $explain['command_type']);
         $this->assertTrue($explain['supports_pipeline_stage_filter']);
         $this->assertStringContainsString('explain [<target>]', $explain['usage']);
         $this->assertSame('generate <intent>', $generatePrompt['signature']);
         $this->assertStringContainsString('--mode=<new|modify|repair>', $generatePrompt['usage']);
+        $this->assertStringContainsString('--explain', $generatePrompt['usage']);
         $this->assertStringContainsString('--allow-pack-install', $generatePrompt['usage']);
         $this->assertSame('App Scaffolding', $generatePrompt['category']);
         $this->assertSame('generate', $generatePrompt['command_type']);

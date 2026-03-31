@@ -167,13 +167,15 @@ Context extraction prioritizes feature matches by instruction tokens, route path
 ## Explain, Diff, Trace, And Generate
 
 - `explain [<target>]` resolves a typed selector, route signature, command name, exact node id, or deterministic alias into a canonical subject and explains it from compiled graph and projection metadata.
+- `explain --diff` renders the last stored architectural generate diff from explain-derived snapshots.
 - `diff` compares the last compiled baseline graph against the current source state without changing core runtime requirements.
 - `trace [<target>]` analyzes the local trace log and summarizes matching categories.
 - `generate "<intent>"` resolves explicit intent into an explain-derived context packet, then selects deterministic core or pack generators.
 - `generate "<intent>" --mode=modify --target=<target>` uses explain attribution to constrain writes to the intended subject.
 - `generate "<intent>" --mode=repair --target=<target>` restores missing generated artifacts and reruns verification before keeping the change.
 - `generate "<intent>" --packs=<vendor/pack> --allow-pack-install` can install a missing pack and immediately route planning through its generator surface.
-- generation recompiles and reruns verification after writes so failures remain inspectable and rollback can restore the prior state.
+- generation captures explain-derived pre/post snapshots, recomputes architectural diffs, and reruns verification after writes so failures remain inspectable and rollback can restore the prior state.
+- `generate "<intent>" --explain` appends the updated explain output after the architectural diff summary.
 
 When no explain target is provided, Foundry explains the first feature or route deterministically. The first-run walkthrough relies on that contract intentionally.
 
@@ -189,8 +191,19 @@ foundry explain command:doctor --json
 foundry explain event:post.created --json
 foundry explain workflow:editorial --json
 foundry explain pack:foundry/blog --json
+foundry explain --diff --json
 foundry explain auth --type=pipeline_stage --json
 ```
+
+Iteration loop:
+
+```bash
+foundry generate "add feature" --mode=new
+foundry explain --diff
+foundry generate "refine feature" --mode=modify --target=<feature>
+```
+
+`explain --diff` compares explain-derived architectural snapshots stored in `.foundry/snapshots/pre-generate.json` and `.foundry/snapshots/post-generate.json`, then renders the latest diff from `.foundry/diffs/last.json`. It is an architectural diff, not a file diff.
 
 Supported subject kinds include:
 

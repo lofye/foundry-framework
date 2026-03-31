@@ -200,6 +200,7 @@ YAML);
         $this->assertSame('explain', $explainHelp['payload']['command']['signature']);
         $this->assertSame('core', $explainHelp['payload']['command']['availability']);
         $this->assertStringContainsString('--neighbors', $explainHelp['payload']['command']['usage']);
+        $this->assertStringContainsString('--diff', $explainHelp['payload']['command']['usage']);
         $this->assertStringContainsString('first feature or route deterministically', $explainHelp['payload']['command']['summary']);
         $this->assertSame('Architecture', $explainHelp['payload']['command']['category']);
         $this->assertSame('explain', $explainHelp['payload']['command']['command_type']);
@@ -258,6 +259,7 @@ YAML);
         $this->assertSame('generate <intent>', $generatePromptHelp['payload']['command']['signature']);
         $this->assertSame('core', $generatePromptHelp['payload']['command']['availability']);
         $this->assertStringContainsString('--mode=<new|modify|repair>', $generatePromptHelp['payload']['command']['usage']);
+        $this->assertStringContainsString('--explain', $generatePromptHelp['payload']['command']['usage']);
         $this->assertStringContainsString('--allow-pack-install', $generatePromptHelp['payload']['command']['usage']);
         $this->assertStringContainsString('explain [<target>]', $explainHelp['payload']['command']['usage']);
 

@@ -51,6 +51,9 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame('GENERATE_PACK_INSTALL_REQUIRED', $result['payload']['error']['code']);
         $this->assertSame(['pack:foundry/blog'], $result['payload']['error']['details']['missing_capabilities']);
         $this->assertSame(['foundry/blog'], $result['payload']['error']['details']['suggested_packs']);
+        $this->assertFileExists($this->project->root . '/.foundry/snapshots/pre-generate.json');
+        $this->assertFileDoesNotExist($this->project->root . '/.foundry/snapshots/post-generate.json');
+        $this->assertFileDoesNotExist($this->project->root . '/.foundry/diffs/last.json');
     }
 
     public function test_generate_uses_installed_pack_generator_when_pack_is_available(): void
@@ -116,6 +119,71 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame('registry', $generate['payload']['packs_installed'][0]['source']['type']);
         $this->assertFileExists($this->project->root . '/.foundry/packs/foundry/blog/1.0.0/foundry.json');
         $this->assertFileExists($this->project->root . '/app/features/blog_post_notes/feature.yaml');
+    }
+
+    public function test_generate_records_architectural_snapshots_diff_and_post_explain(): void
+    {
+        $app = new Application();
+
+        $generate = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            'Create',
+            'comments',
+            '--mode=new',
+            '--explain',
+            '--json',
+        ]);
+
+        $this->assertSame(0, $generate['status']);
+        $this->assertFileExists($this->project->root . '/.foundry/snapshots/pre-generate.json');
+        $this->assertFileExists($this->project->root . '/.foundry/snapshots/post-generate.json');
+        $this->assertFileExists($this->project->root . '/.foundry/diffs/last.json');
+        $this->assertSame('.foundry/snapshots/pre-generate.json', $generate['payload']['snapshots']['pre']);
+        $this->assertSame('.foundry/snapshots/post-generate.json', $generate['payload']['snapshots']['post']);
+        $this->assertSame('.foundry/diffs/last.json', $generate['payload']['snapshots']['diff']);
+        $this->assertIsArray($generate['payload']['architecture_diff']);
+        $this->assertGreaterThan(0, $generate['payload']['architecture_diff']['summary']['added']);
+        $this->assertSame(
+            'feature:' . $generate['payload']['plan']['metadata']['feature'],
+            $generate['payload']['post_explain']['subject']['id'],
+        );
+
+        $diff = $this->runCommand($app, ['foundry', 'explain', '--diff', '--json']);
+        $this->assertSame(0, $diff['status']);
+        $this->assertSame($generate['payload']['architecture_diff'], $diff['payload']);
+    }
+
+    public function test_explain_diff_fails_cleanly_when_snapshots_are_incompatible(): void
+    {
+        mkdir($this->project->root . '/.foundry/snapshots', 0777, true);
+        mkdir($this->project->root . '/.foundry/diffs', 0777, true);
+
+        file_put_contents($this->project->root . '/.foundry/snapshots/pre-generate.json', json_encode([
+            'schema_version' => 1,
+            'label' => 'pre-generate',
+            'metadata' => ['explain_schema_version' => 2],
+            'categories' => [],
+        ], JSON_THROW_ON_ERROR));
+        file_put_contents($this->project->root . '/.foundry/snapshots/post-generate.json', json_encode([
+            'schema_version' => 1,
+            'label' => 'post-generate',
+            'metadata' => ['explain_schema_version' => 99],
+            'categories' => [],
+        ], JSON_THROW_ON_ERROR));
+        file_put_contents($this->project->root . '/.foundry/diffs/last.json', json_encode([
+            'schema_version' => 1,
+            'summary' => ['added' => 0, 'removed' => 0, 'modified' => 0],
+            'added' => [],
+            'removed' => [],
+            'modified' => [],
+        ], JSON_THROW_ON_ERROR));
+
+        $app = new Application();
+        $diff = $this->runCommand($app, ['foundry', 'explain', '--diff', '--json']);
+
+        $this->assertSame(1, $diff['status']);
+        $this->assertSame('EXPLAIN_DIFF_SNAPSHOT_INCOMPATIBLE', $diff['payload']['error']['code']);
     }
 
     /**

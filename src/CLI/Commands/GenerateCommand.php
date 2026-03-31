@@ -90,6 +90,7 @@ final class GenerateCommand extends Command
         $target = null;
         $dryRun = false;
         $skipVerify = false;
+        $explainAfter = false;
         $allowRisky = false;
         $allowPackInstall = false;
         $packHints = [];
@@ -112,6 +113,11 @@ final class GenerateCommand extends Command
 
             if ($arg === '--no-verify') {
                 $skipVerify = true;
+                continue;
+            }
+
+            if ($arg === '--explain') {
+                $explainAfter = true;
                 continue;
             }
 
@@ -208,6 +214,7 @@ final class GenerateCommand extends Command
             target: $target,
             dryRun: $dryRun,
             skipVerify: $skipVerify,
+            explainAfter: $explainAfter,
             allowRisky: $allowRisky,
             allowPackInstall: $allowPackInstall,
             packHints: $packHints,
@@ -259,6 +266,97 @@ final class GenerateCommand extends Command
             $lines[] = 'Verification: ' . ((bool) ($verification['ok'] ?? false) ? 'passed' : 'failed');
         }
 
+        $diff = is_array($payload['architecture_diff'] ?? null) ? $payload['architecture_diff'] : null;
+        if ($diff !== null && ($payload['metadata']['dry_run'] ?? false) !== true) {
+            $summary = $this->renderDiffSummary($diff);
+            if ($summary !== []) {
+                $lines[] = '';
+                $lines[] = 'Summary:';
+                foreach ($summary as $line) {
+                    $lines[] = '- ' . $line;
+                }
+            }
+        }
+
+        $postExplainRendered = trim((string) ($payload['post_explain_rendered'] ?? ''));
+        if ($postExplainRendered !== '') {
+            $lines[] = '';
+            $lines[] = 'Updated system:';
+            $lines[] = $postExplainRendered;
+        }
+
+        if (($payload['metadata']['dry_run'] ?? false) !== true) {
+            $lines[] = '';
+            $lines[] = 'Next:';
+            $lines[] = '- Inspect architectural changes:';
+            $lines[] = '    foundry explain --diff';
+            $lines[] = '- View full current system:';
+            $lines[] = '    foundry explain';
+            $lines[] = '- Continue iterating:';
+            $lines[] = '    ' . $this->refineCommand($payload);
+        }
+
         return implode(PHP_EOL, $lines);
+    }
+
+    /**
+     * @param array<string,mixed> $diff
+     * @return array<int,string>
+     */
+    private function renderDiffSummary(array $diff): array
+    {
+        $lines = [];
+        foreach (['added' => 'Added', 'modified' => 'Modified', 'removed' => 'Removed'] as $key => $label) {
+            $items = array_values(array_filter((array) ($diff[$key] ?? []), 'is_array'));
+            if ($items === []) {
+                continue;
+            }
+
+            $names = [];
+            foreach (array_slice($items, 0, 3) as $item) {
+                $name = trim((string) ($item['label'] ?? $item['id'] ?? ''));
+                $extension = trim((string) ($item['extension'] ?? ''));
+                if ($name === '') {
+                    continue;
+                }
+
+                if ($extension !== '' && $extension !== $name) {
+                    $name .= ' [' . $extension . ']';
+                }
+
+                $names[] = $name;
+            }
+
+            $summary = $label . ': ' . implode('; ', $names);
+            if (count($items) > count($names)) {
+                $summary .= sprintf(' (+%d more)', count($items) - count($names));
+            }
+
+            $lines[] = $summary;
+        }
+
+        if ($lines === []) {
+            $lines[] = 'No architectural changes detected.';
+        }
+
+        return $lines;
+    }
+
+    /**
+     * @param array<string,mixed> $payload
+     */
+    private function refineCommand(array $payload): string
+    {
+        $feature = trim((string) ($payload['plan']['metadata']['feature'] ?? ''));
+        if ($feature !== '') {
+            return sprintf('foundry generate "Refine %s" --mode=modify --target=%s', $feature, $feature);
+        }
+
+        $resolved = trim((string) ($payload['metadata']['target']['resolved'] ?? ''));
+        if ($resolved !== '') {
+            return sprintf('foundry generate "Refine target" --mode=modify --target=%s', $resolved);
+        }
+
+        return 'foundry generate "Refine feature" --mode=modify --target=<target>';
     }
 }

@@ -18,6 +18,7 @@ In a scaffolded app, `foundry` inspects the current project instead of loading a
 composer install
 foundry
 foundry explain --json
+foundry explain --diff --json
 foundry compile graph --json
 foundry inspect graph --json
 foundry inspect pipeline --json

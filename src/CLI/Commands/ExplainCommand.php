@@ -8,8 +8,11 @@ use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
 use Foundry\CLI\Commands\Concerns\InteractsWithLicensing;
 use Foundry\Compiler\CompileOptions;
+use Foundry\Explain\Diff\ExplainDiffService;
 use Foundry\Explain\ExplainOptions;
+use Foundry\Explain\ExplainSupport;
 use Foundry\Explain\ExplainTarget;
+use Foundry\Explain\Snapshot\ExplainSnapshotService;
 use Foundry\Monetization\FeatureFlags;
 use Foundry\Pro\ArchitectureExplainer;
 use Foundry\Support\FoundryError;
@@ -34,12 +37,27 @@ final class ExplainCommand extends Command
     public function run(array $args, CommandContext $context): array
     {
         $this->monetizationContext('explain', [FeatureFlags::PRO_EXPLAIN_PLUS]);
-        [$target, $targetKind, $options] = $this->parseExplainArgs($args);
+        [$target, $targetKind, $options, $diff] = $this->parseExplainArgs($args);
+
+        if ($diff) {
+            $this->assertDiffModeOptions($target, $targetKind, $options);
+            $diffService = new ExplainDiffService(
+                $context->paths(),
+                new ExplainSnapshotService($context->paths(), $context->apiSurfaceRegistry()),
+            );
+            $payload = $diffService->loadLast();
+
+            return [
+                'status' => 0,
+                'message' => $context->expectsJson() ? null : $diffService->render($payload),
+                'payload' => $context->expectsJson() ? $payload : null,
+            ];
+        }
 
         $compiler = $context->graphCompiler();
         $graph = $compiler->loadGraph() ?? $compiler->compile(new CompileOptions())->graph;
         if ($target === '') {
-            $target = $this->defaultTarget($graph);
+            $target = ExplainSupport::defaultTarget($graph);
         }
 
         $response = (new ArchitectureExplainer(
@@ -56,31 +74,9 @@ final class ExplainCommand extends Command
         ];
     }
 
-    private function defaultTarget(\Foundry\Compiler\ApplicationGraph $graph): string
-    {
-        $features = $graph->features();
-        if ($features !== []) {
-            return 'feature:' . $features[0];
-        }
-
-        foreach ($graph->nodesByType('route') as $node) {
-            $signature = trim((string) ($node->payload()['signature'] ?? ''));
-            if ($signature !== '') {
-                return 'route:' . $signature;
-            }
-        }
-
-        throw new FoundryError(
-            'EXPLAIN_TARGET_REQUIRED',
-            'validation',
-            [],
-            'Explain target is required because no explainable feature or route is available in this project.',
-        );
-    }
-
     /**
      * @param array<int,string> $args
-     * @return array{0:string,1:?string,2:ExplainOptions}
+     * @return array{0:string,1:?string,2:ExplainOptions,3:bool}
      */
     private function parseExplainArgs(array $args): array
     {
@@ -91,9 +87,15 @@ final class ExplainCommand extends Command
         $includeDiagnostics = true;
         $includeNeighbors = true;
         $includeExecutionFlow = true;
+        $diff = false;
 
         for ($index = 1; $index < count($args); $index++) {
             $arg = (string) $args[$index];
+
+            if ($arg === '--diff') {
+                $diff = true;
+                continue;
+            }
 
             if ($arg === '--markdown') {
                 $format = 'markdown';
@@ -150,6 +152,27 @@ final class ExplainCommand extends Command
                 includeExecutionFlow: $includeExecutionFlow,
                 type: $targetKind !== '' ? $targetKind : null,
             ),
+            $diff,
         ];
+    }
+
+    private function assertDiffModeOptions(string $target, ?string $targetKind, ExplainOptions $options): void
+    {
+        if (
+            trim($target) !== ''
+            || $targetKind !== null
+            || $options->format !== 'text'
+            || $options->deep
+            || $options->includeDiagnostics !== true
+            || $options->includeNeighbors !== true
+            || $options->includeExecutionFlow !== true
+        ) {
+            throw new FoundryError(
+                'EXPLAIN_DIFF_ARGUMENTS_INVALID',
+                'validation',
+                [],
+                'Explain diff supports only `foundry explain --diff` and `foundry explain --diff --json`.',
+            );
+        }
     }
 }

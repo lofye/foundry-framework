@@ -44,6 +44,7 @@ In a scaffolded app repo, bare `foundry` runs the first-run orientation for the 
 ```bash
 foundry
 foundry explain --json
+foundry explain --diff --json
 foundry inspect graph --json
 foundry inspect pipeline --json
 foundry pack search <query> --json

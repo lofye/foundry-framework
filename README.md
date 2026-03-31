@@ -50,6 +50,7 @@ New to Foundry?
 
 - Run `foundry` for the guided first-run walkthrough
 - Use `foundry help inspect` and `foundry help verify` to discover the safest next commands
+- After each successful `foundry generate`, use `foundry explain --diff` to inspect architectural changes before the next iteration
 - Read `docs/quick-tour.md` and `docs/example-applications.md`
 - Start with `examples/hello-world`
 
@@ -364,12 +365,14 @@ foundry explain publish_post --deep
 foundry explain route:POST /posts --markdown
 foundry explain route:POST /posts --neighbors
 foundry explain pack:foundry/blog --json
+foundry explain --diff --json
 foundry diff --json
 foundry trace publish_post --json
 foundry generate "add bookmark support" --mode=new --dry-run --json
 foundry generate "add moderation notes" --mode=modify --target=publish_post --json
 foundry generate "restore missing generated artifacts" --mode=repair --target=publish_post --json
 foundry generate "create blog post notes" --mode=new --packs=foundry/blog --allow-pack-install --json
+foundry generate "add comment support" --mode=new --explain --json
 ```
 
 `explain` supports typed selectors such as `feature:publish_post`, `route:POST /posts`, `command:doctor`, `event:post.created`, `workflow:editorial`, `extension:core`, and `pack:foundry/blog`.
@@ -384,6 +387,18 @@ Extensions can enrich explain output deterministically by implementing `Foundry\
 - `--mode=modify` applies controlled updates against an explain-resolved target and preserves extension boundaries.
 - `--mode=repair` restores missing generated artifacts and reruns verification before keeping the change.
 - `--packs=vendor/pack` hints pack-specific generators, and `--allow-pack-install` lets Foundry install missing packs before planning.
+- successful generate runs capture explain-derived pre/post snapshots, persist `.foundry/diffs/last.json`, and print the next iteration commands
+- `--explain` appends the updated explain output after a successful change instead of making you run a second command manually
+
+Iteration loop:
+
+```bash
+foundry generate "add comment support" --mode=new
+foundry explain --diff
+foundry generate "refine the new feature" --mode=modify --target=<feature>
+```
+
+`foundry explain --diff` reports architectural changes derived from explain snapshots. It is not a file diff.
 
 Graph inspection and export:
 ```bash
