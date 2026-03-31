@@ -19,6 +19,7 @@ use Foundry\CLI\Commands\GenerateScaffoldCommand;
 use Foundry\CLI\Commands\GraphVisualizeCommand;
 use Foundry\CLI\Commands\HistoryCommand;
 use Foundry\CLI\Commands\ImpactCommand;
+use Foundry\CLI\Commands\InitCommand;
 use Foundry\CLI\Commands\InitAppCommand;
 use Foundry\CLI\Commands\InspectApiCommand;
 use Foundry\CLI\Commands\InspectFeatureCommand;
@@ -31,6 +32,7 @@ use Foundry\CLI\Commands\LicenseCommand;
 use Foundry\CLI\Commands\FeaturesCommand;
 use Foundry\CLI\Commands\MigrateDefinitionsCommand;
 use Foundry\CLI\Commands\ObserveCommand;
+use Foundry\CLI\Commands\ExamplesCommand;
 use Foundry\CLI\Commands\PackCommand;
 use Foundry\CLI\Commands\PreviewNotificationCommand;
 use Foundry\CLI\Commands\PromptCommand;
@@ -86,8 +88,11 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new InspectGraphCommand())->matches(['inspect', 'dependencies', 'x']));
 
         $this->assertTrue((new InspectRouteCommand())->matches(['inspect', 'route', 'GET', '/']));
+        $this->assertTrue((new InitCommand())->matches(['init']));
         $this->assertTrue((new InitAppCommand())->matches(['init', 'app', './my-app']));
         $this->assertTrue((new InitAppCommand())->matches(['new', './my-app']));
+        $this->assertTrue((new ExamplesCommand())->matches(['examples:list']));
+        $this->assertTrue((new ExamplesCommand())->matches(['examples:load', 'blog']));
         $this->assertTrue((new GenerateFeatureCommand())->matches(['generate', 'feature', 'x.yaml']));
         $this->assertTrue((new GenerateScaffoldCommand())->matches(['generate', 'starter', 'api']));
         $this->assertTrue((new GenerateScaffoldCommand())->matches(['generate', 'resource', 'posts', '--definition=definitions/posts.resource.yaml']));

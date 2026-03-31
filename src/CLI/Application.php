@@ -12,6 +12,7 @@ use Foundry\CLI\Commands\DoctorCommand;
 use Foundry\CLI\Commands\DiffCommand;
 use Foundry\CLI\Commands\ExportGraphCommand;
 use Foundry\CLI\Commands\ExportOpenApiCommand;
+use Foundry\CLI\Commands\ExamplesCommand;
 use Foundry\CLI\Commands\ExplainCommand;
 use Foundry\CLI\Commands\FeaturesCommand;
 use Foundry\CLI\Commands\GenerateFeatureCommand;
@@ -23,6 +24,7 @@ use Foundry\CLI\Commands\GenerateScaffoldCommand;
 use Foundry\CLI\Commands\GraphVisualizeCommand;
 use Foundry\CLI\Commands\HistoryCommand;
 use Foundry\CLI\Commands\ImpactCommand;
+use Foundry\CLI\Commands\InitCommand;
 use Foundry\CLI\Commands\InitAppCommand;
 use Foundry\CLI\Commands\InspectApiCommand;
 use Foundry\CLI\Commands\InspectFeatureCommand;
@@ -54,6 +56,7 @@ use Foundry\CLI\Commands\TraceCommand;
 use Foundry\Support\ApiSurfaceRegistry;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Json;
+use Foundry\UX\FirstRunService;
 
 final class Application
 {
@@ -103,7 +106,9 @@ final class Application
             new InspectResourceCommand(),
             new InspectPlatformCommand(),
             new InspectRouteCommand(),
+            new InitCommand(),
             new InitAppCommand(),
+            new ExamplesCommand(),
             new LicenseCommand(),
             new FeaturesCommand(),
             new PackCommand(),
@@ -149,7 +154,11 @@ final class Application
         $context = new CommandContext(jsonOutput: $json);
 
         try {
-            if ($args === [] || ($args[0] ?? null) === 'help') {
+            if ($args === []) {
+                return $this->emitResult((new FirstRunService())->run($context), $json);
+            }
+
+            if (($args[0] ?? null) === 'help') {
                 $helpArgs = ($args[0] ?? null) === 'help' ? array_slice($args, 1) : [];
 
                 return $this->emitResult($this->helpResult($helpArgs, $json), $json);
@@ -356,10 +365,11 @@ final class Application
         return match ($group) {
             'cache' => 'Inspect or clear deterministic compile cache state.',
             'compile' => 'Compile authored source-of-truth files into canonical graph artifacts.',
+            'examples' => 'List or load curated examples for the first-run experience.',
             'export' => 'Export graph and API artifacts for docs and tooling.',
             'generate' => 'Generate docs, scaffolds, helper artifacts, and framework-managed outputs.',
             'graph' => 'Inspect or render graph slices through the graph command family.',
-            'init' => 'Browse the legacy scaffolding alias family.',
+            'init' => 'Start the guided first-run flow or use the app scaffolding alias family.',
             'inspect' => 'Inspect compiled graph, feature, integration, and reference surfaces.',
             'license' => 'Inspect or manage local license identity and service access state.',
             'observe' => 'Capture or compare graph-aware trace and profile summaries.',

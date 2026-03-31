@@ -14,8 +14,8 @@ Foundry scaffolds a project-local `foundry` launcher. If your shell does not res
 
 ```bash
 composer install
-foundry help inspect
-foundry help verify
+foundry
+foundry explain --json
 foundry compile graph --json
 foundry inspect graph --json
 foundry inspect pipeline --json

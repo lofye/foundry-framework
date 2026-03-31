@@ -89,8 +89,7 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertIsString($readme);
         $this->assertStringContainsString('This Foundry project was scaffolded in `Standard` mode.', $readme);
         $this->assertStringContainsString('x-user-id', $readme);
-        $this->assertStringContainsString('foundry help inspect', $readme);
-        $this->assertStringContainsString('foundry help verify', $readme);
+        $this->assertStringContainsString("composer install\nfoundry\nfoundry explain --json", $readme);
         $this->assertStringContainsString('foundry compile graph --json', $readme);
         $this->assertStringContainsString('Foundry scaffolds a project-local `foundry` launcher.', $readme);
 

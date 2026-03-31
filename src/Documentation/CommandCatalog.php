@@ -208,7 +208,7 @@ final class CommandCatalog
             $signature === 'pack remove' => 'pack remove acme/blog --json',
             $signature === 'pack list' => 'pack list --json',
             $signature === 'pack info' => 'pack info acme/blog --json',
-            $signature === 'explain' => 'explain ' . $examples['feature'] . ' --json',
+            $signature === 'explain' => 'explain --json',
             $signature === 'diff' => 'diff --json',
             $signature === 'trace' => 'trace ' . $examples['feature'] . ' --json',
             $signature === 'generate <intent>' => 'generate Add tags to ' . $examples['feature'] . ' --mode=modify --target=' . $examples['feature'] . ' --dry-run --json',
@@ -219,8 +219,11 @@ final class CommandCatalog
             $signature === 'trace:tail' => 'trace:tail --json',
             $signature === 'affected-files' => 'affected-files ' . $examples['feature'] . ' --json',
             $signature === 'impacted-features' => 'impacted-features event:' . $examples['event'] . ' --json',
+            $signature === 'init' => 'init --example=blog --json',
             $signature === 'new' => 'new demo-app --starter=standard --json',
             $signature === 'init app' => 'init app demo-app --starter=standard --json',
+            $signature === 'examples:list' => 'examples:list --json',
+            $signature === 'examples:load' => 'examples:load blog --temp --json',
             $signature === 'migrate definitions' => 'migrate definitions --dry-run --json',
             $signature === 'codemod run' => 'codemod run example-codemod --dry-run --json',
             $signature === 'export graph' => 'export graph --format=json --json',
@@ -404,7 +407,7 @@ final class CommandCatalog
         }
 
         if (
-            in_array($signature, ['new', 'init app', 'generate starter', 'generate resource', 'generate admin-resource', 'generate uploads', 'generate notification', 'generate api-resource', 'generate billing', 'generate workflow', 'generate orchestration', 'generate search-index', 'generate stream', 'generate locale', 'generate roles', 'generate policy'], true)
+            in_array($signature, ['init', 'new', 'init app', 'examples:list', 'examples:load', 'generate starter', 'generate resource', 'generate admin-resource', 'generate uploads', 'generate notification', 'generate api-resource', 'generate billing', 'generate workflow', 'generate orchestration', 'generate search-index', 'generate stream', 'generate locale', 'generate roles', 'generate policy'], true)
         ) {
             $links[] = ['title' => 'App Scaffolding', 'href' => 'app-scaffolding.html'];
             $links[] = ['title' => 'Example Applications', 'href' => 'example-applications.html'];
@@ -485,8 +488,11 @@ final class CommandCatalog
             'inspect graph', 'graph inspect' => ['graph visualize', 'compile graph', 'verify graph', 'export graph'],
             'graph visualize' => ['graph inspect', 'export graph', 'inspect graph'],
             'export graph' => ['graph inspect', 'graph visualize', 'compile graph'],
-            'new' => ['init app', 'generate docs', 'compile graph'],
-            'init app' => ['new', 'generate docs', 'compile graph'],
+            'init' => ['examples:list', 'examples:load', 'new'],
+            'new' => ['init', 'init app', 'generate docs', 'compile graph'],
+            'init app' => ['init', 'new', 'generate docs', 'compile graph'],
+            'examples:list' => ['init', 'examples:load', 'new'],
+            'examples:load' => ['init', 'examples:list', 'explain'],
             'help' => ['inspect cli-surface', 'verify cli-surface', 'explain'],
             'generate docs' => ['graph inspect', 'inspect graph', 'help'],
             'explain' => ['doctor', 'graph inspect', 'inspect graph', 'trace'],

@@ -213,9 +213,10 @@ YAML);
         $this->assertStringContainsString('### Execution Flow', $markdown['output']);
         $this->assertStringContainsString('### Related Docs', $markdown['output']);
 
-        $missing = $this->runCommand($app, ['foundry', 'explain', '--json']);
-        $this->assertSame(1, $missing['status']);
-        $this->assertSame('EXPLAIN_TARGET_REQUIRED', $missing['payload']['error']['code']);
+        $default = $this->runCommand($app, ['foundry', 'explain', '--json']);
+        $this->assertSame(0, $default['status']);
+        $this->assertSame('feature', $default['payload']['subject']['kind']);
+        $this->assertSame('feature:publish_post', $default['payload']['subject']['id']);
     }
 
     public function test_explain_reports_unsupported_kind_and_ambiguous_targets_cleanly(): void

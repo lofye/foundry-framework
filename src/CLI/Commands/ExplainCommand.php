@@ -36,17 +36,12 @@ final class ExplainCommand extends Command
         $this->monetizationContext('explain', [FeatureFlags::PRO_EXPLAIN_PLUS]);
         [$target, $targetKind, $options] = $this->parseExplainArgs($args);
 
-        if ($target === '') {
-            throw new FoundryError(
-                'EXPLAIN_TARGET_REQUIRED',
-                'validation',
-                [],
-                'Explain target is required.',
-            );
-        }
-
         $compiler = $context->graphCompiler();
         $graph = $compiler->loadGraph() ?? $compiler->compile(new CompileOptions())->graph;
+        if ($target === '') {
+            $target = $this->defaultTarget($graph);
+        }
+
         $response = (new ArchitectureExplainer(
             paths: $context->paths(),
             impactAnalyzer: $compiler->impactAnalyzer(),
@@ -59,6 +54,28 @@ final class ExplainCommand extends Command
             'message' => $context->expectsJson() ? null : $response->rendered,
             'payload' => $context->expectsJson() ? $response->toArray() : null,
         ];
+    }
+
+    private function defaultTarget(\Foundry\Compiler\ApplicationGraph $graph): string
+    {
+        $features = $graph->features();
+        if ($features !== []) {
+            return 'feature:' . $features[0];
+        }
+
+        foreach ($graph->nodesByType('route') as $node) {
+            $signature = trim((string) ($node->payload()['signature'] ?? ''));
+            if ($signature !== '') {
+                return 'route:' . $signature;
+            }
+        }
+
+        throw new FoundryError(
+            'EXPLAIN_TARGET_REQUIRED',
+            'validation',
+            [],
+            'Explain target is required because no explainable feature or route is available in this project.',
+        );
     }
 
     /**

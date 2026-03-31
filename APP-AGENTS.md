@@ -40,6 +40,8 @@ Use this file when working inside a Foundry application repository.
 Recommended command loop:
 
 ```bash
+foundry
+foundry explain --json
 foundry inspect graph --json
 foundry inspect pipeline --json
 foundry pack search <query> --json

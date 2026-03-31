@@ -19,12 +19,26 @@ Foundry now includes a semantic compiler core:
 - runtime indexes are projections of that graph
 - verification and impact analysis operate over compiled graph state
 
-## Start Here
+## Getting Started
+
+Run:
+
+```bash
+foundry
+```
+
+Follow the prompts.
+
+If you want a non-interactive first run, load the recommended example directly:
+
+```bash
+foundry init --example=blog
+```
 
 New to Foundry?
 
-- Scaffold an app with `foundry new my-foundry-app --starter=standard --json`
-- Use `foundry help inspect` and `foundry help verify` to discover the safest first commands
+- Run `foundry` for the guided first-run walkthrough
+- Use `foundry help inspect` and `foundry help verify` to discover the safest next commands
 - Read `docs/quick-tour.md` and `docs/example-applications.md`
 - Start with `examples/hello-world`
 
@@ -102,12 +116,16 @@ In installed Foundry apps, use the project-local `foundry` launcher from the app
 ## Install And First Run (Packagist)
 ```bash
 composer require lofye/foundry-framework
+foundry
+
+# or, for automation:
+foundry init --example=blog
 foundry new my-foundry-app --starter=standard --json
 cd my-foundry-app
 composer install
 
-foundry help inspect
-foundry help verify
+foundry
+foundry explain --json
 foundry compile graph --json
 foundry inspect graph --json
 foundry inspect pipeline --json

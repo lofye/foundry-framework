@@ -163,12 +163,8 @@ final class ApiSurfaceRegistry
             return null;
         }
 
-        if ($second === '' && str_contains($first, ':')) {
-            return $first;
-        }
-
         return match ($first) {
-            'help', 'new', 'serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail', 'affected-files', 'impacted-features', 'upgrade-check', 'explain', 'diff', 'trace', 'observe:trace', 'observe:profile', 'observe:compare', 'history', 'regressions', 'features' => $first,
+            'help', 'new', 'serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail', 'affected-files', 'impacted-features', 'upgrade-check', 'explain', 'diff', 'trace', 'observe:trace', 'observe:profile', 'observe:compare', 'history', 'regressions', 'features', 'examples:list', 'examples:load' => $first,
             'license' => match ($second) {
                 'status' => 'license status',
                 'activate' => 'license activate',
@@ -196,7 +192,7 @@ final class ApiSurfaceRegistry
                     default => null,
                 },
                 'preview' => $second === 'notification' ? 'preview notification' : null,
-                'init' => $second === 'app' ? 'init app' : null,
+                'init' => $second === 'app' ? 'init app' : 'init',
                 'migrate' => $second === 'definitions' ? 'migrate definitions' : null,
                 'codemod' => $second === 'run' ? 'codemod run' : null,
                 'cache' => match ($second) {
@@ -374,7 +370,7 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('pack remove', 'pack remove <vendor/pack>', 'experimental', 'Deactivate an installed Foundry pack without deleting its files.'),
             $this->cliCommandEntry('pack list', 'pack list', 'experimental', 'List locally installed Foundry packs, active versions, and whether each pack came from local or remote install sources.'),
             $this->cliCommandEntry('pack info', 'pack info <vendor/pack>', 'experimental', 'Inspect local manifest metadata, checksum/signature, install source, activation state, and explain summary for one pack.'),
-            $this->cliCommandEntry('explain', 'explain <target> [--type=<kind>] [--markdown] [--deep] [--neighbors|--no-neighbors] [--no-diagnostics] [--no-flow]', 'experimental', 'Explain a framework, application, or installed pack subject from the compiled graph, projections, diagnostics, docs metadata, and extension registry.'),
+            $this->cliCommandEntry('explain', 'explain [<target>] [--type=<kind>] [--markdown] [--deep] [--neighbors|--no-neighbors] [--no-diagnostics] [--no-flow]', 'experimental', 'Explain a framework, application, or installed pack subject from the compiled graph, projections, diagnostics, docs metadata, and extension registry. When no target is given, Foundry explains the first feature or route deterministically.'),
             $this->cliCommandEntry('diff', 'diff', 'experimental', 'Compare the current graph against the last compiled baseline.'),
             $this->cliCommandEntry('trace', 'trace [<target>]', 'experimental', 'Analyze local trace output for a feature, route, or free-form filter.'),
             $this->cliCommandEntry('generate <intent>', 'generate <intent...> --mode=<new|modify|repair> [--target=<target>] [--dry-run] [--no-verify] [--allow-risky] [--allow-pack-install] [--packs=<vendor/pack,...>]', 'experimental', 'Plan and execute explain-driven, pack-aware system changes through deterministic generators and verification loops.'),
@@ -385,8 +381,11 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('trace:tail', 'trace:tail', 'internal', 'Tail local trace output for development debugging.'),
             $this->cliCommandEntry('affected-files', 'affected-files <feature>', 'internal', 'List source-of-truth files associated with a feature.'),
             $this->cliCommandEntry('impacted-features', 'impacted-features <permission|event:<name>|cache:<key>>', 'internal', 'Resolve impacted features from a runtime contract identifier.'),
+            $this->cliCommandEntry('init', 'init [--example=<blog|extensions-migrations>] [--temp]', 'stable', 'Start the guided first-run flow, optionally loading a curated example without prompts.'),
             $this->cliCommandEntry('new', 'new <target> [--starter=<minimal|standard|api-first>] [--name=<package>] [--version=<constraint>] [--force]', 'stable', 'Scaffold a new Foundry application.'),
             $this->cliCommandEntry('init app', 'init app <target> [--starter=<minimal|standard|api-first>] [--name=<package>] [--version=<constraint>] [--force]', 'stable', 'Scaffold a new Foundry application (legacy alias).'),
+            $this->cliCommandEntry('examples:list', 'examples:list', 'stable', 'List curated first-run examples that can be loaded fully offline.'),
+            $this->cliCommandEntry('examples:load', 'examples:load <name> [--temp]', 'stable', 'Load a curated example into the current directory or a temporary workspace, then run the first architecture walkthrough.'),
             $this->cliCommandEntry('migrate definitions', 'migrate definitions [--path=<path>] [--dry-run|--write]', 'experimental', 'Apply framework-provided definition migrations.'),
             $this->cliCommandEntry('codemod run', 'codemod run <id> [--path=<path>] [--dry-run|--write]', 'experimental', 'Run explicit source codemods contributed by the framework or extensions.'),
             $this->cliCommandEntry('export graph', 'export graph [--view=<view>|--events|--routes|--caches|--pipeline|--workflows|--extensions] [--feature=<feature>] [--extension=<extension>] [--pipeline-stage=<stage>] [--command=<target>] [--event=<name>] [--workflow=<name>] [--format=json|dot|mermaid|svg] [--output=<path>]', 'stable', 'Export graph slices to docs- and tooling-friendly files.'),
@@ -684,7 +683,7 @@ final class ApiSurfaceRegistry
             in_array($signature, ['serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail'], true) => 'Runtime',
             in_array($signature, ['license status', 'license activate', 'license deactivate', 'features'], true) => 'Monetization',
             in_array($signature, ['pack install', 'pack search', 'pack remove', 'pack list', 'pack info'], true) => 'Extensions',
-            in_array($signature, ['new', 'init app', 'preview notification'], true)
+            in_array($signature, ['init', 'new', 'init app', 'examples:list', 'examples:load', 'preview notification'], true)
                 || str_starts_with($signature, 'generate ')
                 => 'App Scaffolding',
             in_array($signature, ['upgrade-check', 'verify graph', 'verify graph-integrity', 'verify pipeline', 'verify extensions', 'verify compatibility', 'verify feature', 'verify resource', 'verify notifications', 'verify api', 'verify billing', 'verify workflows', 'verify orchestrations', 'verify search', 'verify streams', 'verify locales', 'verify policies', 'verify contracts', 'verify cli-surface', 'verify auth', 'verify cache', 'verify events', 'verify jobs', 'verify migrations'], true)
@@ -699,6 +698,7 @@ final class ApiSurfaceRegistry
     {
         return match (true) {
             str_starts_with($signature, 'observe:') => 'observe',
+            str_starts_with($signature, 'examples:') => 'examples',
             str_starts_with($signature, 'queue:') => 'queue',
             str_starts_with($signature, 'schedule:') => 'schedule',
             $signature === 'features' => 'features',

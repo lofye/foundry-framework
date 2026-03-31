@@ -177,6 +177,13 @@ YAML);
         $this->assertSame('App Scaffolding', $newHelp['payload']['command']['category']);
         $this->assertSame('new', $newHelp['payload']['command']['command_type']);
 
+        $initHelp = $this->runCommand($app, ['foundry', 'help', 'init', '--json']);
+        $this->assertSame(0, $initHelp['status']);
+        $this->assertSame('init', $initHelp['payload']['command']['signature']);
+        $this->assertSame('stable', $initHelp['payload']['command']['stability']);
+        $this->assertSame('App Scaffolding', $initHelp['payload']['command']['category']);
+        $this->assertSame('init', $initHelp['payload']['command']['command_type']);
+
         $upgradeHelp = $this->runCommand($app, ['foundry', 'help', 'upgrade-check', '--json']);
         $this->assertSame(0, $upgradeHelp['status']);
         $this->assertSame('upgrade-check', $upgradeHelp['payload']['command']['signature']);
@@ -225,12 +232,30 @@ YAML);
         $this->assertSame('pack', $packGroupHelp['payload']['group']['name']);
         $this->assertGreaterThan(0, (int) $packGroupHelp['payload']['group']['counts']['experimental']);
 
+        $examplesListHelp = $this->runCommand($app, ['foundry', 'help', 'examples:list', '--json']);
+        $this->assertSame(0, $examplesListHelp['status']);
+        $this->assertSame('examples:list', $examplesListHelp['payload']['command']['signature']);
+        $this->assertSame('stable', $examplesListHelp['payload']['command']['stability']);
+        $this->assertSame('App Scaffolding', $examplesListHelp['payload']['command']['category']);
+
+        $examplesLoadHelp = $this->runCommand($app, ['foundry', 'help', 'examples:load', '--json']);
+        $this->assertSame(0, $examplesLoadHelp['status']);
+        $this->assertSame('examples:load', $examplesLoadHelp['payload']['command']['signature']);
+        $this->assertSame('stable', $examplesLoadHelp['payload']['command']['stability']);
+        $this->assertSame('App Scaffolding', $examplesLoadHelp['payload']['command']['category']);
+
+        $examplesGroupHelp = $this->runCommand($app, ['foundry', 'help', 'examples', '--json']);
+        $this->assertSame(0, $examplesGroupHelp['status']);
+        $this->assertSame('examples', $examplesGroupHelp['payload']['group']['name']);
+        $this->assertGreaterThan(0, (int) $examplesGroupHelp['payload']['group']['counts']['stable']);
+
         $generatePromptHelp = $this->runCommand($app, ['foundry', 'help', 'generate', 'Add', '--json']);
         $this->assertSame(0, $generatePromptHelp['status']);
         $this->assertSame('generate <intent>', $generatePromptHelp['payload']['command']['signature']);
         $this->assertSame('core', $generatePromptHelp['payload']['command']['availability']);
         $this->assertStringContainsString('--mode=<new|modify|repair>', $generatePromptHelp['payload']['command']['usage']);
         $this->assertStringContainsString('--allow-pack-install', $generatePromptHelp['payload']['command']['usage']);
+        $this->assertStringContainsString('explain [<target>]', $explainHelp['payload']['command']['usage']);
 
         $apiSurface = $this->runCommand($app, ['foundry', 'inspect', 'api-surface', '--command=compile graph', '--json']);
         $this->assertSame(0, $apiSurface['status']);

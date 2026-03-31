@@ -246,6 +246,7 @@ final class CliSurfaceVerifier
     {
         return match ($signature) {
             'codemod run' => ['codemod', 'run', 'example-codemod'],
+            'examples:load' => ['examples:load', 'blog'],
             'inspect node' => ['inspect', 'node', 'feature:example'],
             'inspect dependencies' => ['inspect', 'dependencies', 'feature:example'],
             'inspect dependents' => ['inspect', 'dependents', 'feature:example'],
