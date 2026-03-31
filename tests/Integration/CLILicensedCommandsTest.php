@@ -125,9 +125,11 @@ YAML);
         $this->assertTrue($deep['payload']['deep']);
         $this->assertArrayHasKey('deep_diagnostics', $deep['payload']['monetization']);
 
-        $generate = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--json']);
-        $this->assertSame(1, $generate['status']);
-        $this->assertSame('GENERATE_PROVIDER_NOT_CONFIGURED', $generate['payload']['error']['code']);
+        $generate = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--mode=new', '--dry-run', '--json']);
+        $this->assertSame(0, $generate['status']);
+        $this->assertTrue($generate['payload']['ok']);
+        $this->assertSame('new', $generate['payload']['mode']);
+        $this->assertSame('core.feature.new', $generate['payload']['plan']['generator_id']);
 
         $explainText = $this->runCommandRaw($app, ['foundry', 'explain', 'publish_post']);
         $this->assertSame(0, $explainText['status']);
@@ -286,7 +288,7 @@ YAML);
         $this->assertStringContainsString('publish_profile (feature)', $ambiguous['output']);
     }
 
-    public function test_generate_requires_provider_or_deterministic_mode(): void
+    public function test_generate_requires_mode_and_target_contracts(): void
     {
         $app = new Application();
         $this->activateLicense($app);
@@ -294,110 +296,83 @@ YAML);
         $generate = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--dry-run', '--json']);
 
         $this->assertSame(1, $generate['status']);
-        $this->assertSame('GENERATE_PROVIDER_NOT_CONFIGURED', $generate['payload']['error']['code']);
+        $this->assertSame('GENERATE_MODE_REQUIRED', $generate['payload']['error']['code']);
+
+        $modify = $this->runCommand($app, ['foundry', 'generate', 'Update', 'publish', 'copy', '--mode=modify', '--json']);
+        $this->assertSame(1, $modify['status']);
+        $this->assertSame('GENERATE_TARGET_REQUIRED', $modify['payload']['error']['code']);
     }
 
-    public function test_deterministic_generate_dry_run_is_repeatable_and_graph_aware(): void
+    public function test_generate_new_dry_run_is_repeatable_and_explain_driven(): void
     {
         $app = new Application();
         $this->activateLicense($app);
 
-        $first = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--feature-context', '--deterministic', '--dry-run', '--json']);
-        $second = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--feature-context', '--deterministic', '--dry-run', '--json']);
+        $first = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--mode=new', '--dry-run', '--json']);
+        $second = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--mode=new', '--dry-run', '--json']);
 
         $this->assertSame(0, $first['status']);
         $this->assertSame(0, $second['status']);
         $this->assertSame($first['payload']['plan'], $second['payload']['plan']);
-        $this->assertSame($first['payload']['predicted_files'], $second['payload']['predicted_files']);
-        $this->assertSame('generate', $first['payload']['mode']);
-        $this->assertTrue($first['payload']['deterministic']);
-        $this->assertSame('deterministic', $first['payload']['provider']['mode']);
-        $this->assertSame('bookmark_post', $first['payload']['plan']['feature']['feature']);
-        $this->assertSame('/posts/{id}/bookmark', $first['payload']['plan']['feature']['route']['path']);
-        $this->assertSame(['publish_post'], $first['payload']['plan']['trace']['selected_features']);
-        $this->assertNotEmpty($first['payload']['predicted_files']);
+        $this->assertSame('core.feature.new', $first['payload']['plan']['generator_id']);
+        $this->assertSame('bookmark_post', $first['payload']['plan']['metadata']['feature']);
+        $this->assertSame('/posts/{id}/bookmark', $first['payload']['plan']['metadata']['execution']['feature_definition']['route']['path']);
+        $this->assertSame('feature:publish_post', $first['payload']['metadata']['target']['resolved']);
+        $this->assertTrue($first['payload']['verification_results']['ok']);
+        $this->assertSame([], $first['payload']['actions_taken']);
     }
 
-    public function test_provider_backed_generate_uses_local_provider_config(): void
+    public function test_generate_modify_updates_feature_metadata_and_verifies_graph(): void
     {
         $app = new Application();
         $this->activateLicense($app);
-        $this->writeAiConfig([
-            'default' => 'static',
-            'providers' => [
-                'static' => [
-                    'driver' => 'static',
-                    'model' => 'fixture-model',
-                    'parsed' => [
-                        'feature' => [
-                            'feature' => 'favorite_post',
-                            'description' => 'Favorite a post.',
-                            'kind' => 'http',
-                            'route' => ['method' => 'POST', 'path' => '/posts/{id}/favorite'],
-                            'input' => ['fields' => ['id' => ['type' => 'string', 'required' => true]]],
-                            'output' => ['fields' => [
-                                'id' => ['type' => 'string', 'required' => true],
-                                'status' => ['type' => 'string', 'required' => true],
-                            ]],
-                            'auth' => ['required' => true, 'strategies' => ['bearer'], 'permissions' => ['posts.favorite']],
-                            'database' => ['reads' => ['posts'], 'writes' => ['posts'], 'queries' => ['favorite_post'], 'transactions' => 'required'],
-                            'cache' => ['reads' => [], 'writes' => [], 'invalidate' => ['posts:list']],
-                            'events' => ['emit' => ['post.favorited'], 'subscribe' => []],
-                            'jobs' => ['dispatch' => []],
-                            'tests' => ['required' => ['contract', 'feature', 'auth']],
-                        ],
-                        'explanation' => 'Provider plan.',
-                    ],
-                    'input_tokens' => 12,
-                    'output_tokens' => 8,
-                    'cost_estimate' => 0.42,
-                    'metadata' => ['source' => 'fixture'],
-                ],
-            ],
+
+        $generate = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            'Add',
+            'moderation',
+            'notes',
+            '--mode=modify',
+            '--target=publish_post',
+            '--json',
         ]);
-
-        $generate = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--provider', 'static', '--model', 'override-model', '--dry-run', '--json']);
-
-        $this->assertSame(0, $generate['status']);
-        $this->assertFalse($generate['payload']['deterministic']);
-        $this->assertSame('provider', $generate['payload']['provider']['mode']);
-        $this->assertSame('static', $generate['payload']['provider']['provider']);
-        $this->assertSame('override-model', $generate['payload']['provider']['model']);
-        $this->assertSame(12, $generate['payload']['provider']['input_tokens']);
-        $this->assertSame(8, $generate['payload']['provider']['output_tokens']);
-        $this->assertSame('favorite_post', $generate['payload']['plan']['feature']['feature']);
-        $this->assertSame('/posts/{id}/favorite', $generate['payload']['plan']['feature']['route']['path']);
-        $this->assertSame('Provider plan.', $generate['payload']['plan']['explanation']);
-    }
-
-    public function test_deterministic_generate_writes_feature_and_verifies_graph(): void
-    {
-        $app = new Application();
-        $this->activateLicense($app);
-
-        $generate = $this->runCommand($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--deterministic', '--json']);
 
         $this->assertSame(0, $generate['status']);
         $this->assertTrue($generate['payload']['ok']);
-        $this->assertTrue($generate['payload']['verification']['graph']['ok']);
-        $this->assertTrue($generate['payload']['verification']['contracts']['ok']);
-        $this->assertFileExists($this->project->root . '/app/features/bookmark_post/feature.yaml');
-        $generatedFeatureManifest = false;
-        foreach ((array) $generate['payload']['generated']['files'] as $file) {
-            if (str_ends_with((string) $file, '/app/features/bookmark_post/feature.yaml')) {
-                $generatedFeatureManifest = true;
-                break;
-            }
-        }
-        $this->assertTrue($generatedFeatureManifest);
+        $this->assertSame('core.feature.modify', $generate['payload']['plan']['generator_id']);
+        $this->assertTrue($generate['payload']['verification_results']['ok']);
+        $featureYaml = (string) file_get_contents($this->project->root . '/app/features/publish_post/feature.yaml');
+        $prompts = (string) file_get_contents($this->project->root . '/app/features/publish_post/prompts.md');
+        $this->assertStringContainsString('Modification intent: Add moderation notes.', $featureYaml);
+        $this->assertStringContainsString('Latest generate intent: Add moderation notes', $prompts);
+    }
 
-        $inspect = $this->runCommand($app, ['foundry', 'inspect', 'feature', 'bookmark_post', '--json']);
-        $this->assertSame(0, $inspect['status']);
-        $this->assertSame('bookmark_post', $inspect['payload']['feature']);
+    public function test_generate_repair_restores_missing_context_manifest_and_tests(): void
+    {
+        $app = new Application();
+        $this->activateLicense($app);
+        @unlink($this->project->root . '/app/features/publish_post/context.manifest.json');
+        @unlink($this->project->root . '/app/features/publish_post/tests/publish_post_auth_test.php');
 
-        $pipeline = $this->runCommand($app, ['foundry', 'verify', 'pipeline', '--json']);
-        $this->assertSame(0, $pipeline['status']);
-        $this->assertTrue($pipeline['payload']['ok']);
+        $generate = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            'Restore',
+            'missing',
+            'generated',
+            'artifacts',
+            '--mode=repair',
+            '--target=publish_post',
+            '--json',
+        ]);
+
+        $this->assertSame(0, $generate['status']);
+        $this->assertTrue($generate['payload']['ok']);
+        $this->assertSame('core.feature.repair', $generate['payload']['plan']['generator_id']);
+        $this->assertTrue($generate['payload']['verification_results']['ok']);
+        $this->assertFileExists($this->project->root . '/app/features/publish_post/context.manifest.json');
+        $this->assertFileExists($this->project->root . '/app/features/publish_post/tests/publish_post_auth_test.php');
     }
 
     public function test_generate_emits_human_readable_messages_without_json(): void
@@ -405,13 +380,15 @@ YAML);
         $app = new Application();
         $this->activateLicense($app);
 
-        $dryRun = $this->runCommandRaw($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--deterministic', '--dry-run']);
+        $dryRun = $this->runCommandRaw($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--mode=new', '--dry-run']);
         $this->assertSame(0, $dryRun['status']);
-        $this->assertStringContainsString('Foundry generation plan prepared for bookmark_post.', $dryRun['output']);
+        $this->assertStringContainsString('Generate plan prepared.', $dryRun['output']);
+        $this->assertStringContainsString('Generator: core.feature.new', $dryRun['output']);
 
-        $generated = $this->runCommandRaw($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--deterministic']);
+        $generated = $this->runCommandRaw($app, ['foundry', 'generate', 'Add', 'bookmark', 'support', '--mode=new']);
         $this->assertSame(0, $generated['status']);
-        $this->assertStringContainsString('Foundry generated bookmark_post using deterministic mode and wrote', $generated['output']);
+        $this->assertStringContainsString('Generate completed.', $generated['output']);
+        $this->assertStringContainsString('Verification: passed', $generated['output']);
     }
 
     private function validKey(): string
@@ -426,17 +403,6 @@ YAML);
         $enable = $this->runCommand($app, ['foundry', 'license', 'activate', '--key=' . $this->validKey(), '--json']);
         $this->assertSame(0, $enable['status']);
         $this->assertTrue($enable['payload']['license']['valid']);
-    }
-
-    /**
-     * @param array<string,mixed> $config
-     */
-    private function writeAiConfig(array $config): void
-    {
-        file_put_contents(
-            $this->project->root . '/config/ai.php',
-            "<?php\ndeclare(strict_types=1);\n\nreturn " . var_export($config, true) . ";\n",
-        );
     }
 
     private function restoreEnv(string $name, ?string $value): void

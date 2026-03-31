@@ -241,7 +241,7 @@ final class ExplainArtifactCatalog
                 'path' => 'docs/architecture-tools.md',
                 'source' => 'docs',
                 'subjects' => ['feature', 'route', 'command', 'pipeline_stage', 'workflow', 'event', 'job', 'schema', 'extension', 'pack'],
-                'commands' => ['explain', 'doctor', 'graph inspect', 'graph visualize', 'export graph', 'prompt', 'diff', 'trace', 'generate <prompt>'],
+                'commands' => ['explain', 'doctor', 'graph inspect', 'graph visualize', 'export graph', 'prompt', 'diff', 'trace', 'generate <intent>'],
             ],
             [
                 'id' => 'how-it-works',
@@ -342,7 +342,7 @@ final class ExplainArtifactCatalog
                 'path' => 'docs/generated/cli-reference.md',
                 'source' => 'generated',
                 'subjects' => ['command'],
-                'commands' => ['explain', 'doctor', 'graph inspect', 'graph visualize', 'export graph', 'prompt', 'diff', 'trace', 'generate <prompt>'],
+                'commands' => ['explain', 'doctor', 'graph inspect', 'graph visualize', 'export graph', 'prompt', 'diff', 'trace', 'generate <intent>'],
             ],
             [
                 'id' => 'api-surface',

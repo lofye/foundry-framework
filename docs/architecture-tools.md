@@ -39,15 +39,17 @@ foundry doctor --deep --json
 foundry explain <target> --json
 foundry diff --json
 foundry trace [<target>] --json
-foundry generate "<prompt>" --feature-context --deterministic --dry-run --json
-foundry generate "<prompt>" --provider=<name> --model=<name> --dry-run --json
+foundry generate "<intent>" --mode=new --dry-run --json
+foundry generate "<intent>" --mode=modify --target=<target> --json
+foundry generate "<intent>" --mode=repair --target=<target> --json
+foundry generate "<intent>" --mode=new --packs=<vendor/pack> --allow-pack-install --json
 ```
 
-`generate` is intentionally optional:
+`generate` is explain-driven and deterministic:
 
-- `--deterministic` produces a reproducible plan from explicit prompt + graph inputs with no provider dependency.
-- provider-backed mode loads providers from `config/ai.php`.
-- if no provider is configured, the command fails cleanly and points the user to `--deterministic`.
+- it resolves intent through `ExplainModel` before selecting a generator.
+- `--mode=new|modify|repair` makes the execution path explicit and reviewable.
+- packs can contribute generators, and `--allow-pack-install` enables explicit pack installation before planning.
 
 ## Foundry Doctor
 
@@ -162,15 +164,16 @@ Prompt flow:
 
 Context extraction prioritizes feature matches by instruction tokens, route paths, events, cache keys, and permissions. If no match exists, deterministic fallback selects a bounded feature subset.
 
-## Licensed Explain, Diff, Trace, And Generate
+## Explain, Diff, Trace, And Generate
 
 - `explain <target>` resolves a typed selector, route signature, command name, exact node id, or deterministic alias into a canonical subject and explains it from compiled graph and projection metadata.
 - `diff` compares the last compiled baseline graph against the current source state without changing core runtime requirements.
 - `trace [<target>]` analyzes the local trace log and summarizes matching categories.
-- `generate "<prompt>"` reuses the graph-backed prompt bundle flow and materializes an inspectable feature/workflow plan.
-- `generate "<prompt>" --deterministic` is reproducible across runs because it derives its plan strictly from the prompt and compiled graph context.
-- provider-backed generation is pluggable through the AI provider registry; no provider is hard-coded.
-- generation compiles the graph again after writes and returns graph/contracts verification payloads so failures stay inspectable.
+- `generate "<intent>"` resolves explicit intent into an explain-derived context packet, then selects deterministic core or pack generators.
+- `generate "<intent>" --mode=modify --target=<target>` uses explain attribution to constrain writes to the intended subject.
+- `generate "<intent>" --mode=repair --target=<target>` restores missing generated artifacts and reruns verification before keeping the change.
+- `generate "<intent>" --packs=<vendor/pack> --allow-pack-install` can install a missing pack and immediately route planning through its generator surface.
+- generation recompiles and reruns verification after writes so failures remain inspectable and rollback can restore the prior state.
 
 `explain` surface:
 

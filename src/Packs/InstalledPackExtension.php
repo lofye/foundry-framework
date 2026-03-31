@@ -15,6 +15,7 @@ use Foundry\Compiler\Migration\DefinitionFormat;
 use Foundry\Compiler\Migration\MigrationRule;
 use Foundry\Compiler\Projection\ProjectionEmitter;
 use Foundry\Doctor\DoctorCheck;
+use Foundry\Packs\PackGeneratorDefinition;
 use Foundry\Pipeline\PipelineStageDefinition;
 use Foundry\Pipeline\StageInterceptor;
 
@@ -35,6 +36,27 @@ final class InstalledPackExtension extends AbstractCompilerExtension
     public function version(): string
     {
         return $this->manifest->version;
+    }
+
+    public function packName(): string
+    {
+        return $this->manifest->name;
+    }
+
+    /**
+     * @return array<int,PackGeneratorDefinition>
+     */
+    public function generatorDefinitions(): array
+    {
+        return $this->context->generatorDefinitions();
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function packSource(): array
+    {
+        return $this->source;
     }
 
     public function descriptor(): ExtensionDescriptor

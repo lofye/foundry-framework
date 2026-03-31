@@ -227,10 +227,10 @@ YAML);
 
         $generatePromptHelp = $this->runCommand($app, ['foundry', 'help', 'generate', 'Add', '--json']);
         $this->assertSame(0, $generatePromptHelp['status']);
-        $this->assertSame('generate <prompt>', $generatePromptHelp['payload']['command']['signature']);
+        $this->assertSame('generate <intent>', $generatePromptHelp['payload']['command']['signature']);
         $this->assertSame('core', $generatePromptHelp['payload']['command']['availability']);
-        $this->assertStringContainsString('--deterministic', $generatePromptHelp['payload']['command']['usage']);
-        $this->assertStringContainsString('--provider=<name>', $generatePromptHelp['payload']['command']['usage']);
+        $this->assertStringContainsString('--mode=<new|modify|repair>', $generatePromptHelp['payload']['command']['usage']);
+        $this->assertStringContainsString('--allow-pack-install', $generatePromptHelp['payload']['command']['usage']);
 
         $apiSurface = $this->runCommand($app, ['foundry', 'inspect', 'api-surface', '--command=compile graph', '--json']);
         $this->assertSame(0, $apiSurface['status']);

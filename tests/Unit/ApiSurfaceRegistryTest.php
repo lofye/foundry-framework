@@ -113,9 +113,9 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('Architecture', $explain['category']);
         $this->assertSame('explain', $explain['command_type']);
         $this->assertTrue($explain['supports_pipeline_stage_filter']);
-        $this->assertSame('generate <prompt>', $generatePrompt['signature']);
-        $this->assertStringContainsString('--deterministic', $generatePrompt['usage']);
-        $this->assertStringContainsString('--provider=<name>', $generatePrompt['usage']);
+        $this->assertSame('generate <intent>', $generatePrompt['signature']);
+        $this->assertStringContainsString('--mode=<new|modify|repair>', $generatePrompt['usage']);
+        $this->assertStringContainsString('--allow-pack-install', $generatePrompt['usage']);
         $this->assertSame('App Scaffolding', $generatePrompt['category']);
         $this->assertSame('generate', $generatePrompt['command_type']);
         $this->assertSame('Monetization', $licenseStatus['category']);

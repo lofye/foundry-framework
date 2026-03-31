@@ -45,7 +45,7 @@ Foundry is fully usable without a license.
 Licenses are retained for future identity and service access, and licensing remains local-first:
 
 - core compile, inspect, verify, scaffold, runtime, and prompt flows remain available without a license
-- `doctor --deep`, `explain`, `diff`, `trace`, and `generate "<prompt>"` remain available without a license
+- `doctor --deep`, `explain`, `diff`, `trace`, and `generate "<intent>"` remain available without a license
 - licensing is stored locally at `~/.foundry/license.json` by default and may also be supplied through `FOUNDRY_LICENSE_KEY`
 - license state is intended for future identity and service participation such as marketplace access
 - `generate` works in deterministic mode without any provider and otherwise uses whatever local/remote provider you configure in `config/ai.php`
@@ -320,7 +320,7 @@ foundry doctor --deep --json
 
 Core capabilities and license services:
 
-- Core: `compile`, `inspect`, `verify`, `doctor`, `doctor --deep`, `prompt`, `explain <target>`, `diff`, `trace [<target>]`, `generate "<prompt>"`, scaffold generators, runtime commands
+- Core: `compile`, `inspect`, `verify`, `doctor`, `doctor --deep`, `prompt`, `explain <target>`, `diff`, `trace [<target>]`, `generate "<intent>"`, scaffold generators, runtime commands
 - License services: `license status`, `license activate`, `license deactivate`, `features`
 
 Licensed command surface:
@@ -337,8 +337,10 @@ foundry explain route:POST /posts --neighbors
 foundry explain pack:foundry/blog --json
 foundry diff --json
 foundry trace publish_post --json
-foundry generate "add bookmark support" --deterministic --dry-run --json
-foundry generate "add bookmark support" --provider=static --model=fixture-model --dry-run --json
+foundry generate "add bookmark support" --mode=new --dry-run --json
+foundry generate "add moderation notes" --mode=modify --target=publish_post --json
+foundry generate "restore missing generated artifacts" --mode=repair --target=publish_post --json
+foundry generate "create blog post notes" --mode=new --packs=foundry/blog --allow-pack-install --json
 ```
 
 `explain` supports typed selectors such as `feature:publish_post`, `route:POST /posts`, `command:doctor`, `event:post.created`, `workflow:editorial`, `extension:core`, and `pack:foundry/blog`.
@@ -347,31 +349,12 @@ Default text output starts with `Subject` and `Summary`, then renders canonical 
 `--json` returns a deliberate machine-readable contract with canonical `graph`, `execution`, `guards`, `events`, `schemas`, `docs`, `impact`, `commands`, and `extensions` domains, while preserving the legacy `executionFlow`, `relationships`, `relatedCommands`, `relatedDocs`, `diagnostics`, `suggestedFixes`, `sections`, and `sectionOrder` keys for compatibility.
 Extensions can enrich explain output deterministically by implementing `Foundry\Explain\Contributors\ExplainContributorInterface` and returning `Foundry\Explain\Contributors\ExplainContribution` entries that the registry merges before rendering. Contributor sections are normalized through `Foundry\Explain\ExplainSection`.
 
-Provider-backed generation is still optional. If no provider is configured, `generate` exits non-zero with a clear message and suggests `--deterministic`.
+`generate` is now explain-driven and pack-aware:
 
-Minimal AI provider config:
-
-```php
-<?php
-declare(strict_types=1);
-
-return [
-    'default' => 'static',
-    'providers' => [
-        'static' => [
-            'driver' => 'static',
-            'model' => 'fixture-model',
-            'parsed' => [
-                'feature' => [
-                    'feature' => 'favorite_post',
-                    'route' => ['method' => 'POST', 'path' => '/posts/{id}/favorite'],
-                ],
-                'explanation' => 'Provider-authored generation plan.',
-            ],
-        ],
-    ],
-];
-```
+- `--mode=new` scaffolds a new feature through deterministic generators selected from core and installed packs.
+- `--mode=modify` applies controlled updates against an explain-resolved target and preserves extension boundaries.
+- `--mode=repair` restores missing generated artifacts and reruns verification before keeping the change.
+- `--packs=vendor/pack` hints pack-specific generators, and `--allow-pack-install` lets Foundry install missing packs before planning.
 
 Graph inspection and export:
 ```bash

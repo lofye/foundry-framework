@@ -210,7 +210,7 @@ final class ApiSurfaceRegistry
             'inspect', 'verify' => $second !== '' ? $first . ' ' . $second : null,
             'generate' => $second === '' || str_starts_with($second, '--')
                 ? null
-                : (in_array($second, $generateTargets, true) ? 'generate ' . $second : 'generate <prompt>'),
+                : (in_array($second, $generateTargets, true) ? 'generate ' . $second : 'generate <intent>'),
             default => null,
         };
     }
@@ -377,7 +377,7 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('explain', 'explain <target> [--type=<kind>] [--markdown] [--deep] [--neighbors|--no-neighbors] [--no-diagnostics] [--no-flow]', 'experimental', 'Explain a framework, application, or installed pack subject from the compiled graph, projections, diagnostics, docs metadata, and extension registry.'),
             $this->cliCommandEntry('diff', 'diff', 'experimental', 'Compare the current graph against the last compiled baseline.'),
             $this->cliCommandEntry('trace', 'trace [<target>]', 'experimental', 'Analyze local trace output for a feature, route, or free-form filter.'),
-            $this->cliCommandEntry('generate <prompt>', 'generate <prompt...> [--feature-context] [--dry-run] [--deterministic] [--provider=<name>] [--model=<name>] [--force]', 'experimental', 'Plan or generate graph-aware feature scaffolding from the current graph using deterministic or configured AI provider mode.'),
+            $this->cliCommandEntry('generate <intent>', 'generate <intent...> --mode=<new|modify|repair> [--target=<target>] [--dry-run] [--no-verify] [--allow-risky] [--allow-pack-install] [--packs=<vendor/pack,...>]', 'experimental', 'Plan and execute explain-driven, pack-aware system changes through deterministic generators and verification loops.'),
             $this->cliCommandEntry('serve', 'serve', 'internal', 'Emit the lightweight local PHP server hint used in development.'),
             $this->cliCommandEntry('queue:work', 'queue:work [<queue>]', 'internal', 'Run the local queue worker loop.'),
             $this->cliCommandEntry('queue:inspect', 'queue:inspect [<queue>]', 'internal', 'Inspect queued jobs for local development.'),

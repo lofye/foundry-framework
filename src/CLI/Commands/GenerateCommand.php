@@ -6,15 +6,13 @@ namespace Foundry\CLI\Commands;
 
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
-use Foundry\CLI\Commands\Concerns\InteractsWithLicensing;
-use Foundry\Monetization\FeatureFlags;
-use Foundry\Pro\Generation\AIGenerationService;
+use Foundry\Generate\GenerateEngine;
+use Foundry\Generate\Intent;
+use Foundry\Packs\PackManager;
 use Foundry\Support\FoundryError;
 
 final class GenerateCommand extends Command
 {
-    use InteractsWithLicensing;
-
     /**
      * @var array<int,string>
      */
@@ -42,10 +40,12 @@ final class GenerateCommand extends Command
         'inspect-ui',
     ];
 
+    public function __construct(private readonly ?PackManager $packManager = null) {}
+
     #[\Override]
     public function supportedSignatures(): array
     {
-        return ['generate <prompt>'];
+        return ['generate <intent>'];
     }
 
     #[\Override]
@@ -66,34 +66,15 @@ final class GenerateCommand extends Command
     #[\Override]
     public function run(array $args, CommandContext $context): array
     {
-        $license = $this->monetizationContext('generate <prompt>', [FeatureFlags::PRO_GENERATE]);
-        [$prompt, $options] = $this->parse($args);
-
-        if ($prompt === '') {
-            throw new FoundryError(
-                'GENERATE_PROMPT_REQUIRED',
-                'validation',
-                [],
-                'A generation prompt is required.',
-            );
-        }
-
-        $result = (new AIGenerationService(
+        $intent = $this->parse($args);
+        $payload = (new GenerateEngine(
             $context->paths(),
-            $context->graphCompiler(),
-            $context->graphVerifier(),
-            $context->featureGenerator(),
-            $context->workflowGenerator(),
-            $context->contractsVerifier(),
-            $context->workflowVerifier(),
-        ))->generate($prompt, $options);
-
-        $payload = is_array($result['payload'] ?? null) ? $result['payload'] : [];
-        $payload['mode'] = 'generate';
-        $payload['monetization'] = ['license' => $license];
+            $this->packManager,
+            apiSurfaceRegistry: $context->apiSurfaceRegistry(),
+        ))->run($intent);
 
         return [
-            'status' => (int) ($result['status'] ?? 0),
+            'status' => 0,
             'message' => $context->expectsJson() ? null : $this->renderMessage($payload),
             'payload' => $context->expectsJson() ? $payload : null,
         ];
@@ -101,21 +82,19 @@ final class GenerateCommand extends Command
 
     /**
      * @param array<int,string> $args
-     * @return array{0:string,1:array<string,mixed>}
      */
-    private function parse(array $args): array
+    private function parse(array $args): Intent
     {
         $parts = [];
-        $options = [
-            'feature_context' => false,
-            'dry_run' => false,
-            'deterministic' => false,
-            'force' => false,
-            'provider' => null,
-            'model' => null,
-        ];
-
+        $mode = null;
+        $target = null;
+        $dryRun = false;
+        $skipVerify = false;
+        $allowRisky = false;
+        $allowPackInstall = false;
+        $packHints = [];
         $skipNext = false;
+
         foreach ($args as $index => $arg) {
             if ($skipNext) {
                 $skipNext = false;
@@ -126,44 +105,55 @@ final class GenerateCommand extends Command
                 continue;
             }
 
-            if ($arg === '--feature-context') {
-                $options['feature_context'] = true;
-                continue;
-            }
-
             if ($arg === '--dry-run') {
-                $options['dry_run'] = true;
+                $dryRun = true;
                 continue;
             }
 
-            if ($arg === '--deterministic') {
-                $options['deterministic'] = true;
+            if ($arg === '--no-verify') {
+                $skipVerify = true;
                 continue;
             }
 
-            if ($arg === '--force') {
-                $options['force'] = true;
+            if ($arg === '--allow-risky') {
+                $allowRisky = true;
                 continue;
             }
 
-            if (str_starts_with($arg, '--provider=')) {
-                $options['provider'] = substr($arg, strlen('--provider='));
+            if ($arg === '--allow-pack-install') {
+                $allowPackInstall = true;
                 continue;
             }
 
-            if ($arg === '--provider') {
-                $options['provider'] = (string) ($args[$index + 1] ?? '');
+            if (str_starts_with($arg, '--mode=')) {
+                $mode = trim(substr($arg, strlen('--mode=')));
+                continue;
+            }
+
+            if ($arg === '--mode') {
+                $mode = trim((string) ($args[$index + 1] ?? ''));
                 $skipNext = true;
                 continue;
             }
 
-            if (str_starts_with($arg, '--model=')) {
-                $options['model'] = substr($arg, strlen('--model='));
+            if (str_starts_with($arg, '--target=')) {
+                $target = trim(substr($arg, strlen('--target=')));
                 continue;
             }
 
-            if ($arg === '--model') {
-                $options['model'] = (string) ($args[$index + 1] ?? '');
+            if ($arg === '--target') {
+                $target = trim((string) ($args[$index + 1] ?? ''));
+                $skipNext = true;
+                continue;
+            }
+
+            if (str_starts_with($arg, '--packs=')) {
+                $packHints = $this->parsePackList(substr($arg, strlen('--packs=')));
+                continue;
+            }
+
+            if ($arg === '--packs') {
+                $packHints = $this->parsePackList((string) ($args[$index + 1] ?? ''));
                 $skipNext = true;
                 continue;
             }
@@ -175,7 +165,68 @@ final class GenerateCommand extends Command
             $parts[] = $arg;
         }
 
-        return [trim(implode(' ', $parts)), $options];
+        $rawIntent = trim(implode(' ', $parts));
+        if ($rawIntent === '') {
+            throw new FoundryError(
+                'GENERATE_INTENT_REQUIRED',
+                'validation',
+                [],
+                'A generation intent is required.',
+            );
+        }
+
+        if ($mode === null || $mode === '') {
+            throw new FoundryError(
+                'GENERATE_MODE_REQUIRED',
+                'validation',
+                [],
+                'Generate requires --mode=new|modify|repair.',
+            );
+        }
+
+        if (!in_array($mode, Intent::supportedModes(), true)) {
+            throw new FoundryError(
+                'GENERATE_MODE_INVALID',
+                'validation',
+                ['mode' => $mode],
+                'Generate mode must be new, modify, or repair.',
+            );
+        }
+
+        if (in_array($mode, ['modify', 'repair'], true) && trim((string) $target) === '') {
+            throw new FoundryError(
+                'GENERATE_TARGET_REQUIRED',
+                'validation',
+                ['mode' => $mode],
+                'Generate requires --target for modify and repair modes.',
+            );
+        }
+
+        return new Intent(
+            raw: $rawIntent,
+            mode: $mode,
+            target: $target,
+            dryRun: $dryRun,
+            skipVerify: $skipVerify,
+            allowRisky: $allowRisky,
+            allowPackInstall: $allowPackInstall,
+            packHints: $packHints,
+        );
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function parsePackList(string $value): array
+    {
+        $packs = array_values(array_filter(array_map(
+            static fn(string $pack): string => trim($pack),
+            explode(',', $value),
+        )));
+        $packs = array_values(array_unique($packs));
+        sort($packs);
+
+        return $packs;
     }
 
     /**
@@ -183,19 +234,31 @@ final class GenerateCommand extends Command
      */
     private function renderMessage(array $payload): string
     {
-        $feature = trim((string) ($payload['plan']['feature']['feature'] ?? 'generated_feature'));
-        if (($payload['dry_run'] ?? false) === true) {
-            return 'Foundry generation plan prepared for ' . $feature . '.';
+        $feature = trim((string) ($payload['plan']['metadata']['feature'] ?? ''));
+        $files = count((array) ($payload['plan']['affected_files'] ?? []));
+        $generator = (string) ($payload['plan']['generator_id'] ?? 'generate');
+        $packs = array_values(array_map('strval', (array) ($payload['packs_used'] ?? [])));
+        $packSummary = $packs === [] ? 'none' : implode(', ', $packs);
+
+        $lines = [
+            ($payload['metadata']['dry_run'] ?? false) ? 'Generate plan prepared.' : 'Generate completed.',
+            'Mode: ' . (string) ($payload['mode'] ?? 'new'),
+            'Generator: ' . $generator,
+            'Files affected: ' . $files,
+            'Packs: ' . $packSummary,
+        ];
+
+        if ($feature !== '') {
+            $lines[] = 'Feature: ' . $feature;
         }
 
-        $files = count((array) ($payload['generated']['files'] ?? []));
-        $providerMode = (string) ($payload['provider']['mode'] ?? 'provider');
+        $verification = is_array($payload['verification_results'] ?? null) ? $payload['verification_results'] : [];
+        if (($verification['skipped'] ?? false) === true) {
+            $lines[] = 'Verification: skipped';
+        } else {
+            $lines[] = 'Verification: ' . ((bool) ($verification['ok'] ?? false) ? 'passed' : 'failed');
+        }
 
-        return sprintf(
-            'Foundry generated %s using %s mode and wrote %d file(s).',
-            $feature,
-            $providerMode,
-            $files,
-        );
+        return implode(PHP_EOL, $lines);
     }
 }

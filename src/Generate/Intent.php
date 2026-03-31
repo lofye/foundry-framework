@@ -1,0 +1,59 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Foundry\Generate;
+
+final readonly class Intent
+{
+    /**
+     * @param array<int,string> $packHints
+     */
+    public function __construct(
+        public string $raw,
+        public string $mode,
+        public ?string $target = null,
+        public bool $dryRun = false,
+        public bool $skipVerify = false,
+        public bool $allowRisky = false,
+        public bool $allowPackInstall = false,
+        public array $packHints = [],
+    ) {}
+
+    /**
+     * @return array<int,string>
+     */
+    public static function supportedModes(): array
+    {
+        return ['new', 'modify', 'repair'];
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    public function tokens(): array
+    {
+        $normalized = strtolower($this->raw);
+        $normalized = preg_replace('/[^a-z0-9]+/', ' ', $normalized) ?? $normalized;
+        $parts = array_values(array_filter(array_map('trim', explode(' ', $normalized))));
+
+        return array_values(array_unique(array_map('strval', $parts)));
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function toArray(): array
+    {
+        return [
+            'raw' => $this->raw,
+            'mode' => $this->mode,
+            'target' => $this->target,
+            'dry_run' => $this->dryRun,
+            'skip_verify' => $this->skipVerify,
+            'allow_risky' => $this->allowRisky,
+            'allow_pack_install' => $this->allowPackInstall,
+            'packs' => $this->packHints,
+        ];
+    }
+}

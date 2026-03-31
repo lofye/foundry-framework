@@ -33,8 +33,8 @@ final class FoundryBlogExtension extends AbstractCompilerExtension
         );
     }
 
-    public function linkPasses(): array
+    public function pipelineInterceptors(): array
     {
-        return [new FoundryBlogInterceptorPass($this->installPath . '/foundry.json', 'interceptor:pack.foundry.blog')];
+        return [new FoundryBlogStageInterceptor()];
     }
 }

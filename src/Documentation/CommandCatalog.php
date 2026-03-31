@@ -211,7 +211,7 @@ final class CommandCatalog
             $signature === 'explain' => 'explain ' . $examples['feature'] . ' --json',
             $signature === 'diff' => 'diff --json',
             $signature === 'trace' => 'trace ' . $examples['feature'] . ' --json',
-            $signature === 'generate <prompt>' => 'generate Add tags to ' . $examples['feature'] . ' --feature-context --deterministic --dry-run --json',
+            $signature === 'generate <intent>' => 'generate Add tags to ' . $examples['feature'] . ' --mode=modify --target=' . $examples['feature'] . ' --dry-run --json',
             $signature === 'serve' => 'serve --json',
             $signature === 'queue:work' => 'queue:work default --json',
             $signature === 'queue:inspect' => 'queue:inspect default --json',
@@ -320,7 +320,7 @@ final class CommandCatalog
     private function helpInvocation(string $signature): string
     {
         return match ($signature) {
-            'generate <prompt>' => 'help generate Add --json',
+            'generate <intent>' => 'help generate Add --json',
             default => 'help ' . $signature . ' --json',
         };
     }

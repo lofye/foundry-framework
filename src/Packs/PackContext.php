@@ -5,11 +5,17 @@ declare(strict_types=1);
 namespace Foundry\Packs;
 
 use Foundry\Compiler\Extensions\CompilerExtension;
+use Foundry\Generate\Generator;
 use Foundry\Support\FoundryError;
 
 final class PackContext
 {
     private ?CompilerExtension $extension = null;
+
+    /**
+     * @var array<string,PackGeneratorDefinition>
+     */
+    private array $generatorDefinitions = [];
 
     /**
      * @var array<string,array<int,string>>
@@ -78,9 +84,29 @@ final class PackContext
         $this->registerContribution('guards', $name);
     }
 
-    public function registerGenerator(string $name): void
+    /**
+     * @param array<int,string> $capabilities
+     */
+    public function registerGenerator(
+        string $name,
+        ?Generator $generator = null,
+        array $capabilities = [],
+        int $priority = 50,
+    ): void
     {
         $this->registerContribution('generators', $name);
+
+        if ($generator === null) {
+            return;
+        }
+
+        $this->generatorDefinitions[$name] = new PackGeneratorDefinition(
+            name: $name,
+            generator: $generator,
+            capabilities: array_values(array_unique(array_map('strval', $capabilities))),
+            priority: $priority,
+        );
+        ksort($this->generatorDefinitions);
     }
 
     public function registerDocsMetadata(string $name): void
@@ -108,6 +134,14 @@ final class PackContext
         ksort($normalized);
 
         return $normalized;
+    }
+
+    /**
+     * @return array<int,PackGeneratorDefinition>
+     */
+    public function generatorDefinitions(): array
+    {
+        return array_values($this->generatorDefinitions);
     }
 
     private function registerContribution(string $type, string $value): void

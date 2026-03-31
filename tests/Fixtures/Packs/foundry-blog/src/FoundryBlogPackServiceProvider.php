@@ -13,7 +13,7 @@ final class FoundryBlogPackServiceProvider implements PackServiceProvider
     {
         $context->registerCommand('blog.sync');
         $context->registerSchema('blog.post');
-        $context->registerGenerator('generate blog-post');
+        $context->registerGenerator('generate blog-post', new BlogPostGenerator(), ['blog.notes'], 90);
         $context->registerExtension(new FoundryBlogExtension($context->installPath()));
     }
 }
