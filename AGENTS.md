@@ -156,3 +156,17 @@ If a change would surprise a user or break tooling, it is a contract change.
 •	website/content/docs/imported/ = synced copy
 •	website/content/docs/authored/ = website-only authored docs
 •	website/public/docs/ = generated output
+
+## Context Anchoring Bootstrap Note
+
+Foundry is adopting feature-level context anchoring.
+
+For any new meaningful feature work, prefer creating and maintaining:
+
+- `docs/features/<feature-name>.spec.md`
+- `docs/features/<feature-name>.md`
+- `docs/features/<feature-name>.decisions.md`
+
+Until Foundry context tooling is implemented, treat this as a manual workflow convention.
+
+Do not assume `foundry context ...` commands exist yet unless they have already been implemented in this repository.
