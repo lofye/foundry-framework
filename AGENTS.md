@@ -74,6 +74,7 @@ php bin/foundry doctor --feature=<feature> --json
 - If you change compiler or projection behavior, update both verification coverage and integration coverage
 - Do not add app-specific policy to framework internals unless it is meant to be scaffolded into every app
 - Renderers must never access graph, compiler, or runtime state directly; they consume only assembled plan data
+- Preserve git history whenever possible (rename, don’t delete/recreate)
 
 ## Scaffold Doc Sync
 

@@ -59,6 +59,8 @@ final class ApiSurfaceRegistryTest extends TestCase
         $generatePrompt = $registry->classifyCliCommand(['generate', 'Add', 'bookmarks']);
         $licenseStatus = $registry->classifyCliCommand(['license', 'status']);
         $features = $registry->classifyCliCommand(['features']);
+        $contextInit = $registry->classifyCliCommand(['context', 'init', 'event-bus']);
+        $contextDoctor = $registry->classifyCliCommand(['context', 'doctor', '--feature=event-bus']);
         $init = $registry->classifyCliCommand(['init']);
         $examplesList = $registry->classifyCliCommand(['examples:list']);
         $examplesLoad = $registry->classifyCliCommand(['examples:load', 'blog-api']);
@@ -83,6 +85,8 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertNotNull($generatePrompt);
         $this->assertNotNull($licenseStatus);
         $this->assertNotNull($features);
+        $this->assertNotNull($contextInit);
+        $this->assertNotNull($contextDoctor);
         $this->assertNotNull($init);
         $this->assertNotNull($examplesList);
         $this->assertNotNull($examplesLoad);
@@ -147,6 +151,12 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('Monetization', $features['category']);
         $this->assertSame('features', $features['command_type']);
         $this->assertFalse($features['supports_pipeline_stage_filter']);
+        $this->assertSame('stable', $contextInit['stability']);
+        $this->assertSame('Architecture', $contextInit['category']);
+        $this->assertSame('context', $contextInit['command_type']);
+        $this->assertSame('stable', $contextDoctor['stability']);
+        $this->assertSame('Architecture', $contextDoctor['category']);
+        $this->assertSame('context', $contextDoctor['command_type']);
         $this->assertSame('experimental', $packSearch['stability']);
         $this->assertSame('Extensions', $packSearch['category']);
         $this->assertSame('pack', $packSearch['command_type']);

@@ -8,15 +8,17 @@ use Foundry\CLI\Commands\CacheClearCommand;
 use Foundry\CLI\Commands\CacheInspectCommand;
 use Foundry\CLI\Commands\CodemodRunCommand;
 use Foundry\CLI\Commands\CompileGraphCommand;
-use Foundry\CLI\Commands\DoctorCommand;
+use Foundry\CLI\Commands\ContextDoctorCommand;
+use Foundry\CLI\Commands\ContextInitCommand;
 use Foundry\CLI\Commands\DiffCommand;
-use Foundry\CLI\Commands\ExportGraphCommand;
-use Foundry\CLI\Commands\ExportOpenApiCommand;
+use Foundry\CLI\Commands\DoctorCommand;
 use Foundry\CLI\Commands\ExamplesCommand;
 use Foundry\CLI\Commands\ExplainCommand;
+use Foundry\CLI\Commands\ExportGraphCommand;
+use Foundry\CLI\Commands\ExportOpenApiCommand;
 use Foundry\CLI\Commands\FeaturesCommand;
-use Foundry\CLI\Commands\GenerateFeatureCommand;
 use Foundry\CLI\Commands\GenerateCommand as PromptGenerateCommand;
+use Foundry\CLI\Commands\GenerateFeatureCommand;
 use Foundry\CLI\Commands\GenerateIndexesCommand;
 use Foundry\CLI\Commands\GenerateIntegrationCommand;
 use Foundry\CLI\Commands\GeneratePlatformCommand;
@@ -24,8 +26,8 @@ use Foundry\CLI\Commands\GenerateScaffoldCommand;
 use Foundry\CLI\Commands\GraphVisualizeCommand;
 use Foundry\CLI\Commands\HistoryCommand;
 use Foundry\CLI\Commands\ImpactCommand;
-use Foundry\CLI\Commands\InitCommand;
 use Foundry\CLI\Commands\InitAppCommand;
+use Foundry\CLI\Commands\InitCommand;
 use Foundry\CLI\Commands\InspectApiCommand;
 use Foundry\CLI\Commands\InspectFeatureCommand;
 use Foundry\CLI\Commands\InspectGraphCommand;
@@ -43,6 +45,7 @@ use Foundry\CLI\Commands\QueueWorkCommand;
 use Foundry\CLI\Commands\RegressionsCommand;
 use Foundry\CLI\Commands\ScheduleRunCommand;
 use Foundry\CLI\Commands\ServeCommand;
+use Foundry\CLI\Commands\TraceCommand;
 use Foundry\CLI\Commands\UpgradeCheckCommand;
 use Foundry\CLI\Commands\VerifyCompatibilityCommand;
 use Foundry\CLI\Commands\VerifyContractsCommand;
@@ -52,7 +55,6 @@ use Foundry\CLI\Commands\VerifyIntegrationCommand;
 use Foundry\CLI\Commands\VerifyPipelineCommand;
 use Foundry\CLI\Commands\VerifyPlatformCommand;
 use Foundry\CLI\Commands\VerifyResourceCommand;
-use Foundry\CLI\Commands\TraceCommand;
 use Foundry\Support\ApiSurfaceRegistry;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Json;
@@ -81,6 +83,8 @@ final class Application
     {
         return [
             new CompileGraphCommand(),
+            new ContextInitCommand(),
+            new ContextDoctorCommand(),
             new CacheInspectCommand(),
             new CacheClearCommand(),
             new InspectGraphCommand(),
@@ -159,9 +163,7 @@ final class Application
             }
 
             if (($args[0] ?? null) === 'help') {
-                $helpArgs = ($args[0] ?? null) === 'help' ? array_slice($args, 1) : [];
-
-                return $this->emitResult($this->helpResult($helpArgs, $json), $json);
+                return $this->emitResult($this->helpResult(array_slice($args, 1), $json), $json);
             }
 
             $command = array_find(

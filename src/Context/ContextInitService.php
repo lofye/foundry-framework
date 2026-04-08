@@ -1,0 +1,150 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Foundry\Context;
+
+use Foundry\Context\Validation\ValidationIssue;
+use Foundry\Support\FoundryError;
+use Foundry\Support\Paths;
+
+final class ContextInitService
+{
+    /**
+     * @var array<string,array{path:string,stub:string}>
+     */
+    private const array FILES = [
+        'spec' => [
+            'path' => 'specPath',
+            'stub' => 'spec.stub.md',
+        ],
+        'state' => [
+            'path' => 'statePath',
+            'stub' => 'state.stub.md',
+        ],
+        'decisions' => [
+            'path' => 'decisionsPath',
+            'stub' => 'decisions.stub.md',
+        ],
+    ];
+
+    public function __construct(
+        private readonly Paths $paths,
+        private readonly FeatureNameValidator $featureNameValidator = new FeatureNameValidator(),
+        private readonly ContextFileResolver $resolver = new ContextFileResolver(),
+    ) {}
+
+    /**
+     * @return array{success:bool,feature:string,feature_valid:bool,created:list<string>,existing:list<string>,issues:list<array<string,mixed>>}
+     */
+    public function init(string $featureName): array
+    {
+        $nameValidation = $this->featureNameValidator->validate($featureName);
+        if (!$nameValidation->valid) {
+            return [
+                'success' => false,
+                'feature' => $featureName,
+                'feature_valid' => false,
+                'created' => [],
+                'existing' => [],
+                'issues' => $this->issuesToArray($nameValidation->issues),
+            ];
+        }
+
+        $directory = $this->paths->join('docs/features');
+        if (!is_dir($directory) && !mkdir($directory, 0777, true) && !is_dir($directory)) {
+            throw new FoundryError(
+                'CONTEXT_DIRECTORY_CREATE_FAILED',
+                'filesystem',
+                ['path' => 'docs/features'],
+                'Unable to create docs/features directory.',
+            );
+        }
+
+        $created = [];
+        $existing = [];
+
+        foreach (self::FILES as $definition) {
+            $pathMethod = $definition['path'];
+            /** @var string $relativePath */
+            $relativePath = $this->resolver->{$pathMethod}($featureName);
+            $absolutePath = $this->paths->join($relativePath);
+
+            if (is_file($absolutePath)) {
+                $existing[] = $relativePath;
+
+                continue;
+            }
+
+            if (file_exists($absolutePath)) {
+                throw new FoundryError(
+                    'CONTEXT_FILE_PATH_BLOCKED',
+                    'filesystem',
+                    ['path' => $relativePath],
+                    'Context file path exists but is not a file.',
+                );
+            }
+
+            $contents = $this->renderStub($definition['stub'], $featureName);
+            if (file_put_contents($absolutePath, $contents) === false) {
+                throw new FoundryError(
+                    'CONTEXT_FILE_WRITE_FAILED',
+                    'filesystem',
+                    ['path' => $relativePath],
+                    'Unable to write context file.',
+                );
+            }
+
+            $created[] = $relativePath;
+        }
+
+        return [
+            'success' => true,
+            'feature' => $featureName,
+            'feature_valid' => true,
+            'created' => $created,
+            'existing' => $existing,
+            'issues' => [],
+        ];
+    }
+
+    private function renderStub(string $stub, string $featureName): string
+    {
+        $path = $this->paths->frameworkJoin('stubs/context/' . $stub);
+        $contents = file_get_contents($path);
+        if ($contents === false) {
+            throw new FoundryError(
+                'CONTEXT_STUB_MISSING',
+                'filesystem',
+                ['path' => 'stubs/context/' . $stub],
+                'Context stub could not be read.',
+            );
+        }
+
+        return str_replace('{{feature}}', $featureName, $contents);
+    }
+
+    /**
+     * @param array<int,ValidationIssue> $issues
+     * @return list<array<string,mixed>>
+     */
+    private function issuesToArray(array $issues): array
+    {
+        return array_values(array_map(
+            static function (ValidationIssue $issue): array {
+                $row = [
+                    'code' => $issue->code,
+                    'message' => $issue->message,
+                    'file_path' => $issue->file_path,
+                ];
+
+                if ($issue->section !== null) {
+                    $row['section'] = $issue->section;
+                }
+
+                return $row;
+            },
+            $issues,
+        ));
+    }
+}

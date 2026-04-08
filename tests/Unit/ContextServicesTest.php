@@ -1,0 +1,113 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Foundry\Tests\Unit;
+
+use Foundry\Context\ContextDoctorService;
+use Foundry\Context\ContextFileResolver;
+use Foundry\Context\ContextInitService;
+use Foundry\Support\Paths;
+use Foundry\Tests\Fixtures\TempProject;
+use PHPUnit\Framework\TestCase;
+
+final class ContextServicesTest extends TestCase
+{
+    private TempProject $project;
+
+    protected function setUp(): void
+    {
+        $this->project = new TempProject();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->project->cleanup();
+    }
+
+    public function test_init_service_creates_missing_files_correctly(): void
+    {
+        $result = $this->initService()->init('event-bus');
+
+        $this->assertTrue($result['success']);
+        $this->assertSame('event-bus', $result['feature']);
+        $this->assertTrue($result['feature_valid']);
+        $this->assertSame([
+            'docs/features/event-bus.spec.md',
+            'docs/features/event-bus.md',
+            'docs/features/event-bus.decisions.md',
+        ], $result['created']);
+        $this->assertSame([], $result['existing']);
+        $this->assertFileExists($this->project->root . '/docs/features/event-bus.spec.md');
+        $this->assertFileExists($this->project->root . '/docs/features/event-bus.md');
+        $this->assertFileExists($this->project->root . '/docs/features/event-bus.decisions.md');
+        $this->assertStringContainsString('# Feature Spec: event-bus', (string) file_get_contents($this->project->root . '/docs/features/event-bus.spec.md'));
+        $this->assertStringContainsString('Timestamp: <ISO-8601>', (string) file_get_contents($this->project->root . '/docs/features/event-bus.decisions.md'));
+    }
+
+    public function test_init_service_does_not_overwrite_existing_files(): void
+    {
+        $path = $this->project->root . '/docs/features/event-bus.spec.md';
+        $this->writeFile($path, "# Custom Spec\n");
+
+        $result = $this->initService()->init('event-bus');
+
+        $this->assertSame([
+            'docs/features/event-bus.md',
+            'docs/features/event-bus.decisions.md',
+        ], $result['created']);
+        $this->assertSame(['docs/features/event-bus.spec.md'], $result['existing']);
+        $this->assertSame("# Custom Spec\n", file_get_contents($path));
+    }
+
+    public function test_doctor_service_maps_validation_results_to_statuses_consistently(): void
+    {
+        $doctor = $this->doctorService();
+
+        $this->assertSame('repairable', $doctor->checkFeature('event-bus')['status']);
+        $this->assertSame('non_compliant', $doctor->checkFeature('Event_Bus')['status']);
+
+        $this->initService()->init('event-bus');
+        $this->assertSame('ok', $doctor->checkFeature('event-bus')['status']);
+    }
+
+    public function test_doctor_service_generates_required_actions_correctly(): void
+    {
+        $this->initService()->init('event-bus');
+        $resolver = new ContextFileResolver();
+        $this->writeFile(
+            $this->project->root . '/' . $resolver->specPath('event-bus'),
+            str_replace(
+                ["# Feature Spec: event-bus\n", "## Goals\n\n- TBD.\n\n"],
+                ["# Spec: event-bus\n", ''],
+                (string) file_get_contents($this->project->root . '/' . $resolver->specPath('event-bus')),
+            ),
+        );
+
+        $result = $this->doctorService()->checkFeature('event-bus');
+
+        $this->assertSame('repairable', $result['status']);
+        $this->assertContains('Fix malformed spec heading in docs/features/event-bus.spec.md.', $result['required_actions']);
+        $this->assertContains('Add missing required section "## Goals" to docs/features/event-bus.spec.md.', $result['required_actions']);
+    }
+
+    private function initService(): ContextInitService
+    {
+        return new ContextInitService(new Paths($this->project->root));
+    }
+
+    private function doctorService(): ContextDoctorService
+    {
+        return new ContextDoctorService(new Paths($this->project->root));
+    }
+
+    private function writeFile(string $path, string $contents): void
+    {
+        $directory = dirname($path);
+        if (!is_dir($directory)) {
+            mkdir($directory, 0777, true);
+        }
+
+        file_put_contents($path, $contents);
+    }
+}

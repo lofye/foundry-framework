@@ -1,0 +1,39 @@
+# Feature Spec: context-persistence
+
+## Purpose
+- Preserve feature intent, implementation state, and decision history across sessions.
+- Make feature work resumable without relying on chat history.
+
+## Goals
+- Add canonical feature context artifacts under docs/features/.
+- Support deterministic validation of those artifacts.
+- Introduce CLI tooling to initialize and validate feature context.
+- Support future execution driven by canonical feature context.
+
+## Non-Goals
+- Do not add model-specific behavior.
+- Do not replace code/tests as the source of implementation truth.
+- Do not compact or rewrite decision history.
+
+## Constraints
+- Must remain deterministic.
+- Must be compatible with multiple LLMs.
+- Must use human-readable Markdown files.
+- Must preserve exactly one canonical spec per feature.
+
+## Expected Behavior
+- Each feature has one canonical spec, one state document, and one decision ledger.
+- Validators can check structure and required sections.
+- CLI commands can initialize and validate feature context.
+- Later execution systems can consume these files safely.
+
+## Acceptance Criteria
+- Canonical files exist for the feature.
+- Required sections are present.
+- Validation passes.
+- CLI can initialize missing context files deterministically.
+- CLI can validate context and produce actionable repair guidance.
+
+## Assumptions
+- Initial feature work may still be partly manual.
+- Execution specs may exist separately under docs/specs/<feature>/<NNN-name>.md

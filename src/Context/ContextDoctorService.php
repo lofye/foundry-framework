@@ -1,0 +1,350 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Foundry\Context;
+
+use Foundry\Context\Validation\ValidationIssue;
+use Foundry\Context\Validation\ValidationResult;
+use Foundry\Support\Paths;
+
+final class ContextDoctorService
+{
+    /**
+     * @var array<string,int>
+     */
+    private const array STATUS_PRIORITY = [
+        'ok' => 0,
+        'warning' => 1,
+        'repairable' => 2,
+        'non_compliant' => 3,
+    ];
+
+    public function __construct(
+        private readonly Paths $paths,
+        private readonly FeatureNameValidator $featureNameValidator = new FeatureNameValidator(),
+        private readonly ContextFileResolver $resolver = new ContextFileResolver(),
+        private readonly SpecValidator $specValidator = new SpecValidator(),
+        private readonly StateValidator $stateValidator = new StateValidator(),
+        private readonly DecisionLedgerValidator $decisionLedgerValidator = new DecisionLedgerValidator(),
+    ) {}
+
+    /**
+     * @return array{status:string,feature:string,files:array<string,array<string,mixed>>,required_actions:list<string>}
+     */
+    public function checkFeature(string $featureName): array
+    {
+        $relativePaths = $this->resolver->paths($featureName);
+        $nameValidation = $this->featureNameValidator->validate($featureName);
+
+        if (!$nameValidation->valid) {
+            return [
+                'status' => 'non_compliant',
+                'feature' => $featureName,
+                'files' => $this->emptyFiles($relativePaths),
+                'required_actions' => $this->requiredActionsForFeatureName($nameValidation),
+            ];
+        }
+
+        $spec = $this->specValidator->validate($featureName, $this->paths->join($relativePaths['spec']));
+        $state = $this->stateValidator->validate($featureName, $this->paths->join($relativePaths['state']));
+        $decisions = $this->decisionLedgerValidator->validate($featureName, $this->paths->join($relativePaths['decisions']));
+
+        $files = [
+            'spec' => $this->filePayload($relativePaths['spec'], $spec, true),
+            'state' => $this->filePayload($relativePaths['state'], $state, true),
+            'decisions' => $this->filePayload($relativePaths['decisions'], $decisions, false),
+        ];
+
+        $status = $this->statusForResults([$spec, $state, $decisions]);
+
+        return [
+            'status' => $status,
+            'feature' => $featureName,
+            'files' => $files,
+            'required_actions' => $this->requiredActionsForFiles($files),
+        ];
+    }
+
+    /**
+     * @return array{status:string,summary:array{ok:int,warning:int,repairable:int,non_compliant:int,total:int},features:list<array<string,mixed>>,required_actions:list<string>}
+     */
+    public function checkAll(): array
+    {
+        $features = [];
+        foreach ($this->discoverFeatures() as $featureName) {
+            $features[] = $this->checkFeature($featureName);
+        }
+
+        $summary = [
+            'ok' => 0,
+            'warning' => 0,
+            'repairable' => 0,
+            'non_compliant' => 0,
+            'total' => 0,
+        ];
+        $status = 'ok';
+        $requiredActions = [];
+
+        foreach ($features as $feature) {
+            $featureStatus = (string) ($feature['status'] ?? 'ok');
+            $summary[$featureStatus] = ($summary[$featureStatus] ?? 0) + 1;
+            $summary['total']++;
+            $status = $this->moreSevereStatus($status, $featureStatus);
+
+            foreach ((array) ($feature['required_actions'] ?? []) as $action) {
+                $requiredActions[] = (string) ($feature['feature'] ?? '') . ': ' . (string) $action;
+            }
+        }
+
+        return [
+            'status' => $status,
+            'summary' => $summary,
+            'features' => $features,
+            'required_actions' => $requiredActions,
+        ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function discoverFeatures(): array
+    {
+        $directory = $this->paths->join('docs/features');
+        if (!is_dir($directory)) {
+            return [];
+        }
+
+        $items = scandir($directory);
+        if ($items === false) {
+            return [];
+        }
+
+        $features = [];
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $path = $directory . '/' . $item;
+            if (!is_file($path)) {
+                continue;
+            }
+
+            $featureName = $this->featureNameFromCanonicalFilename($item);
+            if ($featureName === null) {
+                continue;
+            }
+
+            $features[] = $featureName;
+        }
+
+        $features = array_values(array_unique($features));
+        sort($features);
+
+        return $features;
+    }
+
+    private function featureNameFromCanonicalFilename(string $filename): ?string
+    {
+        $featureName = null;
+        if (str_ends_with($filename, '.spec.md')) {
+            $featureName = substr($filename, 0, -strlen('.spec.md'));
+        } elseif (str_ends_with($filename, '.decisions.md')) {
+            $featureName = substr($filename, 0, -strlen('.decisions.md'));
+        } elseif (str_ends_with($filename, '.md')) {
+            $featureName = substr($filename, 0, -strlen('.md'));
+        }
+
+        if ($featureName === null || $featureName === '') {
+            return null;
+        }
+
+        if (str_contains($featureName, '.')) {
+            return null;
+        }
+
+        return $featureName;
+    }
+
+    /**
+     * @param array{spec:string,state:string,decisions:string} $relativePaths
+     * @return array<string,array<string,mixed>>
+     */
+    private function emptyFiles(array $relativePaths): array
+    {
+        return [
+            'spec' => [
+                'path' => $relativePaths['spec'],
+                'exists' => is_file($this->paths->join($relativePaths['spec'])),
+                'valid' => false,
+                'missing_sections' => [],
+                'issues' => [],
+            ],
+            'state' => [
+                'path' => $relativePaths['state'],
+                'exists' => is_file($this->paths->join($relativePaths['state'])),
+                'valid' => false,
+                'missing_sections' => [],
+                'issues' => [],
+            ],
+            'decisions' => [
+                'path' => $relativePaths['decisions'],
+                'exists' => is_file($this->paths->join($relativePaths['decisions'])),
+                'valid' => false,
+                'issues' => [],
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    private function filePayload(string $relativePath, ValidationResult $result, bool $includeMissingSections): array
+    {
+        $payload = [
+            'path' => $relativePath,
+            'exists' => $result->file_exists,
+            'valid' => $result->valid,
+        ];
+
+        if ($includeMissingSections) {
+            $payload['missing_sections'] = $result->missing_sections;
+        }
+
+        $payload['issues'] = $this->issuesToArray($result->issues);
+
+        return $payload;
+    }
+
+    /**
+     * @param array<int,ValidationResult> $results
+     */
+    private function statusForResults(array $results): string
+    {
+        foreach ($results as $result) {
+            foreach ($result->issues as $issue) {
+                if (in_array($issue->code, ['CONTEXT_SPEC_PATH_NON_CANONICAL', 'CONTEXT_STATE_PATH_NON_CANONICAL', 'CONTEXT_DECISIONS_PATH_NON_CANONICAL'], true)) {
+                    return 'non_compliant';
+                }
+            }
+
+            if (!$result->valid) {
+                return 'repairable';
+            }
+        }
+
+        return 'ok';
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function requiredActionsForFeatureName(ValidationResult $result): array
+    {
+        if ($result->valid) {
+            return [];
+        }
+
+        return ['Use a lowercase kebab-case feature name.'];
+    }
+
+    /**
+     * @param array<string,array<string,mixed>> $files
+     * @return list<string>
+     */
+    private function requiredActionsForFiles(array $files): array
+    {
+        $actions = [];
+        foreach (['spec', 'state', 'decisions'] as $kind) {
+            $file = (array) ($files[$kind] ?? []);
+            $path = (string) ($file['path'] ?? '');
+            foreach ((array) ($file['issues'] ?? []) as $issue) {
+                if (!is_array($issue)) {
+                    continue;
+                }
+
+                $action = $this->requiredActionForIssue($kind, $path, $issue);
+                if ($action === null) {
+                    continue;
+                }
+
+                $actions[] = $action;
+            }
+        }
+
+        return $actions;
+    }
+
+    /**
+     * @param array<string,mixed> $issue
+     */
+    private function requiredActionForIssue(string $kind, string $path, array $issue): ?string
+    {
+        $code = (string) ($issue['code'] ?? '');
+        $section = (string) ($issue['section'] ?? '');
+
+        return match ($code) {
+            'CONTEXT_FILE_MISSING' => match ($kind) {
+                'spec' => 'Create missing spec file: ' . $path,
+                'state' => 'Create missing state file: ' . $path,
+                'decisions' => 'Create missing decision ledger: ' . $path,
+                default => null,
+            },
+            'CONTEXT_SPEC_HEADING_INVALID' => 'Fix malformed spec heading in ' . $path . '.',
+            'CONTEXT_STATE_HEADING_INVALID' => 'Fix malformed state heading in ' . $path . '.',
+            'CONTEXT_SPEC_SECTION_MISSING' => 'Add missing required section "## ' . $section . '" to ' . $path . '.',
+            'CONTEXT_STATE_SECTION_MISSING' => 'Add missing required section "## ' . $section . '" to ' . $path . '.',
+            'CONTEXT_DECISION_ENTRY_MALFORMED' => 'Fix malformed decision entry in ' . $path . '.',
+            'CONTEXT_DECISION_TIMESTAMP_MISSING' => 'Add missing decision timestamp line to ' . $path . '.',
+            'CONTEXT_DECISION_TIMESTAMP_INVALID' => 'Fix decision timestamp to ISO-8601 in ' . $path . '.',
+            'CONTEXT_DECISION_SUBSECTION_MISSING' => 'Add missing required decision subsection "**' . $section . '**" to ' . $path . '.',
+            default => null,
+        };
+    }
+
+    /**
+     * @param array<int,ValidationIssue> $issues
+     * @return list<array<string,mixed>>
+     */
+    private function issuesToArray(array $issues): array
+    {
+        return array_values(array_map(
+            function (ValidationIssue $issue): array {
+                $row = [
+                    'code' => $issue->code,
+                    'message' => $issue->message,
+                    'file_path' => $this->relativePath($issue->file_path),
+                ];
+
+                if ($issue->section !== null) {
+                    $row['section'] = $issue->section;
+                }
+
+                return $row;
+            },
+            $issues,
+        ));
+    }
+
+    private function relativePath(string $path): string
+    {
+        $root = rtrim($this->paths->root(), '/') . '/';
+        $normalizedPath = str_replace('\\', '/', $path);
+        $normalizedRoot = str_replace('\\', '/', $root);
+
+        if (str_starts_with($normalizedPath, $normalizedRoot)) {
+            return substr($normalizedPath, strlen($normalizedRoot));
+        }
+
+        return $normalizedPath;
+    }
+
+    private function moreSevereStatus(string $current, string $candidate): string
+    {
+        $currentPriority = self::STATUS_PRIORITY[$current] ?? 0;
+        $candidatePriority = self::STATUS_PRIORITY[$candidate] ?? 0;
+
+        return $candidatePriority > $currentPriority ? $candidate : $current;
+    }
+}
