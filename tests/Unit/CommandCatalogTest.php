@@ -37,6 +37,8 @@ final class CommandCatalogTest extends TestCase
 
         $inspectStore = $this->commandRow($data, 'inspect state-store');
         $verifyStore = $this->commandRow($data, 'verify state-store');
+        $inspectMarketplace = $this->commandRow($data, 'inspect marketplace');
+        $verifyMarketplace = $this->commandRow($data, 'verify marketplace');
         $generateIntent = $this->commandRow($data, 'generate <intent>');
         $help = $this->commandRow($data, 'help');
 
@@ -48,6 +50,8 @@ final class CommandCatalogTest extends TestCase
         $this->assertSame('Verification', $verifyStore['category']);
         $this->assertContains('foundry verify state-store --json', $verifyStore['examples']);
         $this->assertContains('foundry help verify state-store --json', $verifyStore['examples']);
+        $this->assertContains('foundry inspect marketplace --json', $inspectMarketplace['examples']);
+        $this->assertContains('foundry verify marketplace --json', $verifyMarketplace['examples']);
 
         $this->assertContains('foundry help generate Add --json', $generateIntent['examples']);
         $this->assertSame('Sample command JSON output (`help --json` index)', $help['sampleOutputLabel']);

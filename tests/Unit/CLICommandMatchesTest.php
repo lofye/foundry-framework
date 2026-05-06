@@ -43,6 +43,7 @@ use Foundry\CLI\Commands\InspectResourceCommand;
 use Foundry\CLI\Commands\InspectRouteCommand;
 use Foundry\CLI\Commands\InspectStateStoreCommand;
 use Foundry\CLI\Commands\LicenseCommand;
+use Foundry\CLI\Commands\MarketplaceCommand;
 use Foundry\CLI\Commands\MigrateDefinitionsCommand;
 use Foundry\CLI\Commands\ObserveCommand;
 use Foundry\CLI\Commands\PackCommand;
@@ -196,6 +197,8 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new VerifyFeaturesCommand())->matches(['verify', 'features']));
         $this->assertTrue((new VerifyContextCommand())->matches(['verify', 'context', '--feature=x']));
         $this->assertTrue((new VerifyStateStoreCommand())->matches(['verify', 'state-store']));
+        $this->assertTrue((new MarketplaceCommand())->matches(['inspect', 'marketplace']));
+        $this->assertTrue((new MarketplaceCommand())->matches(['verify', 'marketplace']));
         $this->assertTrue((new VerifyResourceCommand())->matches(['verify', 'resource', 'posts']));
         $this->assertTrue((new VerifyIntegrationCommand())->matches(['verify', 'notifications']));
         $this->assertTrue((new VerifyIntegrationCommand())->matches(['verify', 'api']));

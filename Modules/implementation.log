@@ -321,3 +321,8 @@
 - spec: feature-system/005-align-docs-agents-and-skills-with-modules-vs-features.md
 - note: Aligned framework and app-facing docs/instructions with module-vs-feature governance: framework context/spec execution now points to `Modules/*` and `Modules/implementation.log`, while downstream app feature context/runtimes remain under `Features/*` with explicit `src/` and `tests/` localization guidance.
 - note: Updated strict/non-strict implementation skills to resolve both module and feature execution-spec paths deterministically and to append framework module work to `Modules/implementation.log` instead of legacy framework feature-ledger paths.
+
+## 2026-05-06 15:01:32 -0400
+- spec: marketplace/001-marketplace-backend-minimal-viable.md
+- note: Added deterministic local marketplace runtime under `src/Marketplace/*` with pack/index models, repository parsing/validation, integrity verifier, and HTTP-style controller handlers for list/detail/download backend contracts.
+- note: Added CLI command surface `inspect marketplace --json` and `verify marketplace --json`, wired command registration plus API/command-catalog metadata, and added focused unit/integration coverage for sorting, validation, download headers, and deterministic failure codes.

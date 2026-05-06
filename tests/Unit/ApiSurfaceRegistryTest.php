@@ -83,8 +83,10 @@ final class ApiSurfaceRegistryTest extends TestCase
         $specValidate = $registry->classifyCliCommand(['spec:validate']);
         $verifyContext = $registry->classifyCliCommand(['verify', 'context', '--feature=event-bus']);
         $verifyStateStore = $registry->classifyCliCommand(['verify', 'state-store']);
+        $verifyMarketplace = $registry->classifyCliCommand(['verify', 'marketplace']);
         $verifyFeatures = $registry->classifyCliCommand(['verify', 'features']);
         $inspectStateStore = $registry->classifyCliCommand(['inspect', 'state-store']);
+        $inspectMarketplace = $registry->classifyCliCommand(['inspect', 'marketplace']);
         $init = $registry->classifyCliCommand(['init']);
         $examplesList = $registry->classifyCliCommand(['examples:list']);
         $examplesLoad = $registry->classifyCliCommand(['examples:load', 'blog-api']);
@@ -132,8 +134,10 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertNotNull($specValidate);
         $this->assertNotNull($verifyContext);
         $this->assertNotNull($verifyStateStore);
+        $this->assertNotNull($verifyMarketplace);
         $this->assertNotNull($verifyFeatures);
         $this->assertNotNull($inspectStateStore);
+        $this->assertNotNull($inspectMarketplace);
         $this->assertNotNull($init);
         $this->assertNotNull($examplesList);
         $this->assertNotNull($examplesLoad);
@@ -271,6 +275,10 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('verify', $verifyContext['command_type']);
         $this->assertSame('stable', $verifyStateStore['stability']);
         $this->assertSame('Verification', $verifyStateStore['category']);
+        $this->assertSame('stable', $verifyMarketplace['stability']);
+        $this->assertSame('Verification', $verifyMarketplace['category']);
+        $this->assertSame('stable', $inspectMarketplace['stability']);
+        $this->assertSame('Extensions', $inspectMarketplace['category']);
         $this->assertSame('verify', $verifyStateStore['command_type']);
         $this->assertSame('stable', $verifyFeatures['stability']);
         $this->assertSame('Verification', $verifyFeatures['category']);

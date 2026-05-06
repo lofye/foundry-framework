@@ -505,6 +505,7 @@ final class ApiSurfaceRegistry
             'jobs' => ['stable', 'inspect jobs <feature>', 'Inspect feature job declarations.'],
             'context' => ['stable', 'inspect context <feature>', 'Inspect unified feature context health using doctor and alignment results.'],
             'state-store' => ['stable', 'inspect state-store', 'Inspect local SQLite state-store metadata and namespace summaries.'],
+            'marketplace' => ['stable', 'inspect marketplace', 'Inspect local marketplace metadata and artifact availability summaries.'],
             'notification' => ['stable', 'inspect notification <name>', 'Inspect a notification contract.'],
             'api' => ['stable', 'inspect api <name>', 'Inspect an API resource contract.'],
             'resource' => ['stable', 'inspect resource <name>', 'Inspect a generated resource contract.'],
@@ -556,6 +557,7 @@ final class ApiSurfaceRegistry
             'features' => ['stable', 'verify features', 'Verify feature workspace boundary compliance and canonical/legacy duplication diagnostics.'],
             'context' => ['stable', 'verify context [--feature=<feature>]', 'Verify feature context health using doctor and alignment results.'],
             'state-store' => ['stable', 'verify state-store', 'Verify local SQLite state-store readiness and deterministic round-trip behavior.'],
+            'marketplace' => ['stable', 'verify marketplace', 'Verify local marketplace metadata and artifact integrity deterministically.'],
             'coverage' => ['stable', 'verify coverage [--min=<percent>] [--clover=<path>]', 'Verify coverage threshold compliance from Clover XML metrics.'],
             'resource' => ['stable', 'verify resource <name>', 'Verify resource contracts.'],
             'notifications' => ['stable', 'verify notifications', 'Verify notification contracts.'],
@@ -750,9 +752,9 @@ final class ApiSurfaceRegistry
             in_array($signature, ['init', 'new', 'init app', 'examples:list', 'examples:load', 'preview notification', 'implement feature', 'implement spec', 'plan feature', 'spec:new', 'spec:plan'], true)
                 || str_starts_with($signature, 'generate ')
                 => 'App Scaffolding',
-            in_array($signature, ['upgrade-check', 'spec:log-entry', 'spec:validate', 'verify graph', 'verify graph-integrity', 'verify pipeline', 'verify extensions', 'verify compatibility', 'verify feature', 'verify features', 'verify context', 'verify state-store', 'verify coverage', 'verify resource', 'verify notifications', 'verify api', 'verify billing', 'verify workflows', 'verify orchestrations', 'verify search', 'verify streams', 'verify locales', 'verify policies', 'verify contracts', 'verify cli-surface', 'verify auth', 'verify cache', 'verify events', 'verify jobs', 'verify migrations'], true)
+            in_array($signature, ['upgrade-check', 'spec:log-entry', 'spec:validate', 'verify graph', 'verify graph-integrity', 'verify pipeline', 'verify extensions', 'verify compatibility', 'verify feature', 'verify features', 'verify context', 'verify state-store', 'verify marketplace', 'verify coverage', 'verify resource', 'verify notifications', 'verify api', 'verify billing', 'verify workflows', 'verify orchestrations', 'verify search', 'verify streams', 'verify locales', 'verify policies', 'verify contracts', 'verify cli-surface', 'verify auth', 'verify cache', 'verify events', 'verify jobs', 'verify migrations'], true)
                 => 'Verification',
-            in_array($signature, ['migrate definitions', 'codemod run', 'inspect extensions', 'inspect extension', 'inspect packs', 'inspect pack', 'inspect compatibility', 'inspect migrations', 'inspect definition-format', 'generate migration'], true)
+            in_array($signature, ['migrate definitions', 'codemod run', 'inspect extensions', 'inspect extension', 'inspect packs', 'inspect pack', 'inspect marketplace', 'inspect compatibility', 'inspect migrations', 'inspect definition-format', 'generate migration'], true)
                 => 'Extensions',
             default => 'Architecture',
         };
