@@ -96,6 +96,37 @@ final class CLIFeatureSystemCommandTest extends TestCase
         $this->assertTrue($result['payload']['ok']);
     }
 
+    public function test_spec_validate_supports_canonical_modules_workspace_and_implementation_log(): void
+    {
+        $this->writeFile(
+            'Modules/ExecutionSpecSystem/specs/001-canonical-layout.md',
+            "# Execution Spec: 001-canonical-layout\n",
+        );
+        $this->writeFile(
+            'Modules/implementation.log',
+            "## 2026-05-03 12:00:00 -0400\n- spec: execution-spec-system/001-canonical-layout.md\n",
+        );
+
+        $result = $this->runCommand(['foundry', 'spec:validate', '--json']);
+
+        $this->assertSame(0, $result['status']);
+        $this->assertTrue($result['payload']['ok']);
+    }
+
+    public function test_verify_features_reports_framework_module_misplaced_in_features_root_when_modules_root_exists(): void
+    {
+        mkdir($this->project->root . '/Modules', 0777, true);
+        $this->writeContext('Features/StateStore', 'state-store');
+
+        $result = $this->runCommand(['foundry', 'verify', 'features', '--json']);
+
+        $this->assertSame(1, $result['status']);
+        $this->assertSame('failed', $result['payload']['status']);
+        $this->assertSame('FRAMEWORK_MODULE_IN_FEATURES_ROOT', $result['payload']['violations'][0]['code']);
+        $this->assertSame('Features/StateStore', $result['payload']['violations'][0]['path']);
+        $this->assertSame('Modules/StateStore', $result['payload']['violations'][0]['details']['expected_path']);
+    }
+
     /**
      * @param array<int,string> $argv
      * @return array{status:int,payload:array<string,mixed>}

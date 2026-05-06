@@ -308,3 +308,6 @@
 - note: Added a root-aware `SqliteStateStore` foundation at `.foundry/state/foundry.sqlite` with deterministic idempotent schema initialization (`foundry_state_meta`, `foundry_state_values`), typed namespaced key/value round-trip semantics, deterministic listing/metadata inspection, and reserved-key transaction rollback verification.
 - note: Added deterministic CLI diagnostics `inspect state-store` and `verify state-store`, wired through command context/application/api-surface catalogs, plus focused unit/integration coverage for root isolation, contract ordering, and failure/validation behavior.
 - note: Updated framework/app scaffold ignore surfaces to exclude `/.foundry/state/` so local SQLite state is never tracked in source control.
+
+## 2026-05-06 12:08:00 -0400
+- spec: feature-system/003-separate-framework-modules-from-application-features.md

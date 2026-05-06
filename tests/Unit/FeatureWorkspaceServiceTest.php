@@ -107,6 +107,48 @@ final class FeatureWorkspaceServiceTest extends TestCase
         $this->assertFalse($list['features'][0]['has_tests']);
     }
 
+    public function test_list_prefers_modules_workspace_when_present(): void
+    {
+        $this->writeFile('Modules/EventSystem/event-system.spec.md', '# Feature Spec: event-system');
+        $this->writeFile('Modules/EventSystem/event-system.md', '# Feature: event-system');
+        $this->writeFile('Modules/EventSystem/event-system.decisions.md', $this->minimalDecision());
+
+        $list = $this->service()->list();
+
+        $this->assertSame('Modules/EventSystem', $list['features'][0]['path']);
+    }
+
+    public function test_verify_reports_framework_module_misplaced_under_features_root_when_modules_root_exists(): void
+    {
+        mkdir($this->project->root . '/Modules', 0777, true);
+        $this->writeFile('Features/StateStore/state-store.spec.md', '# Feature Spec: state-store');
+        $this->writeFile('Features/StateStore/state-store.md', '# Feature: state-store');
+        $this->writeFile('Features/StateStore/state-store.decisions.md', $this->minimalDecision());
+
+        $payload = $this->service()->verify();
+
+        $this->assertSame('failed', $payload['status']);
+        $this->assertSame('FRAMEWORK_MODULE_IN_FEATURES_ROOT', $payload['violations'][0]['code']);
+        $this->assertSame('Features/StateStore', $payload['violations'][0]['path']);
+        $this->assertSame('Modules/StateStore', $payload['violations'][0]['details']['expected_path']);
+    }
+
+    public function test_verify_reports_duplicate_framework_module_location_when_modules_and_features_both_exist(): void
+    {
+        $this->writeFile('Modules/StateStore/state-store.spec.md', '# Feature Spec: state-store');
+        $this->writeFile('Modules/StateStore/state-store.md', '# Feature: state-store');
+        $this->writeFile('Modules/StateStore/state-store.decisions.md', $this->minimalDecision());
+        $this->writeFile('Features/StateStore/state-store.spec.md', '# Feature Spec: state-store');
+        $this->writeFile('Features/StateStore/state-store.md', '# Feature: state-store');
+        $this->writeFile('Features/StateStore/state-store.decisions.md', $this->minimalDecision());
+
+        $payload = $this->service()->verify();
+
+        $this->assertSame('failed', $payload['status']);
+        $codes = array_column($payload['violations'], 'code');
+        $this->assertContains('FRAMEWORK_MODULE_DUPLICATE_LOCATION', $codes);
+    }
+
     private function service(): FeatureWorkspaceService
     {
         return new FeatureWorkspaceService(new Paths($this->project->root));

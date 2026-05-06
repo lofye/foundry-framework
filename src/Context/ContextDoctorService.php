@@ -513,14 +513,19 @@ final class ContextDoctorService
 
         $legacySpecs = 'docs/features/' . $featureName . '/specs';
         $legacyDraftSpecs = 'docs/features/' . $featureName . '/specs/drafts';
-        $canonicalRoot = 'Features/' . $this->pascalFromSlug($featureName);
-        $canonicalSpecs = $canonicalRoot . '/specs';
-        $canonicalDraftSpecs = $canonicalRoot . '/specs/drafts';
+        $modulesCanonicalRoot = 'Modules/' . $this->pascalFromSlug($featureName);
+        $modulesCanonicalSpecs = $modulesCanonicalRoot . '/specs';
+        $modulesCanonicalDraftSpecs = $modulesCanonicalRoot . '/specs/drafts';
+        $featuresCanonicalRoot = 'Features/' . $this->pascalFromSlug($featureName);
+        $featuresCanonicalSpecs = $featuresCanonicalRoot . '/specs';
+        $featuresCanonicalDraftSpecs = $featuresCanonicalRoot . '/specs/drafts';
 
         return $this->directoryContainsMarkdownFiles($legacySpecs)
             || $this->directoryContainsMarkdownFiles($legacyDraftSpecs)
-            || $this->directoryContainsMarkdownFiles($canonicalSpecs)
-            || $this->directoryContainsMarkdownFiles($canonicalDraftSpecs);
+            || $this->directoryContainsMarkdownFiles($modulesCanonicalSpecs)
+            || $this->directoryContainsMarkdownFiles($modulesCanonicalDraftSpecs)
+            || $this->directoryContainsMarkdownFiles($featuresCanonicalSpecs)
+            || $this->directoryContainsMarkdownFiles($featuresCanonicalDraftSpecs);
     }
 
     private function directoryContainsMarkdownFiles(string $relativePath): bool
@@ -621,30 +626,32 @@ final class ContextDoctorService
      */
     private function discoverCanonicalFeatureSlugs(): array
     {
-        $directory = $this->paths->join('Features');
-        if (!is_dir($directory)) {
-            return [];
-        }
-
-        $items = scandir($directory);
-        if ($items === false) {
-            return [];
-        }
-
         $features = [];
-        foreach ($items as $item) {
-            if ($item === '.' || $item === '..') {
+        foreach (['Modules', 'Features'] as $rootDirectory) {
+            $directory = $this->paths->join($rootDirectory);
+            if (!is_dir($directory)) {
                 continue;
             }
 
-            if (!is_dir($directory . '/' . $item) || !$this->isCanonicalFeatureDirectory($item)) {
+            $items = scandir($directory);
+            if ($items === false) {
                 continue;
             }
 
-            $features[] = FeatureNaming::canonical(strtolower((string) preg_replace('/(?<!^)[A-Z]/', '-$0', $item)));
+            foreach ($items as $item) {
+                if ($item === '.' || $item === '..') {
+                    continue;
+                }
+
+                if (!is_dir($directory . '/' . $item) || !$this->isCanonicalFeatureDirectory($item)) {
+                    continue;
+                }
+
+                $features[] = FeatureNaming::canonical(strtolower((string) preg_replace('/(?<!^)[A-Z]/', '-$0', $item)));
+            }
         }
 
-        return $features;
+        return array_values(array_unique($features));
     }
 
     private function pascalFromSlug(string $slug): string

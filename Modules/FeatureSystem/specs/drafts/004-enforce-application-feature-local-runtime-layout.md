@@ -1,4 +1,4 @@
-# 004-enforce-application-feature-local-runtime-layout.md
+# Execution Spec: 004-enforce-application-feature-local-runtime-layout
 
 ## Purpose
 
@@ -190,3 +190,4 @@ php bin/foundry verify coverage --min=90 --clover=build/coverage/clover.xml --js
 - Application feature tests location is mandatory for executable features.
 - Verifiers distinguish app features from framework modules.
 - All required tests and coverage gates pass.
+

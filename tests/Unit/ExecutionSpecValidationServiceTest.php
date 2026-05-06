@@ -324,6 +324,20 @@ MD,
         $this->assertSame([], $result['violations']);
     }
 
+    public function test_validate_supports_canonical_modules_workspace_specs_and_log(): void
+    {
+        $this->writeRawFile('Modules/ExecutionSpecSystem/specs/001-canonical.md', '# Execution Spec: 001-canonical');
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-03 12:00:00 -0400\n- spec: execution-spec-system/001-canonical.md\n",
+        );
+
+        $result = $this->service()->validate();
+
+        $this->assertTrue($result['ok']);
+        $this->assertSame([], $result['violations']);
+    }
+
     public function test_validate_reports_duplicate_canonical_and_legacy_spec_definitions(): void
     {
         $this->writeRawFile('Features/ExecutionSpecSystem/specs/001-shared.md', '# Execution Spec: 001-shared');

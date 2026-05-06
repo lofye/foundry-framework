@@ -1,4 +1,4 @@
-# 005-align-docs-agents-and-skills-with-modules-vs-features.md
+# Execution Spec: 005-align-docs-agents-and-skills-with-modules-vs-features
 
 ## Purpose
 
@@ -169,3 +169,4 @@ php bin/foundry verify coverage --min=90 --clover=build/coverage/clover.xml --js
 - Skills use `Modules/implementation.log` for framework work.
 - No old canonical references to `Features/implementation.log` remain except migration/legacy notes.
 - All required gates pass.
+

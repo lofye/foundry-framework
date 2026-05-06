@@ -86,12 +86,12 @@ final class ContextPlanningService
                     'file_path' => $this->resolver->statePath($featureName),
                 ]],
                 requiredActions: [
-                    'Update docs/features/' . $featureName . '/' . $featureName . '.spec.md or docs/features/' . $featureName . '/' . $featureName . '.md so there is a concrete actionable gap between Expected Behavior and Current State.',
+                    'Update ' . $this->resolver->specPath($featureName) . ' or ' . $this->resolver->statePath($featureName) . ' so there is a concrete actionable gap between Expected Behavior and Current State.',
                 ],
             );
         }
 
-        $relativeDirectory = 'docs/features/' . $featureName . '/specs/drafts';
+        $relativeDirectory = $this->canonicalDraftSpecDirectory($featureName);
         $absoluteDirectory = $this->paths->join($relativeDirectory);
         if (file_exists($absoluteDirectory) && !is_dir($absoluteDirectory)) {
             throw new FoundryError(
@@ -371,7 +371,7 @@ final class ContextPlanningService
                 'created_paths' => $createdPaths,
             ]],
             requiredActions: [
-                'Inspect docs/features/' . $featureName . '/specs/ and docs/features/' . $featureName . '/specs/drafts/ so one planner invocation creates exactly one draft execution spec file.',
+                'Inspect ' . $this->canonicalActiveSpecDirectory($featureName) . '/ and ' . $this->canonicalDraftSpecDirectory($featureName) . '/ so one planner invocation creates exactly one draft execution spec file.',
             ],
         );
     }
@@ -384,6 +384,8 @@ final class ContextPlanningService
         $relativePaths = [];
 
         foreach ([
+            $this->canonicalActiveSpecDirectory($featureName),
+            $this->canonicalDraftSpecDirectory($featureName),
             'docs/features/' . $featureName . '/specs',
             'docs/features/' . $featureName . '/specs/drafts',
         ] as $directory) {
@@ -409,6 +411,31 @@ final class ContextPlanningService
         sort($relativePaths);
 
         return array_values(array_unique($relativePaths));
+    }
+
+    private function canonicalActiveSpecDirectory(string $featureName): string
+    {
+        if (is_dir($this->paths->join('Modules'))) {
+            return 'Modules/' . $this->pascalFromSlug($featureName) . '/specs';
+        }
+
+        return 'docs/features/' . $featureName . '/specs';
+    }
+
+    private function canonicalDraftSpecDirectory(string $featureName): string
+    {
+        if (is_dir($this->paths->join('Modules'))) {
+            return 'Modules/' . $this->pascalFromSlug($featureName) . '/specs/drafts';
+        }
+
+        return 'docs/features/' . $featureName . '/specs/drafts';
+    }
+
+    private function pascalFromSlug(string $slug): string
+    {
+        $parts = array_filter(explode('-', $slug), static fn(string $part): bool => $part !== '');
+
+        return implode('', array_map(static fn(string $part): string => ucfirst($part), $parts));
     }
 
     private function relativePath(string $absolutePath): ?string

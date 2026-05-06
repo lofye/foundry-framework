@@ -11,6 +11,8 @@ final class ExecutionSpecFilename
     public const NAME_PATTERN = '(?<name>(?<id>' . self::ID_PATTERN . ')-(?<slug>' . self::SLUG_PATTERN . '))';
     public const ACTIVE_PATH_PATTERN = '#^docs/features/(?<feature>[a-z0-9]+(?:-[a-z0-9]+)*)/specs/' . self::NAME_PATTERN . '\.md$#';
     public const DRAFT_PATH_PATTERN = '#^docs/features/(?<feature>[a-z0-9]+(?:-[a-z0-9]+)*)/specs/drafts/' . self::NAME_PATTERN . '\.md$#';
+    public const ACTIVE_MODULE_CANONICAL_PATH_PATTERN = '#^Modules/(?<feature_dir>[A-Z][A-Za-z0-9]*)/specs/' . self::NAME_PATTERN . '\.md$#';
+    public const DRAFT_MODULE_CANONICAL_PATH_PATTERN = '#^Modules/(?<feature_dir>[A-Z][A-Za-z0-9]*)/specs/drafts/' . self::NAME_PATTERN . '\.md$#';
     public const ACTIVE_CANONICAL_PATH_PATTERN = '#^Features/(?<feature_dir>[A-Z][A-Za-z0-9]*)/specs/' . self::NAME_PATTERN . '\.md$#';
     public const DRAFT_CANONICAL_PATH_PATTERN = '#^Features/(?<feature_dir>[A-Z][A-Za-z0-9]*)/specs/drafts/' . self::NAME_PATTERN . '\.md$#';
 
@@ -75,6 +77,11 @@ final class ExecutionSpecFilename
             return $legacy;
         }
 
+        $moduleCanonical = self::parseCanonicalPath($relativePath, self::ACTIVE_MODULE_CANONICAL_PATH_PATTERN);
+        if ($moduleCanonical !== null) {
+            return $moduleCanonical;
+        }
+
         return self::parseCanonicalPath($relativePath, self::ACTIVE_CANONICAL_PATH_PATTERN);
     }
 
@@ -93,6 +100,11 @@ final class ExecutionSpecFilename
         $legacy = self::parsePath($relativePath, self::DRAFT_PATH_PATTERN);
         if ($legacy !== null) {
             return $legacy;
+        }
+
+        $moduleCanonical = self::parseCanonicalPath($relativePath, self::DRAFT_MODULE_CANONICAL_PATH_PATTERN);
+        if ($moduleCanonical !== null) {
+            return $moduleCanonical;
         }
 
         return self::parseCanonicalPath($relativePath, self::DRAFT_CANONICAL_PATH_PATTERN);

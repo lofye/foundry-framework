@@ -114,6 +114,7 @@ final class SpecLogEntryCommand extends Command
             !str_contains($trimmed, '/')
             && !str_starts_with($trimmed, 'docs/')
             && !str_starts_with($trimmed, 'Features/')
+            && !str_starts_with($trimmed, 'Modules/')
             && !ExecutionSpecFilename::isCanonicalName($normalized)
             && (new FeatureNameValidator())->validate(FeatureNaming::canonical($normalized))->valid
         ) {
@@ -170,7 +171,7 @@ final class SpecLogEntryCommand extends Command
         $normalized = str_replace('\\', '/', trim($argument));
 
         if (!str_starts_with($normalized, 'docs/')) {
-            if (!str_starts_with($normalized, 'Features/')) {
+            if (!str_starts_with($normalized, 'Features/') && !str_starts_with($normalized, 'Modules/')) {
                 return null;
             }
         }
@@ -197,6 +198,11 @@ final class SpecLogEntryCommand extends Command
     {
         $pascal = $this->pascalFromSlug($feature);
         $paths = [
+            'Modules/' . $pascal,
+            'Modules/' . $pascal . '/specs/drafts',
+            'Modules/' . $pascal . '/' . $feature . '.spec.md',
+            'Modules/' . $pascal . '/' . $feature . '.md',
+            'Modules/' . $pascal . '/' . $feature . '.decisions.md',
             'Features/' . $pascal,
             'Features/' . $pascal . '/specs/drafts',
             'Features/' . $pascal . '/' . $feature . '.spec.md',

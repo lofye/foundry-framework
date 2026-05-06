@@ -123,8 +123,7 @@ final class ContextInitService
      */
     private function targetPaths(string $featureName): array
     {
-        $canonicalRoot = $this->paths->join('Features');
-        if (is_dir($canonicalRoot)) {
+        if (is_dir($this->paths->join('Modules')) || is_dir($this->paths->join('Features'))) {
             return $this->resolver->canonicalPaths($featureName);
         }
 

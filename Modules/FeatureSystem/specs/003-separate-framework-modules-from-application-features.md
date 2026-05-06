@@ -1,4 +1,4 @@
-# 003-separate-framework-modules-from-application-features.md
+# Execution Spec: 003-separate-framework-modules-from-application-features
 
 ## Purpose
 
@@ -198,3 +198,4 @@ If PHPStan/style/doctor are already repo-wide failing for pre-existing unrelated
 - Legacy framework module locations under `Features/` fail deterministically.
 - Existing runtime source under `src/*` is not moved by this spec.
 - All required runtime, PHPUnit, Clover, and coverage verifier gates pass.
+

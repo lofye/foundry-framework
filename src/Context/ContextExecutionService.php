@@ -277,7 +277,7 @@ final class ContextExecutionService
                 ];
                 $payload['required_actions'] = array_values(array_unique(array_merge(
                     array_map('strval', (array) $payload['required_actions']),
-                    ['Restore write access to docs/features/implementation-log.md and record the missing implementation entry.'],
+                    ['Restore write access to ' . (string) ($error->details['path'] ?? 'the execution spec implementation log') . ' and record the missing implementation entry.'],
                 )));
             }
         }

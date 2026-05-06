@@ -196,12 +196,24 @@ final class ExecutionSpecCatalog
     {
         $pascal = $this->pascalFromSlug($featureName);
 
-        return [
-            'canonical_active' => 'Features/' . $pascal . '/specs',
-            'canonical_draft' => 'Features/' . $pascal . '/specs/drafts',
-            'legacy_active' => 'docs/features/' . $featureName . '/specs',
-            'legacy_draft' => 'docs/features/' . $featureName . '/specs/drafts',
-        ];
+        $directories = [];
+
+        if (is_dir($this->paths->join('Modules'))) {
+            $directories['canonical_active'] = 'Modules/' . $pascal . '/specs';
+            $directories['canonical_draft'] = 'Modules/' . $pascal . '/specs/drafts';
+            $directories['features_active'] = 'Features/' . $pascal . '/specs';
+            $directories['features_draft'] = 'Features/' . $pascal . '/specs/drafts';
+        } else {
+            $directories['canonical_active'] = 'Features/' . $pascal . '/specs';
+            $directories['canonical_draft'] = 'Features/' . $pascal . '/specs/drafts';
+            $directories['modules_active'] = 'Modules/' . $pascal . '/specs';
+            $directories['modules_draft'] = 'Modules/' . $pascal . '/specs/drafts';
+        }
+
+        $directories['legacy_active'] = 'docs/features/' . $featureName . '/specs';
+        $directories['legacy_draft'] = 'docs/features/' . $featureName . '/specs/drafts';
+
+        return $directories;
     }
 
     private function pascalFromSlug(string $slug): string

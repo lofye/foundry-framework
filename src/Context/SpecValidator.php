@@ -31,11 +31,13 @@ final class SpecValidator
 
         if (!$this->hasCanonicalPath($filePath, [
             $this->resolver->legacySpecPath($featureName),
+            'Modules/' . $this->pascalFromSlug($featureName) . '/' . $featureName . '.spec.md',
+            'Features/' . $this->pascalFromSlug($featureName) . '/' . $featureName . '.spec.md',
             $this->resolver->canonicalSpecPath($featureName),
         ])) {
             $issues[] = new ValidationIssue(
                 code: 'CONTEXT_SPEC_PATH_NON_CANONICAL',
-                message: sprintf('Spec path must be canonical: docs/features/%1$s/%1$s.spec.md or Features/%2$s/%1$s.spec.md.', $featureName, $this->pascalFromSlug($featureName)),
+                message: sprintf('Spec path must be canonical: docs/features/%1$s/%1$s.spec.md, Features/%2$s/%1$s.spec.md, or Modules/%2$s/%1$s.spec.md.', $featureName, $this->pascalFromSlug($featureName)),
                 file_path: $filePath,
             );
         }

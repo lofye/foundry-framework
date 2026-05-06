@@ -10,13 +10,13 @@
 - `feature:inspect <feature>` returns context and directory mapping with deterministic dependency order.
 - `feature:map` returns deterministic owned path maps.
 - `verify features` reports boundary and duplication issues with explicit enforcement status.
-- `spec:validate` validates canonical `Features/*/specs` and `Features/*/plans` paths.
-- Active-spec implementation logging uses `Features/implementation.log` when canonical workspace is present.
-- Canonical `Features/` workspace is discoverable and preferred.
+- `spec:validate` validates canonical `Modules/*/specs` and `Modules/*/plans` paths.
+- Active-spec implementation logging uses `Modules/implementation.log` when canonical module workspace is present.
+- Canonical `Modules/` workspace is discoverable and preferred for framework modules.
 - New feature-system CLI surfaces are available and deterministic.
 - Canonical and legacy duplicate detection reports `FEATURE_DUPLICATE_CANONICAL_AND_LEGACY`.
-- Spec validation supports canonical `Features/*` specs and plans.
-- Canonical implementation ledger path is recognized as `Features/implementation.log`.
+- Spec validation supports canonical `Modules/*` specs and plans.
+- Canonical implementation ledger path is recognized as `Modules/implementation.log`.
 
 ## Open Questions
 

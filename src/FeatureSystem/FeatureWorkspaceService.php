@@ -13,7 +13,11 @@ final class FeatureWorkspaceService
     public function __construct(private readonly Paths $paths) {}
 
     /**
-     * @return array{features:list<array<string,mixed>>,duplicates:list<array<string,mixed>>}
+     * @return array{
+     *     features:list<array<string,mixed>>,
+     *     duplicates:list<array<string,mixed>>,
+     *     misplaced_framework_modules:list<array<string,string>>
+     * }
      */
     public function scan(): array
     {
@@ -48,6 +52,7 @@ final class FeatureWorkspaceService
         return [
             'features' => array_values($rows),
             'duplicates' => $duplicates,
+            'misplaced_framework_modules' => $this->misplacedFrameworkModules(),
         ];
     }
 
@@ -158,6 +163,29 @@ final class FeatureWorkspaceService
             ];
         }
 
+        foreach ((array) $scan['misplaced_framework_modules'] as $misplaced) {
+            if (!is_array($misplaced)) {
+                continue;
+            }
+
+            $path = (string) ($misplaced['path'] ?? '');
+            $expectedPath = (string) ($misplaced['expected_path'] ?? '');
+            $feature = (string) ($misplaced['feature'] ?? '');
+            $isDuplicate = (bool) ($misplaced['duplicate'] ?? false);
+
+            $violations[] = [
+                'code' => $isDuplicate ? 'FRAMEWORK_MODULE_DUPLICATE_LOCATION' : 'FRAMEWORK_MODULE_IN_FEATURES_ROOT',
+                'feature' => $feature,
+                'path' => $path,
+                'message' => $isDuplicate
+                    ? 'Framework module exists in both Modules/ and Features/ roots.'
+                    : 'Framework module governance directory is misplaced under Features/.',
+                'details' => [
+                    'expected_path' => $expectedPath,
+                ],
+            ];
+        }
+
         if ($enforced) {
             foreach ((array) $scan['features'] as $row) {
                 if (!is_array($row)) {
@@ -198,7 +226,8 @@ final class FeatureWorkspaceService
      */
     private function canonicalFeatures(): array
     {
-        $root = $this->paths->join('Features');
+        $rootName = $this->canonicalRootName();
+        $root = $this->paths->join($rootName);
         if (!is_dir($root)) {
             return [];
         }
@@ -220,7 +249,7 @@ final class FeatureWorkspaceService
             $rows[] = $this->row(
                 slug: $slug,
                 name: $item,
-                relativePath: 'Features/' . $item,
+                relativePath: $rootName . '/' . $item,
                 isCanonical: true,
             );
         }
@@ -423,5 +452,54 @@ final class FeatureWorkspaceService
         $parts = array_filter(explode('-', $slug), static fn(string $part): bool => $part !== '');
 
         return implode('', array_map(static fn(string $part): string => ucfirst($part), $parts));
+    }
+
+    private function canonicalRootName(): string
+    {
+        if (is_dir($this->paths->join('Modules'))) {
+            return 'Modules';
+        }
+
+        return 'Features';
+    }
+
+    /**
+     * @return list<array{feature:string,path:string,expected_path:string,duplicate:bool}>
+     */
+    private function misplacedFrameworkModules(): array
+    {
+        if (!is_dir($this->paths->join('Modules'))) {
+            return [];
+        }
+
+        $featuresRoot = $this->paths->join('Features');
+        if (!is_dir($featuresRoot)) {
+            return [];
+        }
+
+        $rows = [];
+        foreach (scandir($featuresRoot) ?: [] as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $featurePath = $featuresRoot . '/' . $item;
+            if (!is_dir($featurePath) || preg_match('/^[A-Z][A-Za-z0-9]*$/', $item) !== 1) {
+                continue;
+            }
+
+            $slug = FeatureNaming::canonical(strtolower((string) preg_replace('/(?<!^)[A-Z]/', '-$0', $item)));
+            $expected = 'Modules/' . $item;
+            $rows[] = [
+                'feature' => $slug,
+                'path' => 'Features/' . $item,
+                'expected_path' => $expected,
+                'duplicate' => is_dir($this->paths->join($expected)),
+            ];
+        }
+
+        usort($rows, static fn(array $a, array $b): int => strcmp($a['path'], $b['path']));
+
+        return $rows;
     }
 }

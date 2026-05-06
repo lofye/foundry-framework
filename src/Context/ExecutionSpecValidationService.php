@@ -14,6 +14,8 @@ final class ExecutionSpecValidationService
     private const IGNORED_ROOT_FILES = [
         'docs/features/README.md',
         'docs/features/implementation-log.md',
+        'Modules/README.md',
+        'Modules/implementation.log',
         'Features/README.md',
         'Features/implementation.log',
     ];
@@ -53,7 +55,7 @@ final class ExecutionSpecValidationService
                 $violations[] = $this->violation(
                     'EXECUTION_SPEC_INVALID_DIRECTORY',
                     $relativePath,
-                    'Execution specs must live at docs/features/<feature>/specs/<id>-<slug>.md or docs/features/<feature>/specs/drafts/<id>-<slug>.md.',
+                    'Execution specs must live at Modules/<Module>/specs/<id>-<slug>.md, Features/<Feature>/specs/<id>-<slug>.md, or docs/features/<feature>/specs/<id>-<slug>.md (including drafts).',
                 );
 
                 continue;
@@ -137,7 +139,7 @@ final class ExecutionSpecValidationService
 
                 $violations[] = $this->violation(
                     'FEATURE_DUPLICATE_CANONICAL_AND_LEGACY',
-                    $canonicalPaths[0] ?? ('Features/' . $name . '.md'),
+                    $canonicalPaths[0] ?? ('Modules/' . $name . '.md'),
                     'Execution spec exists in both canonical and legacy feature workspaces.',
                     [
                         'feature' => $feature,
@@ -224,7 +226,7 @@ final class ExecutionSpecValidationService
                 $loggedContinuity[(string) $matches['feature']][] = [
                     'id' => $parsedName['id'],
                     'segments' => $parsedName['segments'],
-                    'path' => 'docs/features/implementation-log.md',
+                    'path' => $logPath,
                 ];
             }
 
@@ -256,7 +258,7 @@ final class ExecutionSpecValidationService
                 $violations[] = $this->violation(
                     'EXECUTION_SPEC_PLAN_INVALID_DIRECTORY',
                     $relativePath,
-                    'Implementation plans must live at docs/features/<feature>/plans/<id>-<slug>.md.',
+                    'Implementation plans must live at Modules/<Module>/plans/<id>-<slug>.md, Features/<Feature>/plans/<id>-<slug>.md, or docs/features/<feature>/plans/<id>-<slug>.md.',
                 );
                 continue;
             }
@@ -389,6 +391,9 @@ final class ExecutionSpecValidationService
     {
         $files = [];
         foreach ([
+            'Modules/*/specs/*.md',
+            'Modules/*/specs/drafts/*.md',
+            'Modules/*/specs/*/*.md',
             'Features/*/specs/*.md',
             'Features/*/specs/drafts/*.md',
             'Features/*/specs/*/*.md',
@@ -429,6 +434,8 @@ final class ExecutionSpecValidationService
         $files = [];
 
         foreach ([
+            'Modules/*/plans/*.md',
+            'Modules/*/plans/*/*.md',
             'Features/*/plans/*.md',
             'Features/*/plans/*/*.md',
             'docs/features/*/plans/*.md',
@@ -465,9 +472,14 @@ final class ExecutionSpecValidationService
         $entries = [];
         $candidatePaths = [$relativePath];
 
-        if ($relativePath === 'Features/implementation.log') {
+        if ($relativePath === 'Modules/implementation.log') {
+            $candidatePaths[] = 'Features/implementation.log';
+            $candidatePaths[] = 'docs/features/implementation-log.md';
+        } elseif ($relativePath === 'Features/implementation.log') {
+            $candidatePaths[] = 'Modules/implementation.log';
             $candidatePaths[] = 'docs/features/implementation-log.md';
         } elseif ($relativePath === 'docs/features/implementation-log.md') {
+            $candidatePaths[] = 'Modules/implementation.log';
             $candidatePaths[] = 'Features/implementation.log';
         }
 
@@ -517,6 +529,24 @@ final class ExecutionSpecValidationService
      */
     private function classifyPlacement(string $relativePath): ?array
     {
+        if (preg_match('#^Modules/(?<feature_dir>[A-Z][A-Za-z0-9]*)/specs/(?<name>[^/]+)\.md$#', $relativePath, $matches) === 1) {
+            return [
+                'feature' => $this->slugFromPascal((string) $matches['feature_dir']),
+                'status' => 'active',
+                'name' => (string) $matches['name'],
+                'workspace' => 'canonical',
+            ];
+        }
+
+        if (preg_match('#^Modules/(?<feature_dir>[A-Z][A-Za-z0-9]*)/specs/drafts/(?<name>[^/]+)\.md$#', $relativePath, $matches) === 1) {
+            return [
+                'feature' => $this->slugFromPascal((string) $matches['feature_dir']),
+                'status' => 'draft',
+                'name' => (string) $matches['name'],
+                'workspace' => 'canonical',
+            ];
+        }
+
         if (preg_match('#^Features/(?<feature_dir>[A-Z][A-Za-z0-9]*)/specs/(?<name>[^/]+)\.md$#', $relativePath, $matches) === 1) {
             return [
                 'feature' => $this->slugFromPascal((string) $matches['feature_dir']),
@@ -561,6 +591,13 @@ final class ExecutionSpecValidationService
      */
     private function classifyPlanPlacement(string $relativePath): ?array
     {
+        if (preg_match('#^Modules/(?<feature_dir>[A-Z][A-Za-z0-9]*)/plans/(?<name>[^/]+)\.md$#', $relativePath, $matches) === 1) {
+            return [
+                'feature' => $this->slugFromPascal((string) $matches['feature_dir']),
+                'name' => (string) $matches['name'],
+            ];
+        }
+
         if (preg_match('#^Features/(?<feature_dir>[A-Z][A-Za-z0-9]*)/plans/(?<name>[^/]+)\.md$#', $relativePath, $matches) === 1) {
             return [
                 'feature' => $this->slugFromPascal((string) $matches['feature_dir']),
@@ -580,6 +617,10 @@ final class ExecutionSpecValidationService
 
     private function planFeatureHint(string $relativePath): string
     {
+        if (preg_match('#^Modules/(?<feature_dir>[A-Z][A-Za-z0-9]*)/#', $relativePath, $matches) === 1) {
+            return $this->slugFromPascal((string) $matches['feature_dir']);
+        }
+
         if (preg_match('#^Features/(?<feature_dir>[A-Z][A-Za-z0-9]*)/#', $relativePath, $matches) === 1) {
             return $this->slugFromPascal((string) $matches['feature_dir']);
         }
@@ -669,10 +710,17 @@ final class ExecutionSpecValidationService
 
     private function implementationLogPath(): string
     {
+        $modulesCanonical = $this->paths->join('Modules/implementation.log');
         $canonical = $this->paths->join('Features/implementation.log');
         $legacy = $this->paths->join('docs/features/implementation-log.md');
+        $modulesRoot = $this->paths->join('Modules');
+        $featuresRoot = $this->paths->join('Features');
 
-        if (is_file($canonical) || is_dir($this->paths->join('Features'))) {
+        if (is_file($modulesCanonical) || is_dir($modulesRoot)) {
+            return 'Modules/implementation.log';
+        }
+
+        if (is_file($canonical) || is_dir($featuresRoot)) {
             return 'Features/implementation.log';
         }
 
@@ -680,11 +728,16 @@ final class ExecutionSpecValidationService
             return 'docs/features/implementation-log.md';
         }
 
-        return 'Features/implementation.log';
+        return 'Modules/implementation.log';
     }
 
     private function canonicalPlanPath(string $feature, string $name): string
     {
+        $modulesCanonical = 'Modules/' . $this->pascalFromSlug($feature) . '/plans/' . $name . '.md';
+        if (is_file($this->paths->join($modulesCanonical)) || is_dir($this->paths->join('Modules/' . $this->pascalFromSlug($feature)))) {
+            return $modulesCanonical;
+        }
+
         $canonical = 'Features/' . $this->pascalFromSlug($feature) . '/plans/' . $name . '.md';
         if (is_file($this->paths->join($canonical)) || is_dir($this->paths->join('Features/' . $this->pascalFromSlug($feature)))) {
             return $canonical;

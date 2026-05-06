@@ -135,6 +135,26 @@ MD . "\n", $this->logContents());
         $this->assertFileExists($this->project->root . '/Features/implementation.log');
     }
 
+    public function test_modules_workspace_records_to_modules_implementation_log(): void
+    {
+        mkdir($this->project->root . '/Modules/ExecutionSpecSystem/specs', 0777, true);
+        $path = $this->project->root . '/Modules/ExecutionSpecSystem/specs/004-spec-auto-log-on-implementation.md';
+        file_put_contents($path, '# Execution Spec: 004-spec-auto-log-on-implementation');
+
+        $action = $this->serviceAt('2026-04-14 16:05:06 -0400')->recordIfEligible(
+            new ExecutionSpec(
+                specId: 'execution-spec-system/004-spec-auto-log-on-implementation',
+                feature: 'execution-spec-system',
+                path: 'Modules/ExecutionSpecSystem/specs/004-spec-auto-log-on-implementation.md',
+                name: '004-spec-auto-log-on-implementation',
+                id: '004',
+            ),
+        );
+
+        $this->assertSame('Appended implementation log entry: Modules/implementation.log', $action);
+        $this->assertFileExists($this->project->root . '/Modules/implementation.log');
+    }
+
     private function serviceAt(string $timestamp): ExecutionSpecImplementationLogService
     {
         return new ExecutionSpecImplementationLogService(

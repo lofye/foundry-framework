@@ -108,3 +108,43 @@ Timestamp: 2026-05-03T23:35:00-04:00
 - Goals
 - Expected Behavior
 - Acceptance Criteria
+
+### Decision: migrate framework governance workspace from Features to Modules with deterministic compatibility guards
+
+Timestamp: 2026-05-06T12:05:00-04:00
+
+**Context**
+
+- Execution spec `003-separate-framework-modules-from-application-features` requires framework-owned governance directories to move from `Features/` to `Modules/`.
+- Framework context/spec/plan/log resolution and validation services still treated `Features/` as the canonical root for framework governance.
+
+**Decision**
+
+- Move framework governance directories and implementation log to `Modules/*` and `Modules/implementation.log`.
+- Update context/spec/planning resolution, validation, and feature verification services to discover canonical framework module governance from `Modules/*`.
+- Keep deterministic compatibility for legacy `Features/*` and `docs/features/*` paths while emitting deterministic violations for misplaced framework modules under `Features/` when `Modules/` is present.
+
+**Reasoning**
+
+- Separating framework module governance from application feature ownership removes namespace ambiguity and aligns with the module-vs-feature contract.
+- Deterministic compatibility reduces migration risk while preserving strict failure semantics for incorrect canonical placement.
+
+**Alternatives Considered**
+
+- Keep `Features/` as canonical and defer migration.
+- Hard-remove all legacy compatibility in the same step.
+
+**Impact**
+
+- Framework governance canonical root is now `Modules/`.
+- Validation and resolver surfaces now support `Modules/*` canonical placement and canonical `Modules/implementation.log` discovery.
+- Misplaced framework module directories remaining under `Features/` become deterministic verification failures when `Modules/` exists.
+
+**Spec Reference**
+
+- Core Rule
+- Required Layout
+- Migration Requirements
+- Resolver And Validator Updates
+- Legacy Compatibility Rule
+- Deterministic Error Requirements

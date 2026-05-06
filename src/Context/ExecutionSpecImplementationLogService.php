@@ -118,8 +118,16 @@ final class ExecutionSpecImplementationLogService
 
     private function relativeLogPath(?ExecutionSpec $executionSpec = null): string
     {
+        if ($executionSpec !== null && str_starts_with($executionSpec->path, 'Modules/')) {
+            return 'Modules/implementation.log';
+        }
+
         if ($executionSpec !== null && str_starts_with($executionSpec->path, 'Features/')) {
             return 'Features/implementation.log';
+        }
+
+        if (is_file($this->paths->join('Modules/implementation.log')) || is_dir($this->paths->join('Modules'))) {
+            return 'Modules/implementation.log';
         }
 
         if (is_file($this->paths->join('Features/implementation.log')) || is_dir($this->paths->join('Features'))) {

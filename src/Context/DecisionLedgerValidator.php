@@ -30,11 +30,13 @@ final class DecisionLedgerValidator
 
         if (!$this->hasCanonicalPath($filePath, [
             $this->resolver->legacyDecisionsPath($featureName),
+            'Modules/' . $this->pascalFromSlug($featureName) . '/' . $featureName . '.decisions.md',
+            'Features/' . $this->pascalFromSlug($featureName) . '/' . $featureName . '.decisions.md',
             $this->resolver->canonicalDecisionsPath($featureName),
         ])) {
             $issues[] = new ValidationIssue(
                 code: 'CONTEXT_DECISIONS_PATH_NON_CANONICAL',
-                message: sprintf('Decision ledger path must be canonical: docs/features/%1$s/%1$s.decisions.md or Features/%2$s/%1$s.decisions.md.', $featureName, $this->pascalFromSlug($featureName)),
+                message: sprintf('Decision ledger path must be canonical: docs/features/%1$s/%1$s.decisions.md, Features/%2$s/%1$s.decisions.md, or Modules/%2$s/%1$s.decisions.md.', $featureName, $this->pascalFromSlug($featureName)),
                 file_path: $filePath,
             );
         }

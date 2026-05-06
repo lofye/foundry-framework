@@ -394,7 +394,7 @@ MD);
         $this->assertSame('blocked', $result['payload']['status']);
         $this->assertSame('EXECUTION_SPEC_DRAFT_ONLY', $result['payload']['issues'][0]['code']);
         $this->assertContains(
-            'Promote the draft execution spec to docs/features/<feature>/specs/<id>-<slug>.md before implementing it.',
+            'Promote the draft execution spec to an active specs directory under Modules/, Features/, or docs/features/ before implementing it.',
             $result['payload']['required_actions'],
         );
     }
