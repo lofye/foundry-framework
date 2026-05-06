@@ -17,6 +17,10 @@
 - Canonical and legacy duplicate detection reports `FEATURE_DUPLICATE_CANONICAL_AND_LEGACY`.
 - Spec validation supports canonical `Modules/*` specs and plans.
 - Canonical implementation ledger path is recognized as `Modules/implementation.log`.
+- Application feature layout validation enforces executable `Features/<Feature>/src/` and `Features/<Feature>/tests/` ownership by default.
+- Optional `specs/`, `plans/`, and `docs/` directories are validated when present and may be omitted when absent.
+- Application feature legacy ownership leaks are reported deterministically (`app/features/<slug>` runtime artifacts and `docs/features/<slug>` context files).
+- Framework module duplication under both `Modules/<Module>/` and `Features/<Module>/` is reported deterministically without misclassifying application features that exist only under `Features/`.
 
 ## Open Questions
 

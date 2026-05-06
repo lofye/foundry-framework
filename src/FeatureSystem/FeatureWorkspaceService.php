@@ -205,6 +205,10 @@ final class FeatureWorkspaceService
             }
         }
 
+        foreach ($this->applicationFeatureLayoutViolations() as $violation) {
+            $violations[] = $violation;
+        }
+
         $warnings = [];
         if (!$enforced) {
             $warnings[] = [
@@ -488,8 +492,12 @@ final class FeatureWorkspaceService
                 continue;
             }
 
-            $slug = FeatureNaming::canonical(strtolower((string) preg_replace('/(?<!^)[A-Z]/', '-$0', $item)));
             $expected = 'Modules/' . $item;
+            if (!is_dir($this->paths->join($expected))) {
+                continue;
+            }
+
+            $slug = FeatureNaming::canonical(strtolower((string) preg_replace('/(?<!^)[A-Z]/', '-$0', $item)));
             $rows[] = [
                 'feature' => $slug,
                 'path' => 'Features/' . $item,
@@ -501,5 +509,195 @@ final class FeatureWorkspaceService
         usort($rows, static fn(array $a, array $b): int => strcmp($a['path'], $b['path']));
 
         return $rows;
+    }
+
+    /**
+     * @return list<array<string,mixed>>
+     */
+    private function applicationFeatureLayoutViolations(): array
+    {
+        $violations = [];
+
+        foreach ($this->applicationFeatures() as $feature) {
+            $slug = (string) ($feature['slug'] ?? '');
+            $path = (string) ($feature['path'] ?? '');
+            $name = (string) ($feature['name'] ?? '');
+            $directories = (array) ($feature['directories'] ?? []);
+            $isExecutable = $this->isExecutableApplicationFeature($path);
+
+            if (!(bool) ($feature['has_context'] ?? false)) {
+                $violations[] = [
+                    'code' => 'APP_FEATURE_MISSING_CONTEXT',
+                    'feature' => $slug,
+                    'path' => $path,
+                    'message' => 'Application feature is missing canonical context files under its feature root.',
+                ];
+            }
+
+            if ($isExecutable && !(bool) ($feature['has_src'] ?? false)) {
+                $violations[] = [
+                    'code' => 'APP_FEATURE_RUNTIME_SRC_MISSING',
+                    'feature' => $slug,
+                    'path' => (string) ($directories['src'] ?? ($path . '/src')),
+                    'message' => 'Executable application feature must contain Features/<Feature>/src/.',
+                    'details' => [
+                        'expected_path' => (string) ($directories['src'] ?? ($path . '/src')),
+                    ],
+                ];
+            }
+
+            if ($isExecutable && !(bool) ($feature['has_tests'] ?? false)) {
+                $violations[] = [
+                    'code' => 'APP_FEATURE_RUNTIME_TESTS_MISSING',
+                    'feature' => $slug,
+                    'path' => (string) ($directories['tests'] ?? ($path . '/tests')),
+                    'message' => 'Executable application feature must contain Features/<Feature>/tests/.',
+                    'details' => [
+                        'expected_path' => (string) ($directories['tests'] ?? ($path . '/tests')),
+                    ],
+                ];
+            }
+
+            foreach (['specs', 'plans', 'docs'] as $kind) {
+                $directoryPath = (string) ($directories[$kind] ?? '');
+                if ($directoryPath === '') {
+                    continue;
+                }
+
+                $absoluteDirectoryPath = $this->paths->join($directoryPath);
+                if (file_exists($absoluteDirectoryPath) && !is_dir($absoluteDirectoryPath)) {
+                    $violations[] = [
+                        'code' => 'APP_FEATURE_' . strtoupper($kind) . '_PATH_INVALID',
+                        'feature' => $slug,
+                        'path' => $directoryPath,
+                        'message' => sprintf('Application feature %s path must be a directory when present.', $kind),
+                    ];
+                }
+            }
+
+            $legacyBase = 'app/features/' . $slug;
+            if ($this->directoryContainsFiles($legacyBase)) {
+                $violations[] = [
+                    'code' => 'APP_FEATURE_OWNED_SOURCE_OUTSIDE_FEATURE_ROOT',
+                    'feature' => $slug,
+                    'path' => $legacyBase,
+                    'message' => 'Application feature-owned runtime artifacts must be localized under Features/<Feature>/src and Features/<Feature>/tests.',
+                    'details' => [
+                        'expected_path' => 'Features/' . $name,
+                    ],
+                ];
+            }
+
+            $legacyContextBase = 'docs/features/' . $slug;
+            if ($this->legacyContextFilesExist($legacyContextBase)) {
+                $violations[] = [
+                    'code' => 'APP_FEATURE_LEGACY_CONTEXT_LOCATION',
+                    'feature' => $slug,
+                    'path' => $legacyContextBase,
+                    'message' => 'Application feature context files must live under Features/<Feature>/ at the feature root.',
+                    'details' => [
+                        'expected_path' => $path,
+                    ],
+                ];
+            }
+        }
+
+        return $violations;
+    }
+
+    /**
+     * @return list<array<string,mixed>>
+     */
+    private function applicationFeatures(): array
+    {
+        $root = $this->paths->join('Features');
+        if (!is_dir($root)) {
+            return [];
+        }
+
+        $rows = [];
+        foreach (scandir($root) ?: [] as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $path = $root . '/' . $item;
+            if (!is_dir($path) || preg_match('/^[A-Z][A-Za-z0-9]*$/', $item) !== 1) {
+                continue;
+            }
+
+            if (is_dir($this->paths->join('Modules/' . $item))) {
+                continue;
+            }
+
+            $slug = $this->detectSlug($path, $item);
+            $rows[] = $this->row(
+                slug: $slug,
+                name: $item,
+                relativePath: 'Features/' . $item,
+                isCanonical: true,
+            );
+        }
+
+        usort($rows, static fn(array $a, array $b): int => strcmp((string) ($a['path'] ?? ''), (string) ($b['path'] ?? '')));
+
+        return $rows;
+    }
+
+    private function isExecutableApplicationFeature(string $featurePath): bool
+    {
+        $manifestPath = $this->paths->join($featurePath . '/feature.json');
+        if (!is_file($manifestPath)) {
+            return true;
+        }
+
+        $decoded = json_decode((string) file_get_contents($manifestPath), true);
+        if (!is_array($decoded)) {
+            return true;
+        }
+
+        if (array_key_exists('executable', $decoded)) {
+            return (bool) $decoded['executable'];
+        }
+
+        return true;
+    }
+
+    private function directoryContainsFiles(string $relativePath): bool
+    {
+        $absolutePath = $this->paths->join($relativePath);
+        if (!is_dir($absolutePath)) {
+            return false;
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($absolutePath, \FilesystemIterator::SKIP_DOTS),
+        );
+
+        foreach ($iterator as $fileInfo) {
+            if ($fileInfo instanceof \SplFileInfo && $fileInfo->isFile()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function legacyContextFilesExist(string $legacyContextBase): bool
+    {
+        $slug = basename($legacyContextBase);
+        $legacyPaths = [
+            $legacyContextBase . '/' . $slug . '.spec.md',
+            $legacyContextBase . '/' . $slug . '.md',
+            $legacyContextBase . '/' . $slug . '.decisions.md',
+        ];
+
+        foreach ($legacyPaths as $legacyPath) {
+            if (is_file($this->paths->join($legacyPath))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

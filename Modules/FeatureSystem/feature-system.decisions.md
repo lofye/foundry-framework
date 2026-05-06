@@ -148,3 +148,49 @@ Timestamp: 2026-05-06T12:05:00-04:00
 - Resolver And Validator Updates
 - Legacy Compatibility Rule
 - Deterministic Error Requirements
+
+### Decision: enforce application feature-local runtime layout under Features root
+
+Timestamp: 2026-05-06T13:52:12-04:00
+
+**Context**
+
+- Execution spec `004-enforce-application-feature-local-runtime-layout` requires `Features/<Feature>/` to be reserved for application/business features with deterministic local runtime ownership.
+- Existing verification behavior still allowed executable features with missing runtime/test directories and did not deterministically detect some legacy ownership leaks.
+
+**Decision**
+
+- Enforce executable application feature layout under `Features/<Feature>/` by default:
+  - require canonical root context files
+  - require `src/` and `tests/` for executable features
+  - permit omitted `specs/`, `plans/`, and `docs/` only when absent, and fail when present paths are non-directories
+- Allow planning-only features to omit `src/` and `tests/` only with explicit `feature.json` override (`"executable": false`).
+- Reject attributable legacy application ownership leaks from `app/features/<slug>` runtime files and `docs/features/<slug>` context files.
+- Treat `Features/<Name>` entries as framework-module duplication violations only when a matching `Modules/<Name>` directory exists, avoiding misclassification of application features.
+
+**Reasoning**
+
+- Enforcing deterministic feature-local runtime ownership keeps application behavior, tests, and context together for LLM-safe bounded edits.
+- Explicit non-executable opt-out preserves strict defaults while supporting planning-only artifacts without hidden conventions.
+- Duplicate-only module misplacement detection reduces false positives after framework module migration to `Modules/*`.
+
+**Alternatives Considered**
+
+- Continue allowing executable features without `src/`/`tests/` and rely on soft guidance.
+- Require placeholder `specs/`/`plans/`/`docs/` directories even when empty.
+- Flag all PascalCase `Features/*` directories as misplaced framework modules when `Modules/` exists.
+
+**Impact**
+
+- `verify features --json` now emits deterministic application-layout violations and legacy ownership diagnostics.
+- Scaffold verification coverage now explicitly guards against shipping framework module directories under app `Features/`.
+- Feature-system tests now encode the new runtime-localization contract and deterministic failure modes.
+
+**Spec Reference**
+
+- Core Rule
+- Required Application Feature Layout
+- Validator Requirements
+- Scaffold Requirements
+- CLI Requirements
+- Tests Required

@@ -311,3 +311,8 @@
 
 ## 2026-05-06 12:08:00 -0400
 - spec: feature-system/003-separate-framework-modules-from-application-features.md
+
+## 2026-05-06 13:52:12 -0400
+- spec: feature-system/004-enforce-application-feature-local-runtime-layout.md
+- note: Enforced deterministic application feature layout checks in `verify features` so executable features require localized `Features/<Feature>/src` and `Features/<Feature>/tests`, optional `specs/plans/docs` paths validate when present, and explicit `feature.json` non-executable features can omit runtime/test directories.
+- note: Added deterministic violations for attributable legacy ownership leaks (`app/features/<slug>` runtime artifacts and `docs/features/<slug>` context files) and refined framework-module misplacement detection to avoid misclassifying application features unless matching `Modules/<Name>` directories exist.

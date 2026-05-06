@@ -84,6 +84,10 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertFileExists($target . '/docs/generated/features.md');
         $this->assertFileExists($target . '/docs/generated/cli-reference.md');
         $this->assertFileExists($target . '/docs/inspect-ui/index.html');
+        $this->assertDirectoryDoesNotExist($target . '/Features/StateStore');
+        $this->assertDirectoryDoesNotExist($target . '/Features/FeatureSystem');
+        $this->assertDirectoryDoesNotExist($target . '/Features/ContextPersistence');
+        $this->assertDirectoryDoesNotExist($target . '/Features/GenerateEngine');
         $gitignore = file_get_contents($target . '/.gitignore');
         $this->assertIsString($gitignore);
         $this->assertStringContainsString('/.foundry/state/', $gitignore);

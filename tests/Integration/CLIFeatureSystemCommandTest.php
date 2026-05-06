@@ -71,6 +71,8 @@ final class CLIFeatureSystemCommandTest extends TestCase
     public function test_verify_features_allows_feature_without_optional_subdirectories(): void
     {
         $this->writeContext('Features/EventSystem', 'event-system');
+        mkdir($this->project->root . '/Features/EventSystem/src', 0777, true);
+        mkdir($this->project->root . '/Features/EventSystem/tests', 0777, true);
 
         $result = $this->runCommand(['foundry', 'verify', 'features', '--json']);
 
@@ -116,13 +118,14 @@ final class CLIFeatureSystemCommandTest extends TestCase
     public function test_verify_features_reports_framework_module_misplaced_in_features_root_when_modules_root_exists(): void
     {
         mkdir($this->project->root . '/Modules', 0777, true);
+        $this->writeContext('Modules/StateStore', 'state-store');
         $this->writeContext('Features/StateStore', 'state-store');
 
         $result = $this->runCommand(['foundry', 'verify', 'features', '--json']);
 
         $this->assertSame(1, $result['status']);
         $this->assertSame('failed', $result['payload']['status']);
-        $this->assertSame('FRAMEWORK_MODULE_IN_FEATURES_ROOT', $result['payload']['violations'][0]['code']);
+        $this->assertSame('FRAMEWORK_MODULE_DUPLICATE_LOCATION', $result['payload']['violations'][0]['code']);
         $this->assertSame('Features/StateStore', $result['payload']['violations'][0]['path']);
         $this->assertSame('Modules/StateStore', $result['payload']['violations'][0]['details']['expected_path']);
     }

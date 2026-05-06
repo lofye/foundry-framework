@@ -96,6 +96,8 @@ final class FeatureWorkspaceServiceTest extends TestCase
         $this->writeFile('Features/EventSystem/event-system.spec.md', '# Feature Spec: event-system');
         $this->writeFile('Features/EventSystem/event-system.md', '# Feature: event-system');
         $this->writeFile('Features/EventSystem/event-system.decisions.md', $this->minimalDecision());
+        mkdir($this->project->root . '/Features/EventSystem/src', 0777, true);
+        mkdir($this->project->root . '/Features/EventSystem/tests', 0777, true);
 
         $payload = $this->service()->verify();
         $list = $this->service()->list();
@@ -103,8 +105,8 @@ final class FeatureWorkspaceServiceTest extends TestCase
         $this->assertSame('ok', $payload['status']);
         $this->assertSame([], $payload['violations']);
         $this->assertFalse($list['features'][0]['has_specs']);
-        $this->assertFalse($list['features'][0]['has_src']);
-        $this->assertFalse($list['features'][0]['has_tests']);
+        $this->assertTrue($list['features'][0]['has_src']);
+        $this->assertTrue($list['features'][0]['has_tests']);
     }
 
     public function test_list_prefers_modules_workspace_when_present(): void
@@ -120,7 +122,9 @@ final class FeatureWorkspaceServiceTest extends TestCase
 
     public function test_verify_reports_framework_module_misplaced_under_features_root_when_modules_root_exists(): void
     {
-        mkdir($this->project->root . '/Modules', 0777, true);
+        $this->writeFile('Modules/StateStore/state-store.spec.md', '# Feature Spec: state-store');
+        $this->writeFile('Modules/StateStore/state-store.md', '# Feature: state-store');
+        $this->writeFile('Modules/StateStore/state-store.decisions.md', $this->minimalDecision());
         $this->writeFile('Features/StateStore/state-store.spec.md', '# Feature Spec: state-store');
         $this->writeFile('Features/StateStore/state-store.md', '# Feature: state-store');
         $this->writeFile('Features/StateStore/state-store.decisions.md', $this->minimalDecision());
@@ -128,7 +132,7 @@ final class FeatureWorkspaceServiceTest extends TestCase
         $payload = $this->service()->verify();
 
         $this->assertSame('failed', $payload['status']);
-        $this->assertSame('FRAMEWORK_MODULE_IN_FEATURES_ROOT', $payload['violations'][0]['code']);
+        $this->assertSame('FRAMEWORK_MODULE_DUPLICATE_LOCATION', $payload['violations'][0]['code']);
         $this->assertSame('Features/StateStore', $payload['violations'][0]['path']);
         $this->assertSame('Modules/StateStore', $payload['violations'][0]['details']['expected_path']);
     }
@@ -147,6 +151,117 @@ final class FeatureWorkspaceServiceTest extends TestCase
         $this->assertSame('failed', $payload['status']);
         $codes = array_column($payload['violations'], 'code');
         $this->assertContains('FRAMEWORK_MODULE_DUPLICATE_LOCATION', $codes);
+    }
+
+    public function test_verify_accepts_valid_application_feature_layout_under_features_root(): void
+    {
+        mkdir($this->project->root . '/Modules', 0777, true);
+        $this->writeFile('Features/Blog/blog.spec.md', '# Feature Spec: blog');
+        $this->writeFile('Features/Blog/blog.md', '# Feature: blog');
+        $this->writeFile('Features/Blog/blog.decisions.md', $this->minimalDecision());
+        mkdir($this->project->root . '/Features/Blog/src', 0777, true);
+        mkdir($this->project->root . '/Features/Blog/tests', 0777, true);
+        mkdir($this->project->root . '/Features/Blog/specs', 0777, true);
+        mkdir($this->project->root . '/Features/Blog/plans', 0777, true);
+        mkdir($this->project->root . '/Features/Blog/docs', 0777, true);
+
+        $payload = $this->service()->verify();
+
+        $this->assertSame('ok', $payload['status']);
+    }
+
+    public function test_verify_rejects_executable_application_feature_without_src_directory(): void
+    {
+        mkdir($this->project->root . '/Modules', 0777, true);
+        $this->writeFile('Features/Blog/blog.spec.md', '# Feature Spec: blog');
+        $this->writeFile('Features/Blog/blog.md', '# Feature: blog');
+        $this->writeFile('Features/Blog/blog.decisions.md', $this->minimalDecision());
+        mkdir($this->project->root . '/Features/Blog/tests', 0777, true);
+
+        $payload = $this->service()->verify();
+
+        $this->assertSame('failed', $payload['status']);
+        $codes = array_column($payload['violations'], 'code');
+        $this->assertContains('APP_FEATURE_RUNTIME_SRC_MISSING', $codes);
+    }
+
+    public function test_verify_rejects_executable_application_feature_without_tests_directory(): void
+    {
+        mkdir($this->project->root . '/Modules', 0777, true);
+        $this->writeFile('Features/Blog/blog.spec.md', '# Feature Spec: blog');
+        $this->writeFile('Features/Blog/blog.md', '# Feature: blog');
+        $this->writeFile('Features/Blog/blog.decisions.md', $this->minimalDecision());
+        mkdir($this->project->root . '/Features/Blog/src', 0777, true);
+
+        $payload = $this->service()->verify();
+
+        $this->assertSame('failed', $payload['status']);
+        $codes = array_column($payload['violations'], 'code');
+        $this->assertContains('APP_FEATURE_RUNTIME_TESTS_MISSING', $codes);
+    }
+
+    public function test_verify_rejects_feature_owned_legacy_app_feature_source_path_when_attributable(): void
+    {
+        mkdir($this->project->root . '/Modules', 0777, true);
+        $this->writeFile('Features/Blog/blog.spec.md', '# Feature Spec: blog');
+        $this->writeFile('Features/Blog/blog.md', '# Feature: blog');
+        $this->writeFile('Features/Blog/blog.decisions.md', $this->minimalDecision());
+        mkdir($this->project->root . '/Features/Blog/src', 0777, true);
+        mkdir($this->project->root . '/Features/Blog/tests', 0777, true);
+        $this->writeFile('app/features/blog/action.php', "<?php\n");
+
+        $payload = $this->service()->verify();
+
+        $this->assertSame('failed', $payload['status']);
+        $codes = array_column($payload['violations'], 'code');
+        $this->assertContains('APP_FEATURE_OWNED_SOURCE_OUTSIDE_FEATURE_ROOT', $codes);
+    }
+
+    public function test_verify_allows_non_executable_application_feature_without_src_and_tests_when_explicit(): void
+    {
+        mkdir($this->project->root . '/Modules', 0777, true);
+        $this->writeFile('Features/Research/research.spec.md', '# Feature Spec: research');
+        $this->writeFile('Features/Research/research.md', '# Feature: research');
+        $this->writeFile('Features/Research/research.decisions.md', $this->minimalDecision());
+        $this->writeFile('Features/Research/feature.json', json_encode(['executable' => false], JSON_THROW_ON_ERROR));
+
+        $payload = $this->service()->verify();
+
+        $this->assertSame('ok', $payload['status']);
+    }
+
+    public function test_verify_rejects_optional_specs_path_when_present_as_file(): void
+    {
+        mkdir($this->project->root . '/Modules', 0777, true);
+        $this->writeFile('Features/Blog/blog.spec.md', '# Feature Spec: blog');
+        $this->writeFile('Features/Blog/blog.md', '# Feature: blog');
+        $this->writeFile('Features/Blog/blog.decisions.md', $this->minimalDecision());
+        mkdir($this->project->root . '/Features/Blog/src', 0777, true);
+        mkdir($this->project->root . '/Features/Blog/tests', 0777, true);
+        $this->writeFile('Features/Blog/specs', "not-a-directory\n");
+
+        $payload = $this->service()->verify();
+
+        $this->assertSame('failed', $payload['status']);
+        $codes = array_column($payload['violations'], 'code');
+        $this->assertContains('APP_FEATURE_SPECS_PATH_INVALID', $codes);
+    }
+
+    public function test_verify_rejects_legacy_feature_context_files_for_application_feature(): void
+    {
+        mkdir($this->project->root . '/Modules', 0777, true);
+        $this->writeFile('Features/Blog/blog.spec.md', '# Feature Spec: blog');
+        $this->writeFile('Features/Blog/blog.md', '# Feature: blog');
+        $this->writeFile('Features/Blog/blog.decisions.md', $this->minimalDecision());
+        mkdir($this->project->root . '/Features/Blog/src', 0777, true);
+        mkdir($this->project->root . '/Features/Blog/tests', 0777, true);
+        $this->writeFile('docs/features/blog/blog.spec.md', '# Feature Spec: blog');
+
+        $payload = $this->service()->verify();
+
+        $this->assertSame('failed', $payload['status']);
+        $codes = array_column($payload['violations'], 'code');
+        $this->assertContains('APP_FEATURE_LEGACY_CONTEXT_LOCATION', $codes);
     }
 
     private function service(): FeatureWorkspaceService
