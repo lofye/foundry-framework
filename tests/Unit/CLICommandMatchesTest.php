@@ -41,6 +41,7 @@ use Foundry\CLI\Commands\InspectNotificationCommand;
 use Foundry\CLI\Commands\InspectPlatformCommand;
 use Foundry\CLI\Commands\InspectResourceCommand;
 use Foundry\CLI\Commands\InspectRouteCommand;
+use Foundry\CLI\Commands\InspectStateStoreCommand;
 use Foundry\CLI\Commands\LicenseCommand;
 use Foundry\CLI\Commands\MigrateDefinitionsCommand;
 use Foundry\CLI\Commands\ObserveCommand;
@@ -72,6 +73,7 @@ use Foundry\CLI\Commands\VerifyIntegrationCommand;
 use Foundry\CLI\Commands\VerifyPipelineCommand;
 use Foundry\CLI\Commands\VerifyPlatformCommand;
 use Foundry\CLI\Commands\VerifyResourceCommand;
+use Foundry\CLI\Commands\VerifyStateStoreCommand;
 use PHPUnit\Framework\TestCase;
 
 final class CLICommandMatchesTest extends TestCase
@@ -80,6 +82,7 @@ final class CLICommandMatchesTest extends TestCase
     {
         $this->assertTrue((new InspectFeatureCommand())->matches(['inspect', 'feature', 'x']));
         $this->assertTrue((new InspectContextCommand())->matches(['inspect', 'context', 'x']));
+        $this->assertTrue((new InspectStateStoreCommand())->matches(['inspect', 'state-store']));
         $this->assertTrue((new InspectNotificationCommand())->matches(['inspect', 'notification', 'welcome_email']));
         $this->assertTrue((new InspectApiCommand())->matches(['inspect', 'api', 'posts']));
         $this->assertTrue((new InspectResourceCommand())->matches(['inspect', 'resource', 'posts']));
@@ -192,6 +195,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new VerifyFeatureCommand())->matches(['verify', 'feature', 'x']));
         $this->assertTrue((new VerifyFeaturesCommand())->matches(['verify', 'features']));
         $this->assertTrue((new VerifyContextCommand())->matches(['verify', 'context', '--feature=x']));
+        $this->assertTrue((new VerifyStateStoreCommand())->matches(['verify', 'state-store']));
         $this->assertTrue((new VerifyResourceCommand())->matches(['verify', 'resource', 'posts']));
         $this->assertTrue((new VerifyIntegrationCommand())->matches(['verify', 'notifications']));
         $this->assertTrue((new VerifyIntegrationCommand())->matches(['verify', 'api']));

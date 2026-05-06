@@ -44,6 +44,7 @@ use Foundry\CLI\Commands\InspectNotificationCommand;
 use Foundry\CLI\Commands\InspectPlatformCommand;
 use Foundry\CLI\Commands\InspectResourceCommand;
 use Foundry\CLI\Commands\InspectRouteCommand;
+use Foundry\CLI\Commands\InspectStateStoreCommand;
 use Foundry\CLI\Commands\LicenseCommand;
 use Foundry\CLI\Commands\McpServeCommand;
 use Foundry\CLI\Commands\MigrateDefinitionsCommand;
@@ -77,6 +78,7 @@ use Foundry\CLI\Commands\VerifyIntegrationCommand;
 use Foundry\CLI\Commands\VerifyPipelineCommand;
 use Foundry\CLI\Commands\VerifyPlatformCommand;
 use Foundry\CLI\Commands\VerifyResourceCommand;
+use Foundry\CLI\Commands\VerifyStateStoreCommand;
 use Foundry\Support\ApiSurfaceRegistry;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Json;
@@ -147,6 +149,7 @@ final class Application
             new InspectResourceCommand(),
             new InspectPlatformCommand(),
             new InspectRouteCommand(),
+            new InspectStateStoreCommand(),
             new InitCommand(),
             new InitAppCommand(),
             new ExamplesCommand(),
@@ -169,6 +172,7 @@ final class Application
             new VerifyFeatureCommand(),
             new VerifyFeaturesCommand(),
             new VerifyContextCommand(),
+            new VerifyStateStoreCommand(),
             new VerifyResourceCommand(),
             new VerifyIntegrationCommand(),
             new VerifyPlatformCommand(),

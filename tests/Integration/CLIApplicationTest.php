@@ -225,6 +225,12 @@ XML);
         );
         $this->assertIsArray($verifyGraph);
         $this->assertSame('Verification', $verifyGraph['category']);
+        $verifyStateStore = array_find(
+            $verifyGroupHelp['payload']['group']['commands']['stable'],
+            static fn(array $row): bool => (string) ($row['signature'] ?? '') === 'verify state-store',
+        );
+        $this->assertIsArray($verifyStateStore);
+        $this->assertSame('Verification', $verifyStateStore['category']);
 
         $generateGroupHelp = $this->runCommand($app, ['foundry', 'help', 'generate', '--json']);
         $this->assertSame(0, $generateGroupHelp['status']);
@@ -408,6 +414,10 @@ XML);
         );
         $this->assertIsArray($helpRow);
         $this->assertSame('Application::helpResult', $helpRow['handler']);
+
+        $inspectStateStoreHelp = $this->runCommand($app, ['foundry', 'help', 'inspect', 'state-store', '--json']);
+        $this->assertSame(0, $inspectStateStoreHelp['status']);
+        $this->assertSame('inspect state-store', $inspectStateStoreHelp['payload']['command']['signature']);
 
         $verifyCliSurface = $this->runCommand($app, ['foundry', 'verify', 'cli-surface', '--json']);
         $this->assertSame(0, $verifyCliSurface['status']);

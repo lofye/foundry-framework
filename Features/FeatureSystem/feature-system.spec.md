@@ -42,3 +42,29 @@ Define canonical feature workspace boundaries under `Features/` with determinist
 ## Assumptions
 
 - Additional migration specs will progressively move more feature-owned code into localized feature directories.
+
+## Framework Modules vs Application Features
+
+Foundry distinguishes between:
+
+### Framework Modules
+- Implemented under `src/*`
+- Organized by technical layer (Context, CLI, State, Quality, etc.)
+- May span multiple capabilities
+- Not required to live under `Features/*/src/`
+
+### Application Features
+- Located under `Features/<Feature>/`
+- Own:
+    - context files (`<feature>.md`, `.spec.md`, `.decisions.md`)
+    - `specs/`
+    - `plans/`
+    - optional `src/` and `docs/`
+- May contain fully localized runtime code
+
+### Rule
+
+Framework Modules are layer-organized.
+Application Features are ownership-organized.
+
+Feature directories DO NOT imply that all runtime code must live within them.

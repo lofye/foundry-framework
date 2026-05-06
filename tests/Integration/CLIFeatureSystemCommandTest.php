@@ -68,6 +68,17 @@ final class CLIFeatureSystemCommandTest extends TestCase
         $this->assertSame('FEATURE_DUPLICATE_CANONICAL_AND_LEGACY', $result['payload']['violations'][0]['code']);
     }
 
+    public function test_verify_features_allows_feature_without_optional_subdirectories(): void
+    {
+        $this->writeContext('Features/EventSystem', 'event-system');
+
+        $result = $this->runCommand(['foundry', 'verify', 'features', '--json']);
+
+        $this->assertSame(0, $result['status']);
+        $this->assertSame('ok', $result['payload']['status']);
+        $this->assertSame([], $result['payload']['violations']);
+    }
+
     public function test_spec_validate_supports_canonical_features_workspace_and_implementation_log(): void
     {
         $this->writeFile(

@@ -37,6 +37,7 @@ use Foundry\Generation\UploadsGenerator;
 use Foundry\Generation\WorkflowGenerator;
 use Foundry\Notifications\NotificationPreviewer;
 use Foundry\Quality\CloverCoverageVerifier;
+use Foundry\State\SqliteStateStore;
 use Foundry\Support\ApiSurfaceRegistry;
 use Foundry\Support\Paths;
 use Foundry\Upgrade\UpgradeAnalyzer;
@@ -69,6 +70,7 @@ final class CommandContext
     private ?CodemodEngine $codemodEngine = null;
     private ?ApiSurfaceRegistry $apiSurfaceRegistry = null;
     private ?UpgradeAnalyzer $upgradeAnalyzer = null;
+    private ?SqliteStateStore $sqliteStateStore = null;
 
     public function __construct(
         private readonly ?string $cwd = null,
@@ -350,5 +352,10 @@ final class CommandContext
     public function cloverCoverageVerifier(): CloverCoverageVerifier
     {
         return new CloverCoverageVerifier($this->paths());
+    }
+
+    public function sqliteStateStore(): SqliteStateStore
+    {
+        return $this->sqliteStateStore ??= new SqliteStateStore($this->paths());
     }
 }

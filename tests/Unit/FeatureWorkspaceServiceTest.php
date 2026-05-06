@@ -91,6 +91,22 @@ final class FeatureWorkspaceServiceTest extends TestCase
         $this->assertSame('FEATURE_BOUNDARY_ENFORCEMENT_DISABLED', $payload['warnings'][0]['code']);
     }
 
+    public function test_verify_does_not_require_empty_optional_feature_directories(): void
+    {
+        $this->writeFile('Features/EventSystem/event-system.spec.md', '# Feature Spec: event-system');
+        $this->writeFile('Features/EventSystem/event-system.md', '# Feature: event-system');
+        $this->writeFile('Features/EventSystem/event-system.decisions.md', $this->minimalDecision());
+
+        $payload = $this->service()->verify();
+        $list = $this->service()->list();
+
+        $this->assertSame('ok', $payload['status']);
+        $this->assertSame([], $payload['violations']);
+        $this->assertFalse($list['features'][0]['has_specs']);
+        $this->assertFalse($list['features'][0]['has_src']);
+        $this->assertFalse($list['features'][0]['has_tests']);
+    }
+
     private function service(): FeatureWorkspaceService
     {
         return new FeatureWorkspaceService(new Paths($this->project->root));

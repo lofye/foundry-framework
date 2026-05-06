@@ -82,7 +82,9 @@ final class ApiSurfaceRegistryTest extends TestCase
         $specLogEntry = $registry->classifyCliCommand(['spec:log-entry', 'execution-spec-system', '004']);
         $specValidate = $registry->classifyCliCommand(['spec:validate']);
         $verifyContext = $registry->classifyCliCommand(['verify', 'context', '--feature=event-bus']);
+        $verifyStateStore = $registry->classifyCliCommand(['verify', 'state-store']);
         $verifyFeatures = $registry->classifyCliCommand(['verify', 'features']);
+        $inspectStateStore = $registry->classifyCliCommand(['inspect', 'state-store']);
         $init = $registry->classifyCliCommand(['init']);
         $examplesList = $registry->classifyCliCommand(['examples:list']);
         $examplesLoad = $registry->classifyCliCommand(['examples:load', 'blog-api']);
@@ -129,7 +131,9 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertNotNull($specLogEntry);
         $this->assertNotNull($specValidate);
         $this->assertNotNull($verifyContext);
+        $this->assertNotNull($verifyStateStore);
         $this->assertNotNull($verifyFeatures);
+        $this->assertNotNull($inspectStateStore);
         $this->assertNotNull($init);
         $this->assertNotNull($examplesList);
         $this->assertNotNull($examplesLoad);
@@ -265,9 +269,15 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('stable', $verifyContext['stability']);
         $this->assertSame('Verification', $verifyContext['category']);
         $this->assertSame('verify', $verifyContext['command_type']);
+        $this->assertSame('stable', $verifyStateStore['stability']);
+        $this->assertSame('Verification', $verifyStateStore['category']);
+        $this->assertSame('verify', $verifyStateStore['command_type']);
         $this->assertSame('stable', $verifyFeatures['stability']);
         $this->assertSame('Verification', $verifyFeatures['category']);
         $this->assertSame('verify', $verifyFeatures['command_type']);
+        $this->assertSame('stable', $inspectStateStore['stability']);
+        $this->assertSame('Architecture', $inspectStateStore['category']);
+        $this->assertSame('inspect', $inspectStateStore['command_type']);
         $this->assertSame('experimental', $packSearch['stability']);
         $this->assertSame('Extensions', $packSearch['category']);
         $this->assertSame('pack', $packSearch['command_type']);
@@ -304,6 +314,43 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame($signatures, array_values(array_unique($signatures)));
     }
 
+    public function test_resolve_cli_signature_handles_additional_branch_variants(): void
+    {
+        $registry = new ApiSurfaceRegistry();
+
+        $this->assertNull($registry->resolveCliSignature([]));
+        $this->assertSame('license activate', $registry->resolveCliSignature(['license', 'activate']));
+        $this->assertSame('license deactivate', $registry->resolveCliSignature(['license', 'deactivate']));
+        $this->assertNull($registry->resolveCliSignature(['license', 'unknown']));
+
+        $this->assertSame('pack remove', $registry->resolveCliSignature(['pack', 'remove']));
+        $this->assertSame('pack info', $registry->resolveCliSignature(['pack', 'info']));
+        $this->assertNull($registry->resolveCliSignature(['pack', 'unknown']));
+
+        $this->assertNull($registry->resolveCliSignature(['implement', 'unknown']));
+        $this->assertNull($registry->resolveCliSignature(['plan', 'unknown']));
+        $this->assertSame('cache clear', $registry->resolveCliSignature(['cache', 'clear']));
+        $this->assertNull($registry->resolveCliSignature(['cache', 'unknown']));
+        $this->assertNull($registry->resolveCliSignature(['context', 'unknown']));
+
+        $this->assertNull($registry->resolveCliSignature(['graph', 'unknown']));
+        $this->assertSame('export openapi', $registry->resolveCliSignature(['export', 'openapi']));
+        $this->assertNull($registry->resolveCliSignature(['export', 'unknown']));
+        $this->assertSame('preview notification', $registry->resolveCliSignature(['preview', 'notification']));
+        $this->assertNull($registry->resolveCliSignature(['preview', 'other']));
+
+        $this->assertSame('init app', $registry->resolveCliSignature(['init', 'app']));
+        $this->assertSame('migrate definitions', $registry->resolveCliSignature(['migrate', 'definitions']));
+        $this->assertNull($registry->resolveCliSignature(['migrate', 'unknown']));
+        $this->assertSame('codemod run', $registry->resolveCliSignature(['codemod', 'run']));
+        $this->assertNull($registry->resolveCliSignature(['codemod', 'unknown']));
+
+        $this->assertNull($registry->resolveCliSignature(['inspect']));
+        $this->assertNull($registry->resolveCliSignature(['verify']));
+        $this->assertNull($registry->resolveCliSignature(['unknown-command']));
+        $this->assertSame('generate <intent>', $registry->resolveCliSignature(['generate', '--workflow']));
+    }
+
     public function test_classifies_configuration_and_generated_metadata_paths(): void
     {
         $registry = new ApiSurfaceRegistry();
@@ -336,5 +383,43 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('internal_api', $qualityMetadata['classification']);
         $this->assertSame('internal_api', $historyMetadata['classification']);
         $this->assertSame('internal_api', $planMetadata['classification']);
+    }
+
+    public function test_unknown_symbols_and_paths_return_expected_defaults_or_null(): void
+    {
+        $registry = new ApiSurfaceRegistry();
+
+        $defaultSymbol = $registry->classifyPhpSymbol('Acme\\Package\\CustomSymbol');
+        $this->assertSame('internal_api', $defaultSymbol['classification']);
+        $this->assertSame('default_internal', $defaultSymbol['matched_by']);
+        $this->assertSame('Acme\\Package\\CustomSymbol', $defaultSymbol['identifier']);
+
+        $this->assertNull($registry->classifyCliCommand(['']));
+        $this->assertNull($registry->classifyCliCommand(''));
+        $this->assertNull($registry->classifyConfigurationArtifact('docs/unknown-config.txt'));
+        $this->assertNull($registry->classifyGeneratedMetadata('tmp/random-output.bin'));
+    }
+
+    public function test_resolve_cli_signature_and_pattern_helpers_cover_remaining_branches(): void
+    {
+        $registry = new ApiSurfaceRegistry();
+
+        $this->assertSame('implement feature', $registry->resolveCliSignature(['implement', 'feature']));
+        $this->assertSame('implement spec', $registry->resolveCliSignature(['implement', 'spec']));
+        $this->assertSame('plan feature', $registry->resolveCliSignature(['plan', 'feature']));
+        $this->assertSame('cache inspect', $registry->resolveCliSignature(['cache', 'inspect']));
+        $this->assertNull($registry->resolveCliSignature(['license']));
+        $this->assertNull($registry->resolveCliSignature(['pack']));
+        $this->assertSame('context init', $registry->resolveCliSignature(['context', 'init']));
+        $this->assertSame('context doctor', $registry->resolveCliSignature(['context', 'doctor']));
+        $this->assertSame('context repair', $registry->resolveCliSignature(['context', 'repair']));
+        $this->assertSame('context check-alignment', $registry->resolveCliSignature(['context', 'check-alignment']));
+        $this->assertSame('doctor', $registry->resolveCliSignature(['doctor']));
+
+        $this->assertSame('inspect platform', $registry->resolveCliSignature(['inspect', 'platform']));
+
+        $method = new \ReflectionMethod($registry, 'matchesPattern');
+        $method->setAccessible(true);
+        $this->assertFalse($method->invoke($registry, 'app/generated/routes.php', ''));
     }
 }

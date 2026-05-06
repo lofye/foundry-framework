@@ -38,6 +38,10 @@ final class CLIScaffoldingCommandErrorsTest extends TestCase
         $this->assertSame(1, $invalidStarter['status']);
         $this->assertSame('CLI_INIT_APP_STARTER_INVALID', $invalidStarter['payload']['error']['code']);
 
+        $initAppMissingPath = $this->runCommand($app, ['foundry', 'init', 'app', '--json']);
+        $this->assertSame(1, $initAppMissingPath['status']);
+        $this->assertSame('CLI_INIT_APP_PATH_REQUIRED', $initAppMissingPath['payload']['error']['code']);
+
         $starterMissing = $this->runCommand($app, ['foundry', 'generate', 'starter', '--json']);
         $this->assertSame(1, $starterMissing['status']);
         $this->assertSame('CLI_STARTER_REQUIRED', $starterMissing['payload']['error']['code']);

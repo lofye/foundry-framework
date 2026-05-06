@@ -261,6 +261,14 @@ Spec naming rules:
 - do not rename existing IDs
 - do not add metadata fields like `id`, `parent`, or `status`
 
+## Application Feature Structure
+
+Application features MAY colocate runtime code:
+
+Features/<Feature>/src/
+
+This is optional and encouraged for app-level modularity.
+
 ## Mandatory Workflow Rules
 
 Read-before-acting rule:

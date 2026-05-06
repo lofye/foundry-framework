@@ -247,6 +247,7 @@ final class InitAppCommand extends Command
 /docs/inspect-ui/*
 !/docs/inspect-ui/.gitignore
 /app/.foundry/build/
+/.foundry/state/
 /database/*.sqlite
 /storage/files/*
 !/storage/files/.gitignore

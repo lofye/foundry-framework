@@ -208,6 +208,14 @@ Do NOT:
 
 ---
 
+## Feature vs Module Distinction
+
+- Framework code in `src/*` is organized by technical layer and may implement multiple features.
+- `Features/*` directories define feature ownership, context, specs, and plans.
+- Do not move framework code into `Features/*/src/` unless explicitly required by a spec.
+
+---
+
 ## Workflow Reference
 
 For the full contributor workflow, follow the checklist in `README.md`.

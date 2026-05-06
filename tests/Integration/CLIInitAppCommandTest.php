@@ -84,6 +84,9 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertFileExists($target . '/docs/generated/features.md');
         $this->assertFileExists($target . '/docs/generated/cli-reference.md');
         $this->assertFileExists($target . '/docs/inspect-ui/index.html');
+        $gitignore = file_get_contents($target . '/.gitignore');
+        $this->assertIsString($gitignore);
+        $this->assertStringContainsString('/.foundry/state/', $gitignore);
 
         $readme = file_get_contents($target . '/README.md');
         $this->assertIsString($readme);
@@ -246,6 +249,22 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertStringNotContainsString('legacy readme', (string) file_get_contents($target . '/README.md'));
     }
 
+    public function test_new_command_plain_output_renders_human_summary(): void
+    {
+        $app = new Application();
+        $target = $this->project->root . '/plain-output-app';
+
+        $result = $this->runRawCommand($app, ['foundry', 'new', $target, '--starter=minimal']);
+
+        $this->assertSame(0, $result['status']);
+        $this->assertStringContainsString('Foundry project scaffolded.', $result['output']);
+        $this->assertStringContainsString('Root: ' . $target, $result['output']);
+        $this->assertStringContainsString('Starter: Minimal', $result['output']);
+        $this->assertStringContainsString('Next steps:', $result['output']);
+        $this->assertStringContainsString('- composer install', $result['output']);
+        $this->assertStringContainsString('- foundry verify contracts --json', $result['output']);
+    }
+
     public function test_new_command_merges_existing_composer_bootstrap_and_clears_stale_lockfile(): void
     {
         $app = new Application();
@@ -316,6 +335,30 @@ JSON);
         $payload = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
 
         return ['status' => $status, 'payload' => $payload];
+    }
+
+    /**
+     * @param array<int,string> $argv
+     * @return array{status:int,output:string}
+     */
+    private function runRawCommand(Application $app, array $argv, ?string $cwd = null): array
+    {
+        $previous = getcwd() ?: '.';
+        if ($cwd !== null) {
+            chdir($cwd);
+        }
+
+        try {
+            ob_start();
+            $status = $app->run($argv);
+            $output = (string) (ob_get_clean() ?: '');
+        } finally {
+            if ($cwd !== null) {
+                chdir($previous);
+            }
+        }
+
+        return ['status' => $status, 'output' => $output];
     }
 
     /**
