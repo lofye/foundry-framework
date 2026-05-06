@@ -1,4 +1,4 @@
-# 005-marketplace-mcp-and-generate-entitlement-integration
+# Execution Spec: 005-marketplace-mcp-and-generate-entitlement-integration
 
 ## Purpose
 

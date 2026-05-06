@@ -34,6 +34,10 @@ final class CLIMarketplaceCommandTest extends TestCase
         $this->assertSame('ok', $result['payload']['status']);
         $this->assertSame('.foundry/marketplace', $result['payload']['storage']['root']);
         $this->assertSame('.foundry/marketplace/packs.json', $result['payload']['storage']['index']);
+        $this->assertFalse($result['payload']['auth']['configured']);
+        $this->assertFalse($result['payload']['auth']['authenticated']);
+        $this->assertSame('unauthenticated', $result['payload']['auth']['status']);
+        $this->assertFalse($result['payload']['auth']['token']['present']);
         $this->assertSame([], $result['payload']['packs']);
         $this->assertSame(['packs' => 0, 'versions' => 0, 'artifacts' => 0], $result['payload']['totals']);
     }
@@ -48,8 +52,11 @@ final class CLIMarketplaceCommandTest extends TestCase
 
         $this->assertSame(0, $inspect['status']);
         $this->assertSame('vendor/example-pack', $inspect['payload']['packs'][0]['name']);
+        $this->assertFalse($inspect['payload']['auth']['configured']);
+        $this->assertFalse($inspect['payload']['auth']['authenticated']);
         $this->assertSame(0, $verify['status']);
         $this->assertSame('pass', $verify['payload']['status']);
+        $this->assertFalse($verify['payload']['auth']['configured']);
         $this->assertSame([], $verify['payload']['errors']);
         $this->assertSame(['packs' => 1, 'versions' => 1, 'artifacts' => 1], $verify['payload']['checked']);
     }
@@ -75,6 +82,34 @@ final class CLIMarketplaceCommandTest extends TestCase
         $this->assertSame(1, $verify['status']);
         $this->assertSame('fail', $verify['payload']['status']);
         $this->assertSame('PACK_ARTIFACT_CHECKSUM_MISMATCH', $verify['payload']['errors'][0]['code']);
+    }
+
+    public function test_inspect_and_verify_marketplace_report_invalid_auth_state_without_leaking_secrets(): void
+    {
+        $this->writeFixture(validChecksum: true);
+        $path = $this->project->root . '/.foundry/marketplace/identity.json';
+        if (!is_dir(dirname($path))) {
+            mkdir(dirname($path), 0777, true);
+        }
+        file_put_contents($path, "{\"broken\":true}\n");
+
+        $inspect = $this->runCommand(new Application(), ['foundry', 'inspect', 'marketplace', '--json']);
+        $verify = $this->runCommand(new Application(), ['foundry', 'verify', 'marketplace', '--json']);
+
+        $this->assertSame(0, $inspect['status']);
+        $this->assertSame('invalid', $inspect['payload']['auth']['status']);
+        $this->assertSame('MARKETPLACE_AUTH_STATE_INVALID', $inspect['payload']['auth']['code']);
+        $this->assertFalse($inspect['payload']['auth']['authenticated']);
+        $this->assertArrayNotHasKey('access_token', $inspect['payload']['auth']);
+
+        $this->assertSame(1, $verify['status']);
+        $this->assertSame('fail', $verify['payload']['status']);
+        $this->assertSame('fail', $verify['payload']['auth']['status']);
+        $this->assertSame('MARKETPLACE_AUTH_STATE_INVALID', $verify['payload']['auth']['code']);
+        $this->assertContains('MARKETPLACE_AUTH_STATE_INVALID', array_values(array_map(
+            static fn(array $error): string => (string) ($error['code'] ?? ''),
+            $verify['payload']['errors'],
+        )));
     }
 
     /**
@@ -130,4 +165,3 @@ final class CLIMarketplaceCommandTest extends TestCase
         file_put_contents($index, json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n");
     }
 }
-

@@ -1,4 +1,4 @@
-# 003-marketplace-entitlements-and-license-activation
+# Execution Spec: 003-marketplace-entitlements-and-license-activation
 
 ## Purpose
 

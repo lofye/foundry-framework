@@ -49,7 +49,16 @@ final class MarketplaceIdentityCommand extends Command
     {
         $userId = $this->optionValue($args, '--user');
         $token = $this->optionValue($args, '--token');
-        $payload = $service->login($userId, $token);
+        $email = $this->optionValue($args, '--email');
+        $name = $this->optionValue($args, '--name');
+        $expiresAt = $this->optionValue($args, '--expires-at');
+        $payload = $service->login(
+            $userId,
+            $token,
+            $email === '' ? null : $email,
+            $name === '' ? null : $name,
+            $expiresAt === '' ? null : $expiresAt,
+        );
 
         return $this->result($context, $payload, 'Marketplace login completed.');
     }
@@ -99,19 +108,20 @@ final class MarketplaceIdentityCommand extends Command
     private function renderMessage(string $headline, array $payload): string
     {
         $authenticated = ((bool) ($payload['authenticated'] ?? false)) ? 'yes' : 'no';
-        $user = $payload['identity']['user_id'] ?? null;
-        $tokenHint = $payload['identity']['token_hint'] ?? null;
-        $path = (string) ($payload['storage']['path'] ?? '.foundry/marketplace/identity.json');
+        $user = $payload['user']['id'] ?? null;
+        $email = $payload['user']['email'] ?? null;
+        $reason = isset($payload['reason']) ? (string) $payload['reason'] : null;
 
         $lines = [
             $headline,
             'Authenticated: ' . $authenticated,
             'User: ' . ($user === null ? 'none' : (string) $user),
-            'Token: ' . ($tokenHint === null ? 'none' : (string) $tokenHint),
-            'Identity file: ' . $path,
+            'Email: ' . ($email === null ? 'none' : (string) $email),
         ];
+        if ($reason !== null && $reason !== '') {
+            $lines[] = 'Reason: ' . $reason;
+        }
 
         return implode(PHP_EOL, $lines);
     }
 }
-

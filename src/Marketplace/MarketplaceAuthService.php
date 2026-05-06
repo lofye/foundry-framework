@@ -4,23 +4,36 @@ declare(strict_types=1);
 
 namespace Foundry\Marketplace;
 
+use Foundry\Support\Clock;
 use Foundry\Support\FoundryError;
 
 final class MarketplaceAuthService
 {
-    public function __construct(private readonly MarketplaceIdentityStore $store) {}
+    public function __construct(
+        private readonly MarketplaceIdentityStore $store,
+        private readonly ?Clock $clock = null,
+    ) {}
 
     /**
      * @return array<string,mixed>
      */
-    public function login(string $userId, string $token): array
+    public function login(
+        string $userId,
+        string $token,
+        ?string $email = null,
+        ?string $name = null,
+        ?string $expiresAt = null,
+    ): array
     {
         $userId = trim($userId);
         $token = trim($token);
+        $email = trim((string) $email);
+        $name = $name === null ? null : trim($name);
+        $expiresAt = $expiresAt === null ? null : trim($expiresAt);
 
         if ($userId === '') {
             throw new FoundryError(
-                'MARKETPLACE_LOGIN_USER_REQUIRED',
+                'MARKETPLACE_AUTH_FAILED',
                 'validation',
                 [],
                 'Marketplace login requires a user id.',
@@ -29,7 +42,7 @@ final class MarketplaceAuthService
 
         if (preg_match('/^[A-Za-z0-9._@-]+$/', $userId) !== 1) {
             throw new FoundryError(
-                'MARKETPLACE_LOGIN_USER_INVALID',
+                'MARKETPLACE_AUTH_FAILED',
                 'validation',
                 ['user_id' => $userId],
                 'Marketplace user id is invalid.',
@@ -38,7 +51,7 @@ final class MarketplaceAuthService
 
         if ($token === '') {
             throw new FoundryError(
-                'MARKETPLACE_LOGIN_TOKEN_REQUIRED',
+                'MARKETPLACE_AUTH_FAILED',
                 'validation',
                 [],
                 'Marketplace login requires an access token.',
@@ -47,20 +60,51 @@ final class MarketplaceAuthService
 
         if (preg_match('/\s/', $token) === 1) {
             throw new FoundryError(
-                'MARKETPLACE_LOGIN_TOKEN_INVALID',
+                'MARKETPLACE_AUTH_FAILED',
                 'validation',
                 [],
                 'Marketplace access token is invalid.',
             );
         }
 
-        $this->store->save([
-            'user_id' => $userId,
+        if ($email === '') {
+            $email = str_contains($userId, '@') ? $userId : $userId . '@marketplace.local';
+        }
+
+        if (preg_match('/^[^\s@]+@[^\s@]+\.[^\s@]+$/', $email) !== 1) {
+            throw new FoundryError(
+                'MARKETPLACE_AUTH_FAILED',
+                'validation',
+                ['email' => $email],
+                'Marketplace email is invalid.',
+            );
+        }
+
+        if ($expiresAt !== null && $expiresAt !== '' && !$this->isIso8601($expiresAt)) {
+            throw new FoundryError(
+                'MARKETPLACE_AUTH_FAILED',
+                'validation',
+                ['expires_at' => $expiresAt],
+                'Marketplace credential expiry must be ISO-8601 when provided.',
+            );
+        }
+
+        $this->store->write([
+            'token_type' => 'bearer',
             'access_token' => $token,
-            'token_hint' => $this->tokenHint($token),
+            'expires_at' => $expiresAt === '' ? null : $expiresAt,
+            'user' => [
+                'id' => $userId,
+                'email' => $email,
+                'name' => $name === '' ? null : $name,
+                'created_at' => $this->clock()->nowIso8601(),
+            ],
         ]);
 
-        return $this->whoami();
+        $state = $this->whoami();
+        $state['status'] = 'ok';
+
+        return $state;
     }
 
     /**
@@ -73,17 +117,7 @@ final class MarketplaceAuthService
         return [
             'status' => 'ok',
             'authenticated' => false,
-            'identity' => [
-                'user_id' => null,
-                'token_hint' => null,
-            ],
-            'storage' => [
-                'path' => $this->store->identityPathRelative(),
-                'exists' => false,
-            ],
-            'api' => [
-                'authenticated_request_available' => false,
-            ],
+            'user' => null,
             'logout' => [
                 'had_session' => $hadSession,
             ],
@@ -95,23 +129,35 @@ final class MarketplaceAuthService
      */
     public function whoami(): array
     {
-        $identity = $this->store->read();
-        $authenticated = is_array($identity);
+        $state = $this->store->readState();
+        if ((string) $state['status'] === 'invalid') {
+            return [
+                'status' => 'error',
+                'code' => 'MARKETPLACE_AUTH_STATE_INVALID',
+                'authenticated' => false,
+                'user' => null,
+            ];
+        }
+
+        if ((string) $state['status'] === 'unauthenticated') {
+            return [
+                'authenticated' => false,
+                'user' => null,
+            ];
+        }
+
+        if ((string) $state['status'] === 'expired') {
+            return [
+                'authenticated' => false,
+                'reason' => 'expired',
+                'code' => 'MARKETPLACE_AUTH_EXPIRED',
+                'user' => $this->minimalExpiredUser($state['safe_user']),
+            ];
+        }
 
         return [
-            'status' => 'ok',
-            'authenticated' => $authenticated,
-            'identity' => [
-                'user_id' => $authenticated ? (string) $identity['user_id'] : null,
-                'token_hint' => $authenticated ? (string) $identity['token_hint'] : null,
-            ],
-            'storage' => [
-                'path' => $this->store->identityPathRelative(),
-                'exists' => $authenticated,
-            ],
-            'api' => [
-                'authenticated_request_available' => $authenticated,
-            ],
+            'authenticated' => true,
+            'user' => $state['safe_user'],
         ];
     }
 
@@ -149,8 +195,8 @@ final class MarketplaceAuthService
                 'method' => $method,
                 'path' => $path,
                 'headers' => [
-                    'Authorization' => 'Bearer ' . (string) $identity['access_token'],
-                    'X-Foundry-Marketplace-User' => (string) $identity['user_id'],
+                    'Authorization' => ucfirst((string) ($identity['token_type'] ?? 'bearer')) . ' ' . (string) $identity['access_token'],
+                    'X-Foundry-Marketplace-User' => (string) (($identity['user']['id'] ?? '')),
                 ],
                 'body' => $body,
             ],
@@ -158,30 +204,70 @@ final class MarketplaceAuthService
     }
 
     /**
-     * @return array{user_id:string,access_token:string,token_hint:string}
+     * @return array<string,mixed>
      */
     private function requireAuthenticatedIdentity(): array
     {
-        $identity = $this->store->read();
-        if (!is_array($identity)) {
+        $state = $this->store->readState();
+        if ((string) $state['status'] === 'expired') {
             throw new FoundryError(
-                'MARKETPLACE_AUTHENTICATION_REQUIRED',
+                'MARKETPLACE_AUTH_EXPIRED',
+                'authentication',
+                [],
+                'Marketplace credentials are expired.',
+            );
+        }
+
+        if ((string) $state['status'] === 'invalid') {
+            throw new FoundryError(
+                'MARKETPLACE_AUTH_STATE_INVALID',
+                'authentication',
+                [],
+                'Marketplace auth state is invalid.',
+            );
+        }
+
+        if (!$state['authenticated'] || !is_array($state['credential'])) {
+            throw new FoundryError(
+                'MARKETPLACE_AUTH_NOT_AUTHENTICATED',
                 'authentication',
                 [],
                 'Marketplace authentication is required.',
             );
         }
 
-        return $identity;
+        return $state['credential'];
     }
 
-    private function tokenHint(string $token): string
+    /**
+     * @param array<string,mixed>|null $safeUser
+     * @return array{id:string,email:string}|null
+     */
+    private function minimalExpiredUser(?array $safeUser): ?array
     {
-        if (strlen($token) <= 8) {
-            return str_repeat('*', strlen($token));
+        if ($safeUser === null) {
+            return null;
         }
 
-        return substr($token, 0, 4) . '...' . substr($token, -4);
+        return [
+            'id' => (string) ($safeUser['id'] ?? ''),
+            'email' => (string) ($safeUser['email'] ?? ''),
+        ];
+    }
+
+    private function isIso8601(string $value): bool
+    {
+        try {
+            $dt = new \DateTimeImmutable($value);
+        } catch (\Throwable) {
+            return false;
+        }
+
+        return $dt->format(\DateTimeInterface::ATOM) === $value || $dt->format('Y-m-d\TH:i:s\Z') === $value;
+    }
+
+    private function clock(): Clock
+    {
+        return $this->clock ?? new Clock();
     }
 }
-

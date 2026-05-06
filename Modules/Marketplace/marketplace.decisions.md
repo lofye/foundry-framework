@@ -71,6 +71,45 @@ Timestamp: 2026-05-06T19:23:00Z
 - Expected Behavior
 - Acceptance Criteria
 
+### Decision: harden marketplace auth runtime contracts with fail-closed credential lifecycle semantics
+
+Timestamp: 2026-05-06T20:44:00Z
+
+**Context**
+
+- Marketplace execution spec `002.001-marketplace-auth-runtime-contracts` requires deterministic credential-store semantics, expired/malformed fail-closed behavior, deterministic whoami/login/logout contracts, and safe auth integration into inspect/verify marketplace surfaces.
+- Existing Marketplace identity runtime handled first-pass auth state but did not fully encode canonical credential shape/lifecycle verification contracts.
+
+**Decision**
+
+- Harden `MarketplaceIdentityStore` as the credential-store abstraction with canonical credential normalization (`token_type`, `access_token`, `expires_at`, `user`), root-aware atomic file persistence, deterministic inspect/verify helpers, and explicit fail-closed invalid/expired states.
+- Harden `MarketplaceAuthService` to emit deterministic authenticated/unauthenticated/expired/malformed whoami payloads, deterministic login validation/persistence, idempotent logout semantics, and expired/malformed auth rejection for authenticated request construction.
+- Integrate safe auth inspection into `inspect marketplace --json` and deterministic auth verification into `verify marketplace --json` without leaking raw credential secrets.
+
+**Reasoning**
+
+- Later entitlement, purchase, and MCP integrations require stable auth-state contracts that are deterministic, inspectable, and safe-by-default.
+- Fail-closed malformed/expired handling prevents accidental credential misuse and aligns CLI/runtime behavior with strict verification expectations.
+
+**Alternatives Considered**
+
+- Keep the initial identity store format and defer lifecycle hardening until entitlement specs.
+- Add a separate credential-store class while leaving existing identity store behavior unchanged.
+- Perform auth verification only in identity commands and keep inspect/verify marketplace auth-agnostic.
+
+**Impact**
+
+- Marketplace auth runtime now exposes deterministic lifecycle and verification contracts suitable for downstream integrations.
+- Inspect/verify marketplace payloads include safe auth visibility while preserving secret redaction guarantees.
+
+**Spec Reference**
+
+- Required Runtime Concepts
+- Credential Store Contract
+- Token Lifecycle
+- Verify / Inspect Integration
+- Acceptance Criteria
+
 ### Decision: add deterministic marketplace identity and authentication baseline
 
 Timestamp: 2026-05-06T20:05:00Z

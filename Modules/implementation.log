@@ -331,3 +331,9 @@
 - spec: marketplace/002-marketplace-identity-and-authentication.md
 - note: Added deterministic Marketplace identity runtime under `src/Marketplace/*` with local credential storage at `.foundry/marketplace/identity.json`, deterministic identity inspection, and authenticated request construction contracts.
 - note: Added CLI identity/authentication command surfaces `login`, `logout`, and `whoami`, wired command registration plus API-surface/catalog metadata, and added focused unit/integration coverage for success, validation, and malformed identity-file paths.
+
+## 2026-05-06 20:45:00 -0400
+- spec: marketplace/002.001-marketplace-auth-runtime-contracts.md
+- note: Hardened Marketplace credential lifecycle contracts by normalizing canonical auth records (`token_type`, `access_token`, `expires_at`, `user`) through root-aware atomic storage, deterministic inspect/verify helpers, and explicit fail-closed malformed/expired state handling.
+- note: Tightened auth runtime/CLI behavior to deterministic authenticated, unauthenticated, expired, and malformed `whoami` outcomes, idempotent logout semantics, and authenticated request rejection for invalid/expired auth state.
+- note: Integrated safe auth visibility into `inspect marketplace --json` and deterministic auth validation into `verify marketplace --json`, with focused unit/integration coverage for redaction, malformed state, expiry, replacement, and verification outcomes.

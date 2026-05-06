@@ -36,9 +36,11 @@ The framework Marketplace module defines marketplace contracts, protocol behavio
 - `verify marketplace --json` validates metadata/artifact integrity and returns deterministic stable error codes.
 - Marketplace backend handlers expose deterministic payloads and error semantics for list/detail/download flows.
 - `login --user=<id> --token=<token>` stores Marketplace identity under `.foundry/marketplace/identity.json`.
-- `whoami --json` returns deterministic authentication state and identity hints without exposing raw tokens.
+- `whoami --json` returns deterministic authenticated, unauthenticated, expired, and malformed-state shapes without exposing raw tokens.
 - `logout --json` clears stored Marketplace identity credentials deterministically.
 - Authenticated Marketplace request construction is available through deterministic runtime service behavior.
+- `inspect marketplace --json` includes safe auth inspection (`configured`, `authenticated`, redacted token metadata, safe user metadata).
+- `verify marketplace --json` includes deterministic auth verification and fails closed for malformed or expired credential state.
 
 ## Acceptance Criteria
 
@@ -46,6 +48,7 @@ The framework Marketplace module defines marketplace contracts, protocol behavio
 - `inspect marketplace --json` and `verify marketplace --json` are registered and discoverable.
 - `login`, `logout`, and `whoami` commands are registered, deterministic, and covered by tests.
 - Marketplace identity storage handles missing, malformed, and valid credential states deterministically.
+- Marketplace identity storage and auth runtime fail closed for malformed/expired credentials and never leak raw secret values in inspect/verify/whoami payloads.
 - Invalid pack names, invalid artifact paths, missing artifacts, and checksum mismatches fail deterministically.
 - Required quality and verification gates pass with no context or contract drift.
 

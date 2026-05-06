@@ -11,6 +11,11 @@ final class MarketplaceRepository
 {
     public function __construct(private readonly Paths $paths) {}
 
+    public function paths(): Paths
+    {
+        return $this->paths;
+    }
+
     public function storageRootRelative(): string
     {
         return '.foundry/marketplace';
@@ -27,6 +32,7 @@ final class MarketplaceRepository
     public function inspect(): array
     {
         $index = $this->load();
+        $auth = (new MarketplaceIdentityStore($this->paths))->inspect();
         $packs = [];
         $versionTotal = 0;
         $artifactTotal = 0;
@@ -56,6 +62,7 @@ final class MarketplaceRepository
                 'root' => $this->storageRootRelative(),
                 'index' => $this->indexPathRelative(),
             ],
+            'auth' => $auth,
             'packs' => $packs,
             'totals' => [
                 'packs' => count($packs),
@@ -291,4 +298,3 @@ final class MarketplaceRepository
         return strcmp($right, $left);
     }
 }
-

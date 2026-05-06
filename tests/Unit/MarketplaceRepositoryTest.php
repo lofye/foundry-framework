@@ -33,6 +33,10 @@ final class MarketplaceRepositoryTest extends TestCase
 
         $this->assertSame([], $index->packs);
         $this->assertSame('ok', $inspect['status']);
+        $this->assertFalse($inspect['auth']['configured']);
+        $this->assertFalse($inspect['auth']['authenticated']);
+        $this->assertSame('unauthenticated', $inspect['auth']['status']);
+        $this->assertFalse($inspect['auth']['token']['present']);
         $this->assertSame([], $inspect['packs']);
         $this->assertSame(['packs' => 0, 'versions' => 0, 'artifacts' => 0], $inspect['totals']);
     }
@@ -212,4 +216,3 @@ final class MarketplaceRepositoryTest extends TestCase
         file_put_contents($path, json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n");
     }
 }
-

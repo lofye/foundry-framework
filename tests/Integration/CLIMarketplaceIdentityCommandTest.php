@@ -33,24 +33,27 @@ final class CLIMarketplaceIdentityCommandTest extends TestCase
         $whoamiBefore = $this->runCommand($app, ['foundry', 'whoami', '--json']);
         $this->assertSame(0, $whoamiBefore['status']);
         $this->assertFalse($whoamiBefore['payload']['authenticated']);
-        $this->assertSame('.foundry/marketplace/identity.json', $whoamiBefore['payload']['storage']['path']);
-        $this->assertFalse($whoamiBefore['payload']['storage']['exists']);
+        $this->assertNull($whoamiBefore['payload']['user']);
 
         $login = $this->runCommand($app, ['foundry', 'login', '--user=demo-user', '--token=token_demo_1234', '--json']);
         $this->assertSame(0, $login['status']);
+        $this->assertSame('ok', $login['payload']['status']);
         $this->assertTrue($login['payload']['authenticated']);
-        $this->assertSame('demo-user', $login['payload']['identity']['user_id']);
-        $this->assertSame('toke...1234', $login['payload']['identity']['token_hint']);
-        $this->assertTrue($login['payload']['storage']['exists']);
+        $this->assertSame('demo-user', $login['payload']['user']['id']);
+        $this->assertSame('demo-user@marketplace.local', $login['payload']['user']['email']);
 
         $whoamiAfter = $this->runCommand($app, ['foundry', 'whoami', '--json']);
         $this->assertSame(0, $whoamiAfter['status']);
-        $this->assertSame($login['payload'], $whoamiAfter['payload']);
+        $this->assertTrue($whoamiAfter['payload']['authenticated']);
+        $this->assertSame('demo-user', $whoamiAfter['payload']['user']['id']);
+        $this->assertSame('demo-user@marketplace.local', $whoamiAfter['payload']['user']['email']);
+        $this->assertArrayNotHasKey('access_token', $whoamiAfter['payload']['user']);
 
         $logout = $this->runCommand($app, ['foundry', 'logout', '--json']);
         $this->assertSame(0, $logout['status']);
+        $this->assertSame('ok', $logout['payload']['status']);
         $this->assertFalse($logout['payload']['authenticated']);
-        $this->assertFalse($logout['payload']['storage']['exists']);
+        $this->assertNull($logout['payload']['user']);
         $this->assertTrue($logout['payload']['logout']['had_session']);
     }
 
@@ -61,9 +64,9 @@ final class CLIMarketplaceIdentityCommandTest extends TestCase
         $missingToken = $this->runCommand($app, ['foundry', 'login', '--user=demo-user', '--json']);
 
         $this->assertSame(1, $missingUser['status']);
-        $this->assertSame('MARKETPLACE_LOGIN_USER_REQUIRED', $missingUser['payload']['error']['code']);
+        $this->assertSame('MARKETPLACE_AUTH_FAILED', $missingUser['payload']['error']['code']);
         $this->assertSame(1, $missingToken['status']);
-        $this->assertSame('MARKETPLACE_LOGIN_TOKEN_REQUIRED', $missingToken['payload']['error']['code']);
+        $this->assertSame('MARKETPLACE_AUTH_FAILED', $missingToken['payload']['error']['code']);
     }
 
     public function test_whoami_reports_invalid_identity_file_deterministically(): void
@@ -76,8 +79,39 @@ final class CLIMarketplaceIdentityCommandTest extends TestCase
 
         $result = $this->runCommand(new Application(), ['foundry', 'whoami', '--json']);
 
-        $this->assertSame(1, $result['status']);
-        $this->assertSame('MARKETPLACE_IDENTITY_INVALID_JSON', $result['payload']['error']['code']);
+        $this->assertSame(0, $result['status']);
+        $this->assertSame('error', $result['payload']['status']);
+        $this->assertSame('MARKETPLACE_AUTH_STATE_INVALID', $result['payload']['code']);
+        $this->assertFalse($result['payload']['authenticated']);
+        $this->assertNull($result['payload']['user']);
+    }
+
+    public function test_whoami_reports_expired_credentials_deterministically(): void
+    {
+        $path = $this->project->root . '/.foundry/marketplace/identity.json';
+        if (!is_dir(dirname($path))) {
+            mkdir(dirname($path), 0777, true);
+        }
+        file_put_contents($path, json_encode([
+            'token_type' => 'bearer',
+            'access_token' => 'token_demo_1234',
+            'expires_at' => '2025-01-01T00:00:00Z',
+            'user' => [
+                'id' => 'demo-user',
+                'email' => 'demo@example.com',
+                'name' => null,
+                'created_at' => '2026-01-01T00:00:00Z',
+            ],
+        ], JSON_THROW_ON_ERROR) . "\n");
+
+        $result = $this->runCommand(new Application(), ['foundry', 'whoami', '--json']);
+
+        $this->assertSame(0, $result['status']);
+        $this->assertFalse($result['payload']['authenticated']);
+        $this->assertSame('expired', $result['payload']['reason']);
+        $this->assertSame('MARKETPLACE_AUTH_EXPIRED', $result['payload']['code']);
+        $this->assertSame('demo-user', $result['payload']['user']['id']);
+        $this->assertSame('demo@example.com', $result['payload']['user']['email']);
     }
 
     /**
@@ -96,4 +130,3 @@ final class CLIMarketplaceIdentityCommandTest extends TestCase
         return ['status' => $status, 'payload' => $payload];
     }
 }
-
