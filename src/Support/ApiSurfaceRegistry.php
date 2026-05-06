@@ -164,7 +164,7 @@ final class ApiSurfaceRegistry
         }
 
         return match ($first) {
-            'help', 'completion', 'new', 'serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail', 'affected-files', 'impacted-features', 'upgrade-check', 'explain', 'diff', 'trace', 'observe:trace', 'observe:profile', 'observe:compare', 'history', 'regressions', 'features', 'feature:list', 'feature:inspect', 'feature:map', 'examples:list', 'examples:load', 'spec:new', 'spec:plan', 'spec:log-entry', 'spec:validate', 'plan:list', 'plan:replay', 'plan:show', 'plan:undo', 'extension:install', 'extension:search', 'extension:list', 'mcp:serve', 'event:list', 'event:inspect' => $first,
+            'help', 'completion', 'new', 'serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail', 'affected-files', 'impacted-features', 'upgrade-check', 'explain', 'diff', 'trace', 'observe:trace', 'observe:profile', 'observe:compare', 'history', 'regressions', 'features', 'feature:list', 'feature:inspect', 'feature:map', 'examples:list', 'examples:load', 'spec:new', 'spec:plan', 'spec:log-entry', 'spec:validate', 'plan:list', 'plan:replay', 'plan:show', 'plan:undo', 'extension:install', 'extension:search', 'extension:list', 'mcp:serve', 'event:list', 'event:inspect', 'login', 'logout', 'whoami' => $first,
             'license' => match ($second) {
                 'status' => 'license status',
                 'activate' => 'license activate',
@@ -413,6 +413,9 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('license activate', 'license activate [--key=YOUR_KEY]', 'experimental', 'Validate and store a local Foundry license key. Optional remote validation runs only when explicitly configured.'),
             $this->cliCommandEntry('license deactivate', 'license deactivate', 'experimental', 'Remove the locally stored Foundry license file. Environment-provided keys remain active until the environment is cleared.'),
             $this->cliCommandEntry('features', 'features', 'experimental', 'List capability and service descriptors published by the monetization layer.'),
+            $this->cliCommandEntry('login', 'login --user=<id> --token=<token>', 'experimental', 'Store deterministic local Marketplace identity credentials for authenticated Marketplace API requests.'),
+            $this->cliCommandEntry('logout', 'logout', 'experimental', 'Clear locally stored Marketplace identity credentials.'),
+            $this->cliCommandEntry('whoami', 'whoami', 'experimental', 'Inspect deterministic Marketplace identity authentication status.'),
             $this->cliCommandEntry('feature:list', 'feature:list', 'stable', 'List feature workspaces and context/boundary presence in deterministic slug order.'),
             $this->cliCommandEntry('feature:inspect', 'feature:inspect <feature>', 'stable', 'Inspect one feature workspace context, directories, and declared dependencies.'),
             $this->cliCommandEntry('feature:map', 'feature:map', 'stable', 'Emit deterministic feature-owned path mapping and shared-glue placeholders.'),
@@ -748,7 +751,7 @@ final class ApiSurfaceRegistry
             in_array($signature, ['plan:list', 'plan:replay', 'plan:show', 'plan:undo'], true) => 'App Scaffolding',
             in_array($signature, ['serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail'], true) => 'Runtime',
             in_array($signature, ['license status', 'license activate', 'license deactivate', 'features'], true) => 'Monetization',
-            in_array($signature, ['pack install', 'pack search', 'pack remove', 'pack list', 'pack info'], true) => 'Extensions',
+            in_array($signature, ['pack install', 'pack search', 'pack remove', 'pack list', 'pack info', 'login', 'logout', 'whoami'], true) => 'Extensions',
             in_array($signature, ['init', 'new', 'init app', 'examples:list', 'examples:load', 'preview notification', 'implement feature', 'implement spec', 'plan feature', 'spec:new', 'spec:plan'], true)
                 || str_starts_with($signature, 'generate ')
                 => 'App Scaffolding',

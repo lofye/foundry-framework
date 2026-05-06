@@ -326,3 +326,8 @@
 - spec: marketplace/001-marketplace-backend-minimal-viable.md
 - note: Added deterministic local marketplace runtime under `src/Marketplace/*` with pack/index models, repository parsing/validation, integrity verifier, and HTTP-style controller handlers for list/detail/download backend contracts.
 - note: Added CLI command surface `inspect marketplace --json` and `verify marketplace --json`, wired command registration plus API/command-catalog metadata, and added focused unit/integration coverage for sorting, validation, download headers, and deterministic failure codes.
+
+## 2026-05-06 20:06:00 -0400
+- spec: marketplace/002-marketplace-identity-and-authentication.md
+- note: Added deterministic Marketplace identity runtime under `src/Marketplace/*` with local credential storage at `.foundry/marketplace/identity.json`, deterministic identity inspection, and authenticated request construction contracts.
+- note: Added CLI identity/authentication command surfaces `login`, `logout`, and `whoami`, wired command registration plus API-surface/catalog metadata, and added focused unit/integration coverage for success, validation, and malformed identity-file paths.

@@ -44,6 +44,7 @@ use Foundry\CLI\Commands\InspectRouteCommand;
 use Foundry\CLI\Commands\InspectStateStoreCommand;
 use Foundry\CLI\Commands\LicenseCommand;
 use Foundry\CLI\Commands\MarketplaceCommand;
+use Foundry\CLI\Commands\MarketplaceIdentityCommand;
 use Foundry\CLI\Commands\MigrateDefinitionsCommand;
 use Foundry\CLI\Commands\ObserveCommand;
 use Foundry\CLI\Commands\PackCommand;
@@ -169,6 +170,9 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new HistoryCommand())->matches(['history']));
         $this->assertTrue((new RegressionsCommand())->matches(['regressions']));
         $this->assertTrue((new LicenseCommand())->matches(['license', 'activate', 'key']));
+        $this->assertTrue((new MarketplaceIdentityCommand())->matches(['login', '--user=demo', '--token=abc']));
+        $this->assertTrue((new MarketplaceIdentityCommand())->matches(['logout']));
+        $this->assertTrue((new MarketplaceIdentityCommand())->matches(['whoami']));
         $this->assertTrue((new FeaturesCommand())->matches(['features']));
         $this->assertTrue((new FeatureSystemCommand())->matches(['feature:list']));
         $this->assertTrue((new FeatureSystemCommand())->matches(['feature:inspect', 'event-system']));

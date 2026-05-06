@@ -71,6 +71,43 @@ Timestamp: 2026-05-06T19:23:00Z
 - Expected Behavior
 - Acceptance Criteria
 
+### Decision: add deterministic marketplace identity and authentication baseline
+
+Timestamp: 2026-05-06T20:05:00Z
+
+**Context**
+
+- Marketplace execution spec `002-marketplace-identity-and-authentication` requires deterministic identity/authentication primitives (`login`, `logout`, `whoami`), token storage, and authenticated Marketplace API request construction.
+- The existing Marketplace baseline covered only local pack metadata/artifact inspection and verification.
+
+**Decision**
+
+- Introduce Marketplace identity runtime under `src/Marketplace/*` with deterministic local credential storage at `.foundry/marketplace/identity.json`.
+- Add CLI commands `login`, `logout`, and `whoami` with deterministic JSON + text outputs and explicit validation errors for invalid/missing identity input.
+- Add deterministic authenticated Marketplace request construction in runtime service behavior for downstream Marketplace API integration.
+
+**Reasoning**
+
+- A local deterministic identity baseline enables authenticated Marketplace workflows without prematurely coupling billing, entitlements, or hosted sync behavior.
+- Explicit `whoami` and `logout` surfaces make authentication state inspectable and reversible for agents and users.
+
+**Alternatives Considered**
+
+- Reuse license key state as Marketplace identity credentials.
+- Defer identity/authentication until entitlement and purchase specs.
+- Add only CLI command shells without runtime identity storage contracts.
+
+**Impact**
+
+- Marketplace module now has deterministic auth primitives required for future entitlement/purchase integration.
+- API-surface and command-catalog contracts now include Marketplace identity command flows.
+
+**Spec Reference**
+
+- Purpose
+- CLI Commands
+- Acceptance Criteria
+
 ### Decision: preserve explicit current-state implementation claims for marketplace command and storage wiring
 
 Timestamp: 2026-05-06T19:28:00Z

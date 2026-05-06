@@ -2,26 +2,29 @@
 
 ## Purpose
 
-- Record the implemented minimal marketplace backend state for deterministic pack distribution contracts.
+- Record the implemented Marketplace backend + identity/authentication state for deterministic pack distribution and authenticated Marketplace access contracts.
 
 ## Current State
 
 - Missing `.foundry/marketplace/packs.json` is treated as an empty marketplace.
-- Framework-owned marketplace runtime now exists under `src/Marketplace/*` with deterministic repository, verifier, index, model, and HTTP-style controller classes.
-- Marketplace storage contract uses `.foundry/marketplace/packs.json` plus relative artifact paths under `.foundry/marketplace/artifacts/*`.
 - `inspect marketplace --json` returns deterministic storage metadata, pack summaries, and aggregate totals.
 - `verify marketplace --json` returns deterministic pass/fail status with stable error codes, checked counts, and non-zero exit status on failures.
-- Backend handlers provide deterministic `GET /packs`, `GET /packs/{name}`, and `GET /packs/{name}/{version}/download` semantics through controller methods.
 - Marketplace backend handlers expose deterministic payloads and error semantics for list/detail/download flows.
-- CLI/API surface and command-catalog contracts include `inspect marketplace` and `verify marketplace`.
+- `login --user=<id> --token=<token>` stores Marketplace identity under `.foundry/marketplace/identity.json`.
+- `whoami --json` returns deterministic authentication state and identity hints without exposing raw tokens.
+- `logout --json` clears stored Marketplace identity credentials deterministically.
+- Authenticated Marketplace request construction is available through deterministic runtime service behavior.
+- Marketplace repository/verifier/controller runtime exists under `src/Marketplace/*`.
+- `inspect marketplace --json`, `verify marketplace --json`, `login`, `logout`, and `whoami` are registered and discoverable.
+- Marketplace identity storage handles missing, malformed, and valid credential states deterministically.
 - Invalid pack names, invalid artifact paths, missing artifacts, and checksum mismatches fail deterministically.
 - Required quality and verification gates pass with no context or contract drift.
 
 ## Open Questions
 
-- Future specs still need identity/authentication, entitlement, purchase, and MCP integration behavior.
+- Future specs still need entitlement, purchase, and MCP integration behavior.
 
 ## Next Steps
 
-- Implement Marketplace spec `002-marketplace-identity-and-authentication` after promotion from drafts.
-- Extend marketplace compatibility checks for hosted/distributed registry workflows in later specs.
+- Implement Marketplace spec `003-marketplace-entitlements-and-license-activation` after promotion from drafts.
+- Extend Marketplace request execution to consume authenticated request construction in hosted/distributed registry flows.

@@ -61,6 +61,9 @@ final class ApiSurfaceRegistryTest extends TestCase
         $generateTemplate = $registry->classifyCliCommand(['generate', '--template=feature.recipe']);
         $licenseStatus = $registry->classifyCliCommand(['license', 'status']);
         $features = $registry->classifyCliCommand(['features']);
+        $login = $registry->classifyCliCommand(['login', '--user=demo', '--token=abc']);
+        $logout = $registry->classifyCliCommand(['logout']);
+        $whoami = $registry->classifyCliCommand(['whoami']);
         $featureList = $registry->classifyCliCommand(['feature:list']);
         $featureInspect = $registry->classifyCliCommand(['feature:inspect', 'event-system']);
         $featureMap = $registry->classifyCliCommand(['feature:map']);
@@ -113,6 +116,9 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertNotNull($generateTemplate);
         $this->assertNotNull($licenseStatus);
         $this->assertNotNull($features);
+        $this->assertNotNull($login);
+        $this->assertNotNull($logout);
+        $this->assertNotNull($whoami);
         $this->assertNotNull($featureList);
         $this->assertNotNull($featureInspect);
         $this->assertNotNull($featureMap);
@@ -206,6 +212,15 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('Monetization', $features['category']);
         $this->assertSame('features', $features['command_type']);
         $this->assertFalse($features['supports_pipeline_stage_filter']);
+        $this->assertSame('experimental', $login['stability']);
+        $this->assertSame('Extensions', $login['category']);
+        $this->assertSame('login', $login['command_type']);
+        $this->assertSame('experimental', $logout['stability']);
+        $this->assertSame('Extensions', $logout['category']);
+        $this->assertSame('logout', $logout['command_type']);
+        $this->assertSame('experimental', $whoami['stability']);
+        $this->assertSame('Extensions', $whoami['category']);
+        $this->assertSame('whoami', $whoami['command_type']);
         $this->assertSame('stable', $featureList['stability']);
         $this->assertSame('feature:list', $featureList['command_type']);
         $this->assertSame('stable', $featureInspect['stability']);
