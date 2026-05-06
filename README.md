@@ -28,21 +28,27 @@ Foundry behaves deterministically:
 - in an existing Foundry project, it inspects the current project
 - `foundry explain` with no target explains the first feature or route deterministically
 
-For meaningful feature work, canonical context lives in:
+For meaningful framework-module work, canonical context lives in:
 
-- `docs/features/<feature>/<feature>.spec.md`
-- `docs/features/<feature>/<feature>.md`
-- `docs/features/<feature>/<feature>.decisions.md`
+- `Modules/<Module>/<module>.spec.md`
+- `Modules/<Module>/<module>.md`
+- `Modules/<Module>/<module>.decisions.md`
 
 These paths mean:
 
-- `docs/features/<feature>/<feature>.spec.md` → authoritative feature intent
-- `docs/features/<feature>/<feature>.md` → current state
-- `docs/features/<feature>/<feature>.decisions.md` → append-only decision history
-- `docs/features/<feature>/specs/*.md` → execution specs (planning artifacts, non-authoritative after implementation)
-- `docs/features/<feature>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
-- `docs/features/<feature>/plans/*.md` → implementation plans (planning artifacts)
-- `docs/features/implementation-log.md` → completed execution-spec ledger
+- `Modules/<Module>/<module>.spec.md` → authoritative module intent
+- `Modules/<Module>/<module>.md` → current state
+- `Modules/<Module>/<module>.decisions.md` → append-only decision history
+- `Modules/<Module>/specs/*.md` → execution specs (planning artifacts, non-authoritative after implementation)
+- `Modules/<Module>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
+- `Modules/<Module>/plans/*.md` → implementation plans (planning artifacts)
+- `Modules/implementation.log` → completed framework execution-spec ledger
+
+For downstream application feature work, use:
+
+- `Features/<Feature>/<feature>.spec.md`
+- `Features/<Feature>/<feature>.md`
+- `Features/<Feature>/<feature>.decisions.md`
 
 For new active execution specs, save an implementation plan file before implementation begins. Chat-only plans are not sufficient, and plan files must not expand or alter execution-spec scope.
 
@@ -50,13 +56,18 @@ Execution spec IDs are ordered contracts within each feature. IDs must remain co
 
 Use `foundry verify context --feature=<feature> --json` as the primary machine-readable proceed/fail gate. If canonical context is missing, create it first with `foundry context init <feature> --json`. If context verification fails, repair context before implementation.
 
+## Modules vs Features
+
+Foundry framework capabilities are governed as Framework Modules under `Modules/`.
+Downstream business/application capabilities are governed as Application Features under `Features/`.
+Framework internals may remain layer-organized under `src/*`.
+
 ## Feature-Localized Layout
 
 Foundry features are moving toward a localized structure where the feature directory is the primary context unit for LLMs:
 
 ```text
 Features/
-  implementation.log
   README.md
 
   <FeatureName>/
@@ -92,7 +103,7 @@ foundry completion zsh
 
 Static completion comes from the registered CLI surface, so command and subcommand suggestions stay aligned with `help --json` and CLI surface verification.
 
-When completing `foundry implement spec <feature> <id>`, feature names come from `docs/features/` and execution-spec ids come from active specs under `docs/features/<feature>/specs/`. Draft specs are excluded by default.
+When completing `foundry implement spec <feature> <id>`, names and ids resolve from active execution specs, preferring canonical module/feature roots (`Modules/*/specs` and `Features/*/specs`) with legacy compatibility where applicable. Draft specs are excluded by default.
 
 ## Install And First Run (Packagist)
 

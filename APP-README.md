@@ -10,19 +10,19 @@ Start with `AGENTS.md`. It defines the repo-local workflow and command rules for
 
 For meaningful feature work, maintain canonical feature context under:
 
-- `docs/features/<feature>/<feature>.spec.md`
-- `docs/features/<feature>/<feature>.md`
-- `docs/features/<feature>/<feature>.decisions.md`
+- `Features/<Feature>/<feature>.spec.md`
+- `Features/<Feature>/<feature>.md`
+- `Features/<Feature>/<feature>.decisions.md`
 
 These paths mean:
 
-- `docs/features/<feature>/<feature>.spec.md` → authoritative feature intent
-- `docs/features/<feature>/<feature>.md` → current state
-- `docs/features/<feature>/<feature>.decisions.md` → append-only decision history
-- `docs/features/<feature>/specs/*.md` → execution specs (planning artifacts, non-authoritative after implementation)
-- `docs/features/<feature>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
-- `docs/features/<feature>/plans/*.md` → implementation plans (planning artifacts)
-- `docs/features/implementation-log.md` → completed execution-spec ledger
+- `Features/<Feature>/<feature>.spec.md` → authoritative feature intent
+- `Features/<Feature>/<feature>.md` → current state
+- `Features/<Feature>/<feature>.decisions.md` → append-only decision history
+- `Features/<Feature>/specs/*.md` → execution specs (planning artifacts, non-authoritative after implementation)
+- `Features/<Feature>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
+- `Features/<Feature>/plans/*.md` → implementation plans (planning artifacts)
+- `Features/implementation.log` → completed execution-spec ledger
 
 For new active execution specs, save an implementation plan file before implementation begins. Chat-only plans are not sufficient, and plan files must not expand or alter execution-spec scope.
 
@@ -36,7 +36,6 @@ Foundry apps are moving toward a localized structure where the feature directory
 
 ```text
 Features/
-  implementation.log
   README.md
 
   <FeatureName>/
@@ -51,6 +50,7 @@ Features/
 ```
 
 Feature-specific app code and tests should live inside the owning feature directory once the localized feature layout is enabled. Shared files should contain registration glue only.
+Feature-owned runtime code belongs under `Features/<Feature>/src/` and feature-owned tests belong under `Features/<Feature>/tests/`.
 
 Use boundary verification when available:
 

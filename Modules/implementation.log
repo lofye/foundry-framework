@@ -316,3 +316,8 @@
 - spec: feature-system/004-enforce-application-feature-local-runtime-layout.md
 - note: Enforced deterministic application feature layout checks in `verify features` so executable features require localized `Features/<Feature>/src` and `Features/<Feature>/tests`, optional `specs/plans/docs` paths validate when present, and explicit `feature.json` non-executable features can omit runtime/test directories.
 - note: Added deterministic violations for attributable legacy ownership leaks (`app/features/<slug>` runtime artifacts and `docs/features/<slug>` context files) and refined framework-module misplacement detection to avoid misclassifying application features unless matching `Modules/<Name>` directories exist.
+
+## 2026-05-06 14:07:25 -0400
+- spec: feature-system/005-align-docs-agents-and-skills-with-modules-vs-features.md
+- note: Aligned framework and app-facing docs/instructions with module-vs-feature governance: framework context/spec execution now points to `Modules/*` and `Modules/implementation.log`, while downstream app feature context/runtimes remain under `Features/*` with explicit `src/` and `tests/` localization guidance.
+- note: Updated strict/non-strict implementation skills to resolve both module and feature execution-spec paths deterministically and to append framework module work to `Modules/implementation.log` instead of legacy framework feature-ledger paths.

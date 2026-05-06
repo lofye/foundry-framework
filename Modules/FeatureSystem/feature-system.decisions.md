@@ -194,3 +194,40 @@ Timestamp: 2026-05-06T13:52:12-04:00
 - Scaffold Requirements
 - CLI Requirements
 - Tests Required
+
+### Decision: align framework and app instructions with modules-vs-features split
+
+Timestamp: 2026-05-06T14:10:00-04:00
+
+**Context**
+
+- Execution spec `005-align-docs-agents-and-skills-with-modules-vs-features` requires docs, agent instructions, and implementation skills to match the implemented `Modules/*` (framework) and `Features/*` (application) split.
+- Several guidance files still used legacy `docs/features/*` references for canonical framework workflow and did not clearly enforce app feature-local runtime/test placement.
+
+**Decision**
+
+- Align framework contributor docs to treat `Modules/*` as canonical framework-module context and `Modules/implementation.log` as the framework execution ledger.
+- Align app-facing docs/instructions to treat `Features/*` as canonical app feature context and enforce feature-local runtime/tests under `Features/<Feature>/src` and `Features/<Feature>/tests`.
+- Update strict and non-strict implementation skills to distinguish framework-module and application-feature spec/log paths explicitly.
+
+**Reasoning**
+
+- Clear terminology and path contracts reduce agent drift and prevent framework work from being logged or reasoned about as app feature work.
+- Keeping app instructions explicit about localized runtime/test ownership protects feature-boundary integrity.
+
+**Alternatives Considered**
+
+- Keep legacy docs wording and rely on implicit migration context.
+- Update only AGENTS files and leave skill contracts unchanged.
+
+**Impact**
+
+- Framework docs, app docs, and implementation skills now communicate consistent module-vs-feature governance semantics.
+- Scaffolded app guidance now explicitly reinforces feature-local runtime/test ownership and avoids framework-module directory creation under app `Features/`.
+
+**Spec Reference**
+
+- Purpose
+- Required Content Changes
+- Skills
+- Acceptance Criteria

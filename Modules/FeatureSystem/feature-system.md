@@ -21,6 +21,9 @@
 - Optional `specs/`, `plans/`, and `docs/` directories are validated when present and may be omitted when absent.
 - Application feature legacy ownership leaks are reported deterministically (`app/features/<slug>` runtime artifacts and `docs/features/<slug>` context files).
 - Framework module duplication under both `Modules/<Module>/` and `Features/<Module>/` is reported deterministically without misclassifying application features that exist only under `Features/`.
+- Framework and scaffold documentation now consistently distinguish Framework Modules (`Modules/*`) from Application Features (`Features/*`).
+- Agent guides and implementation skills now route framework execution-spec work to `Modules/*` and `Modules/implementation.log` while keeping app feature-local guidance under `Features/*`.
+- Documentation and agent/skill contracts no longer describe framework module governance as canonical under `Features/*`.
 
 ## Open Questions
 

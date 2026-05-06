@@ -115,13 +115,14 @@ The root `app/*` tree is a framework-owned demo and smoke app.
 
 - `src/*` → framework behavior
 - `tests/*` → expected behavior
-- docs/features/<feature>/<feature>.spec.md → authoritative feature intent
-- docs/features/<feature>/<feature>.md → current state
-- docs/features/<feature>/<feature>.decisions.md → append-only decision history
-- docs/features/<feature>/specs/*.md → execution specs (planning artifacts, non-authoritative after implementation)
-- docs/features/<feature>/specs/drafts/*.md → draft execution specs (non-executable planning artifacts)
-- docs/features/<feature>/plans/*.md → implementation plans (planning artifacts)
-- docs/features/implementation-log.md → completed execution-spec ledger
+- Modules/<Module>/<module>.spec.md → authoritative framework-module intent
+- Modules/<Module>/<module>.md → current framework-module state
+- Modules/<Module>/<module>.decisions.md → append-only framework-module decision history
+- Modules/<Module>/specs/*.md → execution specs (planning artifacts, non-authoritative after implementation)
+- Modules/<Module>/specs/drafts/*.md → draft execution specs (non-executable planning artifacts)
+- Modules/<Module>/plans/*.md → implementation plans (planning artifacts)
+- Modules/implementation.log → completed framework execution-spec ledger
+- Features/<Feature>/<feature>.spec.md, Features/<Feature>/<feature>.md, Features/<Feature>/<feature>.decisions.md → canonical downstream application feature context
 - For new active execution specs, save a plan file before implementation; chat-only plans are not sufficient.
 - Plan files describe implementation strategy only and must not expand or alter execution-spec scope.
 - Execution spec IDs are ordered contracts and must remain contiguous within each feature at every hierarchy level; skipping numbers is forbidden.
@@ -138,15 +139,24 @@ The root `app/*` tree is a framework-owned demo and smoke app.
 
 Foundry features are intended to be physically localized so agents can load, reason about, modify, test, and verify one feature with the smallest safe context window.
 
-The canonical localized feature root is:
-
-`Features/<FeatureName>/`
+Framework governance root is `Modules/<ModuleName>/`.
+Application feature root is `Features/<FeatureName>/`.
 
 Recommended structure:
 
 ```text
-Features/
+Modules/
   implementation.log
+  README.md
+
+  <ModuleName>/
+    <module>.spec.md
+    <module>.md
+    <module>.decisions.md
+    specs/
+    plans/
+
+Features/
   README.md
 
   <FeatureName>/
@@ -162,9 +172,12 @@ Features/
 
 Rules:
 
-- `Features/<FeatureName>/` is the primary LLM context boundary for a feature.
-- Feature-specific runtime behavior MUST live under `Features/<FeatureName>/src/`.
-- Feature-specific tests MUST live under `Features/<FeatureName>/tests/`.
+- `Modules/<ModuleName>/` is the primary framework governance boundary.
+- Framework runtime source remains layer-organized under `src/*` unless an active spec explicitly requires a different placement.
+- Do not opportunistically move framework runtime code into `Modules/<Module>/src/`.
+- `Features/<FeatureName>/` is reserved for downstream application features.
+- Application feature runtime behavior MUST live under `Features/<FeatureName>/src/`.
+- Application feature tests MUST live under `Features/<FeatureName>/tests/`.
 - Feature-specific execution specs, plans, supporting docs, canonical spec/state files, and decision ledgers MUST live under that feature root once the localized layout is enabled.
 - Shared framework directories such as `src/CLI`, `src/Support`, `src/MCP`, `src/Packs`, and similar framework surfaces MAY contain thin registration glue only.
 - Shared framework directories MUST NOT contain feature-specific business logic, policy logic, validators, handlers, renderers, or workflows when that logic can live inside the owning feature.
@@ -406,11 +419,11 @@ Key rules:
 - IDs are immutable
 - IDs must be unique within a feature, not globally
 - slugs are not required to be unique
-- drafts live in `docs/features/<feature-name>/specs/drafts/`
+- drafts live in `Modules/<Module>/specs/drafts/` or `Features/<Feature>/specs/drafts/`
 - Draft specs are non-executable planning artifacts
-- Agents MUST NOT implement specs from `docs/features/<feature>/specs/drafts/`
+- Agents MUST NOT implement specs from any `specs/drafts/` path
 - If asked to implement a draft spec, refuse and require promotion to the active spec path first
-- active executable specs live in `docs/features/<feature-name>/specs/`
+- active executable specs live in `Modules/<Module>/specs/` or `Features/<Feature>/specs/`
 - the spec heading must mirror the filename only
 - filename-only headings are forbidden; required format is `# Execution Spec: <id>-<slug>`
 
@@ -447,16 +460,16 @@ Example:
 
 # Context Anchoring (MANDATORY)
 
-Foundry uses feature-level context anchoring.
+Foundry framework work uses module-level context anchoring.
 
 Canonical files:
 
-- `docs/features/<feature>/<feature>.spec.md` = intent
-- `docs/features/<feature>/<feature>.md` = state
-- `docs/features/<feature>/<feature>.decisions.md` = history
-- `docs/features/implementation-log.md` = completed execution-spec ledger
+- `Modules/<Module>/<module>.spec.md` = intent
+- `Modules/<Module>/<module>.md` = state
+- `Modules/<Module>/<module>.decisions.md` = history
+- `Modules/implementation.log` = completed execution-spec ledger
 
-Execution specs under `docs/features/<feature>/specs/*.md` are:
+Execution specs under `Modules/<Module>/specs/*.md` are:
 
 - planning artifacts
 - optional

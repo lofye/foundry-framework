@@ -27,7 +27,8 @@ Do not use this skill for:
 # Inputs
 
 Expect:
-- Features/<FeatureName>/specs/<id>-<slug>.md
+- Modules/<ModuleName>/specs/<id>-<slug>.md for framework-module work
+- Features/<FeatureName>/specs/<id>-<slug>.md for application-feature work
 
 If missing:
 - stop immediately and request it
@@ -107,7 +108,8 @@ If ANY step fails or leaves unresolved issues:
 
 ## Step 2 — Append Implementation Log
 - Append to:
-  docs/features/implementation-log.md
+  Modules/implementation.log for framework-module specs
+  Features/implementation.log for application-feature specs
 - Must follow exact format
 
 ---

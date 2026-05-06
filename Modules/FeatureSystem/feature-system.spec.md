@@ -34,6 +34,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Framework-module misplacement checks do not classify application features under `Features/` as framework modules unless matching `Modules/<Name>` entries exist.
 - `spec:validate` validates canonical `Modules/*/specs` and `Modules/*/plans` paths.
 - Active-spec implementation logging uses `Modules/implementation.log` when canonical module workspace is present.
+- Framework contributor docs, app-facing docs, and implementation skills align terminology and path contracts so framework-module work resolves from `Modules/*` while application-feature work resolves from `Features/*`.
 
 ## Acceptance Criteria
 
@@ -43,6 +44,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Application feature-local runtime ownership checks are deterministic and enforce default executable layout semantics.
 - Spec validation supports canonical `Modules/*` specs and plans.
 - Canonical implementation ledger path is recognized as `Modules/implementation.log`.
+- Documentation and agent/skill guidance consistently encode the modules-vs-features split without implying framework modules are governed under `Features/*`.
 
 ## Assumptions
 

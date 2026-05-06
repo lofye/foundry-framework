@@ -58,14 +58,14 @@ Execution rules:
 - Treat `app/generated/*` as generated compatibility projections
 - Treat `docs/generated/*` and `docs/inspect-ui/*` as generated documentation output
 - Treat `docs/policies/*` as repository execution and reasoning policy inputs
-- Treat `docs/features/<feature>/<feature>.spec.md` as authoritative feature intent
-- Treat `docs/features/<feature>/<feature>.md` as current state
-- Treat `docs/features/<feature>/<feature>.decisions.md` as append-only decision history
+- Treat `Features/<Feature>/<feature>.spec.md` as authoritative feature intent
+- Treat `Features/<Feature>/<feature>.md` as current state
+- Treat `Features/<Feature>/<feature>.decisions.md` as append-only decision history
 - Treat code and tests as the source of truth for actual implementation and runtime behavior
-- Treat `docs/features/<feature>/specs/*.md` as execution specs: planning artifacts that are non-authoritative after implementation
-- Treat `docs/features/<feature>/specs/drafts/*.md` as draft execution specs: non-executable planning artifacts
-- Treat `docs/features/<feature>/plans/*.md` as implementation plans: planning artifacts that are non-authoritative after implementation
-- Treat `docs/features/implementation-log.md` as the completed execution-spec ledger
+- Treat `Features/<Feature>/specs/*.md` as execution specs: planning artifacts that are non-authoritative after implementation
+- Treat `Features/<Feature>/specs/drafts/*.md` as draft execution specs: non-executable planning artifacts
+- Treat `Features/<Feature>/plans/*.md` as implementation plans: planning artifacts that are non-authoritative after implementation
+- Treat `Features/implementation.log` as the completed execution-spec ledger
 - Save a plan file for new active execution specs before implementation; chat-only plans are not sufficient.
 - Plans describe implementation strategy only and must not expand or alter execution-spec scope.
 - Execution spec IDs are ordered contracts and must stay contiguous within each feature at every hierarchy level; skipping numbers is forbidden.
@@ -225,11 +225,11 @@ Foundry uses feature-level context anchoring for meaningful feature work.
 
 Canonical feature context files:
 
-- `docs/features/<feature-name>/<feature-name>.spec.md` = authoritative feature intent
-- `docs/features/<feature-name>/<feature-name>.md` = current state
-- `docs/features/<feature-name>/<feature-name>.decisions.md` = append-only decision history
+- `Features/<Feature>/<feature>.spec.md` = authoritative feature intent
+- `Features/<Feature>/<feature>.md` = current state
+- `Features/<Feature>/<feature>.decisions.md` = append-only decision history
 
-Execution specs live at `docs/features/<feature-name>/specs/*.md`, but they are:
+Execution specs live at `Features/<Feature>/specs/*.md`, but they are:
 
 - optional
 - planning artifacts only
@@ -256,18 +256,21 @@ Spec naming rules:
 - IDs are unique within a feature, not globally across the whole project
 - slugs are descriptive only and are not required to be unique
 - headings must mirror the filename only
-- drafts live in `docs/features/<feature>/specs/drafts/`
-- active specs live in `docs/features/<feature>/specs/`
+- drafts live in `Features/<Feature>/specs/drafts/`
+- active specs live in `Features/<Feature>/specs/`
 - do not rename existing IDs
 - do not add metadata fields like `id`, `parent`, or `status`
 
 ## Application Feature Structure
 
-Application features MAY colocate runtime code:
+Application features MUST localize runtime code and tests:
 
 Features/<Feature>/src/
+Features/<Feature>/tests/
 
-This is optional and encouraged for app-level modularity.
+Application feature-owned runtime code is sourced from `Features/<Feature>/src/`.
+Application feature-owned tests are sourced from `Features/<Feature>/tests/`.
+Do not create framework module governance directories under `Features/` in app repositories.
 
 ## Mandatory Workflow Rules
 
@@ -277,7 +280,7 @@ Read-before-acting rule:
 - Do not rely on chat history as authoritative context
 - Use `context doctor`, `context check-alignment`, `inspect context`, and `verify context` when context tooling is available
 - Draft specs are non-executable planning artifacts.
-- Agents MUST NOT implement specs from `docs/features/<feature>/specs/drafts/`.
+- Agents MUST NOT implement specs from `Features/<Feature>/specs/drafts/`.
 - If asked to implement a draft spec, refuse and require promotion to the active spec path first.
 
 Primary execution gate:
