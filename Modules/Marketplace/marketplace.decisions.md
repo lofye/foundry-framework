@@ -184,3 +184,47 @@ Timestamp: 2026-05-06T19:28:00Z
 
 - Expected Behavior
 - Acceptance Criteria
+
+### Decision: add centralized entitlement resolution and deterministic license activation cache for Marketplace
+
+Timestamp: 2026-05-07T15:05:00Z
+
+**Context**
+
+- Marketplace execution spec `003-marketplace-entitlements-and-license-activation` requires deterministic entitlement contracts, cache behavior, activation flows, and inspect/verify integration.
+- Existing Marketplace runtime covered backend metadata/artifacts plus identity/authentication, but had no entitlement model or cache-backed resolver.
+
+**Decision**
+
+- Add a deterministic entitlement cache at `.foundry/marketplace/entitlements.json` with strict shape validation and fail-closed malformed-state behavior.
+- Introduce centralized `PackEntitlementResolver` for distribution metadata validation and entitlement decision resolution.
+- Extend `license activate` to refresh Marketplace entitlements via a deterministic Marketplace license-client abstraction while preserving secret redaction.
+- Add `entitlements` CLI surface for deterministic listing and wire entitlement cache inspection/verification into `inspect marketplace --json` and `verify marketplace --json`.
+- Enforce distribution metadata contracts (`distribution`, `entitlement_required`, optional structured `price`) for Marketplace pack metadata.
+
+**Reasoning**
+
+- A single entitlement decision surface prevents logic drift between CLI/backend flows and provides deterministic fail-closed behavior for premium/licensed distribution.
+- Cache inspection/verification keeps entitlement state auditable for agents without exposing credential secrets.
+- Activation flow integration provides a deterministic update path that future hosted Marketplace adapters can replace without changing CLI/runtime contracts.
+
+**Alternatives Considered**
+
+- Add entitlement checks only in CLI command handlers without a shared resolver.
+- Keep activation state in the legacy monetization store only and avoid Marketplace-local entitlement cache.
+- Defer metadata validation until hosted registry integration.
+
+**Impact**
+
+- Marketplace runtime now has deterministic entitlement and activation contracts that can be reused by MCP/Generate integration seams.
+- Download behavior for entitlement-required Marketplace distributions fails closed when cache state is missing, expired, unknown, or malformed.
+- Inspect/verify outputs now include entitlement visibility and validation results.
+
+**Spec Reference**
+
+- Entitlement Model
+- Pack Distribution Metadata
+- PackEntitlementResolver
+- Local Entitlement Cache
+- License Activation
+- Verify / Inspect Integration

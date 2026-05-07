@@ -42,6 +42,7 @@ final class CommandCatalogTest extends TestCase
         $login = $this->commandRow($data, 'login');
         $logout = $this->commandRow($data, 'logout');
         $whoami = $this->commandRow($data, 'whoami');
+        $entitlements = $this->commandRow($data, 'entitlements');
         $generateIntent = $this->commandRow($data, 'generate <intent>');
         $help = $this->commandRow($data, 'help');
 
@@ -58,6 +59,7 @@ final class CommandCatalogTest extends TestCase
         $this->assertContains('foundry login --user=demo-user --token=token_demo_1234 --json', $login['examples']);
         $this->assertContains('foundry logout --json', $logout['examples']);
         $this->assertContains('foundry whoami --json', $whoami['examples']);
+        $this->assertContains('foundry entitlements --json', $entitlements['examples']);
 
         $this->assertContains('foundry help generate Add --json', $generateIntent['examples']);
         $this->assertSame('Sample command JSON output (`help --json` index)', $help['sampleOutputLabel']);

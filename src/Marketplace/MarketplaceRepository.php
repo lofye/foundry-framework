@@ -33,6 +33,7 @@ final class MarketplaceRepository
     {
         $index = $this->load();
         $auth = (new MarketplaceIdentityStore($this->paths))->inspect();
+        $entitlements = (new MarketplaceEntitlementCache($this->paths))->inspect();
         $packs = [];
         $versionTotal = 0;
         $artifactTotal = 0;
@@ -63,6 +64,7 @@ final class MarketplaceRepository
                 'index' => $this->indexPathRelative(),
             ],
             'auth' => $auth,
+            'entitlements' => $entitlements,
             'packs' => $packs,
             'totals' => [
                 'packs' => count($packs),
@@ -135,6 +137,36 @@ final class MarketplaceRepository
         }
 
         return null;
+    }
+
+    /**
+     * @return array<string,mixed>|null
+     */
+    public function distributionMetadataForPack(string $name): ?array
+    {
+        $pack = $this->find($name);
+        if (!$pack instanceof MarketplacePack) {
+            return null;
+        }
+
+        return $this->distributionMetadata($pack);
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function distributionMetadata(MarketplacePack $pack): array
+    {
+        return [
+            'distribution' => $pack->distribution,
+            'entitlement_required' => $pack->entitlementRequired,
+            'price' => $pack->priceCurrency === null || $pack->priceAmount === null
+                ? null
+                : [
+                    'currency' => $pack->priceCurrency,
+                    'amount' => $pack->priceAmount,
+                ],
+        ];
     }
 
     public function artifactAbsolutePath(string $artifact): string
@@ -263,6 +295,8 @@ final class MarketplaceRepository
         }
 
         $metadata = is_array($row['metadata'] ?? null) ? $row['metadata'] : [];
+        $distribution = (new PackEntitlementResolver(new MarketplaceEntitlementCache($this->paths)))
+            ->validateDistributionMetadata($metadata, $name);
         $tags = array_values(array_unique(array_map('strval', (array) ($metadata['tags'] ?? []))));
         sort($tags);
 
@@ -273,6 +307,10 @@ final class MarketplaceRepository
             vendor: (string) ($row['vendor'] ?? ''),
             latestVersion: $latestVersion,
             versions: $versions,
+            distribution: (string) $distribution['distribution'],
+            entitlementRequired: (bool) $distribution['entitlement_required'],
+            priceCurrency: is_array($distribution['price']) ? (string) ($distribution['price']['currency'] ?? '') : null,
+            priceAmount: is_array($distribution['price']) ? (string) ($distribution['price']['amount'] ?? '') : null,
             homepage: $this->nullableString($metadata['homepage'] ?? null),
             license: $this->nullableString($metadata['license'] ?? null),
             tags: $tags,

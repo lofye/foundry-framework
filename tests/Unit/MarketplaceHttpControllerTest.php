@@ -97,12 +97,41 @@ final class MarketplaceHttpControllerTest extends TestCase
         $this->assertSame('PACK_ARTIFACT_CHECKSUM_MISMATCH', $checksumMismatch['payload']['error']['code']);
     }
 
+    public function test_download_fails_closed_when_premium_pack_entitlement_is_missing(): void
+    {
+        $this->writeFixture(distribution: 'premium', entitlementRequired: true);
+        $blocked = $this->controller()->downloadPack('vendor/example-pack', '1.0.0');
+
+        $this->assertSame(403, $blocked['status_code']);
+        $this->assertSame('MARKETPLACE_ENTITLEMENT_MISSING', $blocked['payload']['error']['code']);
+    }
+
+    public function test_download_allows_premium_pack_when_cache_contains_granted_entitlement(): void
+    {
+        $this->writeFixture(distribution: 'premium', entitlementRequired: true);
+        $cachePath = $this->project->root . '/.foundry/marketplace/entitlements.json';
+        file_put_contents($cachePath, json_encode([
+            'entitlements' => [[
+                'pack' => 'vendor/example-pack',
+                'type' => 'premium',
+                'status' => 'granted',
+                'expires_at' => null,
+                'source' => 'marketplace',
+                'granted_at' => '2026-01-01T00:00:00Z',
+            ]],
+            'updated_at' => '2026-01-01T00:00:00Z',
+        ], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . "\n");
+
+        $ok = $this->controller()->downloadPack('vendor/example-pack', '1.0.0');
+        $this->assertSame(200, $ok['status_code']);
+    }
+
     private function controller(): MarketplaceHttpController
     {
         return new MarketplaceHttpController(new MarketplaceRepository(new Paths($this->project->root)));
     }
 
-    private function writeFixture(): void
+    private function writeFixture(string $distribution = 'free', bool $entitlementRequired = false): void
     {
         $artifactRelative = 'artifacts/vendor__example-pack/1.0.0/pack.zip';
         $artifactAbsolute = $this->project->root . '/.foundry/marketplace/' . $artifactRelative;
@@ -124,9 +153,9 @@ final class MarketplaceHttpControllerTest extends TestCase
                     'artifact' => $artifactRelative,
                     'sha256' => hash_file('sha256', $artifactAbsolute),
                     'published_at' => '2026-01-01T00:00:00Z',
-                    'metadata' => ['homepage' => null, 'license' => null, 'tags' => []],
+                    'metadata' => ['distribution' => $distribution, 'entitlement_required' => $entitlementRequired, 'homepage' => null, 'license' => null, 'tags' => []],
                 ]],
-                'metadata' => ['homepage' => null, 'license' => null, 'tags' => []],
+                'metadata' => ['distribution' => $distribution, 'entitlement_required' => $entitlementRequired, 'homepage' => null, 'license' => null, 'tags' => []],
             ]],
         ];
 
@@ -137,4 +166,3 @@ final class MarketplaceHttpControllerTest extends TestCase
         file_put_contents($index, json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) . "\n");
     }
 }
-

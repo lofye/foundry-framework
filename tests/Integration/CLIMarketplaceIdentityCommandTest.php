@@ -114,6 +114,55 @@ final class CLIMarketplaceIdentityCommandTest extends TestCase
         $this->assertSame('demo@example.com', $result['payload']['user']['email']);
     }
 
+    public function test_entitlements_lists_cached_entitlements_deterministically(): void
+    {
+        $path = $this->project->root . '/.foundry/marketplace/entitlements.json';
+        if (!is_dir(dirname($path))) {
+            mkdir(dirname($path), 0777, true);
+        }
+        file_put_contents($path, json_encode([
+            'entitlements' => [[
+                'pack' => 'vendor/premium-pack',
+                'type' => 'premium',
+                'status' => 'granted',
+                'expires_at' => null,
+                'source' => 'marketplace',
+                'granted_at' => '2026-01-01T00:00:00Z',
+            ]],
+            'updated_at' => '2026-01-01T00:00:00Z',
+        ], JSON_THROW_ON_ERROR) . "\n");
+
+        $result = $this->runCommand(new Application(), ['foundry', 'entitlements', '--json']);
+
+        $this->assertSame(0, $result['status']);
+        $this->assertSame('ok', $result['payload']['status']);
+        $this->assertSame('vendor/premium-pack', $result['payload']['entitlements'][0]['pack']);
+    }
+
+    public function test_login_supports_space_delimited_options_and_plain_text_output(): void
+    {
+        $app = new Application();
+
+        $login = $this->runCommand($app, ['foundry', 'login', '--user', 'demo-user', '--token', 'token_demo_1234', '--json']);
+        $this->assertSame(0, $login['status']);
+        $this->assertTrue($login['payload']['authenticated']);
+
+        $whoami = $this->runCommandRaw($app, ['foundry', 'whoami']);
+        $this->assertSame(0, $whoami['status']);
+        $this->assertStringContainsString('Marketplace identity inspected.', $whoami['output']);
+        $this->assertStringContainsString('Authenticated: yes', $whoami['output']);
+        $this->assertStringContainsString('User: demo-user', $whoami['output']);
+    }
+
+    public function test_entitlements_plain_text_lists_none_when_cache_missing(): void
+    {
+        $result = $this->runCommandRaw(new Application(), ['foundry', 'entitlements']);
+
+        $this->assertSame(0, $result['status']);
+        $this->assertStringContainsString('Marketplace entitlements:', $result['output']);
+        $this->assertStringContainsString('- none', $result['output']);
+    }
+
     /**
      * @param array<int,string> $argv
      * @return array{status:int,payload:array<string,mixed>}
@@ -128,5 +177,18 @@ final class CLIMarketplaceIdentityCommandTest extends TestCase
         $payload = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
 
         return ['status' => $status, 'payload' => $payload];
+    }
+
+    /**
+     * @param array<int,string> $argv
+     * @return array{status:int,output:string}
+     */
+    private function runCommandRaw(Application $app, array $argv): array
+    {
+        ob_start();
+        $status = $app->run($argv);
+        $output = (string) (ob_get_clean() ?: '');
+
+        return ['status' => $status, 'output' => $output];
     }
 }

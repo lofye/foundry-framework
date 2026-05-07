@@ -37,6 +37,9 @@ final class MarketplaceRepositoryTest extends TestCase
         $this->assertFalse($inspect['auth']['authenticated']);
         $this->assertSame('unauthenticated', $inspect['auth']['status']);
         $this->assertFalse($inspect['auth']['token']['present']);
+        $this->assertFalse($inspect['entitlements']['configured']);
+        $this->assertSame('missing', $inspect['entitlements']['status']);
+        $this->assertSame([], $inspect['entitlements']['entitlements']);
         $this->assertSame([], $inspect['packs']);
         $this->assertSame(['packs' => 0, 'versions' => 0, 'artifacts' => 0], $inspect['totals']);
     }
@@ -95,7 +98,7 @@ final class MarketplaceRepositoryTest extends TestCase
                         $this->versionRow('vendor/example-pack', '1.0.0'),
                         $this->versionRow('vendor/example-pack', '1.0.0'),
                     ],
-                    'metadata' => ['homepage' => null, 'license' => null, 'tags' => []],
+                    'metadata' => ['distribution' => 'free', 'entitlement_required' => false, 'homepage' => null, 'license' => null, 'tags' => []],
                 ],
             ],
         ]);
@@ -122,12 +125,31 @@ final class MarketplaceRepositoryTest extends TestCase
                     'published_at' => '2026-01-01T00:00:00Z',
                     'metadata' => ['homepage' => null, 'license' => null, 'tags' => []],
                 ]],
-                'metadata' => ['homepage' => null, 'license' => null, 'tags' => []],
+                'metadata' => ['distribution' => 'free', 'entitlement_required' => false, 'homepage' => null, 'license' => null, 'tags' => []],
             ]],
         ]);
 
         $this->expectException(FoundryError::class);
         $this->expectExceptionMessage('Marketplace pack name is invalid.');
+        $this->repository()->load();
+    }
+
+    public function test_load_rejects_missing_distribution_metadata(): void
+    {
+        $this->writeRawIndex([
+            'packs' => [[
+                'name' => 'vendor/example-pack',
+                'display_name' => 'Example',
+                'description' => 'Example',
+                'vendor' => 'vendor',
+                'latest_version' => '1.0.0',
+                'versions' => [$this->versionRow('vendor/example-pack', '1.0.0')],
+                'metadata' => ['homepage' => null, 'license' => null, 'tags' => []],
+            ]],
+        ]);
+
+        $this->expectException(FoundryError::class);
+        $this->expectExceptionMessage('Marketplace distribution metadata is invalid.');
         $this->repository()->load();
     }
 
@@ -175,7 +197,7 @@ final class MarketplaceRepositoryTest extends TestCase
             'vendor' => str_contains($name, '/') ? explode('/', $name)[0] : $name,
             'latest_version' => $latestVersion,
             'versions' => array_map(fn(string $version): array => $this->versionRow($name, $version), $versions),
-            'metadata' => ['homepage' => null, 'license' => null, 'tags' => ['z', 'a']],
+            'metadata' => ['distribution' => 'free', 'entitlement_required' => false, 'homepage' => null, 'license' => null, 'tags' => ['z', 'a']],
         ];
     }
 
@@ -199,7 +221,7 @@ final class MarketplaceRepositoryTest extends TestCase
             'artifact' => $artifactRelative,
             'sha256' => hash_file('sha256', $artifactAbsolute),
             'published_at' => '2026-01-01T00:00:00Z',
-            'metadata' => ['homepage' => null, 'license' => null, 'tags' => ['z', 'a']],
+            'metadata' => ['distribution' => 'free', 'entitlement_required' => false, 'homepage' => null, 'license' => null, 'tags' => ['z', 'a']],
         ];
     }
 

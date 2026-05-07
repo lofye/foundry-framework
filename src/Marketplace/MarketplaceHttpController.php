@@ -65,6 +65,39 @@ final class MarketplaceHttpController
             return $this->error(404, 'PACK_VERSION_NOT_FOUND', 'Pack version not found.', ['name' => $name, 'version' => $version]);
         }
 
+        $distributionMetadata = $this->repository->distributionMetadataForPack($name);
+        if (!is_array($distributionMetadata)) {
+            return $this->error(404, 'PACK_NOT_FOUND', 'Pack not found.', ['name' => $name]);
+        }
+
+        try {
+            $decision = (new PackEntitlementResolver(
+                new MarketplaceEntitlementCache($this->repository->paths()),
+            ))->resolve($name, $distributionMetadata);
+        } catch (\Throwable) {
+            return $this->error(
+                403,
+                'MARKETPLACE_ENTITLEMENT_CACHE_INVALID',
+                'Marketplace entitlement cache is invalid.',
+                ['name' => $name],
+            );
+        }
+
+        if ((bool) ($decision['required'] ?? false) && (string) ($decision['status'] ?? 'unknown') !== 'granted') {
+            $code = match ((string) ($decision['status'] ?? 'unknown')) {
+                'missing' => 'MARKETPLACE_ENTITLEMENT_MISSING',
+                'expired' => 'MARKETPLACE_ENTITLEMENT_EXPIRED',
+                default => 'MARKETPLACE_ENTITLEMENT_UNKNOWN',
+            };
+
+            return $this->error(
+                403,
+                $code,
+                'Marketplace entitlement is required for this pack.',
+                ['name' => $name, 'version' => $version, 'status' => (string) ($decision['status'] ?? 'unknown')],
+            );
+        }
+
         $absolute = $this->repository->artifactAbsolutePath($packVersion->artifact);
         if (!is_file($absolute)) {
             return $this->error(410, 'PACK_ARTIFACT_MISSING', 'Pack artifact is missing.', ['name' => $name, 'version' => $version, 'artifact' => $this->repository->storageRootRelative() . '/' . ltrim($packVersion->artifact, '/')]);
@@ -109,4 +142,3 @@ final class MarketplaceHttpController
         ];
     }
 }
-

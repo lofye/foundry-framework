@@ -11,11 +11,12 @@ final class MarketplaceVerifier
     public function __construct(private readonly MarketplaceRepository $repository) {}
 
     /**
-     * @return array{status:string,checked:array{packs:int,versions:int,artifacts:int},auth:array<string,mixed>,errors:list<array<string,mixed>>}
+     * @return array{status:string,checked:array{packs:int,versions:int,artifacts:int},auth:array<string,mixed>,entitlements:array<string,mixed>,errors:list<array<string,mixed>>}
      */
     public function verify(): array
     {
         $auth = (new MarketplaceIdentityStore($this->repository->paths()))->verify();
+        $entitlements = (new MarketplaceEntitlementCache($this->repository->paths()))->verify();
 
         try {
             $index = $this->repository->load();
@@ -26,11 +27,13 @@ final class MarketplaceVerifier
                 'details' => $error->details,
             ]];
             $errors = array_merge($errors, (array) ($auth['errors'] ?? []));
+            $errors = array_merge($errors, (array) ($entitlements['errors'] ?? []));
 
             return [
                 'status' => $errors === [] ? 'pass' : 'fail',
                 'checked' => ['packs' => 0, 'versions' => 0, 'artifacts' => 0],
                 'auth' => $auth,
+                'entitlements' => $entitlements,
                 'errors' => $errors,
             ];
         }
@@ -80,6 +83,11 @@ final class MarketplaceVerifier
                 $errors[] = $authError;
             }
         }
+        foreach ((array) ($entitlements['errors'] ?? []) as $entitlementError) {
+            if (is_array($entitlementError)) {
+                $errors[] = $entitlementError;
+            }
+        }
 
         usort($errors, static function (array $a, array $b): int {
             $aKey = implode('|', [
@@ -97,13 +105,14 @@ final class MarketplaceVerifier
         });
 
         return [
-            'status' => ($errors === [] && (string) ($auth['status'] ?? 'fail') === 'pass') ? 'pass' : 'fail',
+            'status' => ($errors === [] && (string) ($auth['status'] ?? 'fail') === 'pass' && (string) ($entitlements['status'] ?? 'fail') === 'pass') ? 'pass' : 'fail',
             'checked' => [
                 'packs' => $packCount,
                 'versions' => $versionCount,
                 'artifacts' => $artifactCount,
             ],
             'auth' => $auth,
+            'entitlements' => $entitlements,
             'errors' => $errors,
         ];
     }

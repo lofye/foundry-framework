@@ -36,6 +36,8 @@ final class CLIMarketplaceCommandTest extends TestCase
         $this->assertSame('.foundry/marketplace/packs.json', $result['payload']['storage']['index']);
         $this->assertFalse($result['payload']['auth']['configured']);
         $this->assertFalse($result['payload']['auth']['authenticated']);
+        $this->assertFalse($result['payload']['entitlements']['configured']);
+        $this->assertSame('missing', $result['payload']['entitlements']['status']);
         $this->assertSame('unauthenticated', $result['payload']['auth']['status']);
         $this->assertFalse($result['payload']['auth']['token']['present']);
         $this->assertSame([], $result['payload']['packs']);
@@ -54,9 +56,11 @@ final class CLIMarketplaceCommandTest extends TestCase
         $this->assertSame('vendor/example-pack', $inspect['payload']['packs'][0]['name']);
         $this->assertFalse($inspect['payload']['auth']['configured']);
         $this->assertFalse($inspect['payload']['auth']['authenticated']);
+        $this->assertSame('missing', $inspect['payload']['entitlements']['status']);
         $this->assertSame(0, $verify['status']);
         $this->assertSame('pass', $verify['payload']['status']);
         $this->assertFalse($verify['payload']['auth']['configured']);
+        $this->assertSame('pass', $verify['payload']['entitlements']['status']);
         $this->assertSame([], $verify['payload']['errors']);
         $this->assertSame(['packs' => 1, 'versions' => 1, 'artifacts' => 1], $verify['payload']['checked']);
     }
@@ -152,9 +156,9 @@ final class CLIMarketplaceCommandTest extends TestCase
                     'artifact' => $artifactRelative,
                     'sha256' => $checksum,
                     'published_at' => '2026-01-01T00:00:00Z',
-                    'metadata' => ['homepage' => null, 'license' => null, 'tags' => []],
+                    'metadata' => ['distribution' => 'free', 'entitlement_required' => false, 'homepage' => null, 'license' => null, 'tags' => []],
                 ]],
-                'metadata' => ['homepage' => null, 'license' => null, 'tags' => []],
+                'metadata' => ['distribution' => 'free', 'entitlement_required' => false, 'homepage' => null, 'license' => null, 'tags' => []],
             ]],
         ];
 

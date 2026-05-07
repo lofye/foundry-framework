@@ -6,6 +6,9 @@ namespace Foundry\CLI\Commands;
 
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
+use Foundry\Marketplace\MarketplaceEntitlementCache;
+use Foundry\Marketplace\MarketplaceEntitlementService;
+use Foundry\Marketplace\MarketplaceIdentityStore;
 use Foundry\Monetization\FeatureFlags;
 use Foundry\Monetization\MonetizationService;
 use Foundry\Support\FoundryError;
@@ -41,9 +44,9 @@ final class LicenseCommand extends Command
         $service = new MonetizationService();
 
         return match ($subcommand) {
-            'status' => $this->result($context, $service->status()),
+            'status' => $this->result($context, $service->status(), null),
             'activate' => $this->activate($args, $context, $service),
-            'deactivate' => $this->result($context, $service->deactivate()),
+            'deactivate' => $this->result($context, $service->deactivate(), null),
             default => throw new FoundryError(
                 'CLI_LICENSE_SUBCOMMAND_NOT_FOUND',
                 'not_found',
@@ -86,31 +89,39 @@ final class LicenseCommand extends Command
             );
         }
 
-        return $this->result($context, $service->activate($licenseKey));
+        $license = $service->activate($licenseKey);
+        $marketplace = $this->marketplaceEntitlementService($context)->activateLicense($licenseKey);
+
+        return $this->result($context, $license, $marketplace);
     }
 
     /**
      * @param array<string,mixed> $license
+     * @param array<string,mixed>|null $marketplace
      * @return array{status:int,payload:array<string,mixed>|null,message:string|null}
      */
-    private function result(CommandContext $context, array $license): array
+    private function result(CommandContext $context, array $license, ?array $marketplace): array
     {
         $payload = [
             'license' => $license,
             'commands' => self::LICENSE_COMMANDS,
         ];
+        if (is_array($marketplace)) {
+            $payload['marketplace'] = $marketplace;
+        }
 
         return [
             'status' => 0,
-            'message' => $context->expectsJson() ? null : $this->renderStatus($license),
+            'message' => $context->expectsJson() ? null : $this->renderStatus($license, $marketplace),
             'payload' => $context->expectsJson() ? $payload : null,
         ];
     }
 
     /**
      * @param array<string,mixed> $license
+     * @param array<string,mixed>|null $marketplace
      */
-    private function renderStatus(array $license): string
+    private function renderStatus(array $license, ?array $marketplace): string
     {
         $active = (($license['valid'] ?? false) === true);
         $capabilities = array_values(array_filter(array_map('strval', (array) ($license['capabilities'] ?? []))));
@@ -149,6 +160,11 @@ final class LicenseCommand extends Command
             ? 'enabled (opt-in local analytics)'
             : 'disabled (opt-in local analytics)');
 
+        if (is_array($marketplace)) {
+            $lines[] = '';
+            $lines[] = 'Marketplace entitlements refreshed: ' . count((array) ($marketplace['entitlements'] ?? []));
+        }
+
         return implode(PHP_EOL, $lines);
     }
 
@@ -175,5 +191,13 @@ final class LicenseCommand extends Command
         }
 
         return $lines;
+    }
+
+    private function marketplaceEntitlementService(CommandContext $context): MarketplaceEntitlementService
+    {
+        return new MarketplaceEntitlementService(
+            new MarketplaceEntitlementCache($context->paths()),
+            new MarketplaceIdentityStore($context->paths()),
+        );
     }
 }

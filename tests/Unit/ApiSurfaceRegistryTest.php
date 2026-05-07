@@ -64,6 +64,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $login = $registry->classifyCliCommand(['login', '--user=demo', '--token=abc']);
         $logout = $registry->classifyCliCommand(['logout']);
         $whoami = $registry->classifyCliCommand(['whoami']);
+        $entitlements = $registry->classifyCliCommand(['entitlements']);
         $featureList = $registry->classifyCliCommand(['feature:list']);
         $featureInspect = $registry->classifyCliCommand(['feature:inspect', 'event-system']);
         $featureMap = $registry->classifyCliCommand(['feature:map']);
@@ -119,6 +120,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertNotNull($login);
         $this->assertNotNull($logout);
         $this->assertNotNull($whoami);
+        $this->assertNotNull($entitlements);
         $this->assertNotNull($featureList);
         $this->assertNotNull($featureInspect);
         $this->assertNotNull($featureMap);
@@ -221,6 +223,9 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('experimental', $whoami['stability']);
         $this->assertSame('Extensions', $whoami['category']);
         $this->assertSame('whoami', $whoami['command_type']);
+        $this->assertSame('experimental', $entitlements['stability']);
+        $this->assertSame('Extensions', $entitlements['category']);
+        $this->assertSame('entitlements', $entitlements['command_type']);
         $this->assertSame('stable', $featureList['stability']);
         $this->assertSame('feature:list', $featureList['command_type']);
         $this->assertSame('stable', $featureInspect['stability']);
@@ -344,6 +349,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertNull($registry->resolveCliSignature([]));
         $this->assertSame('license activate', $registry->resolveCliSignature(['license', 'activate']));
         $this->assertSame('license deactivate', $registry->resolveCliSignature(['license', 'deactivate']));
+        $this->assertSame('entitlements', $registry->resolveCliSignature(['entitlements']));
         $this->assertNull($registry->resolveCliSignature(['license', 'unknown']));
 
         $this->assertSame('pack remove', $registry->resolveCliSignature(['pack', 'remove']));

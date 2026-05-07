@@ -75,6 +75,10 @@ final class CLILicenseCommandsTest extends TestCase
         $this->assertSame('file', $activate['payload']['license']['source']);
         $this->assertSame('foundry license status', $activate['payload']['license']['license_commands']['status_command']);
         $this->assertSame('foundry license activate --key=YOUR_KEY', $activate['payload']['license']['license_commands']['activate_command']);
+        $this->assertSame('ok', $activate['payload']['marketplace']['status']);
+        $this->assertTrue($activate['payload']['marketplace']['activated']);
+        $this->assertStringStartsWith('***', (string) $activate['payload']['marketplace']['license']['hint']);
+        $this->assertFileExists($this->project->root . '/.foundry/marketplace/entitlements.json');
         $this->assertContains('license deactivate', $activate['payload']['commands']);
 
         $activeStatus = $this->runCommandRaw($app, ['foundry', 'license', 'status']);
@@ -121,6 +125,17 @@ final class CLILicenseCommandsTest extends TestCase
         $this->assertTrue($deactivate['payload']['license']['valid']);
         $this->assertSame('environment', $deactivate['payload']['license']['source']);
         $this->assertStringContainsString('Environment-based licensing remains active', (string) $deactivate['payload']['license']['message']);
+    }
+
+    public function test_license_activate_positional_key_renders_marketplace_refresh_in_plain_output(): void
+    {
+        $app = new Application();
+
+        $result = $this->runCommandRaw($app, ['foundry', 'license', 'activate', $this->validKey()]);
+
+        $this->assertSame(0, $result['status']);
+        $this->assertStringContainsString('License: Active', $result['output']);
+        $this->assertStringContainsString('Marketplace entitlements refreshed: 1', $result['output']);
     }
 
     private function validKey(): string

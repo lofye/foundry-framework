@@ -173,6 +173,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new MarketplaceIdentityCommand())->matches(['login', '--user=demo', '--token=abc']));
         $this->assertTrue((new MarketplaceIdentityCommand())->matches(['logout']));
         $this->assertTrue((new MarketplaceIdentityCommand())->matches(['whoami']));
+        $this->assertTrue((new MarketplaceIdentityCommand())->matches(['entitlements']));
         $this->assertTrue((new FeaturesCommand())->matches(['features']));
         $this->assertTrue((new FeatureSystemCommand())->matches(['feature:list']));
         $this->assertTrue((new FeatureSystemCommand())->matches(['feature:inspect', 'event-system']));

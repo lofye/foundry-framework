@@ -7,6 +7,8 @@ namespace Foundry\CLI\Commands;
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
 use Foundry\Marketplace\MarketplaceAuthService;
+use Foundry\Marketplace\MarketplaceEntitlementCache;
+use Foundry\Marketplace\MarketplaceEntitlementService;
 use Foundry\Marketplace\MarketplaceIdentityStore;
 
 final class MarketplaceIdentityCommand extends Command
@@ -14,25 +16,31 @@ final class MarketplaceIdentityCommand extends Command
     #[\Override]
     public function supportedSignatures(): array
     {
-        return ['login', 'logout', 'whoami'];
+        return ['login', 'logout', 'whoami', 'entitlements'];
     }
 
     #[\Override]
     public function matches(array $args): bool
     {
-        return in_array((string) ($args[0] ?? ''), ['login', 'logout', 'whoami'], true);
+        return in_array((string) ($args[0] ?? ''), ['login', 'logout', 'whoami', 'entitlements'], true);
     }
 
     #[\Override]
     public function run(array $args, CommandContext $context): array
     {
         $command = (string) ($args[0] ?? '');
-        $service = new MarketplaceAuthService(new MarketplaceIdentityStore($context->paths()));
+        $store = new MarketplaceIdentityStore($context->paths());
+        $service = new MarketplaceAuthService($store);
+        $entitlements = new MarketplaceEntitlementService(
+            new MarketplaceEntitlementCache($context->paths()),
+            $store,
+        );
 
         return match ($command) {
             'login' => $this->login($args, $context, $service),
             'logout' => $this->result($context, $service->logout(), 'Marketplace identity cleared.'),
             'whoami' => $this->result($context, $service->whoami(), 'Marketplace identity inspected.'),
+            'entitlements' => $this->entitlements($context, $entitlements),
             default => [
                 'status' => 1,
                 'message' => 'Marketplace identity command not found.',
@@ -80,6 +88,43 @@ final class MarketplaceIdentityCommand extends Command
         return [
             'status' => 0,
             'message' => $this->renderMessage($message, $payload),
+            'payload' => null,
+        ];
+    }
+
+    /**
+     * @return array{status:int,payload:array<string,mixed>|null,message:string|null}
+     */
+    private function entitlements(CommandContext $context, MarketplaceEntitlementService $service): array
+    {
+        $payload = $service->listEntitlements();
+        if ($context->expectsJson()) {
+            return [
+                'status' => 0,
+                'message' => null,
+                'payload' => $payload,
+            ];
+        }
+
+        $lines = ['Marketplace entitlements:'];
+        foreach ((array) ($payload['entitlements'] ?? []) as $entitlement) {
+            if (!is_array($entitlement)) {
+                continue;
+            }
+
+            $lines[] = '- ' . (string) ($entitlement['pack'] ?? '')
+                . ' [' . (string) ($entitlement['type'] ?? '') . ']'
+                . ' status=' . (string) ($entitlement['status'] ?? '')
+                . ' expires=' . ((string) (($entitlement['expires_at'] ?? null) ?? 'never'));
+        }
+
+        if (count($lines) === 1) {
+            $lines[] = '- none';
+        }
+
+        return [
+            'status' => 0,
+            'message' => implode(PHP_EOL, $lines),
             'payload' => null,
         ];
     }

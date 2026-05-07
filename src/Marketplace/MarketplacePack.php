@@ -17,6 +17,10 @@ final readonly class MarketplacePack
         public string $vendor,
         public string $latestVersion,
         public array $versions,
+        public string $distribution,
+        public bool $entitlementRequired,
+        public ?string $priceCurrency,
+        public ?string $priceAmount,
         public ?string $homepage,
         public ?string $license,
         public array $tags,
@@ -38,6 +42,14 @@ final readonly class MarketplacePack
                 $this->versions,
             )),
             'metadata' => [
+                'distribution' => $this->distribution,
+                'entitlement_required' => $this->entitlementRequired,
+                'price' => $this->priceCurrency === null || $this->priceAmount === null
+                    ? null
+                    : [
+                        'currency' => $this->priceCurrency,
+                        'amount' => $this->priceAmount,
+                    ],
                 'homepage' => $this->homepage,
                 'license' => $this->license,
                 'tags' => $this->tags,
@@ -61,6 +73,14 @@ final readonly class MarketplacePack
                 $this->versions,
             )),
             'metadata' => [
+                'distribution' => $this->distribution,
+                'entitlement_required' => $this->entitlementRequired,
+                'price' => $this->priceCurrency === null || $this->priceAmount === null
+                    ? null
+                    : [
+                        'currency' => $this->priceCurrency,
+                        'amount' => $this->priceAmount,
+                    ],
                 'homepage' => $this->homepage,
                 'license' => $this->license,
                 'tags' => $this->tags,
@@ -68,4 +88,3 @@ final readonly class MarketplacePack
         ];
     }
 }
-

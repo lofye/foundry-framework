@@ -337,3 +337,9 @@
 - note: Hardened Marketplace credential lifecycle contracts by normalizing canonical auth records (`token_type`, `access_token`, `expires_at`, `user`) through root-aware atomic storage, deterministic inspect/verify helpers, and explicit fail-closed malformed/expired state handling.
 - note: Tightened auth runtime/CLI behavior to deterministic authenticated, unauthenticated, expired, and malformed `whoami` outcomes, idempotent logout semantics, and authenticated request rejection for invalid/expired auth state.
 - note: Integrated safe auth visibility into `inspect marketplace --json` and deterministic auth validation into `verify marketplace --json`, with focused unit/integration coverage for redaction, malformed state, expiry, replacement, and verification outcomes.
+
+## 2026-05-07 11:20:00 -0400
+- spec: marketplace/003-marketplace-entitlements-and-license-activation.md
+- note: Added deterministic Marketplace entitlement runtime with strict cache storage at `.foundry/marketplace/entitlements.json`, fail-closed malformed-state validation, centralized `PackEntitlementResolver`, and deterministic distribution metadata contract validation (`distribution`, `entitlement_required`, optional `price`).
+- note: Extended Marketplace contracts with `entitlements` CLI listing, `license activate` entitlement refresh via Marketplace license-client abstraction with redacted key hints, entitlement-aware download gating, and inspect/verify marketplace entitlement visibility.
+- note: Added focused unit/integration coverage for entitlement cache normalization and failure paths, resolver decisions, activation behavior, command surface classification/registration, and premium-download entitlement enforcement.
