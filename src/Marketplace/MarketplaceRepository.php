@@ -34,6 +34,7 @@ final class MarketplaceRepository
         $index = $this->load();
         $auth = (new MarketplaceIdentityStore($this->paths))->inspect();
         $entitlements = (new MarketplaceEntitlementCache($this->paths))->inspect();
+        $purchase = (new MarketplacePurchaseService($this->paths))->inspectCapability();
         $packs = [];
         $versionTotal = 0;
         $artifactTotal = 0;
@@ -65,6 +66,7 @@ final class MarketplaceRepository
             ],
             'auth' => $auth,
             'entitlements' => $entitlements,
+            'purchase' => $purchase,
             'packs' => $packs,
             'totals' => [
                 'packs' => count($packs),

@@ -8,6 +8,7 @@ use Foundry\CLI\CommandContext;
 use Foundry\Compiler\CompileOptions;
 use Foundry\Explain\ExplainOptions;
 use Foundry\Explain\ExplainTarget;
+use Foundry\Marketplace\MarketplacePurchaseService;
 use Foundry\Pro\ArchitectureExplainer;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Paths;
@@ -22,6 +23,7 @@ final class PackManager
         private readonly Paths $paths,
         ?HostedPackRegistry $hostedRegistry = null,
         ?PackArchiveExtractor $archiveExtractor = null,
+        private readonly ?MarketplacePurchaseService $purchaseService = null,
     ) {
         $this->registry = new InstalledPackRegistry($paths);
         $this->hostedRegistry = $hostedRegistry ?? new HostedPackRegistry($paths);
@@ -98,6 +100,14 @@ final class PackManager
             'cache_path' => $this->relativePath($this->hostedRegistry->cachePath()),
             'packs' => $this->hostedRegistry->search($query),
         ];
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function purchase(string $pack): array
+    {
+        return $this->purchaseService()->purchase($pack);
     }
 
     /**
@@ -350,6 +360,11 @@ final class PackManager
         }
 
         return rtrim($candidate, '/');
+    }
+
+    private function purchaseService(): MarketplacePurchaseService
+    {
+        return $this->purchaseService ?? new MarketplacePurchaseService($this->paths, $this->hostedRegistry);
     }
 
     private function resolveLocalSource(string $source): string

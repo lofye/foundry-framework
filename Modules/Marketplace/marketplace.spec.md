@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Define deterministic framework-owned marketplace behavior for local pack metadata/artifact access, Marketplace identity/authentication flows, and entitlement/license activation contracts.
+Define deterministic framework-owned marketplace behavior for local pack metadata/artifact access, Marketplace identity/authentication flows, entitlement/license activation contracts, and purchase/monetization flow contracts.
 
 The framework Marketplace module defines marketplace contracts, protocol behavior, CLI integration, client-side resolution, and deterministic validation. It is not the canonical hosted marketplace application. The hosted marketplace service, account UI, payment flows, and production storage live in the website repo, which may consume the framework module via the pinned framework/ checkout.
 
@@ -15,6 +15,7 @@ The framework Marketplace module defines marketplace contracts, protocol behavio
 - Provide deterministic Marketplace token storage and authenticated-request construction.
 - Preserve compatibility with existing extension pack metadata semantics.
 - Provide deterministic entitlement cache, centralized entitlement resolution, and license-activation flows for Marketplace-hosted distribution access.
+- Provide deterministic purchase flow contracts for hosted Marketplace paid packs with browser handoff or completed-purchase entitlement refresh outcomes.
 
 ## Non-Goals
 
@@ -30,6 +31,7 @@ The framework Marketplace module defines marketplace contracts, protocol behavio
 - Authentication output must not expose raw access tokens in inspectable identity payloads.
 - Entitlement output must not expose raw license keys.
 - Entitlement-required pack distribution must fail closed for malformed, missing, expired, or unknown entitlement state.
+- Marketplace purchase flows must never grant paid access unless entitlement refresh succeeds through shared entitlement runtime.
 - Framework runtime implementation remains under `src/*` rather than `Modules/Marketplace/src/*`.
 
 ## Expected Behavior
@@ -49,6 +51,10 @@ The framework Marketplace module defines marketplace contracts, protocol behavio
 - `inspect marketplace --json` includes entitlement cache inspection (`configured`, `status`, `path`, ordered entitlements) without secrets.
 - `verify marketplace --json` includes deterministic auth + entitlement cache verification and fails closed for malformed or expired credential/entitlement state.
 - Entitlement-required marketplace downloads resolve through centralized entitlement decisions.
+- `pack purchase <vendor/pack> --json` exists with deterministic purchase outcomes for free/not-purchasable, already-entitled, auth-required, pending browser handoff, success, partial refresh failure, and error paths.
+- Completed purchase outcomes refresh entitlements through shared Marketplace entitlement runtime, without duplicating direct entitlement-write logic in purchase command handling.
+- `inspect marketplace --json` includes deterministic purchase capability metadata.
+- `verify marketplace --json` includes deterministic purchase capability readiness checks that do not require live payment credentials by default.
 
 ## Acceptance Criteria
 
@@ -60,6 +66,7 @@ The framework Marketplace module defines marketplace contracts, protocol behavio
 - Marketplace entitlement cache handles missing, malformed, granted, and expired states deterministically without exposing raw license key values.
 - Marketplace distribution metadata validation is deterministic and rejects missing/invalid distribution contract shape.
 - Entitlement resolution is centralized via `PackEntitlementResolver` and reused by download/runtime seams.
+- Purchase resolution and entitlement refresh are centralized via Marketplace purchase service/client contracts and shared entitlement runtime.
 - Invalid pack names, invalid artifact paths, missing artifacts, and checksum mismatches fail deterministically.
 - Required quality and verification gates pass with no context or contract drift.
 

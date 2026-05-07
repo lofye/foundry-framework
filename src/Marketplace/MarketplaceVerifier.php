@@ -11,12 +11,13 @@ final class MarketplaceVerifier
     public function __construct(private readonly MarketplaceRepository $repository) {}
 
     /**
-     * @return array{status:string,checked:array{packs:int,versions:int,artifacts:int},auth:array<string,mixed>,entitlements:array<string,mixed>,errors:list<array<string,mixed>>}
+     * @return array{status:string,checked:array{packs:int,versions:int,artifacts:int},auth:array<string,mixed>,entitlements:array<string,mixed>,purchase:array<string,mixed>,errors:list<array<string,mixed>>}
      */
     public function verify(): array
     {
         $auth = (new MarketplaceIdentityStore($this->repository->paths()))->verify();
         $entitlements = (new MarketplaceEntitlementCache($this->repository->paths()))->verify();
+        $purchase = (new MarketplacePurchaseService($this->repository->paths()))->verifyCapability();
 
         try {
             $index = $this->repository->load();
@@ -34,6 +35,7 @@ final class MarketplaceVerifier
                 'checked' => ['packs' => 0, 'versions' => 0, 'artifacts' => 0],
                 'auth' => $auth,
                 'entitlements' => $entitlements,
+                'purchase' => $purchase,
                 'errors' => $errors,
             ];
         }
@@ -88,6 +90,11 @@ final class MarketplaceVerifier
                 $errors[] = $entitlementError;
             }
         }
+        foreach ((array) ($purchase['errors'] ?? []) as $purchaseError) {
+            if (is_array($purchaseError)) {
+                $errors[] = $purchaseError;
+            }
+        }
 
         usort($errors, static function (array $a, array $b): int {
             $aKey = implode('|', [
@@ -105,7 +112,12 @@ final class MarketplaceVerifier
         });
 
         return [
-            'status' => ($errors === [] && (string) ($auth['status'] ?? 'fail') === 'pass' && (string) ($entitlements['status'] ?? 'fail') === 'pass') ? 'pass' : 'fail',
+            'status' => (
+                $errors === []
+                && (string) ($auth['status'] ?? 'fail') === 'pass'
+                && (string) ($entitlements['status'] ?? 'fail') === 'pass'
+                && (string) ($purchase['status'] ?? 'fail') === 'pass'
+            ) ? 'pass' : 'fail',
             'checked' => [
                 'packs' => $packCount,
                 'versions' => $versionCount,
@@ -113,6 +125,7 @@ final class MarketplaceVerifier
             ],
             'auth' => $auth,
             'entitlements' => $entitlements,
+            'purchase' => $purchase,
             'errors' => $errors,
         ];
     }

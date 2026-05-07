@@ -38,6 +38,8 @@ final class CLIMarketplaceCommandTest extends TestCase
         $this->assertFalse($result['payload']['auth']['authenticated']);
         $this->assertFalse($result['payload']['entitlements']['configured']);
         $this->assertSame('missing', $result['payload']['entitlements']['status']);
+        $this->assertTrue($result['payload']['purchase']['enabled']);
+        $this->assertSame('deterministic', $result['payload']['purchase']['client']);
         $this->assertSame('unauthenticated', $result['payload']['auth']['status']);
         $this->assertFalse($result['payload']['auth']['token']['present']);
         $this->assertSame([], $result['payload']['packs']);
@@ -61,6 +63,7 @@ final class CLIMarketplaceCommandTest extends TestCase
         $this->assertSame('pass', $verify['payload']['status']);
         $this->assertFalse($verify['payload']['auth']['configured']);
         $this->assertSame('pass', $verify['payload']['entitlements']['status']);
+        $this->assertSame('pass', $verify['payload']['purchase']['status']);
         $this->assertSame([], $verify['payload']['errors']);
         $this->assertSame(['packs' => 1, 'versions' => 1, 'artifacts' => 1], $verify['payload']['checked']);
     }

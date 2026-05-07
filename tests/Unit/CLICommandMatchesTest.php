@@ -179,6 +179,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new FeatureSystemCommand())->matches(['feature:inspect', 'event-system']));
         $this->assertTrue((new FeatureSystemCommand())->matches(['feature:map']));
         $this->assertTrue((new PackCommand())->matches(['pack', 'install', '/tmp/pack']));
+        $this->assertTrue((new PackCommand())->matches(['pack', 'purchase', 'vendor/premium-pack']));
         $this->assertTrue((new PackCommand())->matches(['pack', 'search', 'blog']));
         $this->assertTrue((new PackCommand())->matches(['pack', 'remove', 'foundry/blog']));
         $this->assertTrue((new PackCommand())->matches(['pack', 'list']));

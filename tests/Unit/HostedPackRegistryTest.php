@@ -281,6 +281,26 @@ final class HostedPackRegistryTest extends TestCase
         } catch (FoundryError $error) {
             $this->assertSame('PACK_DOWNLOAD_URL_INVALID', $error->errorCode);
         }
+
+        $distributionRegistry = $this->registry([
+            [
+                'name' => 'foundry/blog',
+                'version' => '1.0.0',
+                'description' => 'Blog workflow tools',
+                'download_url' => 'https://downloads.example/foundry-blog-1.0.0.zip',
+                'checksum' => str_repeat('1', 64),
+                'signature' => null,
+                'verified' => true,
+                'distribution' => 'premium',
+                'entitlement_required' => false,
+            ],
+        ]);
+        try {
+            $distributionRegistry->entries();
+            self::fail('Expected invalid distribution entitlement failure.');
+        } catch (FoundryError $error) {
+            $this->assertSame('PACK_REGISTRY_ENTRY_INVALID', $error->errorCode);
+        }
     }
 
     /**

@@ -209,6 +209,7 @@ final class CommandCatalog
             $signature === 'whoami' => 'whoami --json',
             $signature === 'features' => 'features --json',
             $signature === 'pack install' => 'pack install foundry/blog --json',
+            $signature === 'pack purchase' => 'pack purchase vendor/premium-pack --json',
             $signature === 'pack search' => 'pack search blog --json',
             $signature === 'pack remove' => 'pack remove acme/blog --json',
             $signature === 'pack list' => 'pack list --json',

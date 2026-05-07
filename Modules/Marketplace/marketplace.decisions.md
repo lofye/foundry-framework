@@ -228,3 +228,48 @@ Timestamp: 2026-05-07T15:05:00Z
 - Local Entitlement Cache
 - License Activation
 - Verify / Inspect Integration
+
+### Decision: introduce deterministic Marketplace purchase flow contracts with shared entitlement refresh integration
+
+Timestamp: 2026-05-07T16:10:00Z
+
+**Context**
+
+- Marketplace execution spec `004-marketplace-purchase-and-monetization-flows` requires framework-side purchase initiation contracts, deterministic purchase outcomes, and entitlement refresh via shared runtime.
+- Existing Marketplace runtime handled metadata/artifact inspection, identity/auth lifecycle, and entitlement activation/listing, but lacked purchase initiation/runtime surfaces.
+
+**Decision**
+
+- Add centralized `MarketplacePurchaseService` and `MarketplacePurchaseClient` abstraction with deterministic default client behavior for pending checkout handoff, success, and structured failure conditions.
+- Add `pack purchase <vendor/pack>` CLI support through `PackManager` and `PackCommand`, returning deterministic free/not-purchasable, already-entitled, auth-required, pending, success, and partial-refresh outcomes.
+- Extend hosted registry entry schema with deterministic purchase metadata (`distribution`, `entitlement_required`, optional `price`) so purchase eligibility can be validated consistently.
+- Route purchase-success entitlement updates through shared `MarketplaceEntitlementService` persistence instead of duplicating direct cache-write logic.
+- Extend inspect/verify marketplace payloads with deterministic purchase capability metadata/readiness signals that do not require live payment credentials by default.
+
+**Reasoning**
+
+- A centralized purchase service/client seam keeps payment-system integration replaceable while preserving deterministic framework contracts.
+- Reusing shared entitlement runtime prevents policy drift and enforces fail-closed purchase completion semantics.
+- Explicit purchase outcomes improve CLI and automation predictability across local/dev/CI environments.
+
+**Alternatives Considered**
+
+- Implement purchase logic directly in `PackCommand` without a shared service layer.
+- Add purchase-only entitlement cache writes bypassing existing entitlement services.
+- Require live payment/provider credentials for verify-time purchase readiness checks.
+
+**Impact**
+
+- Marketplace module now exposes deterministic purchase/monetization flow contracts and stable CLI/runtime seams for future hosted checkout integration.
+- Purchase outcomes remain deterministic and secret-safe while preventing local entitlement escalation.
+- Inspect/verify marketplace now reflects purchase capability status alongside auth and entitlement status.
+
+**Spec Reference**
+
+- CLI Command
+- Purchase Flow
+- Purchase Result Contracts
+- Pack Eligibility
+- Entitlement Refresh
+- Marketplace Client Abstraction
+- Inspect / Verify Integration

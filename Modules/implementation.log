@@ -343,3 +343,9 @@
 - note: Added deterministic Marketplace entitlement runtime with strict cache storage at `.foundry/marketplace/entitlements.json`, fail-closed malformed-state validation, centralized `PackEntitlementResolver`, and deterministic distribution metadata contract validation (`distribution`, `entitlement_required`, optional `price`).
 - note: Extended Marketplace contracts with `entitlements` CLI listing, `license activate` entitlement refresh via Marketplace license-client abstraction with redacted key hints, entitlement-aware download gating, and inspect/verify marketplace entitlement visibility.
 - note: Added focused unit/integration coverage for entitlement cache normalization and failure paths, resolver decisions, activation behavior, command surface classification/registration, and premium-download entitlement enforcement.
+
+## 2026-05-07 12:12:00 -0400
+- spec: marketplace/004-marketplace-purchase-and-monetization-flows.md
+- note: Added deterministic Marketplace purchase contracts via `MarketplacePurchaseService` and purchase-client abstraction, plus `pack purchase <vendor/pack>` CLI flow support with explicit free/not-purchasable, already-entitled, auth-required, pending checkout, success, partial-refresh, and failure outcomes.
+- note: Extended hosted registry purchase metadata contracts (`distribution`, `entitlement_required`, optional `price`) and wired purchase-success entitlement updates through shared entitlement runtime to avoid duplicate direct cache-write logic.
+- note: Added inspect/verify marketplace purchase capability integration and focused unit/integration coverage for purchase client/service/CLI behavior, entitlement refresh paths, and deterministic error handling.

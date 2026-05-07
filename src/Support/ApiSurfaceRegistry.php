@@ -173,6 +173,7 @@ final class ApiSurfaceRegistry
             },
             'pack' => match ($second) {
                 'install' => 'pack install',
+                'purchase' => 'pack purchase',
                 'search' => 'pack search',
                 'remove' => 'pack remove',
                 'list' => 'pack list',
@@ -421,6 +422,7 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('feature:inspect', 'feature:inspect <feature>', 'stable', 'Inspect one feature workspace context, directories, and declared dependencies.'),
             $this->cliCommandEntry('feature:map', 'feature:map', 'stable', 'Emit deterministic feature-owned path mapping and shared-glue placeholders.'),
             $this->cliCommandEntry('pack install', 'pack install <path-or-name>', 'experimental', 'Install a Foundry pack from disk or the hosted public registry, optionally pinning an exact hosted version with vendor/pack@1.2.0.'),
+            $this->cliCommandEntry('pack purchase', 'pack purchase <vendor/pack>', 'experimental', 'Initiate a deterministic Marketplace purchase flow for a licensed or premium pack and refresh entitlement cache on completed purchase responses.'),
             $this->cliCommandEntry('pack search', 'pack search <query>', 'experimental', 'Search the hosted public pack registry by name and description.'),
             $this->cliCommandEntry('pack remove', 'pack remove <vendor/pack>', 'experimental', 'Deactivate an installed Foundry pack without deleting its files.'),
             $this->cliCommandEntry('pack list', 'pack list', 'experimental', 'List locally installed Foundry packs, active versions, and whether each pack came from local or remote install sources.'),
@@ -752,7 +754,7 @@ final class ApiSurfaceRegistry
             in_array($signature, ['plan:list', 'plan:replay', 'plan:show', 'plan:undo'], true) => 'App Scaffolding',
             in_array($signature, ['serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail'], true) => 'Runtime',
             in_array($signature, ['license status', 'license activate', 'license deactivate', 'features'], true) => 'Monetization',
-            in_array($signature, ['pack install', 'pack search', 'pack remove', 'pack list', 'pack info', 'login', 'logout', 'whoami', 'entitlements'], true) => 'Extensions',
+            in_array($signature, ['pack install', 'pack purchase', 'pack search', 'pack remove', 'pack list', 'pack info', 'login', 'logout', 'whoami', 'entitlements'], true) => 'Extensions',
             in_array($signature, ['init', 'new', 'init app', 'examples:list', 'examples:load', 'preview notification', 'implement feature', 'implement spec', 'plan feature', 'spec:new', 'spec:plan'], true)
                 || str_starts_with($signature, 'generate ')
                 => 'App Scaffolding',

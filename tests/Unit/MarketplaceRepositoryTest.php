@@ -40,6 +40,8 @@ final class MarketplaceRepositoryTest extends TestCase
         $this->assertFalse($inspect['entitlements']['configured']);
         $this->assertSame('missing', $inspect['entitlements']['status']);
         $this->assertSame([], $inspect['entitlements']['entitlements']);
+        $this->assertTrue($inspect['purchase']['enabled']);
+        $this->assertSame('deterministic', $inspect['purchase']['client']);
         $this->assertSame([], $inspect['packs']);
         $this->assertSame(['packs' => 0, 'versions' => 0, 'artifacts' => 0], $inspect['totals']);
     }

@@ -190,6 +190,47 @@ final class PackManagerTest extends TestCase
         }
     }
 
+    public function test_purchase_reports_free_and_pending_paid_paths(): void
+    {
+        $registry = $this->registry(
+            [
+                [
+                    'name' => 'vendor/free-pack',
+                    'version' => '1.0.0',
+                    'description' => 'Free pack',
+                    'download_url' => 'https://downloads.example/vendor-free-pack-1.0.0.zip',
+                    'checksum' => str_repeat('1', 64),
+                    'signature' => null,
+                    'verified' => true,
+                    'distribution' => 'free',
+                    'entitlement_required' => false,
+                ],
+                [
+                    'name' => 'vendor/premium-pack',
+                    'version' => '1.0.0',
+                    'description' => 'Premium pack',
+                    'download_url' => 'https://downloads.example/vendor-premium-pack-1.0.0.zip',
+                    'checksum' => str_repeat('2', 64),
+                    'signature' => null,
+                    'verified' => true,
+                    'distribution' => 'premium',
+                    'entitlement_required' => true,
+                    'price' => ['currency' => 'CAD', 'amount' => '49.00'],
+                ],
+            ],
+            [],
+        );
+        $manager = $this->manager($registry);
+
+        $free = $manager->purchase('vendor/free-pack');
+        $this->assertSame('not_purchasable', $free['status']);
+
+        $this->writeMarketplaceIdentity();
+        $pending = $manager->purchase('vendor/premium-pack');
+        $this->assertSame('pending', $pending['status']);
+        $this->assertStringContainsString('https://marketplace.example/checkout/', (string) $pending['checkout_url']);
+    }
+
     private function manager(?HostedPackRegistry $registry = null): PackManager
     {
         return new PackManager(Paths::fromCwd($this->project->root), $registry);
@@ -352,5 +393,25 @@ final class PackManagerTest extends TestCase
         }
 
         @rmdir($path);
+    }
+
+    private function writeMarketplaceIdentity(): void
+    {
+        $path = $this->project->root . '/.foundry/marketplace/identity.json';
+        if (!is_dir(dirname($path))) {
+            mkdir(dirname($path), 0777, true);
+        }
+
+        file_put_contents($path, json_encode([
+            'token_type' => 'bearer',
+            'access_token' => 'token_demo_1234',
+            'expires_at' => null,
+            'user' => [
+                'id' => 'demo-user',
+                'email' => 'demo@example.com',
+                'name' => null,
+                'created_at' => '2026-01-01T00:00:00Z',
+            ],
+        ], JSON_THROW_ON_ERROR) . PHP_EOL);
     }
 }

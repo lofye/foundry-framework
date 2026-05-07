@@ -36,6 +36,15 @@ final class MarketplaceEntitlementService
     }
 
     /**
+     * @param list<array<string,mixed>> $entitlements
+     * @return list<array<string,mixed>>
+     */
+    public function persistEntitlements(array $entitlements): array
+    {
+        return $this->cache->persist($entitlements);
+    }
+
+    /**
      * @return array{status:string,activated:bool,license:array{hint:string},entitlements:list<array<string,mixed>>}
      */
     public function activateLicense(string $licenseKey): array
@@ -76,7 +85,7 @@ final class MarketplaceEntitlementService
             );
         }
 
-        $normalizedEntitlements = $this->cache->persist(array_values($entitlements));
+        $normalizedEntitlements = $this->persistEntitlements(array_values($entitlements));
 
         return [
             'status' => 'ok',

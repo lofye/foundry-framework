@@ -16,10 +16,14 @@ final readonly class HostedPackRegistryEntry
         public string $checksum,
         public ?string $signature,
         public bool $verified,
+        public string $distribution,
+        public bool $entitlementRequired,
+        public ?string $priceCurrency,
+        public ?string $priceAmount,
     ) {}
 
     /**
-     * @return array<string,string>
+     * @return array<string,mixed>
      */
     public function toArray(): array
     {
@@ -31,6 +35,14 @@ final readonly class HostedPackRegistryEntry
             'checksum' => $this->checksum,
             'signature' => $this->signature,
             'verified' => $this->verified,
+            'distribution' => $this->distribution,
+            'entitlement_required' => $this->entitlementRequired,
+            'price' => ($this->priceCurrency === null || $this->priceAmount === null)
+                ? null
+                : [
+                    'currency' => $this->priceCurrency,
+                    'amount' => $this->priceAmount,
+                ],
         ];
     }
 
@@ -46,6 +58,9 @@ final readonly class HostedPackRegistryEntry
         $checksum = strtolower(trim((string) ($payload['checksum'] ?? '')));
         $signature = $payload['signature'] ?? null;
         $verified = $payload['verified'] ?? null;
+        $distribution = strtolower(trim((string) ($payload['distribution'] ?? 'free')));
+        $entitlementRequired = $payload['entitlement_required'] ?? ($distribution !== 'free');
+        $price = $payload['price'] ?? null;
 
         $errors = [];
 
@@ -77,6 +92,34 @@ final readonly class HostedPackRegistryEntry
             $errors['verified'] = 'verified must be a boolean.';
         }
 
+        if (!in_array($distribution, ['free', 'licensed', 'premium'], true)) {
+            $errors['distribution'] = 'distribution must be one of free|licensed|premium.';
+        }
+
+        if (!is_bool($entitlementRequired)) {
+            $errors['entitlement_required'] = 'entitlement_required must be a boolean.';
+        }
+
+        if (is_bool($entitlementRequired) && $distribution === 'free' && $entitlementRequired) {
+            $errors['entitlement_required'] = 'free packs cannot require entitlement.';
+        }
+
+        if (is_bool($entitlementRequired) && $distribution === 'premium' && !$entitlementRequired) {
+            $errors['entitlement_required'] = 'premium packs must require entitlement.';
+        }
+
+        if ($price !== null) {
+            if (!is_array($price)) {
+                $errors['price'] = 'price must be null or an object.';
+            } else {
+                $currency = strtoupper(trim((string) ($price['currency'] ?? '')));
+                $amount = trim((string) ($price['amount'] ?? ''));
+                if (preg_match('/^[A-Z]{3}$/', $currency) !== 1 || preg_match('/^\d+\.\d{2}$/', $amount) !== 1) {
+                    $errors['price'] = 'price must include currency (ISO-4217) and amount (decimal with 2 digits).';
+                }
+            }
+        }
+
         if ($errors !== []) {
             throw new FoundryError(
                 'PACK_REGISTRY_ENTRY_INVALID',
@@ -98,6 +141,10 @@ final readonly class HostedPackRegistryEntry
             checksum: $checksum,
             signature: is_string($signature) ? trim($signature) : null,
             verified: $verified,
+            distribution: $distribution,
+            entitlementRequired: $entitlementRequired,
+            priceCurrency: is_array($price) ? strtoupper(trim((string) ($price['currency'] ?? ''))) : null,
+            priceAmount: is_array($price) ? trim((string) ($price['amount'] ?? '')) : null,
         );
     }
 

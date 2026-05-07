@@ -18,6 +18,7 @@ final class PackCommand extends Command
     {
         return [
             'pack install',
+            'pack purchase',
             'pack remove',
             'pack list',
             'pack info',
@@ -32,7 +33,7 @@ final class PackCommand extends Command
     public function matches(array $args): bool
     {
         if (($args[0] ?? null) === 'pack') {
-            return in_array((string) ($args[1] ?? ''), ['install', 'remove', 'list', 'info', 'search'], true);
+            return in_array((string) ($args[1] ?? ''), ['install', 'purchase', 'remove', 'list', 'info', 'search'], true);
         }
 
         return in_array((string) ($args[0] ?? ''), ['extension:install', 'extension:search', 'extension:list'], true);
@@ -54,6 +55,11 @@ final class PackCommand extends Command
             'install' => $this->result(
                 payload: ['pack' => $manager->install($subject, $context)],
                 message: fn(array $payload): string => $this->renderInstall($payload['pack'] ?? []),
+                json: $context->expectsJson(),
+            ),
+            'purchase' => $this->result(
+                payload: ['purchase' => $manager->purchase($subject)],
+                message: fn(array $payload): string => $this->renderPurchase((array) ($payload['purchase'] ?? [])),
                 json: $context->expectsJson(),
             ),
             'remove' => $this->result(
@@ -210,5 +216,52 @@ final class PackCommand extends Command
         }
 
         return implode(PHP_EOL, $lines);
+    }
+
+    /**
+     * @param array<string,mixed> $payload
+     */
+    private function renderPurchase(array $payload): string
+    {
+        $status = (string) ($payload['status'] ?? 'error');
+        $pack = (string) ($payload['pack'] ?? '');
+
+        return match ($status) {
+            'pending' => implode(PHP_EOL, [
+                'Purchase initiated.',
+                'Pack: ' . $pack,
+                'Status: pending',
+                'Checkout URL: ' . (string) ($payload['checkout_url'] ?? ''),
+                'Entitlement refreshed: no',
+            ]),
+            'success' => implode(PHP_EOL, [
+                'Purchase completed.',
+                'Pack: ' . $pack,
+                'Status: success',
+                'Entitlement refreshed: yes',
+            ]),
+            'already_entitled' => implode(PHP_EOL, [
+                'Purchase not required.',
+                'Pack: ' . $pack,
+                'Status: already entitled',
+            ]),
+            'not_purchasable' => implode(PHP_EOL, [
+                'Purchase not available.',
+                'Pack: ' . $pack,
+                'Status: free',
+            ]),
+            'partial' => implode(PHP_EOL, [
+                'Purchase completed with warnings.',
+                'Pack: ' . $pack,
+                'Status: partial',
+                'Code: ' . (string) ($payload['code'] ?? ''),
+            ]),
+            default => implode(PHP_EOL, [
+                'Purchase failed.',
+                'Pack: ' . $pack,
+                'Status: error',
+                'Code: ' . (string) ($payload['code'] ?? 'MARKETPLACE_PURCHASE_FAILED'),
+            ]),
+        };
     }
 }

@@ -95,6 +95,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $examplesList = $registry->classifyCliCommand(['examples:list']);
         $examplesLoad = $registry->classifyCliCommand(['examples:load', 'blog-api']);
         $packSearch = $registry->classifyCliCommand(['pack', 'search', 'blog']);
+        $packPurchase = $registry->classifyCliCommand(['pack', 'purchase', 'vendor/premium-pack']);
         $packList = $registry->classifyCliCommand(['pack', 'list']);
         $observeTrace = $registry->classifyCliCommand(['observe:trace', 'publish_post']);
         $observeProfile = $registry->classifyCliCommand(['observe:profile']);
@@ -150,6 +151,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertNotNull($examplesList);
         $this->assertNotNull($examplesLoad);
         $this->assertNotNull($packSearch);
+        $this->assertNotNull($packPurchase);
         $this->assertNotNull($packList);
         $this->assertNotNull($observeTrace);
         $this->assertNotNull($observeProfile);
@@ -309,6 +311,9 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('experimental', $packSearch['stability']);
         $this->assertSame('Extensions', $packSearch['category']);
         $this->assertSame('pack', $packSearch['command_type']);
+        $this->assertSame('experimental', $packPurchase['stability']);
+        $this->assertSame('Extensions', $packPurchase['category']);
+        $this->assertSame('pack', $packPurchase['command_type']);
         $this->assertSame('experimental', $packList['stability']);
         $this->assertSame('Extensions', $packList['category']);
         $this->assertSame('pack', $packList['command_type']);
@@ -353,6 +358,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertNull($registry->resolveCliSignature(['license', 'unknown']));
 
         $this->assertSame('pack remove', $registry->resolveCliSignature(['pack', 'remove']));
+        $this->assertSame('pack purchase', $registry->resolveCliSignature(['pack', 'purchase']));
         $this->assertSame('pack info', $registry->resolveCliSignature(['pack', 'info']));
         $this->assertNull($registry->resolveCliSignature(['pack', 'unknown']));
 

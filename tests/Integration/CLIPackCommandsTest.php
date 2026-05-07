@@ -366,6 +366,78 @@ final class CLIPackCommandsTest extends TestCase
         $this->assertSame('PACK_REGISTRY_UNAVAILABLE', $result['payload']['error']['code']);
     }
 
+    public function test_pack_purchase_requires_auth_for_paid_packs_and_supports_pending_handoff(): void
+    {
+        $app = $this->hostedPackApplication([
+            [
+                'name' => 'vendor/premium-pack',
+                'version' => '1.0.0',
+                'description' => 'Premium pack',
+                'download_url' => 'https://downloads.example/vendor-premium-pack-1.0.0.zip',
+                'checksum' => str_repeat('1', 64),
+                'signature' => null,
+                'verified' => true,
+                'distribution' => 'premium',
+                'entitlement_required' => true,
+                'price' => ['currency' => 'CAD', 'amount' => '49.00'],
+            ],
+        ]);
+
+        $unauthenticated = $this->runCommand($app, ['foundry', 'pack', 'purchase', 'vendor/premium-pack', '--json']);
+        $this->assertSame(1, $unauthenticated['status']);
+        $this->assertSame('MARKETPLACE_PURCHASE_AUTH_REQUIRED', $unauthenticated['payload']['error']['code']);
+
+        $this->writeMarketplaceIdentity();
+        $pending = $this->runCommand($app, ['foundry', 'pack', 'purchase', 'vendor/premium-pack', '--json']);
+        $this->assertSame(0, $pending['status']);
+        $this->assertSame('pending', $pending['payload']['purchase']['status']);
+        $this->assertSame('vendor/premium-pack', $pending['payload']['purchase']['pack']);
+        $this->assertFalse($pending['payload']['purchase']['entitlement_refreshed']);
+        $this->assertStringContainsString('https://marketplace.example/checkout/', (string) $pending['payload']['purchase']['checkout_url']);
+    }
+
+    public function test_pack_purchase_handles_free_and_already_entitled_paths(): void
+    {
+        $app = $this->hostedPackApplication([
+            [
+                'name' => 'vendor/free-pack',
+                'version' => '1.0.0',
+                'description' => 'Free pack',
+                'download_url' => 'https://downloads.example/vendor-free-pack-1.0.0.zip',
+                'checksum' => str_repeat('1', 64),
+                'signature' => null,
+                'verified' => true,
+                'distribution' => 'free',
+                'entitlement_required' => false,
+                'price' => null,
+            ],
+            [
+                'name' => 'vendor/already-owned-pack',
+                'version' => '1.0.0',
+                'description' => 'Premium pack',
+                'download_url' => 'https://downloads.example/vendor-already-owned-pack-1.0.0.zip',
+                'checksum' => str_repeat('2', 64),
+                'signature' => null,
+                'verified' => true,
+                'distribution' => 'premium',
+                'entitlement_required' => true,
+                'price' => ['currency' => 'CAD', 'amount' => '49.00'],
+            ],
+        ]);
+
+        $free = $this->runCommand($app, ['foundry', 'pack', 'purchase', 'vendor/free-pack', '--json']);
+        $this->assertSame(0, $free['status']);
+        $this->assertSame('not_purchasable', $free['payload']['purchase']['status']);
+        $this->assertSame('MARKETPLACE_PURCHASE_PACK_NOT_PURCHASABLE', $free['payload']['purchase']['code']);
+
+        $this->writeMarketplaceIdentity();
+        $this->writeMarketplaceEntitlement('vendor/already-owned-pack');
+        $owned = $this->runCommand($app, ['foundry', 'pack', 'purchase', 'vendor/already-owned-pack', '--json']);
+        $this->assertSame(0, $owned['status']);
+        $this->assertSame('already_entitled', $owned['payload']['purchase']['status']);
+        $this->assertSame('MARKETPLACE_PURCHASE_ALREADY_ENTITLED', $owned['payload']['purchase']['code']);
+    }
+
     public function test_extension_alias_commands_route_to_pack_marketplace_flows(): void
     {
         $app = new Application();
@@ -600,5 +672,45 @@ final class CLIPackCommandsTest extends TestCase
 
             copy($fileInfo->getPathname(), $destination);
         }
+    }
+
+    private function writeMarketplaceIdentity(): void
+    {
+        $path = $this->project->root . '/.foundry/marketplace/identity.json';
+        if (!is_dir(dirname($path))) {
+            mkdir(dirname($path), 0777, true);
+        }
+
+        file_put_contents($path, json_encode([
+            'token_type' => 'bearer',
+            'access_token' => 'token_demo_1234',
+            'expires_at' => null,
+            'user' => [
+                'id' => 'demo-user',
+                'email' => 'demo@example.com',
+                'name' => null,
+                'created_at' => '2026-01-01T00:00:00Z',
+            ],
+        ], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . "\n");
+    }
+
+    private function writeMarketplaceEntitlement(string $pack): void
+    {
+        $path = $this->project->root . '/.foundry/marketplace/entitlements.json';
+        if (!is_dir(dirname($path))) {
+            mkdir(dirname($path), 0777, true);
+        }
+
+        file_put_contents($path, json_encode([
+            'entitlements' => [[
+                'pack' => $pack,
+                'type' => 'premium',
+                'status' => 'granted',
+                'expires_at' => null,
+                'source' => 'marketplace',
+                'granted_at' => '2026-01-01T00:00:00Z',
+            ]],
+            'updated_at' => '2026-01-01T00:00:00Z',
+        ], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . "\n");
     }
 }
