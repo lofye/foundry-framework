@@ -15,6 +15,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Provide deterministic prep-only historical-spec archive extraction tooling before full module import migration.
 - Provide deterministic historical-spec evidence mapping that preserves legacy ordering keys, confidence levels, and supporting evidence before import.
 - Tighten historical evidence boundaries so `Spec35D1` is the canonical transition anchor and historical candidates are classified by import era/action before any import step.
+- Provide deterministic historical-spec import from reviewed archive bundles into canonical module spec or draft paths without silently overwriting existing specs.
 
 ## Non-Goals
 
@@ -34,7 +35,12 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - `feature:map` returns deterministic owned path maps.
 - `verify features` reports boundary/duplication issues and enforcement status.
 - `historical-specs:extract` scans `_import/raw-historical-specs` and writes deterministic candidate archives under `_import/historical-specs` without importing into `Modules/*`.
+- Historical extraction candidates track source segment indexes and optional RESULT/FOLLOWUPS detection metadata for multi-spec source files.
 - `historical-specs:evidence` builds deterministic `_import/historical-specs/evidence-map.json` data (and optional markdown report) with legacy-order keys, module suggestions, confidence values, evidence-state fields, and supporting evidence-file references.
+- Historical evidence mapping treats `Spec35D1` as the canonical transition anchor and emits deterministic candidate-era classification (`pre_canonical`, `canonical_existing`, `ambiguous`, `supporting_evidence`) with explicit import actions (`import`, `link_existing`, `review`, `ignore_supporting`).
+- Evidence-map top-level output includes deterministic `canonical_transition` and per-era `counts` fields for downstream historical import boundary enforcement.
+- `historical-specs:import` scans archive candidate directories containing `spec.md` and optional `metadata.json`, reports unmapped or invalid metadata deterministically, writes completed imports under `Modules/<Module>/specs/`, writes uncertain imports under `Modules/<Module>/specs/drafts/`, and refuses conflicting destinations unless explicit force handling is requested.
+- Imported historical specs receive a canonical execution-spec heading and prose historical import note while preserving archived source text below the import note.
 - Legacy labels such as `Spec 19FB`, `Spec 30C-2`, and `Spec 35D7JA` are parsed into stable sort keys used for deterministic candidate ordering.
 - Known summary/planning files are treated as supporting evidence sources by default unless explicit extractable execution-spec headings are present.
 - `verify features` enforces executable application feature-local runtime layout under `Features/<Feature>/` (`src/` and `tests/` required by default).
@@ -61,6 +67,8 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Historical-spec prep extraction remains explicit and non-authoritative until follow-up import specs are implemented.
 - Historical ordering/evidence mapping remains explicit and non-authoritative until follow-up import specs are implemented.
 - Historical evidence output distinguishes `pre_canonical`, `canonical_existing`, `ambiguous`, and `supporting_evidence` candidates with deterministic `import_action`, transition-relative metadata, and confidence-scored module inference.
+- Historical import reports remain deterministic, repository-relative, timestamp-free, and machine-readable.
+- Historical import apply mode does not overwrite existing canonical specs silently and routes uncertain implementation status to drafts.
 
 ## Assumptions
 

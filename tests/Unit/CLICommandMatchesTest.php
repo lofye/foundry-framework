@@ -30,6 +30,7 @@ use Foundry\CLI\Commands\GraphVisualizeCommand;
 use Foundry\CLI\Commands\HistoryCommand;
 use Foundry\CLI\Commands\HistoricalSpecsEvidenceCommand;
 use Foundry\CLI\Commands\HistoricalSpecsExtractCommand;
+use Foundry\CLI\Commands\HistoricalSpecsImportCommand;
 use Foundry\CLI\Commands\ImpactCommand;
 use Foundry\CLI\Commands\ImplementFeatureCommand;
 use Foundry\CLI\Commands\ImplementSpecCommand;
@@ -172,6 +173,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new HistoryCommand())->matches(['history']));
         $this->assertTrue((new HistoricalSpecsEvidenceCommand())->matches(['historical-specs:evidence', '--dry-run']));
         $this->assertTrue((new HistoricalSpecsExtractCommand())->matches(['historical-specs:extract', '--dry-run']));
+        $this->assertTrue((new HistoricalSpecsImportCommand())->matches(['historical-specs:import', '--dry-run']));
         $this->assertTrue((new RegressionsCommand())->matches(['regressions']));
         $this->assertTrue((new LicenseCommand())->matches(['license', 'activate', 'key']));
         $this->assertTrue((new MarketplaceIdentityCommand())->matches(['login', '--user=demo', '--token=abc']));

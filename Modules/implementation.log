@@ -381,3 +381,9 @@
 - note: Tightened historical evidence-map boundary semantics around `Spec35D1` as the default canonical transition anchor with deterministic override support via anchor config, plus top-level transition/count output for downstream import guards.
 - note: Extended candidate contracts with deterministic era/action/transition-relative fields and confidence-scored module inference evidence/alternatives so pre-canonical mapping remains explicit and reviewable.
 - note: Added canonical-era link-or-review behavior and focused unit/integration coverage for boundary classification, anchor override, supporting-evidence handling, and deterministic output ordering.
+
+## 2026-05-07 17:06:25 -0400
+- spec: Modules/FeatureSystem/specs/008-import-historical-spec-archive.md
+- note: Added deterministic historical archive import through `historical-specs:import` with report-only default behavior, explicit `--apply` write mode, repository-relative JSON output, and stable candidate summary/status fields.
+- note: Added FeatureSystem import handling for validated metadata, completed-vs-uncertain destination routing, canonical imported spec headings, historical import notes, exact duplicate detection, and conflict refusal.
+- note: Added focused unit/integration coverage for dry-run reports, apply writes, exact duplicates, conflicts, missing/malformed metadata, uncertain draft placement, deterministic ordering, and CLI command wiring.

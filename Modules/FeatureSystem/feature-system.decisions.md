@@ -444,3 +444,48 @@ Timestamp: 2026-05-07T17:08:00-04:00
 - Candidate Metadata Additions
 - Canonical Existing Candidate Handling
 - Import Boundary Output
+
+### Decision: import reviewed historical archive candidates without fabricating certainty
+
+Timestamp: 2026-05-07T17:06:25-04:00
+
+**Context**
+
+- Execution spec `008-import-historical-spec-archive` requires deterministic import from historical archive bundles into canonical module spec paths.
+- Historical candidate evidence can be incomplete, malformed, or uncertain, and existing canonical specs must not be overwritten silently.
+
+**Decision**
+
+- Add `historical-specs:import` as a report/apply command backed by a FeatureSystem archive importer service.
+- Treat archive directories containing `spec.md` as candidate bundles and require valid `metadata.json` with module, padded spec id, slug, optional implemented status, and optional source confidence before import.
+- Route `implemented: true` imports to active `Modules/<Module>/specs/` and uncertain/non-implemented imports to `Modules/<Module>/specs/drafts/`.
+- Render imported specs with canonical execution-spec headings plus a prose historical import note, preserving archived spec text below that note.
+- Report unmapped, invalid metadata, exact duplicate, and conflict cases deterministically with repository-relative paths and stable error codes.
+
+**Reasoning**
+
+- Import should preserve available evidence while keeping uncertainty visible.
+- Requiring metadata prevents the importer from inventing module mappings or implementation status.
+- Draft placement for uncertain candidates protects active spec validation and avoids claiming historical completion without evidence.
+- Exact-content duplicate detection supports idempotent reruns, while conflict reporting prevents silent overwrite of current canonical contracts.
+
+**Alternatives Considered**
+
+- Infer module/spec metadata from evidence-map fields during import.
+- Import uncertain candidates directly as active specs with warning notes.
+- Keep import as manual copy steps without a command.
+
+**Impact**
+
+- Historical archive import now has deterministic report and apply surfaces.
+- Follow-up reconstruction/log-generation specs can consume imported specs without re-solving basic destination and conflict handling.
+- Current source code remains unchanged except for importer/CLI/test surfaces.
+
+**Spec Reference**
+
+- Goals
+- Import Modes
+- Imported Spec Header
+- Conflict Handling
+- Determinism Requirements
+- Testing Requirements

@@ -38,6 +38,12 @@
 - Historical evidence mapping now treats `Spec35D1` as the canonical transition anchor and emits deterministic candidate-era classification (`pre_canonical`, `canonical_existing`, `ambiguous`, `supporting_evidence`) with explicit import actions (`import`, `link_existing`, `review`, `ignore_supporting`).
 - Evidence-map candidates now include deterministic transition-relative metadata, canonical-existing linking/review behavior, and confidence-scored module inference evidence/alternatives to keep pre-canonical module assignment reviewable.
 - Evidence-map top-level output now includes deterministic `canonical_transition` and per-era `counts` fields for downstream historical import boundary enforcement.
+- `historical-specs:import` now provides deterministic report/apply import from archive candidate directories containing `spec.md` plus `metadata.json`.
+- Historical import writes completed candidates to `Modules/<Module>/specs/<id>-<slug>.md` and uncertain candidates to `Modules/<Module>/specs/drafts/<id>-<slug>.md`.
+- Historical import reports unmapped candidates, malformed/invalid metadata, exact duplicates, and destination conflicts with stable status and error-code fields.
+- Historical import reports are deterministic, repository-relative, timestamp-free, and machine-readable.
+- Historical import apply mode does not overwrite existing canonical specs silently; exact matches are idempotent, conflicting destinations are refused, and explicit force mode is required before replacement.
+- Imported historical specs receive canonical execution-spec headings and a prose historical import note while preserving archived spec text below the note.
 
 ## Open Questions
 
@@ -49,4 +55,4 @@
 - Expand boundary-violation classification depth in follow-up execution specs.
 - Continue incremental source/test localization through promoted execution specs.
 - Evaluate follow-up specs to migrate grandfathered legacy module plan documents into strict reconstruction-note format.
-- Continue historical import and archive specs after canonical module implementation-log path normalization is complete, using extracted candidates plus evidence-map ordering as prep artifacts only until import specs are implemented.
+- Use the historical import report to review unmapped or invalid archive candidates before follow-up context/document reconstruction specs generate module docs, decision ledgers, reconstruction notes, or log entries from imported history.
