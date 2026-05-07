@@ -40,6 +40,10 @@ final class CLIHistoricalSpecsEvidenceCommandTest extends TestCase
         $this->assertSame(0, $preview['status']);
         $this->assertTrue($preview['payload']['dry_run']);
         $this->assertFalse($preview['payload']['outputs']['written']);
+        $this->assertArrayHasKey('canonical_transition', $preview['payload']);
+        $this->assertArrayHasKey('counts', $preview['payload']);
+        $this->assertArrayHasKey('era', $preview['payload']['candidates'][0]);
+        $this->assertArrayHasKey('import_action', $preview['payload']['candidates'][0]);
         $this->assertFileDoesNotExist($this->project->root . '/_import/historical-specs/evidence-map.json');
 
         $write = $this->runCommand([
@@ -81,6 +85,7 @@ final class CLIHistoricalSpecsEvidenceCommandTest extends TestCase
 
         $this->assertSame(0, $result['status']);
         $this->assertSame('ContextPersistence', $result['payload']['candidates'][0]['suggested_module']);
+        $this->assertSame('canonical_existing', $result['payload']['candidates'][0]['era']);
         $this->assertArrayHasKey('git', $result['payload']['candidates'][0]);
     }
 

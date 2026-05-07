@@ -400,3 +400,47 @@ Timestamp: 2026-05-07T16:20:00-04:00
 - Known Anchor: Numeric Canonical IDs
 - Source Summary Files
 - Git Evidence Cross-Reference
+
+### Decision: tighten historical import boundary and module inference using Spec35D1 anchor
+
+Timestamp: 2026-05-07T17:08:00-04:00
+
+**Context**
+
+- Execution spec `007.003-tighten-historical-import-boundary-and-module-inference` requires historical evidence mapping to separate pre-canonical import candidates from canonical-era existing specs.
+- Prior historical evidence mapping captured ordering and confidence but did not enforce a canonical transition boundary anchored at `Spec35D1`.
+
+**Decision**
+
+- Treat `Spec35D1` as the canonical transition anchor by default, while allowing deterministic override through `_import/historical-specs/import-anchors.json`.
+- Classify each candidate segment into `pre_canonical`, `canonical_existing`, `ambiguous`, or `supporting_evidence` and emit deterministic import actions (`import`, `link_existing`, `review`, `ignore_supporting`).
+- Require canonical-era candidates to link to existing canonical specs when discoverable and fall back to deterministic review status when no match is found.
+- Add explicit module-inference evidence and alternatives for pre-canonical candidates so uncertain mappings stay reviewable rather than silently promoted.
+
+**Reasoning**
+
+- The corrected transition anchor prevents accidental re-import of already-canonical specs as historical artifacts.
+- Explicit era/action metadata gives follow-up import tooling a safe deterministic boundary without requiring immediate destructive migration steps.
+- Confidence-scored inference with alternatives preserves uncertainty and keeps module assignment auditable.
+
+**Alternatives Considered**
+
+- Continue using a later transition assumption (`Spec35D7C`) and infer canonical boundaries implicitly.
+- Treat all historical candidates uniformly and defer boundary logic entirely to a future import command.
+- Force module assignment even when evidence is weak.
+
+**Impact**
+
+- `historical-specs:evidence --json` now includes deterministic top-level transition/count fields and candidate-level era/action/module-inference boundary metadata.
+- Multi-segment historical files can now be evaluated per segment for import/link/review behavior without relying on filename identity alone.
+- Future historical import specs can consume evidence-map output directly to avoid importing canonical-era contracts.
+
+**Spec Reference**
+
+- Purpose
+- Goals
+- New Concept: Historical Era
+- Canonical Transition Anchor
+- Candidate Metadata Additions
+- Canonical Existing Candidate Handling
+- Import Boundary Output

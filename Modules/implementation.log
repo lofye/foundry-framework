@@ -375,3 +375,9 @@
 - spec: Modules/FeatureSystem/specs/007.002-historical-spec-ordering-and-evidence-map.md
 - note: Added deterministic historical ordering/evidence-map generation through `historical-specs:evidence`, including stable legacy-order key parsing, supporting evidence file tracking, anchor-aware mapping, and explicit confidence/evidence contracts.
 - note: Extended historical extraction metadata with multi-segment source indexing and optional RESULT/FOLLOWUPS detection so evidence-map consumers can preserve uncertainty and provenance without importing specs into `Modules/*`.
+
+## 2026-05-07 16:53:30 -0400
+- spec: Modules/FeatureSystem/specs/007.003-tighten-historical-import-boundary-and-module-inference.md
+- note: Tightened historical evidence-map boundary semantics around `Spec35D1` as the default canonical transition anchor with deterministic override support via anchor config, plus top-level transition/count output for downstream import guards.
+- note: Extended candidate contracts with deterministic era/action/transition-relative fields and confidence-scored module inference evidence/alternatives so pre-canonical mapping remains explicit and reviewable.
+- note: Added canonical-era link-or-review behavior and focused unit/integration coverage for boundary classification, anchor override, supporting-evidence handling, and deterministic output ordering.

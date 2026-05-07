@@ -14,6 +14,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Keep migration-compatible behavior for legacy `docs/features/*` inputs.
 - Provide deterministic prep-only historical-spec archive extraction tooling before full module import migration.
 - Provide deterministic historical-spec evidence mapping that preserves legacy ordering keys, confidence levels, and supporting evidence before import.
+- Tighten historical evidence boundaries so `Spec35D1` is the canonical transition anchor and historical candidates are classified by import era/action before any import step.
 
 ## Non-Goals
 
@@ -59,6 +60,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Documentation and agent/skill guidance consistently encode the modules-vs-features split without implying framework modules are governed under `Features/*`.
 - Historical-spec prep extraction remains explicit and non-authoritative until follow-up import specs are implemented.
 - Historical ordering/evidence mapping remains explicit and non-authoritative until follow-up import specs are implemented.
+- Historical evidence output distinguishes `pre_canonical`, `canonical_existing`, `ambiguous`, and `supporting_evidence` candidates with deterministic `import_action`, transition-relative metadata, and confidence-scored module inference.
 
 ## Assumptions
 

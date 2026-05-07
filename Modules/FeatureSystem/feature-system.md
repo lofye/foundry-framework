@@ -35,6 +35,9 @@
 - `_import/historical-specs/evidence-map.json` and optional `_import/historical-specs/evidence-map.md` can now be generated through explicit write mode while keeping default command behavior non-mutating.
 - Historical extraction candidates now track source segment indexes and optional RESULT/FOLLOWUPS detection metadata for multi-spec source files.
 - Historical summary/planning files are treated as supporting evidence sources by default and are not imported as ordinary specs unless explicit extractable execution-spec headings are present.
+- Historical evidence mapping now treats `Spec35D1` as the canonical transition anchor and emits deterministic candidate-era classification (`pre_canonical`, `canonical_existing`, `ambiguous`, `supporting_evidence`) with explicit import actions (`import`, `link_existing`, `review`, `ignore_supporting`).
+- Evidence-map candidates now include deterministic transition-relative metadata, canonical-existing linking/review behavior, and confidence-scored module inference evidence/alternatives to keep pre-canonical module assignment reviewable.
+- Evidence-map top-level output now includes deterministic `canonical_transition` and per-era `counts` fields for downstream historical import boundary enforcement.
 
 ## Open Questions
 

@@ -76,15 +76,20 @@ final class HistoricalSpecEvidenceMapperTest extends TestCase
         );
 
         $this->assertContains('_import/historical-specs/Foundry-Spec-Summaries.md', $payload['supporting_evidence_files']);
-        $sourceFiles = array_column($payload['candidates'], 'source_file');
-        $this->assertContains('_import/historical-specs/Foundry-Spec-2.md', $sourceFiles);
-        $this->assertNotContains('_import/historical-specs/Foundry-Spec-Summaries.md', $sourceFiles);
+        $rowsBySource = [];
+        foreach ($payload['candidates'] as $row) {
+            $rowsBySource[(string) $row['source_file']] = $row;
+        }
+
+        $this->assertSame('pre_canonical', $rowsBySource['_import/historical-specs/Foundry-Spec-2.md']['era']);
+        $this->assertSame('supporting_evidence', $rowsBySource['_import/historical-specs/Foundry-Spec-Summaries.md']['era']);
+        $this->assertSame('ignore_supporting', $rowsBySource['_import/historical-specs/Foundry-Spec-Summaries.md']['import_action']);
     }
 
-    public function test_build_supports_multi_spec_segments_and_result_detection(): void
+    public function test_build_supports_multi_spec_segments_result_detection_and_filename_mismatch_note(): void
     {
         $this->writeSpecFile('Foundry-Spec-35D7G-015.md', <<<'TXT'
-Spec 35D7G
+Spec 35D7G2
 Title: Segment one
 RESULT:
 Completed output.
@@ -104,6 +109,11 @@ TXT);
         $this->assertCount(2, $payload['candidates']);
         $this->assertSame(1, $payload['candidates'][0]['source_segment']);
         $this->assertSame(2, $payload['candidates'][0]['source_segments_total']);
+        $this->assertSame('Spec35D7G2', $payload['candidates'][0]['legacy_label']);
+        $this->assertContains(
+            'Filename label differs from internal segment label; internal heading used for candidate identity.',
+            $payload['candidates'][0]['notes'],
+        );
         $this->assertTrue($payload['candidates'][0]['result_detected']);
         $this->assertSame('candidate-001/result.md', $payload['candidates'][0]['result_file']);
         $this->assertFalse($payload['candidates'][1]['result_detected']);
@@ -134,9 +144,164 @@ TXT);
         $candidate = $payload['candidates'][0];
         $this->assertSame('ContextPersistence', $candidate['suggested_module']);
         $this->assertSame('Modules/ContextPersistence/specs/011-auto-planning-from-canonical-feature-context.md', $candidate['suggested_spec_path']);
-        $this->assertSame('high', $candidate['confidence']);
+        $this->assertSame('high', $candidate['module_inference']['confidence']);
+        $this->assertSame('review', $candidate['import_action']);
         $this->assertSame('inferred', $candidate['evidence']['current_source']);
         $this->assertContains('Anchor matched: Spec35D7C', $candidate['notes']);
+    }
+
+    public function test_build_classifies_eras_and_import_actions_around_transition_anchor(): void
+    {
+        $this->writeRawFile('Modules/ContextPersistence/specs/001-initial.md', "# Execution Spec: 001-initial\n");
+        $this->writeSpecFile('Foundry-Spec-35D.md', "Spec 35D\nTitle: Marketplace bridge\n");
+        $this->writeSpecFile('Foundry-Spec-35D1.md', "Spec 35D1\nTitle: Canonical transition\n");
+        $this->writeSpecFile('Foundry-Spec-35D2.md', "Spec 35D2\nTitle: Canonical after anchor\n");
+        $this->writeSpecFile('Foundry-Spec-36.md', "Spec 36\nTitle: Canonical numeric era\n");
+        $this->writeSpecFile('Foundry-Spec-Unknown.md', "# Planning Notes\nTitle: Unknown\n");
+
+        $payload = $this->mapper()->build(
+            sourcePath: '_import/historical-specs',
+            anchorsPath: null,
+            withGitEvidence: false,
+            write: false,
+            dryRun: true,
+        );
+
+        $rowsByLabel = [];
+        foreach ($payload['candidates'] as $row) {
+            $rowsByLabel[(string) $row['legacy_label']] = $row;
+        }
+
+        $this->assertSame('pre_canonical', $rowsByLabel['Spec35D']['era']);
+        $this->assertSame('before', $rowsByLabel['Spec35D']['canonical_transition_relative']);
+        $this->assertSame('import', $rowsByLabel['Spec35D']['import_action']);
+
+        $this->assertSame('canonical_existing', $rowsByLabel['Spec35D1']['era']);
+        $this->assertSame('at', $rowsByLabel['Spec35D1']['canonical_transition_relative']);
+        $this->assertSame('link_existing', $rowsByLabel['Spec35D1']['import_action']);
+        $this->assertSame('Modules/ContextPersistence/specs/001-initial.md', $rowsByLabel['Spec35D1']['existing_spec_path']);
+
+        $this->assertSame('canonical_existing', $rowsByLabel['Spec35D2']['era']);
+        $this->assertSame('review', $rowsByLabel['Spec35D2']['import_action']);
+        $this->assertSame('canonical_existing', $rowsByLabel['Spec36']['era']);
+        $this->assertSame('review', $rowsByLabel['Spec36']['import_action']);
+
+        $ambiguous = null;
+        foreach ($payload['candidates'] as $row) {
+            if ((string) $row['source_file'] === '_import/historical-specs/Foundry-Spec-Unknown.md') {
+                $ambiguous = $row;
+                break;
+            }
+        }
+
+        self::assertIsArray($ambiguous);
+        $this->assertSame('', $ambiguous['legacy_label']);
+        $this->assertSame('ambiguous', $ambiguous['era']);
+        $this->assertSame('review', $ambiguous['import_action']);
+        $this->assertSame('unknown', $ambiguous['canonical_transition_relative']);
+    }
+
+    public function test_build_marks_low_confidence_pre_canonical_candidates_for_review(): void
+    {
+        $this->writeSpecFile('Foundry-Spec-20.md', "Spec 20\nTitle: General planning\n");
+
+        $payload = $this->mapper()->build(
+            sourcePath: '_import/historical-specs',
+            anchorsPath: null,
+            withGitEvidence: false,
+            write: false,
+            dryRun: true,
+        );
+
+        $candidate = $payload['candidates'][0];
+        $this->assertSame('pre_canonical', $candidate['era']);
+        $this->assertSame('review', $candidate['import_action']);
+        $this->assertNull($candidate['suggested_module']);
+        $this->assertSame('low', $candidate['module_inference']['confidence']);
+    }
+
+    public function test_build_marks_conflicting_module_inference_as_review(): void
+    {
+        $this->writeSpecFile(
+            'Foundry-Spec-34.md',
+            "Spec 34\nTitle: MCP quality guard\nPurpose: mcp runtime and quality checks.\n",
+        );
+
+        $payload = $this->mapper()->build(
+            sourcePath: '_import/historical-specs',
+            anchorsPath: null,
+            withGitEvidence: false,
+            write: false,
+            dryRun: true,
+        );
+
+        $candidate = $payload['candidates'][0];
+        $this->assertSame('pre_canonical', $candidate['era']);
+        $this->assertSame('review', $candidate['import_action']);
+        $this->assertSame('conflict', $candidate['evidence']['current_source']);
+        $this->assertNotEmpty($candidate['module_inference']['alternatives']);
+    }
+
+    public function test_build_supports_transition_anchor_override_via_config(): void
+    {
+        $this->writeSpecFile('Foundry-Spec-19A.md', "Spec 19A\nTitle: Override boundary\n");
+        $this->writeRawFile(
+            '_import/historical-specs/import-anchors.json',
+            json_encode([
+                'canonical_transition' => [
+                    'legacy_label' => 'Spec19A',
+                    'canonical_path' => 'docs/features/custom/019-a.md',
+                    'canonical_module' => 'FeatureSystem',
+                    'canonical_spec_id' => '019',
+                    'canonical_slug' => 'custom-boundary',
+                    'confidence' => 'medium',
+                ],
+            ], JSON_THROW_ON_ERROR),
+        );
+
+        $payload = $this->mapper()->build(
+            sourcePath: '_import/historical-specs',
+            anchorsPath: '_import/historical-specs/import-anchors.json',
+            withGitEvidence: false,
+            write: false,
+            dryRun: true,
+        );
+
+        $candidate = $payload['candidates'][0];
+        $this->assertSame('canonical_existing', $candidate['era']);
+        $this->assertSame('at', $candidate['canonical_transition_relative']);
+        $this->assertSame('review', $candidate['import_action']);
+        $this->assertSame('Spec19A', $payload['canonical_transition']['legacy_label']);
+        $this->assertSame('docs/features/custom/019-a.md', $payload['canonical_transition']['canonical_path']);
+        $this->assertSame('medium', $payload['canonical_transition']['confidence']);
+    }
+
+    public function test_build_includes_deterministic_transition_and_counts(): void
+    {
+        $this->writeRawFile('Modules/ContextPersistence/specs/001-initial.md', "# Execution Spec: 001-initial\n");
+        $this->writeSpecFile('Foundry-Spec-35D.md', "Spec 35D\nTitle: Marketplace\n");
+        $this->writeSpecFile('Foundry-Spec-35D1.md', "Spec 35D1\nTitle: Context persistence\n");
+        $this->writeSpecFile('Foundry-Spec-Summaries.md', "Summary only\n");
+        $this->writeSpecFile('Foundry-Spec-Unknown.md', "# Notes\n");
+
+        $payload = $this->mapper()->build(
+            sourcePath: '_import/historical-specs',
+            anchorsPath: null,
+            withGitEvidence: false,
+            write: false,
+            dryRun: true,
+        );
+
+        $this->assertSame('Spec35D1', $payload['canonical_transition']['legacy_label']);
+        $this->assertSame('docs/features/context-persistence/001-initial.md', $payload['canonical_transition']['canonical_path']);
+        $this->assertSame('Modules/ContextPersistence/specs/001-initial.md', $payload['canonical_transition']['current_canonical_path']);
+        $this->assertSame('high', $payload['canonical_transition']['confidence']);
+        $this->assertSame([
+            'pre_canonical' => 1,
+            'canonical_existing' => 1,
+            'ambiguous' => 1,
+            'supporting_evidence' => 1,
+        ], $payload['counts']);
     }
 
     public function test_write_and_dry_run_behaviors_are_deterministic(): void
