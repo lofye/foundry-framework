@@ -120,11 +120,11 @@ The root `app/*` tree is a framework-owned demo and smoke app.
 - Modules/<Module>/<module>.decisions.md → append-only framework-module decision history
 - Modules/<Module>/specs/*.md → execution specs (planning artifacts, non-authoritative after implementation)
 - Modules/<Module>/specs/drafts/*.md → draft execution specs (non-executable planning artifacts)
-- Modules/<Module>/plans/*.md → implementation plans (planning artifacts)
+- Modules/<Module>/plans/*.md → implementation reconstruction notes (post-implementation artifacts)
 - Modules/implementation.log → completed framework execution-spec ledger
 - Features/<Feature>/<feature>.spec.md, Features/<Feature>/<feature>.md, Features/<Feature>/<feature>.decisions.md → canonical downstream application feature context
-- For new active execution specs, save a plan file before implementation; chat-only plans are not sufficient.
-- Plan files describe implementation strategy only and must not expand or alter execution-spec scope.
+- For completed active framework specs, create or update the matching reconstruction note before reporting completion.
+- Reconstruction notes record what was actually implemented and must not be speculative planning placeholders.
 - Execution spec IDs are ordered contracts and must remain contiguous within each feature at every hierarchy level; skipping numbers is forbidden.
 - Agents must stop instead of planning, implementing, promoting, or logging execution specs when any numeric gap exists.
 - `docs/policies/*` → repository execution and reasoning policies
@@ -226,6 +226,37 @@ Do NOT:
 - Framework code in `src/*` is organized by technical layer and may implement multiple features.
 - `Features/*` directories define feature ownership, context, specs, and plans.
 - Do not move framework code into `Features/*/src/` unless explicitly required by a spec.
+
+---
+
+## Implementation Reconstruction Notes
+
+Every completed framework execution spec MUST have a matching reconstruction note under the owning module's `plans/` directory.
+
+Example:
+
+- Spec: `Modules/Marketplace/specs/003-marketplace-entitlements-and-license-activation.md`
+- Reconstruction note: `Modules/Marketplace/plans/003-marketplace-entitlements-and-license-activation.md`
+
+Reconstruction notes are written after implementation. They are not speculative project plans. They record what actually changed so a future agent or developer can understand, audit, or rebuild the module without chat history.
+
+A reconstruction note MUST include:
+
+- implemented spec path
+- implementation summary
+- files introduced
+- files modified
+- runtime contracts
+- deterministic outputs
+- tests added or updated
+- verification commands
+- decisions and tradeoffs
+- reconstruction notes
+- follow-up dependencies
+
+Do not report a spec complete until its reconstruction note, decision ledger updates, context updates, implementation-log entry, tests, coverage, and validation gates are all complete.
+
+`Modules/implementation.log` answers whether a spec was implemented. The matching `plans/` file answers how it was implemented.
 
 ---
 

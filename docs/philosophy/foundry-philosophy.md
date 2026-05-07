@@ -177,3 +177,19 @@ The following are explicitly disallowed:
 Foundry aims to make software development:
 
 predictable, inspectable, and correct by construction.
+
+⸻
+
+## 15. Context Persistence And Reconstruction
+
+Foundry treats durable context as part of the software.
+
+Source code tells us what the system does now. Tests tell us what behavior is executable and protected. Specs tell us what was intended. Decision ledgers tell us why choices were made. Implementation logs tell us what was completed.
+
+Reconstruction notes complete that loop by explaining how a spec was actually implemented.
+
+This matters because Foundry is designed for humans and LLMs working across many sessions. Chat history is temporary. Repository context is durable.
+
+A future agent should be able to read a module's context files, specs, decisions, reconstruction notes, implementation log, source, and tests, then resume or rebuild the module with high fidelity.
+
+The goal is not bureaucracy. The goal is continuity: a framework that remembers not only its code, but the reasoning and implementation shape that produced it.

@@ -64,10 +64,10 @@ Execution rules:
 - Treat code and tests as the source of truth for actual implementation and runtime behavior
 - Treat `Features/<Feature>/specs/*.md` as execution specs: planning artifacts that are non-authoritative after implementation
 - Treat `Features/<Feature>/specs/drafts/*.md` as draft execution specs: non-executable planning artifacts
-- Treat `Features/<Feature>/plans/*.md` as implementation plans: planning artifacts that are non-authoritative after implementation
+- Treat `Features/<Feature>/plans/*.md` as implementation reconstruction notes: post-implementation artifacts describing what actually changed
 - Treat `Features/implementation.log` as the completed execution-spec ledger
-- Save a plan file for new active execution specs before implementation; chat-only plans are not sufficient.
-- Plans describe implementation strategy only and must not expand or alter execution-spec scope.
+- For completed active execution specs, create or update the matching reconstruction note before reporting completion.
+- Reconstruction notes are not speculative plans; they document actual implementation shape and verification evidence.
 - Execution spec IDs are ordered contracts and must stay contiguous within each feature at every hierarchy level; skipping numbers is forbidden.
 - Stop instead of planning, implementing, promoting, or logging execution specs when a numeric gap exists.
 - Do not hand-edit `app/generated/*`; regenerate instead
@@ -141,6 +141,19 @@ Completion rules:
 - Boundary warnings require explicit acknowledgement and must not be silently ignored.
 - Boundary failures block completion.
 - Opting out of boundary enforcement is permitted only through an explicit documented project configuration and must be reported as a warning by doctor/verify.
+
+## Application Feature Reconstruction Notes
+
+Every completed application feature spec SHOULD have a matching reconstruction note under the feature's `plans/` directory.
+
+Example:
+
+- Spec: `Features/Blog/specs/001-blog-posting.md`
+- Reconstruction note: `Features/Blog/plans/001-blog-posting.md`
+
+For executable application features, reconstruction notes preserve implementation memory: files added, runtime contracts, tests, deterministic outputs, and follow-up dependencies.
+
+Application agents should treat reconstruction notes as part of the feature's durable context. They are written after implementation and should describe what actually changed, not what might happen.
 
 ## Safe Edit Loop
 

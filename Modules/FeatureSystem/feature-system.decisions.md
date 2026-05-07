@@ -231,3 +231,47 @@ Timestamp: 2026-05-06T14:10:00-04:00
 - Required Content Changes
 - Skills
 - Acceptance Criteria
+
+### Decision: enforce module reconstruction notes with deterministic legacy grandfathering
+
+Timestamp: 2026-05-07T13:55:00-04:00
+
+**Context**
+
+- Execution spec `006-require-implementation-reconstruction-notes` requires durable post-implementation reconstruction notes under `Modules/<Module>/plans/`.
+- The repository already contained many module plan files with legacy `# Implementation Plan:` headings and non-reconstruction sections.
+- Immediate strict revalidation of all legacy plan files would invalidate the repository without migration support.
+
+**Decision**
+
+- Extend `spec:validate` to require reconstruction-note coverage for every active framework module spec.
+- Introduce deterministic violations for missing note files, invalid reconstruction headings, missing required sections, and out-of-order required sections.
+- Accept legacy module plan files that start with `# Implementation Plan:` as explicit grandfathered artifacts during migration.
+- Generate missing module plan/reconstruction files for active FeatureSystem, Marketplace, and StateStore specs so promoted specs have matching notes.
+
+**Reasoning**
+
+- Requiring matching note files immediately closes the largest reconstruction-context gap for active module specs.
+- Deterministic grandfathering preserves repository validity while avoiding hidden date-based exceptions.
+- Keeping strict section/ordering checks for new reconstruction-note headings provides enforceable quality for forward work.
+
+**Alternatives Considered**
+
+- Rewrite every historical module plan file into strict reconstruction-note format in this same change.
+- Delay enforcement entirely until a future full-history migration.
+- Use timestamp/date rules to exempt old notes.
+
+**Impact**
+
+- `spec:validate` now encodes module reconstruction-note coverage as a first-class contract.
+- Framework docs, scaffold docs, philosophy text, and implementation skills now describe `plans/` as post-implementation reconstruction memory.
+- Future promoted module specs fail validation if no matching reconstruction note exists.
+
+**Spec Reference**
+
+- Goals
+- Validation Rules
+- Failure Codes
+- Historical Specs / Migration Behavior
+- Required Documentation Updates
+- Skills Updates

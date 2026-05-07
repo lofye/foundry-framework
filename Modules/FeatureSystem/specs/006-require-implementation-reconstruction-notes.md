@@ -1,4 +1,4 @@
-# 006-require-implementation-reconstruction-notes
+# Execution Spec: 006-require-implementation-reconstruction-notes
 
 ## Purpose
 

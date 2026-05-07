@@ -327,6 +327,7 @@ MD,
     public function test_validate_supports_canonical_modules_workspace_specs_and_log(): void
     {
         $this->writeRawFile('Modules/ExecutionSpecSystem/specs/001-canonical.md', '# Execution Spec: 001-canonical');
+        $this->writeRawFile('Modules/ExecutionSpecSystem/plans/001-canonical.md', '# Implementation Plan: 001-canonical');
         $this->writeRawFile(
             'Modules/implementation.log',
             "## 2026-05-03 12:00:00 -0400\n- spec: execution-spec-system/001-canonical.md\n",
@@ -595,6 +596,148 @@ MD,
         );
     }
 
+    public function test_validate_reports_missing_reconstruction_note_for_active_module_specs(): void
+    {
+        $this->writeRawFile('Modules/FeatureSystem/specs/001-reconstruction-required.md', '# Execution Spec: 001-reconstruction-required');
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-07 10:00:00 -0400\n- spec: feature-system/001-reconstruction-required.md\n",
+        );
+
+        $result = $this->service()->validate();
+
+        $this->assertFalse($result['ok']);
+        $violation = array_values(array_filter(
+            $result['violations'],
+            static fn(array $entry): bool => $entry['code'] === 'EXECUTION_SPEC_RECONSTRUCTION_NOTE_MISSING',
+        ))[0];
+        $this->assertSame('Modules/FeatureSystem/specs/001-reconstruction-required.md', $violation['file_path']);
+        $this->assertSame('Modules/FeatureSystem/plans/001-reconstruction-required.md', $violation['details']['expected_path']);
+    }
+
+    public function test_validate_accepts_legacy_module_plan_heading_as_grandfathered_reconstruction_note(): void
+    {
+        $this->writeRawFile('Modules/FeatureSystem/specs/001-grandfathered.md', '# Execution Spec: 001-grandfathered');
+        $this->writeRawFile('Modules/FeatureSystem/plans/001-grandfathered.md', '# Implementation Plan: 001-grandfathered');
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-07 10:00:00 -0400\n- spec: feature-system/001-grandfathered.md\n",
+        );
+
+        $result = $this->service()->validate();
+
+        $this->assertTrue($result['ok']);
+        $this->assertSame([], $result['violations']);
+    }
+
+    public function test_validate_reports_invalid_reconstruction_note_heading_for_active_module_specs(): void
+    {
+        $this->writeRawFile('Modules/FeatureSystem/specs/001-heading.md', '# Execution Spec: 001-heading');
+        $this->writeRawFile('Modules/FeatureSystem/plans/001-heading.md', '# Wrong Heading');
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-07 10:00:00 -0400\n- spec: feature-system/001-heading.md\n",
+        );
+
+        $result = $this->service()->validate();
+
+        $this->assertFalse($result['ok']);
+        $codes = array_map(static fn(array $entry): string => (string) $entry['code'], $result['violations']);
+        $this->assertContains('EXECUTION_SPEC_RECONSTRUCTION_NOTE_HEADING_INVALID', $codes);
+    }
+
+    public function test_validate_reports_missing_reconstruction_note_sections_for_active_module_specs(): void
+    {
+        $this->writeRawFile('Modules/FeatureSystem/specs/001-sections.md', '# Execution Spec: 001-sections');
+        $this->writeRawFile(
+            'Modules/FeatureSystem/plans/001-sections.md',
+            "# 001-sections\n\n## Spec Implemented\n\n`Modules/FeatureSystem/specs/001-sections.md`\n",
+        );
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-07 10:00:00 -0400\n- spec: feature-system/001-sections.md\n",
+        );
+
+        $result = $this->service()->validate();
+
+        $this->assertFalse($result['ok']);
+        $violations = array_values(array_filter(
+            $result['violations'],
+            static fn(array $entry): bool => $entry['code'] === 'EXECUTION_SPEC_RECONSTRUCTION_NOTE_SECTION_MISSING',
+        ));
+        $this->assertNotEmpty($violations);
+        $this->assertSame('Implementation Summary', $violations[0]['details']['missing_section']);
+    }
+
+    public function test_validate_reports_reconstruction_note_section_order_violations_for_active_module_specs(): void
+    {
+        $this->writeRawFile('Modules/FeatureSystem/specs/001-order.md', '# Execution Spec: 001-order');
+        $this->writeRawFile(
+            'Modules/FeatureSystem/plans/001-order.md',
+            $this->validReconstructionNote(
+                '001-order',
+                [
+                    'Implementation Summary',
+                    'Spec Implemented',
+                    'Files Introduced',
+                    'Files Modified',
+                    'Runtime Contracts',
+                    'Deterministic Outputs',
+                    'Tests Added Or Updated',
+                    'Verification Commands',
+                    'Decisions And Tradeoffs',
+                    'Reconstruction Notes',
+                    'Follow-Up Dependencies',
+                ],
+            ),
+        );
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-07 10:00:00 -0400\n- spec: feature-system/001-order.md\n",
+        );
+
+        $result = $this->service()->validate();
+
+        $this->assertFalse($result['ok']);
+        $this->assertContains(
+            'EXECUTION_SPEC_RECONSTRUCTION_NOTE_SECTION_ORDER_INVALID',
+            array_map(static fn(array $entry): string => (string) $entry['code'], $result['violations']),
+        );
+    }
+
+    public function test_validate_draft_module_specs_do_not_require_reconstruction_notes(): void
+    {
+        $this->writeRawFile('Modules/FeatureSystem/specs/drafts/001-draft.md', '# Execution Spec: 001-draft');
+
+        $result = $this->service()->validate();
+
+        $this->assertTrue($result['ok']);
+        $this->assertSame([], $result['violations']);
+    }
+
+    public function test_validate_matches_hierarchical_module_spec_ids_to_reconstruction_note_paths(): void
+    {
+        $this->writeRawFile('Modules/Marketplace/specs/002-parent.md', '# Execution Spec: 002-parent');
+        $this->writeRawFile(
+            'Modules/Marketplace/plans/002-parent.md',
+            $this->validReconstructionNote('002-parent'),
+        );
+        $this->writeRawFile('Modules/Marketplace/specs/002.001-runtime.md', '# Execution Spec: 002.001-runtime');
+        $this->writeRawFile(
+            'Modules/Marketplace/plans/002.001-runtime.md',
+            $this->validReconstructionNote('002.001-runtime'),
+        );
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-07 10:00:00 -0400\n- spec: marketplace/002-parent.md\n\n## 2026-05-07 10:00:01 -0400\n- spec: marketplace/002.001-runtime.md\n",
+        );
+
+        $result = $this->service()->validate();
+
+        $this->assertTrue($result['ok']);
+        $this->assertSame([], $result['violations']);
+    }
+
     private function service(): ExecutionSpecValidationService
     {
         return new ExecutionSpecValidationService(new Paths($this->project->root));
@@ -632,6 +775,36 @@ MD,
         $contents = $existing === '' ? $entry : rtrim($existing, "\n") . "\n\n" . $entry;
 
         file_put_contents($absolutePath, $contents);
+    }
+
+    /**
+     * @param list<string>|null $orderedSections
+     */
+    private function validReconstructionNote(string $name, ?array $orderedSections = null): string
+    {
+        $sections = $orderedSections ?? [
+            'Spec Implemented',
+            'Implementation Summary',
+            'Files Introduced',
+            'Files Modified',
+            'Runtime Contracts',
+            'Deterministic Outputs',
+            'Tests Added Or Updated',
+            'Verification Commands',
+            'Decisions And Tradeoffs',
+            'Reconstruction Notes',
+            'Follow-Up Dependencies',
+        ];
+
+        $lines = ['# ' . $name, ''];
+        foreach ($sections as $section) {
+            $lines[] = '## ' . $section;
+            $lines[] = '';
+            $lines[] = '- documented';
+            $lines[] = '';
+        }
+
+        return implode("\n", $lines);
     }
 
     /**

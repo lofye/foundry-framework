@@ -41,7 +41,7 @@ These paths mean:
 - `Modules/<Module>/<module>.decisions.md` → append-only decision history
 - `Modules/<Module>/specs/*.md` → execution specs (planning artifacts, non-authoritative after implementation)
 - `Modules/<Module>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
-- `Modules/<Module>/plans/*.md` → implementation plans (planning artifacts)
+- `Modules/<Module>/plans/*.md` → implementation reconstruction notes (post-implementation artifacts)
 - `Modules/implementation.log` → completed framework execution-spec ledger
 
 For downstream application feature work, use:
@@ -50,7 +50,7 @@ For downstream application feature work, use:
 - `Features/<Feature>/<feature>.md`
 - `Features/<Feature>/<feature>.decisions.md`
 
-For new active execution specs, save an implementation plan file before implementation begins. Chat-only plans are not sufficient, and plan files must not expand or alter execution-spec scope.
+For completed active framework execution specs, create or update the matching reconstruction note before reporting completion. Reconstruction notes describe what actually changed, not speculative implementation plans.
 
 Execution spec IDs are ordered contracts within each feature. IDs must remain contiguous at every hierarchy level (`001`, `002`, `003`; `007.001`, `007.002`, ...), skipping numbers is forbidden, and agents must stop instead of planning, implementing, promoting, or logging specs when any numeric gap exists.
 
@@ -61,6 +61,23 @@ Use `foundry verify context --feature=<feature> --json` as the primary machine-r
 Foundry framework capabilities are governed as Framework Modules under `Modules/`.
 Downstream business/application capabilities are governed as Application Features under `Features/`.
 Framework internals may remain layer-organized under `src/*`.
+
+### Reconstruction Notes
+
+Foundry stores implementation reconstruction notes in each module's `plans/` directory.
+
+Specs define what must be true. Decision ledgers explain why architectural choices were made. Implementation logs record that a spec was completed. Reconstruction notes explain how the spec was actually implemented.
+
+This gives future agents and developers enough context to resume work, audit behavior, or rebuild a module without relying on chat history.
+
+Example:
+
+```text
+Modules/Marketplace/specs/003-marketplace-entitlements-and-license-activation.md
+Modules/Marketplace/plans/003-marketplace-entitlements-and-license-activation.md
+```
+
+For framework modules, completed specs are expected to have matching reconstruction notes.
 
 ## Feature-Localized Layout
 

@@ -9,6 +9,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Provide deterministic `feature:list`, `feature:inspect`, `feature:map`, and `verify features` CLI surfaces.
 - Treat `Modules/implementation.log` as the canonical implementation ledger path.
 - Support canonical `Modules/*/specs/` and `Modules/*/plans/` in spec validation.
+- Require reconstruction notes for completed framework module specs under `Modules/<Module>/plans/<id>-<slug>.md`.
 - Keep migration-compatible behavior for legacy `docs/features/*` inputs.
 
 ## Non-Goals
@@ -33,6 +34,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - `verify features` emits deterministic violations when attributable application-owned runtime/context files remain in legacy `app/features/<slug>` and `docs/features/<slug>` paths.
 - Framework-module misplacement checks do not classify application features under `Features/` as framework modules unless matching `Modules/<Name>` entries exist.
 - `spec:validate` validates canonical `Modules/*/specs` and `Modules/*/plans` paths.
+- `spec:validate` requires reconstruction-note coverage for active framework module specs and reports deterministic violations when notes are missing or malformed.
 - Active-spec implementation logging uses `Modules/implementation.log` when canonical module workspace is present.
 - Framework contributor docs, app-facing docs, and implementation skills align terminology and path contracts so framework-module work resolves from `Modules/*` while application-feature work resolves from `Features/*`.
 
@@ -43,6 +45,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Canonical/legacy duplicate detection reports `FEATURE_DUPLICATE_CANONICAL_AND_LEGACY`.
 - Application feature-local runtime ownership checks are deterministic and enforce default executable layout semantics.
 - Spec validation supports canonical `Modules/*` specs and plans.
+- Active module specs require matching reconstruction notes; legacy `# Implementation Plan:` notes remain deterministic grandfathered artifacts during migration.
 - Canonical implementation ledger path is recognized as `Modules/implementation.log`.
 - Documentation and agent/skill guidance consistently encode the modules-vs-features split without implying framework modules are governed under `Features/*`.
 

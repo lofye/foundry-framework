@@ -21,10 +21,10 @@ These paths mean:
 - `Features/<Feature>/<feature>.decisions.md` → append-only decision history
 - `Features/<Feature>/specs/*.md` → execution specs (planning artifacts, non-authoritative after implementation)
 - `Features/<Feature>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
-- `Features/<Feature>/plans/*.md` → implementation plans (planning artifacts)
+- `Features/<Feature>/plans/*.md` → implementation reconstruction notes (post-implementation artifacts)
 - `Features/implementation.log` → completed execution-spec ledger
 
-For new active execution specs, save an implementation plan file before implementation begins. Chat-only plans are not sufficient, and plan files must not expand or alter execution-spec scope.
+For completed active execution specs, create or update the matching reconstruction note before reporting completion. Reconstruction notes should describe what actually changed, not speculative implementation plans.
 
 Execution spec IDs are ordered contracts within each feature. IDs must stay contiguous at every hierarchy level, skipping numbers is forbidden, and agents must stop instead of planning, implementing, promoting, or logging specs when a numeric gap exists.
 
@@ -60,6 +60,18 @@ foundry feature:map --feature=<feature> --json
 ```
 
 Legacy `app/features/*`, `docs/features/*`, and generated compatibility paths may exist during migration, but new feature work should prefer localized feature roots.
+
+### Feature Reconstruction Notes
+
+Application features may include reconstruction notes under:
+
+```text
+Features/<Feature>/plans/
+```
+
+A reconstruction note records how a completed feature spec was implemented: files changed, runtime contracts, tests, deterministic outputs, and follow-up dependencies.
+
+These notes help future developers and agents understand or rebuild feature behavior without needing the original chat or implementation session.
 
 ## First Run
 

@@ -105,6 +105,10 @@ final class CLIFeatureSystemCommandTest extends TestCase
             "# Execution Spec: 001-canonical-layout\n",
         );
         $this->writeFile(
+            'Modules/ExecutionSpecSystem/plans/001-canonical-layout.md',
+            "# Implementation Plan: 001-canonical-layout\n",
+        );
+        $this->writeFile(
             'Modules/implementation.log',
             "## 2026-05-03 12:00:00 -0400\n- spec: execution-spec-system/001-canonical-layout.md\n",
         );

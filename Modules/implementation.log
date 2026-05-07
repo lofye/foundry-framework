@@ -355,3 +355,9 @@
 - note: Extended generate pack-requirement resolution to emit deterministic Marketplace pack requirement details, entitlement summaries, execution-state classification, and structured entitlement validation errors while reusing centralized `PackEntitlementResolver` behavior.
 - note: Added fail-closed generate enforcement for entitlement-required auto-install/replay paths and replay-time entitlement state-change detection (`ENTITLEMENT_STATE_CHANGED`) before mutation.
 - note: Added MCP tool contracts `generate_plan` and `generate_apply` with deterministic blocked/applied status payloads, entitlement visibility, and replay-backed preflight/apply validation behavior.
+
+## 2026-05-07 14:32:00 -0400
+- spec: feature-system/006-require-implementation-reconstruction-notes.md
+- note: Added deterministic module reconstruction-note validation in `spec:validate` with explicit missing/heading/section/order violation codes and migration-safe legacy `# Implementation Plan:` grandfathering for historical module notes.
+- note: Added strict-format reconstruction notes for active FeatureSystem, Marketplace, and StateStore specs that previously lacked matching `Modules/<Module>/plans/<id>-<slug>.md` files.
+- note: Updated framework/app docs, philosophy, and strict/non-strict implementation skills to treat `plans/` as post-implementation reconstruction memory and require reconstruction-note completion before claiming spec completion.

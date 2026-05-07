@@ -182,6 +182,28 @@ TEXT . "\n", $raw['output']);
         $this->assertStringContainsString('next_observed_id=003', $raw['output']);
     }
 
+    public function test_spec_validate_reports_missing_reconstruction_note_for_active_module_spec(): void
+    {
+        $this->writeRawFile(
+            'Modules/FeatureSystem/specs/001-reconstruction-required.md',
+            "# Execution Spec: 001-reconstruction-required\n",
+        );
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-07 12:00:00 -0400\n- spec: feature-system/001-reconstruction-required.md\n",
+        );
+
+        $json = $this->runCommand(['foundry', 'spec:validate', '--json']);
+
+        $this->assertSame(1, $json['status']);
+        $this->assertFalse($json['payload']['ok']);
+        $this->assertSame('EXECUTION_SPEC_RECONSTRUCTION_NOTE_MISSING', $json['payload']['violations'][0]['code']);
+        $this->assertSame(
+            'Modules/FeatureSystem/plans/001-reconstruction-required.md',
+            $json['payload']['violations'][0]['details']['expected_path'],
+        );
+    }
+
     /**
      * @param array<int,string> $argv
      * @return array{status:int,payload:array<string,mixed>}

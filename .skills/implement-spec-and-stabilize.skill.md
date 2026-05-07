@@ -51,7 +51,16 @@ If a step fails or leaves unresolved issues:
 
 ---
 
-## Step 2 — Append Implementation Log
+## Step 2 — Write Reconstruction Note
+- Create or update the matching reconstruction note under:
+  Modules/<Module>/plans/<id>-<slug>.md for framework-module specs
+  Features/<Feature>/plans/<id>-<slug>.md for application-feature specs
+- Reconstruction notes are post-implementation records, not speculative plans
+- Include implemented spec path, implementation summary, files introduced/modified, runtime contracts, deterministic outputs, tests, verification commands, decisions/tradeoffs, reconstruction notes, and follow-up dependencies
+
+---
+
+## Step 3 — Append Implementation Log
 - Append to:
   Modules/implementation.log for framework-module specs
   Features/implementation.log for application-feature specs
@@ -59,7 +68,7 @@ If a step fails or leaves unresolved issues:
 
 ---
 
-## Step 3 — Spec Validation (MUST PASS CLEAN)
+## Step 4 — Spec Validation (MUST PASS CLEAN)
 
 Run:
 
@@ -75,7 +84,7 @@ If ANY violation exists:
 
 ---
 
-## Step 4 — Tests (MUST PASS CLEAN)
+## Step 5 — Tests (MUST PASS CLEAN)
 
 Run:
 
@@ -90,7 +99,7 @@ If ANY failure:
 
 ---
 
-## Step 5 — Context Verification (MUST BE CLEAN)
+## Step 6 — Context Verification (MUST BE CLEAN)
 
 Run:
 
@@ -106,7 +115,7 @@ If ANY issue exists:
 
 ---
 
-## Step 6 — Context Repair (REQUIRED IF ISSUES EXIST)
+## Step 7 — Context Repair (REQUIRED IF ISSUES EXIST)
 
 Run:
 
@@ -123,7 +132,7 @@ If still not clean:
 
 ---
 
-## Step 7 — Feature Boundary Verification (MANDATORY WHEN AVAILABLE)
+## Step 8 — Feature Boundary Verification (MANDATORY WHEN AVAILABLE)
 
 Run when available:
 
@@ -152,7 +161,7 @@ If the command is not available because the feature-boundary system has not yet 
 
 ---
 
-## Step 8 — Feature Alignment Pass (MANDATORY)
+## Step 9 — Feature Alignment Pass (MANDATORY)
 
 Run the `feature-alignment-pass` skill/workflow across `Features/*` when applicable.
 `feature-alignment-pass` is a skill file (`.skills/feature-alignment-pass.skill.md`), not a Foundry CLI command.
@@ -171,11 +180,12 @@ If NOT clean:
 
 ---
 
-## Step 9 — Final System Check
+## Step 10 — Final System Check
 
 Report all of the following:
 
 - whether the spec was implemented
+- whether the reconstruction note is complete
 - whether the implementation log is correct
 - whether spec validation is clean
 - whether tests pass

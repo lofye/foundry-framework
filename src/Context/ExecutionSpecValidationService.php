@@ -20,6 +20,25 @@ final class ExecutionSpecValidationService
         'Features/implementation.log',
     ];
 
+    private const LEGACY_PLAN_HEADING_PREFIX = '# Implementation Plan: ';
+
+    /**
+     * @var list<string>
+     */
+    private const RECONSTRUCTION_SECTION_ORDER = [
+        'Spec Implemented',
+        'Implementation Summary',
+        'Files Introduced',
+        'Files Modified',
+        'Runtime Contracts',
+        'Deterministic Outputs',
+        'Tests Added Or Updated',
+        'Verification Commands',
+        'Decisions And Tradeoffs',
+        'Reconstruction Notes',
+        'Follow-Up Dependencies',
+    ];
+
     public function __construct(
         private readonly Paths $paths,
     ) {}
@@ -42,6 +61,7 @@ final class ExecutionSpecValidationService
         $activeSpecNames = [];
         $activeSpecPathsByFeature = [];
         $activeSpecLocations = [];
+        $activeModuleSpecs = [];
 
         foreach ($this->specFiles() as $relativePath) {
             if (in_array($relativePath, self::IGNORED_ROOT_FILES, true)) {
@@ -123,6 +143,14 @@ final class ExecutionSpecValidationService
                 $activeSpecNames[$placement['feature']][$parsedName['name']] = true;
                 $activeSpecPathsByFeature[$placement['feature']][$parsedName['name']] = $relativePath;
                 $activeSpecLocations[$placement['feature']][$parsedName['name']][$placement['workspace']][] = $relativePath;
+                if ($placement['scope'] === 'module') {
+                    $activeModuleSpecs[] = [
+                        'feature' => $placement['feature'],
+                        'name' => $parsedName['name'],
+                        'spec_path' => $relativePath,
+                        'expected_note_path' => $this->moduleReconstructionNotePath((string) $placement['feature_dir'], $parsedName['name']),
+                    ];
+                }
             }
         }
 
@@ -290,14 +318,17 @@ final class ExecutionSpecValidationService
 
             $fileHasViolations = false;
             $expectedHeading = '# Implementation Plan: ' . $parsedName['name'];
-            if ($this->firstLine($contents) !== $expectedHeading) {
+            $reconstructionHeading = '# ' . $parsedName['name'];
+            $firstLine = $this->firstLine($contents);
+            if ($firstLine !== $expectedHeading && $firstLine !== $reconstructionHeading) {
                 $violations[] = $this->violation(
                     'EXECUTION_SPEC_PLAN_INVALID_HEADING',
                     $relativePath,
-                    'Implementation plan heading must mirror the filename.',
+                    'Implementation plans must use either the legacy plan heading or the reconstruction-note filename heading.',
                     [
                         'expected_heading' => $expectedHeading,
-                        'actual_heading' => $this->firstLine($contents),
+                        'expected_reconstruction_heading' => $reconstructionHeading,
+                        'actual_heading' => $firstLine,
                     ],
                 );
                 $fileHasViolations = true;
@@ -363,6 +394,114 @@ final class ExecutionSpecValidationService
                         ],
                     );
                 }
+            }
+        }
+
+        foreach ($activeModuleSpecs as $moduleSpec) {
+            $notePath = (string) $moduleSpec['expected_note_path'];
+            $noteAbsolutePath = $this->paths->join($notePath);
+            if (!is_file($noteAbsolutePath)) {
+                $violations[] = $this->violation(
+                    'EXECUTION_SPEC_RECONSTRUCTION_NOTE_MISSING',
+                    (string) $moduleSpec['spec_path'],
+                    'Active module execution specs must have a matching reconstruction note in plans/.',
+                    [
+                        'spec_path' => (string) $moduleSpec['spec_path'],
+                        'expected_path' => $notePath,
+                    ],
+                );
+
+                continue;
+            }
+
+            $noteContents = file_get_contents($noteAbsolutePath);
+            if ($noteContents === false) {
+                $violations[] = $this->violation(
+                    'EXECUTION_SPEC_RECONSTRUCTION_NOTE_MISSING',
+                    (string) $moduleSpec['spec_path'],
+                    'Active module execution specs must have a readable reconstruction note in plans/.',
+                    [
+                        'spec_path' => (string) $moduleSpec['spec_path'],
+                        'expected_path' => $notePath,
+                    ],
+                );
+
+                continue;
+            }
+
+            $firstLine = $this->firstLine($noteContents);
+            if ($firstLine === '' || str_starts_with($firstLine, self::LEGACY_PLAN_HEADING_PREFIX)) {
+                continue;
+            }
+
+            $expectedHeading = '# ' . (string) $moduleSpec['name'];
+            if ($firstLine !== $expectedHeading) {
+                $violations[] = $this->violation(
+                    'EXECUTION_SPEC_RECONSTRUCTION_NOTE_HEADING_INVALID',
+                    $notePath,
+                    'Reconstruction note heading must mirror the filename only.',
+                    [
+                        'expected_heading' => $expectedHeading,
+                        'actual_heading' => $firstLine,
+                    ],
+                );
+
+                continue;
+            }
+
+            $sectionHeadings = $this->sectionHeadings($noteContents);
+            $missingSections = [];
+            foreach (self::RECONSTRUCTION_SECTION_ORDER as $sectionHeading) {
+                if (!in_array($sectionHeading, $sectionHeadings, true)) {
+                    $missingSections[] = $sectionHeading;
+                }
+            }
+
+            if ($missingSections !== []) {
+                foreach ($missingSections as $missingSection) {
+                    $violations[] = $this->violation(
+                        'EXECUTION_SPEC_RECONSTRUCTION_NOTE_SECTION_MISSING',
+                        $notePath,
+                        'Reconstruction notes must include all required sections.',
+                        [
+                            'missing_section' => $missingSection,
+                            'required_sections' => self::RECONSTRUCTION_SECTION_ORDER,
+                        ],
+                    );
+                }
+
+                continue;
+            }
+
+            $positions = [];
+            foreach (self::RECONSTRUCTION_SECTION_ORDER as $sectionHeading) {
+                $positions[$sectionHeading] = array_search($sectionHeading, $sectionHeadings, true);
+            }
+
+            $isOrdered = true;
+            $previousPosition = -1;
+            foreach (self::RECONSTRUCTION_SECTION_ORDER as $sectionHeading) {
+                $position = (int) $positions[$sectionHeading];
+                if ($position > $previousPosition) {
+                    $previousPosition = $position;
+
+                    continue;
+                }
+
+                $isOrdered = false;
+                break;
+            }
+
+            if (!$isOrdered) {
+                $violations[] = $this->violation(
+                    'EXECUTION_SPEC_RECONSTRUCTION_NOTE_SECTION_ORDER_INVALID',
+                    $notePath,
+                    'Reconstruction note required sections must appear in canonical order.',
+                    [
+                        'required_sections' => self::RECONSTRUCTION_SECTION_ORDER,
+                        'actual_sections' => $sectionHeadings,
+                    ],
+                );
             }
         }
 
@@ -525,7 +664,7 @@ final class ExecutionSpecValidationService
     }
 
     /**
-     * @return array{feature:string,status:string,name:string,workspace:string}|null
+     * @return array{feature:string,status:string,name:string,workspace:string,scope:string,feature_dir?:string}|null
      */
     private function classifyPlacement(string $relativePath): ?array
     {
@@ -535,6 +674,8 @@ final class ExecutionSpecValidationService
                 'status' => 'active',
                 'name' => (string) $matches['name'],
                 'workspace' => 'canonical',
+                'scope' => 'module',
+                'feature_dir' => (string) $matches['feature_dir'],
             ];
         }
 
@@ -544,6 +685,8 @@ final class ExecutionSpecValidationService
                 'status' => 'draft',
                 'name' => (string) $matches['name'],
                 'workspace' => 'canonical',
+                'scope' => 'module',
+                'feature_dir' => (string) $matches['feature_dir'],
             ];
         }
 
@@ -553,6 +696,8 @@ final class ExecutionSpecValidationService
                 'status' => 'active',
                 'name' => (string) $matches['name'],
                 'workspace' => 'canonical',
+                'scope' => 'feature',
+                'feature_dir' => (string) $matches['feature_dir'],
             ];
         }
 
@@ -562,6 +707,8 @@ final class ExecutionSpecValidationService
                 'status' => 'draft',
                 'name' => (string) $matches['name'],
                 'workspace' => 'canonical',
+                'scope' => 'feature',
+                'feature_dir' => (string) $matches['feature_dir'],
             ];
         }
 
@@ -571,6 +718,7 @@ final class ExecutionSpecValidationService
                 'status' => 'active',
                 'name' => (string) $matches['name'],
                 'workspace' => 'legacy',
+                'scope' => 'legacy',
             ];
         }
 
@@ -580,6 +728,7 @@ final class ExecutionSpecValidationService
                 'status' => 'draft',
                 'name' => (string) $matches['name'],
                 'workspace' => 'legacy',
+                'scope' => 'legacy',
             ];
         }
 
@@ -744,6 +893,30 @@ final class ExecutionSpecValidationService
         }
 
         return 'docs/features/' . $feature . '/plans/' . $name . '.md';
+    }
+
+    private function moduleReconstructionNotePath(string $moduleName, string $name): string
+    {
+        return 'Modules/' . $moduleName . '/plans/' . $name . '.md';
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function sectionHeadings(string $contents): array
+    {
+        $headings = [];
+
+        foreach (preg_split('/\R/', $contents) ?: [] as $line) {
+            $trimmed = trim($line);
+            if (!str_starts_with($trimmed, '## ')) {
+                continue;
+            }
+
+            $headings[] = trim(substr($trimmed, 3));
+        }
+
+        return $headings;
     }
 
     private function pascalFromSlug(string $slug): string

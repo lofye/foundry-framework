@@ -24,6 +24,9 @@
 - Framework and scaffold documentation now consistently distinguish Framework Modules (`Modules/*`) from Application Features (`Features/*`).
 - Agent guides and implementation skills now route framework execution-spec work to `Modules/*` and `Modules/implementation.log` while keeping app feature-local guidance under `Features/*`.
 - Documentation and agent/skill contracts no longer describe framework module governance as canonical under `Features/*`.
+- `spec:validate` now enforces reconstruction-note coverage for active module specs with deterministic violations for missing notes, invalid reconstruction headings, missing required sections, and section-order drift.
+- Legacy module `plans/` files using `# Implementation Plan:` remain deterministic grandfathered records while new or updated module notes use strict reconstruction-note sections.
+- Missing module reconstruction-note files for active FeatureSystem, Marketplace, and StateStore specs now exist under `Modules/<Module>/plans/` with canonical section layout.
 
 ## Open Questions
 
@@ -34,3 +37,4 @@
 
 - Expand boundary-violation classification depth in follow-up execution specs.
 - Continue incremental source/test localization through promoted execution specs.
+- Evaluate follow-up specs to migrate grandfathered legacy module plan documents into strict reconstruction-note format.
