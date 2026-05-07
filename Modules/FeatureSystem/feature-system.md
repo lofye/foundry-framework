@@ -26,9 +26,9 @@
 - Documentation and agent/skill contracts no longer describe framework module governance as canonical under `Features/*`.
 - `spec:validate` now enforces reconstruction-note coverage for active module specs with deterministic violations for missing notes, invalid reconstruction headings, missing required sections, and section-order drift.
 - Legacy module `plans/` files using `# Implementation Plan:` remain deterministic grandfathered records while new or updated module notes use strict reconstruction-note sections.
-- Missing module reconstruction-note files for active FeatureSystem, Marketplace, and StateStore specs now exist under `Modules/<Module>/plans/` with canonical section layout.
 - `Modules/implementation.log` framework entries are normalized to canonical module spec paths (`Modules/<Module>/specs/<id>-<slug>.md`) where deterministic mapping exists.
 - `spec:validate` now reports deterministic `EXECUTION_SPEC_IMPLEMENTATION_LOG_PATH_NOT_CANONICAL` violations when framework log entries use slug-style spec references.
+- `historical-specs:extract` now provides deterministic prep-only archive extraction from `_import/raw-historical-specs` into `_import/historical-specs/candidate-XXX` bundles (`spec.md`, `source.md`, `metadata.json`).
 
 ## Open Questions
 
@@ -40,4 +40,4 @@
 - Expand boundary-violation classification depth in follow-up execution specs.
 - Continue incremental source/test localization through promoted execution specs.
 - Evaluate follow-up specs to migrate grandfathered legacy module plan documents into strict reconstruction-note format.
-- Continue historical import and archive specs after canonical module implementation-log path normalization is complete.
+- Continue historical import and archive specs after canonical module implementation-log path normalization is complete, using extracted candidates as prep artifacts only until import specs are implemented.

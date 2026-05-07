@@ -318,3 +318,42 @@ Timestamp: 2026-05-07T15:05:00-04:00
 - Existing Log Migration
 - Validation Rules
 - Acceptance Criteria
+
+### Decision: add deterministic historical-spec archive extraction helper before module import
+
+Timestamp: 2026-05-07T15:15:00-04:00
+
+**Context**
+
+- Execution spec `007.001-historical-spec-archive-extraction-helper` requires a prep-only workflow to extract likely historical execution specs from messy source notes before implementing import/migration specs.
+- `_import/historical-specs/` exists as a prepared target path and requires deterministic candidate output contracts.
+
+**Decision**
+
+- Add a dedicated `historical-specs:extract` CLI command with deterministic `--source`, `--target`, and `--dry-run` behavior.
+- Implement extraction through a feature-system service that scans sorted `.md`/`.txt` source files, detects likely spec boundaries, preserves original extracted text, emits cleaned candidate spec text, and writes best-effort metadata.
+- Keep this workflow prep-only: do not import candidates into `Modules/*`, do not append module implementation logs for historical specs, and do not generate reconstruction notes during extraction.
+
+**Reasoning**
+
+- Separating extraction from import reduces migration risk and keeps historical parsing heuristics isolated from module ownership mutations.
+- Deterministic candidate numbering and output shape allows repeatable review and follow-up tooling without hidden side effects.
+
+**Alternatives Considered**
+
+- Skip extraction tooling and perform manual archival splitting.
+- Combine extraction and module import in one command.
+- Emit absolute-path metadata tied to local machine paths.
+
+**Impact**
+
+- Historical-spec prep now has a deterministic machine command and candidate artifact contract.
+- Follow-up import specs can consume normalized candidate bundles without reimplementing messy parsing logic.
+- Existing module/runtime ownership contracts remain unchanged in this step.
+
+**Spec Reference**
+
+- Goal
+- Requirements
+- Determinism
+- Testing

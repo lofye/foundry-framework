@@ -31,6 +31,7 @@ use Foundry\CLI\Commands\GeneratePlatformCommand;
 use Foundry\CLI\Commands\GenerateScaffoldCommand;
 use Foundry\CLI\Commands\GraphVisualizeCommand;
 use Foundry\CLI\Commands\HistoryCommand;
+use Foundry\CLI\Commands\HistoricalSpecsExtractCommand;
 use Foundry\CLI\Commands\ImpactCommand;
 use Foundry\CLI\Commands\ImplementFeatureCommand;
 use Foundry\CLI\Commands\ImplementSpecCommand;
@@ -131,6 +132,7 @@ final class Application
             new DoctorCommand(),
             new ObserveCommand(),
             new HistoryCommand(),
+            new HistoricalSpecsExtractCommand(),
             new RegressionsCommand(),
             new ExplainCommand(),
             new DiffCommand(),

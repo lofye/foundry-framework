@@ -12,6 +12,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Require reconstruction notes for completed framework module specs under `Modules/<Module>/plans/<id>-<slug>.md`.
 - Require canonical module implementation-log references in the form `Modules/<Module>/specs/<id>-<slug>.md`.
 - Keep migration-compatible behavior for legacy `docs/features/*` inputs.
+- Provide deterministic prep-only historical-spec archive extraction tooling before full module import migration.
 
 ## Non-Goals
 
@@ -30,6 +31,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - `feature:inspect <feature>` returns context and directory mapping with deterministic dependency order.
 - `feature:map` returns deterministic owned path maps.
 - `verify features` reports boundary/duplication issues and enforcement status.
+- `historical-specs:extract` scans `_import/raw-historical-specs` and writes deterministic candidate archives under `_import/historical-specs` without importing into `Modules/*`.
 - `verify features` enforces executable application feature-local runtime layout under `Features/<Feature>/` (`src/` and `tests/` required by default).
 - `verify features` permits omitted `specs/`, `plans/`, and `docs/` directories when absent, and fails deterministically when present paths are not directories.
 - `verify features` emits deterministic violations when attributable application-owned runtime/context files remain in legacy `app/features/<slug>` and `docs/features/<slug>` paths.
@@ -51,6 +53,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Framework implementation-log entries are canonicalized to module spec paths and slug-style module references fail deterministic validation.
 - Canonical implementation ledger path is recognized as `Modules/implementation.log`.
 - Documentation and agent/skill guidance consistently encode the modules-vs-features split without implying framework modules are governed under `Features/*`.
+- Historical-spec prep extraction remains explicit and non-authoritative until follow-up import specs are implemented.
 
 ## Assumptions
 

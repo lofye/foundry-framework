@@ -367,3 +367,7 @@
 - note: Normalized deterministic historical framework entries in `Modules/implementation.log` from slug-style references to canonical `Modules/<Module>/specs/<id>-<slug>.md` paths where module/spec mapping is explicit.
 - note: Tightened `spec:validate` module log coverage semantics to require canonical module references and emit deterministic `EXECUTION_SPEC_IMPLEMENTATION_LOG_PATH_NOT_CANONICAL` violations when only slug-style module references exist.
 - note: Updated module `spec:log-entry` generation to emit canonical module spec paths for framework module specs and added focused unit/integration tests for canonical pass and non-canonical fail behavior.
+## 2026-05-07 15:02:55 -0400
+- spec: Modules/FeatureSystem/specs/007.001-historical-spec-archive-extraction-helper.md
+- note: Added deterministic historical-spec archive extraction tooling (`historical-specs:extract`) that scans messy `.md/.txt` source directories and emits prep-only candidate bundles under `_import/historical-specs/candidate-XXX`.
+- note: Extraction preserves original segments in `source.md`, writes cleaned candidate text to `spec.md`, emits stable metadata fields in `metadata.json`, supports dry-run mode, and avoids importing candidates into `Modules/*`.
