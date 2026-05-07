@@ -137,6 +137,9 @@ php -S 127.0.0.1:8000 public/index.php
 4. Make the smallest necessary source-of-truth changes.
 5. Re-run verification and tests.
 
+Clarification: `feature-alignment-pass` is a skill/workflow name, not a Foundry CLI command.
+Use `php bin/foundry verify context --json` as the canonical CLI command for context/alignment validation.
+
 When claiming implementation completion, use this canonical machine gate:
 
 ```bash

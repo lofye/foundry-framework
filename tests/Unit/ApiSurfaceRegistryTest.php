@@ -442,7 +442,6 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('inspect platform', $registry->resolveCliSignature(['inspect', 'platform']));
 
         $method = new \ReflectionMethod($registry, 'matchesPattern');
-        $method->setAccessible(true);
         $this->assertFalse($method->invoke($registry, 'app/generated/routes.php', ''));
     }
 }

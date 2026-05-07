@@ -200,7 +200,7 @@ prefer the higher safe reasoning level.
 Use these defaults unless there is a clear reason to override them:
 
 - **Medium**:
-  - feature-alignment-pass
+  - feature-alignment-pass (skill/workflow, not a CLI command)
   - strict dry-run
   - small local fixes
   - deterministic cleanup work

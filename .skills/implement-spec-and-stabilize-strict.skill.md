@@ -211,8 +211,8 @@ If the command is not available because the feature-boundary system has not yet 
 
 ## Step 8 — Feature Alignment Pass (MANDATORY)
 
-Run:
-- feature-alignment-pass across Features/*
+Run the `feature-alignment-pass` skill/workflow across `Features/*` when applicable.
+`feature-alignment-pass` is a skill file (`.skills/feature-alignment-pass.skill.md`), not a Foundry CLI command.
 
 Then re-run:
 

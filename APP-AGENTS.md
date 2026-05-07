@@ -163,6 +163,8 @@ Completion rules:
 ## Recommended Command Loop
 
 Use feature-scoped inspection and verification whenever possible:
+`feature-alignment-pass` refers to a skill/workflow, not a Foundry CLI command.
+Use `foundry verify context --json` (or `foundry verify context --feature=<feature> --json`) as the canonical CLI context/alignment validator.
 
 ```bash
 foundry explain --json

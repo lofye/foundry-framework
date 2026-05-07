@@ -128,7 +128,6 @@ final class InitAppCommandInternalsTest extends TestCase
     private function invoke(string $method, array $args): mixed
     {
         $reflection = new \ReflectionMethod($this->command, $method);
-        $reflection->setAccessible(true);
 
         return $reflection->invokeArgs($this->command, $args);
     }

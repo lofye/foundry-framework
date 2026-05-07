@@ -232,6 +232,8 @@ Do NOT:
 ## Workflow Reference
 
 For the full contributor workflow, follow the checklist in `README.md`.
+`feature-alignment-pass` refers to the skill/workflow file at `.skills/feature-alignment-pass.skill.md`; it is not a Foundry CLI command.
+The canonical CLI command for context/alignment validation is `php bin/foundry verify context --json`.
 
 Do not skip:
 

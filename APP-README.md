@@ -90,6 +90,9 @@ foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
 php -S 127.0.0.1:8000 public/index.php
 ```
 
+Clarification: `feature-alignment-pass` is a skill/workflow name, not a Foundry CLI command.
+Use `foundry verify context --json` as the canonical CLI command for context/alignment validation.
+
 ## Starter Routes
 
 {{ROUTE_SUMMARY}}
