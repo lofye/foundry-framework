@@ -349,3 +349,9 @@
 - note: Added deterministic Marketplace purchase contracts via `MarketplacePurchaseService` and purchase-client abstraction, plus `pack purchase <vendor/pack>` CLI flow support with explicit free/not-purchasable, already-entitled, auth-required, pending checkout, success, partial-refresh, and failure outcomes.
 - note: Extended hosted registry purchase metadata contracts (`distribution`, `entitlement_required`, optional `price`) and wired purchase-success entitlement updates through shared entitlement runtime to avoid duplicate direct cache-write logic.
 - note: Added inspect/verify marketplace purchase capability integration and focused unit/integration coverage for purchase client/service/CLI behavior, entitlement refresh paths, and deterministic error handling.
+
+## 2026-05-07 14:05:00 -0400
+- spec: marketplace/005-marketplace-mcp-and-generate-entitlement-integration.md
+- note: Extended generate pack-requirement resolution to emit deterministic Marketplace pack requirement details, entitlement summaries, execution-state classification, and structured entitlement validation errors while reusing centralized `PackEntitlementResolver` behavior.
+- note: Added fail-closed generate enforcement for entitlement-required auto-install/replay paths and replay-time entitlement state-change detection (`ENTITLEMENT_STATE_CHANGED`) before mutation.
+- note: Added MCP tool contracts `generate_plan` and `generate_apply` with deterministic blocked/applied status payloads, entitlement visibility, and replay-backed preflight/apply validation behavior.

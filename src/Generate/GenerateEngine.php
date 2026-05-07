@@ -19,6 +19,8 @@ use Foundry\Explain\ExplainSupport;
 use Foundry\Explain\ExplainTarget;
 use Foundry\Explain\Snapshot\ExplainSnapshotService;
 use Foundry\Git\GitRepositoryInspector;
+use Foundry\Marketplace\MarketplaceEntitlementCache;
+use Foundry\Marketplace\PackEntitlementResolver;
 use Foundry\Packs\PackManager;
 use Foundry\Pro\ArchitectureExplainer;
 use Foundry\Support\ApiSurfaceRegistry;
@@ -98,7 +100,7 @@ final class GenerateEngine
             ? ['requested' => true, 'created' => false, 'message' => $this->defaultGitCommitMessage($intent), 'files' => []]
             : null;
         $initialExtensions = ExtensionRegistry::forPaths($this->paths);
-        $requirementResolver = new PackRequirementResolver();
+        $requirementResolver = $this->packRequirementResolver();
         $preSnapshot = null;
 
         $packsInstalled = [];
@@ -148,8 +150,27 @@ final class GenerateEngine
                         [
                             'missing_capabilities' => $initialRequirements['missing_capabilities'],
                             'suggested_packs' => $initialRequirements['suggested_packs'],
+                            'pack_requirements' => $initialRequirements['pack_requirements'],
+                            'entitlements' => $initialRequirements['entitlements'],
+                            'execution_state' => $initialRequirements['execution_state'],
                         ],
                         'Required packs are not installed. Re-run with --allow-pack-install or install them first.',
+                    );
+                }
+
+                $blocking = $this->entitlementBlockingIssue($initialRequirements, false);
+                if ($blocking !== null) {
+                    throw new FoundryError(
+                        $blocking['code'],
+                        'validation',
+                        [
+                            'pack' => $blocking['pack'],
+                            'execution_state' => $initialRequirements['execution_state'],
+                            'entitlements' => $initialRequirements['entitlements'],
+                            'pack_requirements' => $initialRequirements['pack_requirements'],
+                            'errors' => $initialRequirements['errors'],
+                        ],
+                        (string) $blocking['message'],
                     );
                 }
 
@@ -179,6 +200,9 @@ final class GenerateEngine
             $model = $this->buildExplainModel($compiler, $extensions, $compile->graph, $target);
             $generatorRegistry = GeneratorRegistry::forExtensions($extensions);
             $requirements = $requirementResolver->resolve($intent, $extensions->packRegistry());
+            $planningRequirements = $initialRequirements['suggested_packs'] !== []
+                ? $initialRequirements
+                : $requirements;
             $context = new GenerationContextPacket(
                 intent: $intent,
                 model: $model,
@@ -203,8 +227,11 @@ final class GenerateEngine
                     $generatorRegistry->all(),
                 )),
                 installedPacks: $extensions->packRegistry()->inspectRows(),
-                missingCapabilities: $requirements['missing_capabilities'],
-                suggestedPacks: $requirements['suggested_packs'],
+                missingCapabilities: $planningRequirements['missing_capabilities'],
+                suggestedPacks: $planningRequirements['suggested_packs'],
+                packRequirements: $planningRequirements['pack_requirements'],
+                entitlements: $planningRequirements['entitlements'],
+                executionState: (string) ($planningRequirements['execution_state'] ?? 'executable'),
             );
 
             $plan = (new GenerationPlanner($generatorRegistry))->plan($context);
@@ -1051,6 +1078,24 @@ final class GenerateEngine
         $intent = $this->replayIntent($record, $plan, $dryRun);
         $validator = new PlanValidator();
         $validator->validate($plan, $intent);
+        $entitlementValidation = $this->replayEntitlementValidation($record);
+        if (($entitlementValidation['ok'] ?? true) !== true) {
+            throw new FoundryError(
+                (string) ($entitlementValidation['code'] ?? 'ENTITLEMENT_VALIDATION_FAILED'),
+                'validation',
+                [
+                    'plan_id' => $planId,
+                    'pack' => $entitlementValidation['pack'] ?? null,
+                    'planned_execution_state' => $entitlementValidation['planned_execution_state'] ?? 'unknown',
+                    'current_execution_state' => $entitlementValidation['current_execution_state'] ?? 'unknown',
+                    'planned_entitlements' => $entitlementValidation['planned_entitlements'] ?? [],
+                    'current_entitlements' => $entitlementValidation['current_entitlements'] ?? [],
+                    'current_pack_requirements' => $entitlementValidation['current_pack_requirements'] ?? [],
+                    'entitlement_errors' => $entitlementValidation['errors'] ?? [],
+                ],
+                (string) ($entitlementValidation['message'] ?? 'Replay entitlement validation failed.'),
+            );
+        }
 
         $extensions = ExtensionRegistry::forPaths($this->paths);
         $compiler = new GraphCompiler($this->paths, $extensions);
@@ -1132,6 +1177,9 @@ final class GenerateEngine
             'verification' => $verification,
             'dry_run' => $dryRun,
             'plan' => $plan->toArray(),
+            'execution_state' => (string) ($entitlementValidation['current_execution_state'] ?? 'executable'),
+            'entitlements' => is_array($entitlementValidation['current_entitlements'] ?? null) ? $entitlementValidation['current_entitlements'] : [],
+            'pack_requirements' => array_values(array_filter((array) ($entitlementValidation['current_pack_requirements'] ?? []), 'is_array')),
             'source_record' => [
                 'status' => $record['status'] ?? null,
                 'timestamp' => $record['timestamp'] ?? null,
@@ -1268,6 +1316,9 @@ final class GenerateEngine
             'actions_taken' => $actionsTaken,
             'verification_results' => $verificationResults,
             'errors' => $errors,
+            'execution_state' => $context->executionState,
+            'entitlements' => $context->entitlements,
+            'pack_requirements' => $context->packRequirements,
             'metadata' => $metadata,
             'git' => $git,
             'snapshots' => $snapshots,
@@ -1339,6 +1390,9 @@ final class GenerateEngine
             'git' => $payload['git'] ?? [],
             'packs_used' => $payload['packs_used'] ?? [],
             'packs_installed' => $payload['packs_installed'] ?? [],
+            'execution_state' => $payload['execution_state'] ?? 'executable',
+            'entitlements' => is_array($payload['entitlements'] ?? null) ? $payload['entitlements'] : [],
+            'pack_requirements' => array_values(array_filter((array) ($payload['pack_requirements'] ?? []), 'is_array')),
             'interactive' => $payload['interactive'] ?? null,
             'safety_routing' => $payload['safety_routing'] ?? null,
             'policy' => $payload['policy'] ?? null,
@@ -1748,6 +1802,8 @@ final class GenerateEngine
             'plan_origin' => $effectivePlan?->origin,
             'generator_id' => $effectivePlan?->generatorId,
             'safety_routing' => $safetyRouting,
+            'execution_state' => $context?->executionState ?? 'executable',
+            'entitlements' => $context?->entitlements ?? [],
         ];
         if ($workflowLinkage !== null) {
             $metadata['workflow'] = $workflowLinkage;
@@ -3083,6 +3139,159 @@ final class GenerateEngine
         }
 
         return $planned;
+    }
+
+    /**
+     * @return array<int,array<string,mixed>>
+     */
+    private function packRequirementResolver(): PackRequirementResolver
+    {
+        return new PackRequirementResolver(
+            hostedRegistry: $this->packManager->hostedRegistry(),
+            entitlementResolver: new PackEntitlementResolver(new MarketplaceEntitlementCache($this->paths)),
+        );
+    }
+
+    /**
+     * @param array<string,mixed> $requirements
+     * @return array{code:string,pack:?string,message:string}|null
+     */
+    private function entitlementBlockingIssue(array $requirements, bool $stateChanged): ?array
+    {
+        $executionState = (string) ($requirements['execution_state'] ?? 'invalid');
+        if ($executionState === 'executable') {
+            return null;
+        }
+
+        $entitlements = is_array($requirements['entitlements'] ?? null) ? $requirements['entitlements'] : [];
+        $errors = array_values(array_filter((array) ($requirements['errors'] ?? []), 'is_array'));
+
+        $missing = array_values(array_map('strval', (array) ($entitlements['missing'] ?? [])));
+        if ($missing !== []) {
+            return [
+                'code' => $stateChanged ? 'ENTITLEMENT_STATE_CHANGED' : 'MISSING_ENTITLEMENT',
+                'pack' => $missing[0],
+                'message' => $stateChanged
+                    ? 'Marketplace entitlement state changed and now blocks execution.'
+                    : 'Marketplace entitlement is missing.',
+            ];
+        }
+
+        $expired = array_values(array_map('strval', (array) ($entitlements['expired'] ?? [])));
+        if ($expired !== []) {
+            return [
+                'code' => $stateChanged ? 'ENTITLEMENT_STATE_CHANGED' : 'EXPIRED_ENTITLEMENT',
+                'pack' => $expired[0],
+                'message' => $stateChanged
+                    ? 'Marketplace entitlement state changed and now blocks execution.'
+                    : 'Marketplace entitlement is expired.',
+            ];
+        }
+
+        foreach ($errors as $error) {
+            $code = (string) ($error['code'] ?? '');
+            $pack = is_string($error['pack'] ?? null) ? (string) $error['pack'] : null;
+
+            if ($code === 'MARKETPLACE_PACK_NOT_AVAILABLE') {
+                return [
+                    'code' => $stateChanged ? 'ENTITLEMENT_STATE_CHANGED' : 'MARKETPLACE_PACK_NOT_AVAILABLE',
+                    'pack' => $pack,
+                    'message' => $stateChanged
+                        ? 'Marketplace entitlement state changed and now blocks execution.'
+                        : 'Marketplace pack is not available.',
+                ];
+            }
+
+            if ($code === 'ENTITLEMENT_VALIDATION_FAILED') {
+                return [
+                    'code' => $stateChanged ? 'ENTITLEMENT_STATE_CHANGED' : 'ENTITLEMENT_VALIDATION_FAILED',
+                    'pack' => $pack,
+                    'message' => $stateChanged
+                        ? 'Marketplace entitlement state changed and now blocks execution.'
+                        : 'Marketplace entitlement validation failed.',
+                ];
+            }
+        }
+
+        $unknown = array_values(array_map('strval', (array) ($entitlements['unknown'] ?? [])));
+        if ($unknown !== []) {
+            return [
+                'code' => $stateChanged ? 'ENTITLEMENT_STATE_CHANGED' : 'UNKNOWN_ENTITLEMENT',
+                'pack' => $unknown[0],
+                'message' => $stateChanged
+                    ? 'Marketplace entitlement state changed and now blocks execution.'
+                    : 'Marketplace entitlement is unknown.',
+            ];
+        }
+
+        return [
+            'code' => $stateChanged ? 'ENTITLEMENT_STATE_CHANGED' : 'ENTITLEMENT_VALIDATION_FAILED',
+            'pack' => null,
+            'message' => $stateChanged
+                ? 'Marketplace entitlement state changed and now blocks execution.'
+                : 'Marketplace entitlement validation failed.',
+        ];
+    }
+
+    /**
+     * @param array<string,mixed> $record
+     * @return array<string,mixed>
+     */
+    private function replayEntitlementValidation(array $record): array
+    {
+        $contextPacket = is_array($record['generation_context_packet'] ?? null) ? $record['generation_context_packet'] : [];
+        $plannedExecutionState = (string) ($contextPacket['execution_state'] ?? 'executable');
+        $plannedEntitlements = is_array($contextPacket['entitlements'] ?? null) ? $contextPacket['entitlements'] : [];
+        $required = array_values(array_map('strval', (array) ($plannedEntitlements['required'] ?? [])));
+        sort($required);
+
+        if ($required === []) {
+            return [
+                'ok' => true,
+                'planned_execution_state' => $plannedExecutionState,
+                'current_execution_state' => 'executable',
+                'planned_entitlements' => $plannedEntitlements,
+                'current_entitlements' => $plannedEntitlements,
+                'current_pack_requirements' => [],
+                'errors' => [],
+            ];
+        }
+
+        $requirements = $this->packRequirementResolver()->resolve(
+            new Intent(raw: 'Replay entitlement validation', mode: 'modify', packHints: $required),
+            new \Foundry\Compiler\Extensions\PackRegistry(),
+        );
+        $currentExecutionState = (string) ($requirements['execution_state'] ?? 'invalid');
+
+        if ($currentExecutionState === 'executable') {
+            return [
+                'ok' => true,
+                'planned_execution_state' => $plannedExecutionState,
+                'current_execution_state' => $currentExecutionState,
+                'planned_entitlements' => $plannedEntitlements,
+                'current_entitlements' => $requirements['entitlements'] ?? [],
+                'current_pack_requirements' => $requirements['pack_requirements'] ?? [],
+                'errors' => $requirements['errors'] ?? [],
+            ];
+        }
+
+        $blocking = $this->entitlementBlockingIssue($requirements, $plannedExecutionState === 'executable');
+        if ($blocking === null) {
+            return ['ok' => true];
+        }
+
+        return [
+            'ok' => false,
+            'code' => $blocking['code'],
+            'pack' => $blocking['pack'],
+            'message' => $blocking['message'],
+            'planned_execution_state' => $plannedExecutionState,
+            'current_execution_state' => $currentExecutionState,
+            'planned_entitlements' => $plannedEntitlements,
+            'current_entitlements' => $requirements['entitlements'] ?? [],
+            'current_pack_requirements' => $requirements['pack_requirements'] ?? [],
+            'errors' => $requirements['errors'] ?? [],
+        ];
     }
 
     /**

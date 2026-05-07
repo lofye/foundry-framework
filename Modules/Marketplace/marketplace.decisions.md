@@ -273,3 +273,48 @@ Timestamp: 2026-05-07T16:10:00Z
 - Entitlement Refresh
 - Marketplace Client Abstraction
 - Inspect / Verify Integration
+
+### Decision: enforce Marketplace entitlement validation across MCP generate planning/apply and generate replay/runtime flows
+
+Timestamp: 2026-05-07T17:55:00Z
+
+**Context**
+
+- Marketplace execution spec `005-marketplace-mcp-and-generate-entitlement-integration` requires entitlement-aware MCP planning/apply contracts plus generate planning/runtime enforcement with deterministic blocked/executable execution-state signaling.
+- Existing Marketplace runtime already centralized entitlement decisions via `PackEntitlementResolver`, but generate and MCP tooling did not surface or revalidate entitlement state across persisted plan/apply boundaries.
+
+**Decision**
+
+- Extend generate pack-requirement resolution to emit deterministic marketplace pack requirement details, entitlement summary state, execution-state classification, and deterministic entitlement error categories.
+- Persist this entitlement context into generate payloads and plan records, and revalidate required Marketplace entitlement state during `plan:replay` before applying mutations.
+- Fail replay/apply closed with deterministic entitlement codes (`MISSING_ENTITLEMENT`, `EXPIRED_ENTITLEMENT`, `UNKNOWN_ENTITLEMENT`, `ENTITLEMENT_STATE_CHANGED`, `ENTITLEMENT_VALIDATION_FAILED`, `MARKETPLACE_PACK_NOT_AVAILABLE`) using structured details.
+- Add MCP tools `generate_plan` and `generate_apply` that expose blocked/applied status and entitlement data, with apply preflight + execution routed through replay validation contracts.
+
+**Reasoning**
+
+- Entitlement gates must remain explicit and deterministic at both planning and mutation time to prevent hidden premium access escalation.
+- Reusing shared resolver semantics avoids duplicate MCP- or generate-specific entitlement policy code paths and preserves contract consistency.
+- Replay-time revalidation addresses entitlement-state drift between planning and apply without silently mutating state.
+
+**Alternatives Considered**
+
+- Keep entitlement checks only at initial generate planning time and skip apply/replay revalidation.
+- Implement separate MCP-specific entitlement policies outside generate/runtime services.
+- Require live marketplace/payment connectivity for entitlement checks instead of deterministic local/cache-backed validation.
+
+**Impact**
+
+- MCP and generate surfaces now expose transparent entitlement execution-state context and block unauthorized apply/mutation deterministically.
+- Persisted plan replay/apply behavior now detects entitlement-state changes and fails closed before writes.
+- Marketplace entitlement contracts become reusable across planning, replay, and MCP orchestration without policy drift.
+
+**Spec Reference**
+
+- Core Principle
+- Required Shared Runtime
+- MCP Planning Integration
+- MCP Apply Integration
+- Generate Planning Integration
+- Generate Execution Integration
+- Entitlement State Changes
+- Error Codes

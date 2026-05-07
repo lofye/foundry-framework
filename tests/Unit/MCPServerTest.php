@@ -64,4 +64,13 @@ final class MCPServerTest extends TestCase
             $this->assertSame('MCP_TOOL_NOT_FOUND', $error->errorCode);
         }
     }
+
+    public function test_boot_manifest_includes_generate_planning_tools(): void
+    {
+        $manifest = MCPServer::boot()->manifest();
+
+        $this->assertContains('generate_plan', $manifest['tools']);
+        $this->assertContains('generate_apply', $manifest['tools']);
+        $this->assertSame($manifest['tools'], array_values(array_unique($manifest['tools'])));
+    }
 }

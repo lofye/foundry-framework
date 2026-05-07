@@ -56,6 +56,8 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame('GENERATE_PACK_INSTALL_REQUIRED', $result['payload']['error']['code']);
         $this->assertSame(['pack:foundry/blog'], $result['payload']['error']['details']['missing_capabilities']);
         $this->assertSame(['foundry/blog'], $result['payload']['error']['details']['suggested_packs']);
+        $this->assertSame('invalid', $result['payload']['error']['details']['execution_state']);
+        $this->assertSame(['foundry/blog'], $result['payload']['error']['details']['entitlements']['required']);
         $this->assertFileExists($this->project->root . '/.foundry/snapshots/pre-generate.json');
         $this->assertFileDoesNotExist($this->project->root . '/.foundry/snapshots/post-generate.json');
         $this->assertFileDoesNotExist($this->project->root . '/.foundry/diffs/last.json');
@@ -250,6 +252,99 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertArrayHasKey('outcome_confidence', $generate['payload']);
         $this->assertFileExists($this->project->root . '/.foundry/packs/foundry/blog/1.0.0/foundry.json');
         $this->assertFileExists($this->project->root . '/app/features/blog_post_notes/feature.yaml');
+    }
+
+    public function test_generate_blocks_auto_install_when_entitlement_is_missing(): void
+    {
+        $downloadUrl = 'https://downloads.example/foundry-premium-blog-1.0.0.zip';
+        $manifest = $this->fixtureManifest('foundry-blog');
+        $app = $this->hostedGenerateApplication(
+            [[
+                'name' => 'foundry/blog',
+                'version' => '1.0.0',
+                'description' => 'Premium blog workflow tools',
+                'download_url' => $downloadUrl,
+                'checksum' => $manifest['checksum'],
+                'signature' => $manifest['signature'],
+                'verified' => true,
+                'distribution' => 'premium',
+                'entitlement_required' => true,
+                'price' => ['currency' => 'CAD', 'amount' => '49.00'],
+            ]],
+            [$downloadUrl => $this->fixtureArchive('foundry-blog')],
+        );
+
+        $generate = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            'Create',
+            'premium',
+            'blog',
+            'post',
+            'notes',
+            '--mode=new',
+            '--packs=foundry/blog',
+            '--allow-pack-install',
+            '--json',
+        ]);
+
+        $this->assertSame(1, $generate['status']);
+        $this->assertSame('MISSING_ENTITLEMENT', $generate['payload']['error']['code']);
+        $this->assertSame('foundry/blog', $generate['payload']['error']['details']['pack']);
+        $this->assertSame('blocked_missing_entitlement', $generate['payload']['error']['details']['execution_state']);
+    }
+
+    public function test_plan_replay_blocks_when_entitlement_state_changes_after_planning(): void
+    {
+        $downloadUrl = 'https://downloads.example/foundry-premium-blog-1.0.0.zip';
+        $manifest = $this->fixtureManifest('foundry-blog');
+        $app = $this->hostedGenerateApplication(
+            [[
+                'name' => 'foundry/blog',
+                'version' => '1.0.0',
+                'description' => 'Premium blog workflow tools',
+                'download_url' => $downloadUrl,
+                'checksum' => $manifest['checksum'],
+                'signature' => $manifest['signature'],
+                'verified' => true,
+                'distribution' => 'premium',
+                'entitlement_required' => true,
+                'price' => ['currency' => 'CAD', 'amount' => '49.00'],
+            ]],
+            [$downloadUrl => $this->fixtureArchive('foundry-blog')],
+        );
+        $this->writeMarketplaceEntitlements([[
+            'pack' => 'foundry/blog',
+            'type' => 'premium',
+            'status' => 'granted',
+            'expires_at' => null,
+            'source' => 'marketplace',
+            'granted_at' => '2026-01-01T00:00:00Z',
+        ]]);
+
+        $generate = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            'Create',
+            'premium',
+            'blog',
+            'post',
+            'notes',
+            '--mode=new',
+            '--packs=foundry/blog',
+            '--allow-pack-install',
+            '--json',
+        ]);
+        $this->assertSame(0, $generate['status']);
+        $this->assertSame('executable', $generate['payload']['execution_state']);
+        $planId = (string) $generate['payload']['plan_record']['plan_id'];
+
+        $this->writeMarketplaceEntitlements([]);
+        $replay = $this->runCommand($app, ['foundry', 'plan:replay', $planId, '--json']);
+
+        $this->assertSame(1, $replay['status']);
+        $this->assertSame('ENTITLEMENT_STATE_CHANGED', $replay['payload']['error']['code']);
+        $this->assertSame('foundry/blog', $replay['payload']['error']['details']['pack']);
     }
 
     public function test_generate_workflow_executes_steps_sequentially_and_merges_step_context(): void
@@ -2083,6 +2178,17 @@ final class CLIGenerateCommandTest extends TestCase
             $absolutePath,
             json_encode($payload, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) . PHP_EOL,
         );
+    }
+
+    /**
+     * @param array<int,array<string,mixed>> $entitlements
+     */
+    private function writeMarketplaceEntitlements(array $entitlements): void
+    {
+        $this->writeJsonFile('.foundry/marketplace/entitlements.json', [
+            'entitlements' => $entitlements,
+            'updated_at' => '2026-01-01T00:00:00Z',
+        ]);
     }
 
     /**

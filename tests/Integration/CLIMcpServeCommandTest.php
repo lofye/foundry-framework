@@ -64,6 +64,48 @@ final class CLIMcpServeCommandTest extends TestCase
         $this->assertSame($cli['payload'], $mcp['payload']['data']);
     }
 
+    public function test_mcp_generate_plan_and_apply_tools_surface_entitlement_and_apply_contracts(): void
+    {
+        $app = new Application();
+
+        $planBlocked = $this->runCommand($app, [
+            'foundry',
+            'mcp:serve',
+            '--tool=generate_plan',
+            '--input={"intent":"Create blog post notes","mode":"new","packs":["foundry/blog"]}',
+            '--json',
+        ]);
+        $this->assertSame(0, $planBlocked['status']);
+        $this->assertSame('generate_plan', $planBlocked['payload']['tool']);
+        $this->assertSame('blocked', $planBlocked['payload']['data']['status']);
+        $this->assertSame('invalid', $planBlocked['payload']['data']['execution_state']);
+        $this->assertSame(['foundry/blog'], $planBlocked['payload']['data']['entitlements']['required']);
+
+        $generate = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            'Create',
+            'comments',
+            '--mode=new',
+            '--json',
+        ]);
+        $this->assertSame(0, $generate['status']);
+        $planId = (string) ($generate['payload']['plan_record']['plan_id'] ?? '');
+        $this->assertNotSame('', $planId);
+
+        $apply = $this->runCommand($app, [
+            'foundry',
+            'mcp:serve',
+            '--tool=generate_apply',
+            '--input={"plan_id":"' . $planId . '","strict":true}',
+            '--json',
+        ]);
+        $this->assertSame(0, $apply['status']);
+        $this->assertSame('generate_apply', $apply['payload']['tool']);
+        $this->assertSame('applied', $apply['payload']['data']['status']);
+        $this->assertSame($planId, $apply['payload']['data']['plan_id']);
+    }
+
     /**
      * @param array<int,string> $argv
      * @return array{status:int,payload:array<string,mixed>}

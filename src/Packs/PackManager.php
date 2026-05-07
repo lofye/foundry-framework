@@ -110,6 +110,11 @@ final class PackManager
         return $this->purchaseService()->purchase($pack);
     }
 
+    public function hostedRegistry(): HostedPackRegistry
+    {
+        return $this->hostedRegistry;
+    }
+
     /**
      * @param array<string,mixed> $metadata
      * @return array<string,mixed>

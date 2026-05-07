@@ -18,6 +18,8 @@ final readonly class GenerationContextPacket
      * @param array<int,array<string,mixed>> $installedPacks
      * @param array<int,string> $missingCapabilities
      * @param array<int,string> $suggestedPacks
+     * @param array<int,array<string,mixed>> $packRequirements
+     * @param array<string,mixed> $entitlements
      */
     public function __construct(
         public Intent $intent,
@@ -31,6 +33,9 @@ final readonly class GenerationContextPacket
         public array $installedPacks,
         public array $missingCapabilities,
         public array $suggestedPacks,
+        public array $packRequirements = [],
+        public array $entitlements = [],
+        public string $executionState = 'executable',
     ) {}
 
     /**
@@ -49,6 +54,9 @@ final readonly class GenerationContextPacket
             'installed_packs' => $this->installedPacks,
             'missing_capabilities' => $this->missingCapabilities,
             'suggested_packs' => $this->suggestedPacks,
+            'pack_requirements' => $this->packRequirements,
+            'entitlements' => $this->entitlements,
+            'execution_state' => $this->executionState,
             'explain_model' => [
                 'subject' => $this->model->subject,
                 'confidence' => $this->model->confidence,

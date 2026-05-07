@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Define deterministic framework-owned marketplace behavior for local pack metadata/artifact access, Marketplace identity/authentication flows, entitlement/license activation contracts, and purchase/monetization flow contracts.
+Define deterministic framework-owned marketplace behavior for local pack metadata/artifact access, Marketplace identity/authentication flows, entitlement/license activation contracts, purchase/monetization flow contracts, and MCP/Generate entitlement-aware planning and apply/runtime integration contracts.
 
 The framework Marketplace module defines marketplace contracts, protocol behavior, CLI integration, client-side resolution, and deterministic validation. It is not the canonical hosted marketplace application. The hosted marketplace service, account UI, payment flows, and production storage live in the website repo, which may consume the framework module via the pinned framework/ checkout.
 
@@ -16,6 +16,7 @@ The framework Marketplace module defines marketplace contracts, protocol behavio
 - Preserve compatibility with existing extension pack metadata semantics.
 - Provide deterministic entitlement cache, centralized entitlement resolution, and license-activation flows for Marketplace-hosted distribution access.
 - Provide deterministic purchase flow contracts for hosted Marketplace paid packs with browser handoff or completed-purchase entitlement refresh outcomes.
+- Provide deterministic entitlement-aware planning/apply contracts for MCP generate surfaces and generate runtime replay/application flows.
 
 ## Non-Goals
 
@@ -55,6 +56,9 @@ The framework Marketplace module defines marketplace contracts, protocol behavio
 - Completed purchase outcomes refresh entitlements through shared Marketplace entitlement runtime, without duplicating direct entitlement-write logic in purchase command handling.
 - `inspect marketplace --json` includes deterministic purchase capability metadata.
 - `verify marketplace --json` includes deterministic purchase capability readiness checks that do not require live payment credentials by default.
+- Generate planning payloads and persisted plan records include deterministic entitlement summaries, execution-state classification, and per-pack requirement details for Marketplace-dependent pack hints.
+- Generate auto-install and replay/apply flows fail closed with deterministic entitlement block/error codes (`MISSING_ENTITLEMENT`, `EXPIRED_ENTITLEMENT`, `UNKNOWN_ENTITLEMENT`, `ENTITLEMENT_STATE_CHANGED`, `ENTITLEMENT_VALIDATION_FAILED`, `MARKETPLACE_PACK_NOT_AVAILABLE`) when Marketplace entitlement validation fails.
+- MCP `generate_plan` and `generate_apply` tool contracts expose deterministic blocked/applied status with entitlement state and replay-time entitlement revalidation.
 
 ## Acceptance Criteria
 
@@ -67,6 +71,7 @@ The framework Marketplace module defines marketplace contracts, protocol behavio
 - Marketplace distribution metadata validation is deterministic and rejects missing/invalid distribution contract shape.
 - Entitlement resolution is centralized via `PackEntitlementResolver` and reused by download/runtime seams.
 - Purchase resolution and entitlement refresh are centralized via Marketplace purchase service/client contracts and shared entitlement runtime.
+- Generate and MCP entitlement checks reuse centralized `PackEntitlementResolver` semantics through shared requirement-resolution runtime rather than command-local entitlement parsing.
 - Invalid pack names, invalid artifact paths, missing artifacts, and checksum mismatches fail deterministically.
 - Required quality and verification gates pass with no context or contract drift.
 

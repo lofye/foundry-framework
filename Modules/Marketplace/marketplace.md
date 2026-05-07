@@ -25,6 +25,9 @@
 - `verify marketplace --json` includes deterministic auth + entitlement cache verification and fails closed for malformed or expired credential/entitlement state.
 - `inspect marketplace --json` includes deterministic purchase capability metadata (`enabled`, `client`, auth requirement, handoff capability, live-mode requirement).
 - `verify marketplace --json` includes deterministic purchase capability readiness checks without requiring live payment credentials by default.
+- Generate planning/runtime now includes deterministic Marketplace entitlement context (`execution_state`, entitlement summary, pack requirement details) whenever Marketplace-dependent pack hints are evaluated.
+- Generate auto-install and replay/apply flows fail closed on missing/expired/unknown/invalid Marketplace entitlements with deterministic error codes and structured details.
+- MCP server now exposes `generate_plan` and `generate_apply` tools that surface blocked/applied status and enforce replay-time entitlement revalidation before mutation.
 - Marketplace repository/verifier/controller runtime exists under `src/Marketplace/*`.
 - `inspect marketplace --json` and `verify marketplace --json` are registered and discoverable.
 - `login`, `logout`, `whoami`, and `entitlements` commands are registered, deterministic, and covered by tests.
@@ -36,7 +39,7 @@
 
 ## Open Questions
 
-- Future specs still need hosted payment-provider fulfillment and MCP/Generate enforcement breadth beyond the currently added purchase + entitlement integration seams.
+- Future specs still need hosted payment-provider fulfillment and deeper MCP explainability surfaces that render entitlement reasoning more richly for long-form plan/explain workflows.
 
 ## Next Steps
 

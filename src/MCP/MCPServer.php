@@ -9,6 +9,8 @@ use Foundry\MCP\Handlers\EventInspectHandler;
 use Foundry\MCP\Handlers\EventListHandler;
 use Foundry\MCP\Handlers\ExplainPackHandler;
 use Foundry\MCP\Handlers\ExplainTargetHandler;
+use Foundry\MCP\Handlers\GenerateApplyHandler;
+use Foundry\MCP\Handlers\GeneratePlanHandler;
 use Foundry\MCP\Handlers\InspectGraphHandler;
 use Foundry\MCP\Handlers\ListExamplesHandler;
 use Foundry\MCP\Handlers\ListPacksHandler;
@@ -28,6 +30,8 @@ final class MCPServer
         $registry->register('event.list', new EventListHandler($bridge));
         $registry->register('explain_pack', new ExplainPackHandler($bridge));
         $registry->register('explain_target', new ExplainTargetHandler($bridge));
+        $registry->register('generate_apply', new GenerateApplyHandler($bridge));
+        $registry->register('generate_plan', new GeneratePlanHandler($bridge));
         $registry->register('inspect_graph', new InspectGraphHandler($bridge));
         $registry->register('list_examples', new ListExamplesHandler($bridge));
         $registry->register('list_packs', new ListPacksHandler($bridge));
