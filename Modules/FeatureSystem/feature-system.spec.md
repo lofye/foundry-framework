@@ -13,6 +13,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Require canonical module implementation-log references in the form `Modules/<Module>/specs/<id>-<slug>.md`.
 - Keep migration-compatible behavior for legacy `docs/features/*` inputs.
 - Provide deterministic prep-only historical-spec archive extraction tooling before full module import migration.
+- Provide deterministic historical-spec evidence mapping that preserves legacy ordering keys, confidence levels, and supporting evidence before import.
 
 ## Non-Goals
 
@@ -32,6 +33,9 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - `feature:map` returns deterministic owned path maps.
 - `verify features` reports boundary/duplication issues and enforcement status.
 - `historical-specs:extract` scans `_import/raw-historical-specs` and writes deterministic candidate archives under `_import/historical-specs` without importing into `Modules/*`.
+- `historical-specs:evidence` builds deterministic `_import/historical-specs/evidence-map.json` data (and optional markdown report) with legacy-order keys, module suggestions, confidence values, evidence-state fields, and supporting evidence-file references.
+- Legacy labels such as `Spec 19FB`, `Spec 30C-2`, and `Spec 35D7JA` are parsed into stable sort keys used for deterministic candidate ordering.
+- Known summary/planning files are treated as supporting evidence sources by default unless explicit extractable execution-spec headings are present.
 - `verify features` enforces executable application feature-local runtime layout under `Features/<Feature>/` (`src/` and `tests/` required by default).
 - `verify features` permits omitted `specs/`, `plans/`, and `docs/` directories when absent, and fails deterministically when present paths are not directories.
 - `verify features` emits deterministic violations when attributable application-owned runtime/context files remain in legacy `app/features/<slug>` and `docs/features/<slug>` paths.
@@ -54,6 +58,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Canonical implementation ledger path is recognized as `Modules/implementation.log`.
 - Documentation and agent/skill guidance consistently encode the modules-vs-features split without implying framework modules are governed under `Features/*`.
 - Historical-spec prep extraction remains explicit and non-authoritative until follow-up import specs are implemented.
+- Historical ordering/evidence mapping remains explicit and non-authoritative until follow-up import specs are implemented.
 
 ## Assumptions
 

@@ -84,6 +84,32 @@ TXT);
         $this->assertSame('high', $payload['candidates'][0]['confidence']);
     }
 
+    public function test_extract_tracks_multi_segment_indices_and_result_detection(): void
+    {
+        $this->writeRawSpecFile('raw/multi.md', <<<'TXT'
+Spec 10
+Title: Segment one
+RESULT:
+Finished.
+
+Spec 11
+Title: Segment two
+TXT);
+
+        $payload = $this->extractor()->extract(
+            '_import/raw-historical-specs',
+            '_import/historical-specs',
+            false,
+        );
+
+        $this->assertSame(2, $payload['summary']['candidates']);
+        $this->assertSame(1, $payload['candidates'][0]['source_segment']);
+        $this->assertSame(2, $payload['candidates'][0]['source_segments_total']);
+        $this->assertTrue($payload['candidates'][0]['result_detected']);
+        $this->assertFalse($payload['candidates'][1]['result_detected']);
+        $this->assertFileExists($this->project->root . '/_import/historical-specs/candidate-001/result.md');
+    }
+
     public function test_extract_deduplicates_slugs_for_duplicate_titles(): void
     {
         $this->writeRawSpecFile('raw/dupes.md', <<<'TXT'

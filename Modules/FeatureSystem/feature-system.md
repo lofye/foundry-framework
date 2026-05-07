@@ -29,6 +29,12 @@
 - `Modules/implementation.log` framework entries are normalized to canonical module spec paths (`Modules/<Module>/specs/<id>-<slug>.md`) where deterministic mapping exists.
 - `spec:validate` now reports deterministic `EXECUTION_SPEC_IMPLEMENTATION_LOG_PATH_NOT_CANONICAL` violations when framework log entries use slug-style spec references.
 - `historical-specs:extract` now provides deterministic prep-only archive extraction from `_import/raw-historical-specs` into `_import/historical-specs/candidate-XXX` bundles (`spec.md`, `source.md`, `metadata.json`).
+- `historical-specs:evidence` now provides deterministic ordering/evidence mapping for historical candidates, including legacy-order keys, confidence/evidence markers, supporting evidence files, and optional git cross-reference metadata.
+- `historical-specs:evidence` builds deterministic `_import/historical-specs/evidence-map.json` data and optional markdown report with legacy-order keys, module suggestions, confidence values, evidence-state fields, and supporting evidence-file references.
+- Legacy labels such as `Spec 19FB`, `Spec 30C-2`, and `Spec 35D7JA` are parsed into stable sort keys used for deterministic candidate ordering.
+- `_import/historical-specs/evidence-map.json` and optional `_import/historical-specs/evidence-map.md` can now be generated through explicit write mode while keeping default command behavior non-mutating.
+- Historical extraction candidates now track source segment indexes and optional RESULT/FOLLOWUPS detection metadata for multi-spec source files.
+- Historical summary/planning files are treated as supporting evidence sources by default and are not imported as ordinary specs unless explicit extractable execution-spec headings are present.
 
 ## Open Questions
 
@@ -40,4 +46,4 @@
 - Expand boundary-violation classification depth in follow-up execution specs.
 - Continue incremental source/test localization through promoted execution specs.
 - Evaluate follow-up specs to migrate grandfathered legacy module plan documents into strict reconstruction-note format.
-- Continue historical import and archive specs after canonical module implementation-log path normalization is complete, using extracted candidates as prep artifacts only until import specs are implemented.
+- Continue historical import and archive specs after canonical module implementation-log path normalization is complete, using extracted candidates plus evidence-map ordering as prep artifacts only until import specs are implemented.

@@ -357,3 +357,46 @@ Timestamp: 2026-05-07T15:15:00-04:00
 - Requirements
 - Determinism
 - Testing
+
+### Decision: add deterministic historical ordering and evidence map before import
+
+Timestamp: 2026-05-07T16:20:00-04:00
+
+**Context**
+
+- Execution spec `007.002-historical-spec-ordering-and-evidence-map` requires explicit ordering/evidence preparation between candidate extraction and module import.
+- Historical sources include mixed legacy labels, summary/planning documents, multi-spec files, and optional RESULT/OUTPUT sections.
+
+**Decision**
+
+- Add `historical-specs:evidence` as the deterministic prep command for ordering and evidence-map generation.
+- Generate `_import/historical-specs/evidence-map.json` (and optional markdown report) with explicit confidence/evidence fields, supporting evidence file references, and stable candidate ordering.
+- Parse legacy labels into deterministic order keys (for example `Spec 19FB` -> `019.F.B`, `Spec 35D7JA` -> `035.D.007.J.A`) and fallback safely for unknown labels.
+- Support anchors (`--anchors`) and optional offline git cross-reference (`--with-git`) while preserving unknown/inferred evidence states explicitly.
+
+**Reasoning**
+
+- Import sequencing should rely on explicit evidence and uncertainty markers, not hidden assumptions.
+- Separating extraction from evidence ordering keeps each phase bounded and reviewable.
+- Deterministic map output enables repeatable follow-up import workflows and auditing.
+
+**Alternatives Considered**
+
+- Fold full evidence mapping into `historical-specs:extract`.
+- Skip explicit order-key parsing and sort by filename only.
+- Treat summary/planning files as normal specs by default.
+
+**Impact**
+
+- Historical candidates now have a machine-readable evidence and ordering surface before import.
+- Summary/planning artifacts are preserved as supporting sources instead of silently becoming imported specs.
+- Future import specs can consume one deterministic evidence-map contract.
+
+**Spec Reference**
+
+- Goals
+- New Concept: Historical Evidence Map
+- Legacy Ordering Rules
+- Known Anchor: Numeric Canonical IDs
+- Source Summary Files
+- Git Evidence Cross-Reference

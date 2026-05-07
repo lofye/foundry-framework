@@ -23,12 +23,16 @@ final class HistoricalSpecArchiveExtractor
      *     candidates:list<array{
      *         candidate_id:string,
      *         original_file:string,
+     *         source_segment:int,
+     *         source_segments_total:int,
      *         detected_spec_label:string,
      *         detected_title:string,
      *         suggested_slug:string,
      *         suggested_module:string,
      *         confidence:string,
      *         notes:list<string>,
+     *         result_detected:bool,
+     *         followups_detected:bool,
      *         output_paths:array{directory:string,spec:string,source:string,metadata:string}
      *     }>
      * }
@@ -132,12 +136,18 @@ final class HistoricalSpecArchiveExtractor
      * @return list<array{
      *     source_text:string,
      *     spec_text:string,
+     *     source_segment:int,
+     *     source_segments_total:int,
      *     detected_spec_label:string,
      *     detected_title:string,
      *     suggested_slug:string,
      *     suggested_module:string,
      *     confidence:string,
      *     notes:list<string>,
+     *     result_detected:bool,
+     *     result_text:string,
+     *     followups_detected:bool,
+     *     followups_text:string,
      *     original_file?:string
      * }>
      */
@@ -165,6 +175,8 @@ final class HistoricalSpecArchiveExtractor
             $segment = implode("\n", array_slice($lines, $start, ($end - $start) + 1));
             $candidate = $this->buildCandidate($segment);
             if ($candidate !== null) {
+                $candidate['source_segment'] = $index + 1;
+                $candidate['source_segments_total'] = $count;
                 $candidates[] = $candidate;
             }
         }
@@ -226,12 +238,18 @@ final class HistoricalSpecArchiveExtractor
      * @return array{
      *     source_text:string,
      *     spec_text:string,
+     *     source_segment:int,
+     *     source_segments_total:int,
      *     detected_spec_label:string,
      *     detected_title:string,
      *     suggested_slug:string,
      *     suggested_module:string,
      *     confidence:string,
      *     notes:list<string>,
+     *     result_detected:bool,
+     *     result_text:string,
+     *     followups_detected:bool,
+     *     followups_text:string,
      *     original_file?:string
      * }|null
      */
@@ -247,16 +265,24 @@ final class HistoricalSpecArchiveExtractor
         $confidence = $this->detectConfidence($sourceText, $label, $title);
         $notes = $this->buildNotes($sourceText, $label, $title, $confidence);
         $cleaned = $this->cleanSpecText($sourceText);
+        $result = $this->extractSection($sourceText, ['RESULT', 'OUTPUT']);
+        $followups = $this->extractSection($sourceText, ['FOLLOWUPS', 'FOLLOW-UPS', 'FOLLOW UPS']);
 
         return [
             'source_text' => $sourceText,
             'spec_text' => $cleaned,
+            'source_segment' => 1,
+            'source_segments_total' => 1,
             'detected_spec_label' => $label,
             'detected_title' => $title,
             'suggested_slug' => $this->slugify($label . ' ' . $title),
             'suggested_module' => 'unknown',
             'confidence' => $confidence,
             'notes' => $notes,
+            'result_detected' => $result !== null,
+            'result_text' => $result ?? '',
+            'followups_detected' => $followups !== null,
+            'followups_text' => $followups ?? '',
         ];
     }
 
@@ -264,12 +290,18 @@ final class HistoricalSpecArchiveExtractor
      * @return array{
      *     source_text:string,
      *     spec_text:string,
+     *     source_segment:int,
+     *     source_segments_total:int,
      *     detected_spec_label:string,
      *     detected_title:string,
      *     suggested_slug:string,
      *     suggested_module:string,
      *     confidence:string,
      *     notes:list<string>,
+     *     result_detected:bool,
+     *     result_text:string,
+     *     followups_detected:bool,
+     *     followups_text:string,
      *     original_file?:string
      * }|null
      */
@@ -295,6 +327,45 @@ final class HistoricalSpecArchiveExtractor
         $candidate['notes'][] = 'Weak boundary match; extracted using title/purpose fallback.';
 
         return $candidate;
+    }
+
+    /**
+     * @param list<string> $headings
+     */
+    private function extractSection(string $text, array $headings): ?string
+    {
+        $lines = preg_split('/\n/', $text) ?: [];
+        $start = null;
+        foreach ($lines as $index => $line) {
+            $trimmed = trim($line);
+            foreach ($headings as $heading) {
+                $pattern = '/^#{0,6}\s*' . preg_quote($heading, '/') . '\s*:?/i';
+                if (preg_match($pattern, $trimmed) === 1) {
+                    $start = $index + 1;
+                    break 2;
+                }
+            }
+        }
+
+        if ($start === null) {
+            return null;
+        }
+
+        $collected = [];
+        for ($index = $start; $index < count($lines); $index++) {
+            $line = $lines[$index];
+            if (preg_match('/^#{1,6}\s+[A-Za-z]/', trim($line)) === 1) {
+                break;
+            }
+            $collected[] = $line;
+        }
+
+        $section = trim(implode("\n", $collected));
+        if ($section === '') {
+            return null;
+        }
+
+        return $section . "\n";
     }
 
     private function normalizeText(string $value): string
@@ -432,12 +503,18 @@ final class HistoricalSpecArchiveExtractor
      * @param list<array{
      *     source_text:string,
      *     spec_text:string,
+     *     source_segment:int,
+     *     source_segments_total:int,
      *     detected_spec_label:string,
      *     detected_title:string,
      *     suggested_slug:string,
      *     suggested_module:string,
      *     confidence:string,
      *     notes:list<string>,
+     *     result_detected:bool,
+     *     result_text:string,
+     *     followups_detected:bool,
+     *     followups_text:string,
      *     original_file:string
      * }> $rawCandidates
      * @return list<array<string,mixed>>
@@ -460,12 +537,18 @@ final class HistoricalSpecArchiveExtractor
             $final[] = [
                 'candidate_id' => $candidateId,
                 'original_file' => (string) $candidate['original_file'],
+                'source_segment' => (int) ($candidate['source_segment'] ?? 1),
+                'source_segments_total' => (int) ($candidate['source_segments_total'] ?? 1),
                 'detected_spec_label' => (string) $candidate['detected_spec_label'],
                 'detected_title' => (string) $candidate['detected_title'],
                 'suggested_slug' => $slug,
                 'suggested_module' => (string) ($candidate['suggested_module'] ?? 'unknown'),
                 'confidence' => (string) $candidate['confidence'],
                 'notes' => (array) $candidate['notes'],
+                'result_detected' => (bool) ($candidate['result_detected'] ?? false),
+                'result_text' => (string) ($candidate['result_text'] ?? ''),
+                'followups_detected' => (bool) ($candidate['followups_detected'] ?? false),
+                'followups_text' => (string) ($candidate['followups_text'] ?? ''),
                 'source_text' => (string) $candidate['source_text'],
                 'spec_text' => (string) $candidate['spec_text'],
                 'output_paths' => [
@@ -547,16 +630,26 @@ final class HistoricalSpecArchiveExtractor
         $metadata = [
             'original_file' => (string) ($candidate['original_file'] ?? ''),
             'candidate_id' => $candidateId,
+            'source_segment' => (int) ($candidate['source_segment'] ?? 1),
+            'source_segments_total' => (int) ($candidate['source_segments_total'] ?? 1),
             'detected_spec_label' => (string) ($candidate['detected_spec_label'] ?? ''),
             'detected_title' => (string) ($candidate['detected_title'] ?? ''),
             'suggested_slug' => (string) ($candidate['suggested_slug'] ?? ''),
             'suggested_module' => (string) ($candidate['suggested_module'] ?? 'unknown'),
             'confidence' => (string) ($candidate['confidence'] ?? 'low'),
             'notes' => array_values(array_map('strval', (array) ($candidate['notes'] ?? []))),
+            'result_detected' => (bool) ($candidate['result_detected'] ?? false),
+            'followups_detected' => (bool) ($candidate['followups_detected'] ?? false),
         ];
 
         file_put_contents($directory . '/source.md', (string) ($candidate['source_text'] ?? ''));
         file_put_contents($directory . '/spec.md', (string) ($candidate['spec_text'] ?? ''));
+        if ((bool) ($candidate['result_detected'] ?? false)) {
+            file_put_contents($directory . '/result.md', (string) ($candidate['result_text'] ?? ''));
+        }
+        if ((bool) ($candidate['followups_detected'] ?? false)) {
+            file_put_contents($directory . '/followups.md', (string) ($candidate['followups_text'] ?? ''));
+        }
         file_put_contents(
             $directory . '/metadata.json',
             json_encode($metadata, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_THROW_ON_ERROR) . "\n",
@@ -568,12 +661,16 @@ final class HistoricalSpecArchiveExtractor
      * @return array{
      *     candidate_id:string,
      *     original_file:string,
+     *     source_segment:int,
+     *     source_segments_total:int,
      *     detected_spec_label:string,
      *     detected_title:string,
      *     suggested_slug:string,
      *     suggested_module:string,
      *     confidence:string,
      *     notes:list<string>,
+     *     result_detected:bool,
+     *     followups_detected:bool,
      *     output_paths:array{directory:string,spec:string,source:string,metadata:string}
      * }
      */
@@ -582,12 +679,16 @@ final class HistoricalSpecArchiveExtractor
         return [
             'candidate_id' => (string) $candidate['candidate_id'],
             'original_file' => (string) $candidate['original_file'],
+            'source_segment' => (int) ($candidate['source_segment'] ?? 1),
+            'source_segments_total' => (int) ($candidate['source_segments_total'] ?? 1),
             'detected_spec_label' => (string) $candidate['detected_spec_label'],
             'detected_title' => (string) $candidate['detected_title'],
             'suggested_slug' => (string) $candidate['suggested_slug'],
             'suggested_module' => (string) $candidate['suggested_module'],
             'confidence' => (string) $candidate['confidence'],
             'notes' => array_values(array_map('strval', (array) $candidate['notes'])),
+            'result_detected' => (bool) ($candidate['result_detected'] ?? false),
+            'followups_detected' => (bool) ($candidate['followups_detected'] ?? false),
             'output_paths' => [
                 'directory' => $this->outputPath((string) $candidate['output_paths']['directory']),
                 'spec' => $this->outputPath((string) $candidate['output_paths']['spec']),

@@ -371,3 +371,7 @@
 - spec: Modules/FeatureSystem/specs/007.001-historical-spec-archive-extraction-helper.md
 - note: Added deterministic historical-spec archive extraction tooling (`historical-specs:extract`) that scans messy `.md/.txt` source directories and emits prep-only candidate bundles under `_import/historical-specs/candidate-XXX`.
 - note: Extraction preserves original segments in `source.md`, writes cleaned candidate text to `spec.md`, emits stable metadata fields in `metadata.json`, supports dry-run mode, and avoids importing candidates into `Modules/*`.
+## 2026-05-07 16:18:25 -0400
+- spec: Modules/FeatureSystem/specs/007.002-historical-spec-ordering-and-evidence-map.md
+- note: Added deterministic historical ordering/evidence-map generation through `historical-specs:evidence`, including stable legacy-order key parsing, supporting evidence file tracking, anchor-aware mapping, and explicit confidence/evidence contracts.
+- note: Extended historical extraction metadata with multi-segment source indexing and optional RESULT/FOLLOWUPS detection so evidence-map consumers can preserve uncertainty and provenance without importing specs into `Modules/*`.

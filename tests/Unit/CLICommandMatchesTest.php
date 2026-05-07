@@ -28,6 +28,7 @@ use Foundry\CLI\Commands\GeneratePlatformCommand;
 use Foundry\CLI\Commands\GenerateScaffoldCommand;
 use Foundry\CLI\Commands\GraphVisualizeCommand;
 use Foundry\CLI\Commands\HistoryCommand;
+use Foundry\CLI\Commands\HistoricalSpecsEvidenceCommand;
 use Foundry\CLI\Commands\HistoricalSpecsExtractCommand;
 use Foundry\CLI\Commands\ImpactCommand;
 use Foundry\CLI\Commands\ImplementFeatureCommand;
@@ -169,6 +170,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new ObserveCommand())->matches(['observe:profile']));
         $this->assertTrue((new ObserveCommand())->matches(['observe:compare', 'trace-a', 'trace-b']));
         $this->assertTrue((new HistoryCommand())->matches(['history']));
+        $this->assertTrue((new HistoricalSpecsEvidenceCommand())->matches(['historical-specs:evidence', '--dry-run']));
         $this->assertTrue((new HistoricalSpecsExtractCommand())->matches(['historical-specs:extract', '--dry-run']));
         $this->assertTrue((new RegressionsCommand())->matches(['regressions']));
         $this->assertTrue((new LicenseCommand())->matches(['license', 'activate', 'key']));
