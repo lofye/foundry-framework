@@ -153,6 +153,10 @@ MD . "\n", $this->logContents());
 
         $this->assertSame('Appended implementation log entry: Modules/implementation.log', $action);
         $this->assertFileExists($this->project->root . '/Modules/implementation.log');
+        $this->assertStringContainsString(
+            '- spec: Modules/ExecutionSpecSystem/specs/004-spec-auto-log-on-implementation.md',
+            (string) file_get_contents($this->project->root . '/Modules/implementation.log'),
+        );
     }
 
     private function serviceAt(string $timestamp): ExecutionSpecImplementationLogService

@@ -275,3 +275,46 @@ Timestamp: 2026-05-07T13:55:00-04:00
 - Historical Specs / Migration Behavior
 - Required Documentation Updates
 - Skills Updates
+
+### Decision: normalize framework implementation-log spec references to canonical module paths
+
+Timestamp: 2026-05-07T15:05:00-04:00
+
+**Context**
+
+- Execution spec `007-normalize-implementation-log-canonical-spec-paths` requires `Modules/implementation.log` references to match canonical module spec paths.
+- Historical framework log entries used slug-style references (for example `feature-system/005-...`) that were readable but not path-canonical.
+- Existing validation only checked presence matching legacy slug references for active specs.
+
+**Decision**
+
+- Normalize deterministic slug-style framework entries in `Modules/implementation.log` to canonical spec paths (`Modules/<Module>/specs/<id>-<slug>.md`).
+- Treat canonical module spec paths as the required framework implementation-log identity for module active specs.
+- Add deterministic validator failure `EXECUTION_SPEC_IMPLEMENTATION_LOG_PATH_NOT_CANONICAL` when module log coverage exists only through slug-style references.
+- Update module `spec:log-entry` generation so module entries emit canonical module paths.
+
+**Reasoning**
+
+- Canonical module paths align implementation-log identity with filesystem source of truth, reconstruction notes, and reviewer navigation.
+- Deterministic validation prevents regressions without introducing ambiguous migration heuristics.
+- Keeping non-module legacy behavior unchanged in this spec limits scope and avoids accidental app-level contract drift.
+
+**Alternatives Considered**
+
+- Keep slug references permanently and rely on alias matching only.
+- Require canonical-path rewrite for all log scopes (including app/legacy) in one step.
+- Accept both canonical and slug formats indefinitely for modules.
+
+**Impact**
+
+- `Modules/implementation.log` now uses canonical module spec references for existing normalized entries.
+- `spec:validate` now distinguishes missing coverage from non-canonical module coverage.
+- Module log-entry suggestions/writes now reinforce canonical path discipline.
+
+**Spec Reference**
+
+- Purpose
+- Required Canonical Format
+- Existing Log Migration
+- Validation Rules
+- Acceptance Criteria

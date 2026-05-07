@@ -66,6 +66,48 @@ final class CLISpecLogEntryCommandTest extends TestCase
         $this->assertSame($first, $second);
     }
 
+    public function test_spec_log_entry_outputs_canonical_modules_path_for_module_specs(): void
+    {
+        $this->writeRawFile(
+            'Modules/ExecutionSpecSystem/specs/001-spec-auto-log-on-implementation.md',
+            <<<'MD'
+# Execution Spec: 001-spec-auto-log-on-implementation
+
+## Feature
+
+- execution-spec-system
+
+## Purpose
+
+- Emit deterministic implementation-log guidance.
+
+## Scope
+
+- Resolve one active execution spec.
+
+## Constraints
+
+- Keep output deterministic.
+
+## Requested Changes
+
+- Emit exact canonical implementation-log entry content.
+MD
+            . "\n",
+        );
+        $app = $this->fixedClockApp('2026-04-17 12:30:45 -0400');
+
+        $json = $this->runCommand($app, ['foundry', 'spec:log-entry', 'execution-spec-system', '001', '--json']);
+
+        $this->assertSame(0, $json['status']);
+        $this->assertSame('Modules/ExecutionSpecSystem/specs/001-spec-auto-log-on-implementation.md', $json['payload']['spec_ref']);
+        $this->assertSame('Modules/implementation.log', $json['payload']['log_path']);
+        $this->assertSame(
+            '- spec: Modules/ExecutionSpecSystem/specs/001-spec-auto-log-on-implementation.md',
+            $json['payload']['spec_log_line'],
+        );
+    }
+
     public function test_spec_log_entry_rejects_draft_only_matches_clearly(): void
     {
         $this->writeDraftExecutionSpec('execution-spec-system', '001-spec-auto-log-on-implementation', 'execution-spec-system');

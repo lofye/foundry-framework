@@ -62,6 +62,7 @@ final class ExecutionSpecValidationService
         $activeSpecPathsByFeature = [];
         $activeSpecLocations = [];
         $activeModuleSpecs = [];
+        $activeModuleLegacyReferences = [];
 
         foreach ($this->specFiles() as $relativePath) {
             if (in_array($relativePath, self::IGNORED_ROOT_FILES, true)) {
@@ -139,7 +140,12 @@ final class ExecutionSpecValidationService
             }
 
             if ($placement['status'] === 'active' && !$fileHasViolations) {
-                $activeSpecReferences[$relativePath] = $placement['feature'] . '/' . $parsedName['name'] . '.md';
+                $activeSpecReferences[$relativePath] = $this->implementationLogReferenceForActiveSpec(
+                    $relativePath,
+                    (string) $placement['feature'],
+                    $parsedName['name'],
+                    (string) $placement['scope'],
+                );
                 $activeSpecNames[$placement['feature']][$parsedName['name']] = true;
                 $activeSpecPathsByFeature[$placement['feature']][$parsedName['name']] = $relativePath;
                 $activeSpecLocations[$placement['feature']][$parsedName['name']][$placement['workspace']][] = $relativePath;
@@ -150,6 +156,7 @@ final class ExecutionSpecValidationService
                         'spec_path' => $relativePath,
                         'expected_note_path' => $this->moduleReconstructionNotePath((string) $placement['feature_dir'], $parsedName['name']),
                     ];
+                    $activeModuleLegacyReferences[$relativePath] = (string) $placement['feature'] . '/' . $parsedName['name'] . '.md';
                 }
             }
         }
@@ -230,6 +237,22 @@ final class ExecutionSpecValidationService
                     continue;
                 }
 
+                $legacyReference = $activeModuleLegacyReferences[$relativePath] ?? null;
+                if ($legacyReference !== null && isset($loggedSpecs[$legacyReference])) {
+                    $violations[] = $this->violation(
+                        'EXECUTION_SPEC_IMPLEMENTATION_LOG_PATH_NOT_CANONICAL',
+                        $logPath,
+                        'Implementation-log entries for framework modules must use canonical module spec paths.',
+                        [
+                            'entry' => $legacyReference,
+                            'expected' => $specReference,
+                            'spec_path' => $relativePath,
+                        ],
+                    );
+
+                    continue;
+                }
+
                 $violations[] = $this->violation(
                     'EXECUTION_SPEC_IMPLEMENTATION_LOG_MISSING',
                     $relativePath,
@@ -242,16 +265,17 @@ final class ExecutionSpecValidationService
             }
 
             foreach (array_keys($loggedSpecs) as $specReference) {
-                if (preg_match('#^(?<feature>[a-z0-9]+(?:-[a-z0-9]+)*)/(?<name>[^/]+)\.md$#', $specReference, $matches) !== 1) {
+                $parsedReference = $this->parseImplementationLogReference($specReference);
+                if ($parsedReference === null) {
                     continue;
                 }
 
-                $parsedName = ExecutionSpecFilename::parseName((string) $matches['name']);
+                $parsedName = ExecutionSpecFilename::parseName((string) $parsedReference['name']);
                 if ($parsedName === null) {
                     continue;
                 }
 
-                $loggedContinuity[(string) $matches['feature']][] = [
+                $loggedContinuity[(string) $parsedReference['feature']][] = [
                     'id' => $parsedName['id'],
                     'segments' => $parsedName['segments'],
                     'path' => $logPath,
@@ -878,6 +902,43 @@ final class ExecutionSpecValidationService
         }
 
         return 'Modules/implementation.log';
+    }
+
+    private function implementationLogReferenceForActiveSpec(string $relativePath, string $feature, string $name, string $scope): string
+    {
+        if ($scope === 'module') {
+            return $relativePath;
+        }
+
+        return $feature . '/' . $name . '.md';
+    }
+
+    /**
+     * @return array{feature:string,name:string}|null
+     */
+    private function parseImplementationLogReference(string $reference): ?array
+    {
+        $trimmed = trim($reference);
+        if ($trimmed === '') {
+            return null;
+        }
+
+        $activePath = ExecutionSpecFilename::parseActivePath($trimmed);
+        if ($activePath !== null) {
+            return [
+                'feature' => $activePath['feature'],
+                'name' => $activePath['name'],
+            ];
+        }
+
+        if (preg_match('#^(?<feature>[a-z0-9]+(?:-[a-z0-9]+)*)/(?<name>[^/]+)\.md$#', $trimmed, $matches) !== 1) {
+            return null;
+        }
+
+        return [
+            'feature' => (string) $matches['feature'],
+            'name' => (string) $matches['name'],
+        ];
     }
 
     private function canonicalPlanPath(string $feature, string $name): string

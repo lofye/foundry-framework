@@ -110,7 +110,7 @@ final class CLIFeatureSystemCommandTest extends TestCase
         );
         $this->writeFile(
             'Modules/implementation.log',
-            "## 2026-05-03 12:00:00 -0400\n- spec: execution-spec-system/001-canonical-layout.md\n",
+            "## 2026-05-03 12:00:00 -0400\n- spec: Modules/ExecutionSpecSystem/specs/001-canonical-layout.md\n",
         );
 
         $result = $this->runCommand(['foundry', 'spec:validate', '--json']);

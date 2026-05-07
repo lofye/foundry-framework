@@ -190,7 +190,7 @@ TEXT . "\n", $raw['output']);
         );
         $this->writeRawFile(
             'Modules/implementation.log',
-            "## 2026-05-07 12:00:00 -0400\n- spec: feature-system/001-reconstruction-required.md\n",
+            "## 2026-05-07 12:00:00 -0400\n- spec: Modules/FeatureSystem/specs/001-reconstruction-required.md\n",
         );
 
         $json = $this->runCommand(['foundry', 'spec:validate', '--json']);
@@ -202,6 +202,30 @@ TEXT . "\n", $raw['output']);
             'Modules/FeatureSystem/plans/001-reconstruction-required.md',
             $json['payload']['violations'][0]['details']['expected_path'],
         );
+    }
+
+    public function test_spec_validate_reports_non_canonical_module_implementation_log_references(): void
+    {
+        $this->writeRawFile(
+            'Modules/FeatureSystem/specs/001-normalized-log.md',
+            "# Execution Spec: 001-normalized-log\n",
+        );
+        $this->writeRawFile(
+            'Modules/FeatureSystem/plans/001-normalized-log.md',
+            "# Implementation Plan: 001-normalized-log\n",
+        );
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-07 12:00:00 -0400\n- spec: feature-system/001-normalized-log.md\n",
+        );
+
+        $json = $this->runCommand(['foundry', 'spec:validate', '--json']);
+
+        $this->assertSame(1, $json['status']);
+        $this->assertFalse($json['payload']['ok']);
+        $this->assertSame('EXECUTION_SPEC_IMPLEMENTATION_LOG_PATH_NOT_CANONICAL', $json['payload']['violations'][0]['code']);
+        $this->assertSame('feature-system/001-normalized-log.md', $json['payload']['violations'][0]['details']['entry']);
+        $this->assertSame('Modules/FeatureSystem/specs/001-normalized-log.md', $json['payload']['violations'][0]['details']['expected']);
     }
 
     /**

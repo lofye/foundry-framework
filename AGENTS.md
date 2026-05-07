@@ -122,6 +122,7 @@ The root `app/*` tree is a framework-owned demo and smoke app.
 - Modules/<Module>/specs/drafts/*.md → draft execution specs (non-executable planning artifacts)
 - Modules/<Module>/plans/*.md → implementation reconstruction notes (post-implementation artifacts)
 - Modules/implementation.log → completed framework execution-spec ledger
+- Framework implementation-log `- spec:` lines MUST reference canonical module spec paths: `Modules/<Module>/specs/<id>-<slug>.md`
 - Features/<Feature>/<feature>.spec.md, Features/<Feature>/<feature>.md, Features/<Feature>/<feature>.decisions.md → canonical downstream application feature context
 - For completed active framework specs, create or update the matching reconstruction note before reporting completion.
 - Reconstruction notes record what was actually implemented and must not be speculative planning placeholders.

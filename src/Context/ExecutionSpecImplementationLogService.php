@@ -74,7 +74,9 @@ final class ExecutionSpecImplementationLogService
             return null;
         }
 
-        $specReference = $parsedPath['feature'] . '/' . $parsedPath['name'] . '.md';
+        $specReference = str_starts_with($executionSpec->path, 'Modules/')
+            ? $executionSpec->path
+            : $parsedPath['feature'] . '/' . $parsedPath['name'] . '.md';
         $timestamp = ($this->nowProvider)()->format('Y-m-d H:i:s O');
         $timestampHeading = '## ' . $timestamp;
         $specLogLine = '- spec: ' . $specReference;

@@ -330,13 +330,34 @@ MD,
         $this->writeRawFile('Modules/ExecutionSpecSystem/plans/001-canonical.md', '# Implementation Plan: 001-canonical');
         $this->writeRawFile(
             'Modules/implementation.log',
-            "## 2026-05-03 12:00:00 -0400\n- spec: execution-spec-system/001-canonical.md\n",
+            "## 2026-05-03 12:00:00 -0400\n- spec: Modules/ExecutionSpecSystem/specs/001-canonical.md\n",
         );
 
         $result = $this->service()->validate();
 
         $this->assertTrue($result['ok']);
         $this->assertSame([], $result['violations']);
+    }
+
+    public function test_validate_rejects_legacy_slug_references_for_module_implementation_log_entries(): void
+    {
+        $this->writeRawFile('Modules/ExecutionSpecSystem/specs/001-canonical.md', '# Execution Spec: 001-canonical');
+        $this->writeRawFile('Modules/ExecutionSpecSystem/plans/001-canonical.md', '# Implementation Plan: 001-canonical');
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-03 12:00:00 -0400\n- spec: execution-spec-system/001-canonical.md\n",
+        );
+
+        $result = $this->service()->validate();
+
+        $this->assertFalse($result['ok']);
+        $violation = array_values(array_filter(
+            $result['violations'],
+            static fn(array $entry): bool => $entry['code'] === 'EXECUTION_SPEC_IMPLEMENTATION_LOG_PATH_NOT_CANONICAL',
+        ))[0];
+        $this->assertSame('Modules/implementation.log', $violation['file_path']);
+        $this->assertSame('execution-spec-system/001-canonical.md', $violation['details']['entry']);
+        $this->assertSame('Modules/ExecutionSpecSystem/specs/001-canonical.md', $violation['details']['expected']);
     }
 
     public function test_validate_reports_duplicate_canonical_and_legacy_spec_definitions(): void
@@ -601,7 +622,7 @@ MD,
         $this->writeRawFile('Modules/FeatureSystem/specs/001-reconstruction-required.md', '# Execution Spec: 001-reconstruction-required');
         $this->writeRawFile(
             'Modules/implementation.log',
-            "## 2026-05-07 10:00:00 -0400\n- spec: feature-system/001-reconstruction-required.md\n",
+            "## 2026-05-07 10:00:00 -0400\n- spec: Modules/FeatureSystem/specs/001-reconstruction-required.md\n",
         );
 
         $result = $this->service()->validate();
@@ -621,7 +642,7 @@ MD,
         $this->writeRawFile('Modules/FeatureSystem/plans/001-grandfathered.md', '# Implementation Plan: 001-grandfathered');
         $this->writeRawFile(
             'Modules/implementation.log',
-            "## 2026-05-07 10:00:00 -0400\n- spec: feature-system/001-grandfathered.md\n",
+            "## 2026-05-07 10:00:00 -0400\n- spec: Modules/FeatureSystem/specs/001-grandfathered.md\n",
         );
 
         $result = $this->service()->validate();
@@ -636,7 +657,7 @@ MD,
         $this->writeRawFile('Modules/FeatureSystem/plans/001-heading.md', '# Wrong Heading');
         $this->writeRawFile(
             'Modules/implementation.log',
-            "## 2026-05-07 10:00:00 -0400\n- spec: feature-system/001-heading.md\n",
+            "## 2026-05-07 10:00:00 -0400\n- spec: Modules/FeatureSystem/specs/001-heading.md\n",
         );
 
         $result = $this->service()->validate();
@@ -655,7 +676,7 @@ MD,
         );
         $this->writeRawFile(
             'Modules/implementation.log',
-            "## 2026-05-07 10:00:00 -0400\n- spec: feature-system/001-sections.md\n",
+            "## 2026-05-07 10:00:00 -0400\n- spec: Modules/FeatureSystem/specs/001-sections.md\n",
         );
 
         $result = $this->service()->validate();
@@ -693,7 +714,7 @@ MD,
         );
         $this->writeRawFile(
             'Modules/implementation.log',
-            "## 2026-05-07 10:00:00 -0400\n- spec: feature-system/001-order.md\n",
+            "## 2026-05-07 10:00:00 -0400\n- spec: Modules/FeatureSystem/specs/001-order.md\n",
         );
 
         $result = $this->service()->validate();
@@ -729,7 +750,7 @@ MD,
         );
         $this->writeRawFile(
             'Modules/implementation.log',
-            "## 2026-05-07 10:00:00 -0400\n- spec: marketplace/002-parent.md\n\n## 2026-05-07 10:00:01 -0400\n- spec: marketplace/002.001-runtime.md\n",
+            "## 2026-05-07 10:00:00 -0400\n- spec: Modules/Marketplace/specs/002-parent.md\n\n## 2026-05-07 10:00:01 -0400\n- spec: Modules/Marketplace/specs/002.001-runtime.md\n",
         );
 
         $result = $this->service()->validate();

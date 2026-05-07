@@ -10,6 +10,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Treat `Modules/implementation.log` as the canonical implementation ledger path.
 - Support canonical `Modules/*/specs/` and `Modules/*/plans/` in spec validation.
 - Require reconstruction notes for completed framework module specs under `Modules/<Module>/plans/<id>-<slug>.md`.
+- Require canonical module implementation-log references in the form `Modules/<Module>/specs/<id>-<slug>.md`.
 - Keep migration-compatible behavior for legacy `docs/features/*` inputs.
 
 ## Non-Goals
@@ -35,6 +36,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Framework-module misplacement checks do not classify application features under `Features/` as framework modules unless matching `Modules/<Name>` entries exist.
 - `spec:validate` validates canonical `Modules/*/specs` and `Modules/*/plans` paths.
 - `spec:validate` requires reconstruction-note coverage for active framework module specs and reports deterministic violations when notes are missing or malformed.
+- `spec:validate` rejects slug-style framework implementation-log references and reports deterministic canonical-path violations.
 - Active-spec implementation logging uses `Modules/implementation.log` when canonical module workspace is present.
 - Framework contributor docs, app-facing docs, and implementation skills align terminology and path contracts so framework-module work resolves from `Modules/*` while application-feature work resolves from `Features/*`.
 
@@ -46,6 +48,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Application feature-local runtime ownership checks are deterministic and enforce default executable layout semantics.
 - Spec validation supports canonical `Modules/*` specs and plans.
 - Active module specs require matching reconstruction notes; legacy `# Implementation Plan:` notes remain deterministic grandfathered artifacts during migration.
+- Framework implementation-log entries are canonicalized to module spec paths and slug-style module references fail deterministic validation.
 - Canonical implementation ledger path is recognized as `Modules/implementation.log`.
 - Documentation and agent/skill guidance consistently encode the modules-vs-features split without implying framework modules are governed under `Features/*`.
 

@@ -43,6 +43,7 @@ These paths mean:
 - `Modules/<Module>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
 - `Modules/<Module>/plans/*.md` → implementation reconstruction notes (post-implementation artifacts)
 - `Modules/implementation.log` → completed framework execution-spec ledger
+- Framework implementation-log `- spec:` entries must use canonical module spec paths (`Modules/<Module>/specs/<id>-<slug>.md`), not slug aliases.
 
 For downstream application feature work, use:
 
