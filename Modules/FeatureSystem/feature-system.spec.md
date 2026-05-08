@@ -16,6 +16,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Provide deterministic historical-spec evidence mapping that preserves legacy ordering keys, confidence levels, and supporting evidence before import.
 - Tighten historical evidence boundaries so `Spec35D1` is the canonical transition anchor and historical candidates are classified by import era/action before any import step.
 - Provide deterministic historical-spec import from reviewed archive bundles into canonical module spec or draft paths without silently overwriting existing specs.
+- Provide deterministic historical module context generation for modules that contain imported historical specs.
 
 ## Non-Goals
 
@@ -41,6 +42,11 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Evidence-map top-level output includes deterministic `canonical_transition` and per-era `counts` fields for downstream historical import boundary enforcement.
 - `historical-specs:import` scans archive candidate directories containing `spec.md` and optional `metadata.json`, reports unmapped or invalid metadata deterministically, writes completed imports under `Modules/<Module>/specs/`, writes uncertain imports under `Modules/<Module>/specs/drafts/`, and refuses conflicting destinations unless explicit force handling is requested.
 - Imported historical specs receive a canonical execution-spec heading and prose historical import note while preserving archived source text below the import note.
+- `historical-specs:context` scans imported historical specs, creates missing module context files, updates existing module context without destructive rewrite, appends decision-ledger reconstruction entries, and marks inferred or uncertain historical details explicitly.
+- Historical imported specs are documented in module context with explicit uncertainty markers.
+- Imported historical specs have module-level context with explicit caveats.
+- Missing module context files are created deterministically.
+- Decision ledger entries remain append-only.
 - Legacy labels such as `Spec 19FB`, `Spec 30C-2`, and `Spec 35D7JA` are parsed into stable sort keys used for deterministic candidate ordering.
 - Known summary/planning files are treated as supporting evidence sources by default unless explicit extractable execution-spec headings are present.
 - `verify features` enforces executable application feature-local runtime layout under `Features/<Feature>/` (`src/` and `tests/` required by default).
@@ -69,6 +75,8 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Historical evidence output distinguishes `pre_canonical`, `canonical_existing`, `ambiguous`, and `supporting_evidence` candidates with deterministic `import_action`, transition-relative metadata, and confidence-scored module inference.
 - Historical import reports remain deterministic, repository-relative, timestamp-free, and machine-readable.
 - Historical import apply mode does not overwrite existing canonical specs silently and routes uncertain implementation status to drafts.
+- Historical context generation creates or repairs canonical `Modules/<Module>/<module>.md`, `Modules/<Module>/<module>.spec.md`, and `Modules/<Module>/<module>.decisions.md` files for modules with imported historical specs.
+- Historical context generation preserves existing context content and decision history while appending bounded historical-import sections and entries.
 
 ## Assumptions
 

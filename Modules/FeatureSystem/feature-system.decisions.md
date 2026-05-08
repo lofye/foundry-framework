@@ -489,3 +489,47 @@ Timestamp: 2026-05-07T17:06:25-04:00
 - Conflict Handling
 - Determinism Requirements
 - Testing Requirements
+
+### Decision: generate module context from imported historical specs without rewriting history
+
+Timestamp: 2026-05-07T20:38:36-04:00
+
+**Context**
+
+- Execution spec `009-generate-historical-module-context-docs` requires modules with imported historical specs to have canonical state, spec, and decision context files.
+- Imported historical records may be inferred, draft-only, or incomplete, and existing module context/decision history must not be overwritten.
+
+**Decision**
+
+- Add `historical-specs:context` as a report/apply command backed by a FeatureSystem historical module context generator.
+- Detect imported historical specs only when they match the importer-produced shape: canonical execution-spec heading followed immediately by a `Historical Import Note`.
+- Create missing module context files with deterministic sections and explicit historical caveats.
+- Update existing module context by appending bounded historical sections and grounding bullets while preserving existing content.
+- Append a deterministic decision-ledger entry for historical context generation and avoid duplicate entries on rerun.
+
+**Reasoning**
+
+- Context generation should make imported history navigable without fabricating certainty.
+- Shape-based imported-spec detection prevents prose examples from being treated as imported history.
+- Bounded section updates preserve existing module context while making recovered historical specs visible to future agents.
+- Deterministic placeholder timestamps in generated historical decision entries avoid nondeterministic generated docs while satisfying ledger validation.
+
+**Alternatives Considered**
+
+- Treat any spec mentioning `Historical Import Note` as imported history.
+- Rewrite entire module context files from generated summaries.
+- Generate module docs only manually without a command surface.
+
+**Impact**
+
+- Modules with imported historical specs can receive canonical context files through a deterministic command.
+- Existing decision ledgers remain append-only.
+- Inferred or uncertain historical imports stay marked for review before later reconstruction-note or implementation-log generation.
+
+**Spec Reference**
+
+- Goals
+- Context File Roles
+- Historical Import Marking
+- Determinism Requirements
+- Testing Requirements

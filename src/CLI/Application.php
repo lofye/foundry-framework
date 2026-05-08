@@ -31,6 +31,7 @@ use Foundry\CLI\Commands\GeneratePlatformCommand;
 use Foundry\CLI\Commands\GenerateScaffoldCommand;
 use Foundry\CLI\Commands\GraphVisualizeCommand;
 use Foundry\CLI\Commands\HistoryCommand;
+use Foundry\CLI\Commands\HistoricalSpecsContextCommand;
 use Foundry\CLI\Commands\HistoricalSpecsEvidenceCommand;
 use Foundry\CLI\Commands\HistoricalSpecsExtractCommand;
 use Foundry\CLI\Commands\HistoricalSpecsImportCommand;
@@ -134,6 +135,7 @@ final class Application
             new DoctorCommand(),
             new ObserveCommand(),
             new HistoryCommand(),
+            new HistoricalSpecsContextCommand(),
             new HistoricalSpecsEvidenceCommand(),
             new HistoricalSpecsExtractCommand(),
             new HistoricalSpecsImportCommand(),

@@ -387,3 +387,9 @@
 - note: Added deterministic historical archive import through `historical-specs:import` with report-only default behavior, explicit `--apply` write mode, repository-relative JSON output, and stable candidate summary/status fields.
 - note: Added FeatureSystem import handling for validated metadata, completed-vs-uncertain destination routing, canonical imported spec headings, historical import notes, exact duplicate detection, and conflict refusal.
 - note: Added focused unit/integration coverage for dry-run reports, apply writes, exact duplicates, conflicts, missing/malformed metadata, uncertain draft placement, deterministic ordering, and CLI command wiring.
+
+## 2026-05-07 20:38:36 -0400
+- spec: Modules/FeatureSystem/specs/009-generate-historical-module-context-docs.md
+- note: Added deterministic historical module context generation through `historical-specs:context` with report-only default behavior, explicit `--apply` write mode, module filtering, and stable repository-relative output.
+- note: Added FeatureSystem context generation that creates missing module state/spec/decision files, updates existing files without destructive rewrite, appends decision-ledger reconstruction entries, and keeps inferred or draft-only import caveats explicit.
+- note: Added shape-based imported-spec detection so prose examples are not misclassified as imported history, plus focused unit/integration coverage for creation, updates, decision appends, uncertainty marking, deterministic ordering, and context validation.

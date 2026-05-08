@@ -44,6 +44,13 @@
 - Historical import reports are deterministic, repository-relative, timestamp-free, and machine-readable.
 - Historical import apply mode does not overwrite existing canonical specs silently; exact matches are idempotent, conflicting destinations are refused, and explicit force mode is required before replacement.
 - Imported historical specs receive canonical execution-spec headings and a prose historical import note while preserving archived spec text below the note.
+- `historical-specs:context` now provides deterministic report/apply module context generation for modules that contain imported historical specs.
+- Historical context generation creates missing canonical module state/spec/decision files and updates existing files without destructive rewrite.
+- Historical imported specs are documented in module context with explicit uncertainty markers.
+- Imported historical specs have module-level context with explicit caveats.
+- Missing module context files are created deterministically.
+- Decision ledger entries remain append-only.
+- Historical context generation appends decision-ledger reconstruction entries and keeps inferred or draft-only import caveats explicit.
 
 ## Open Questions
 
@@ -55,4 +62,4 @@
 - Expand boundary-violation classification depth in follow-up execution specs.
 - Continue incremental source/test localization through promoted execution specs.
 - Evaluate follow-up specs to migrate grandfathered legacy module plan documents into strict reconstruction-note format.
-- Use the historical import report to review unmapped or invalid archive candidates before follow-up context/document reconstruction specs generate module docs, decision ledgers, reconstruction notes, or log entries from imported history.
+- Use generated historical module context as the review surface before follow-up specs generate reconstruction notes or implementation-log entries from imported history.

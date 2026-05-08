@@ -28,6 +28,7 @@ use Foundry\CLI\Commands\GeneratePlatformCommand;
 use Foundry\CLI\Commands\GenerateScaffoldCommand;
 use Foundry\CLI\Commands\GraphVisualizeCommand;
 use Foundry\CLI\Commands\HistoryCommand;
+use Foundry\CLI\Commands\HistoricalSpecsContextCommand;
 use Foundry\CLI\Commands\HistoricalSpecsEvidenceCommand;
 use Foundry\CLI\Commands\HistoricalSpecsExtractCommand;
 use Foundry\CLI\Commands\HistoricalSpecsImportCommand;
@@ -171,6 +172,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new ObserveCommand())->matches(['observe:profile']));
         $this->assertTrue((new ObserveCommand())->matches(['observe:compare', 'trace-a', 'trace-b']));
         $this->assertTrue((new HistoryCommand())->matches(['history']));
+        $this->assertTrue((new HistoricalSpecsContextCommand())->matches(['historical-specs:context', '--dry-run']));
         $this->assertTrue((new HistoricalSpecsEvidenceCommand())->matches(['historical-specs:evidence', '--dry-run']));
         $this->assertTrue((new HistoricalSpecsExtractCommand())->matches(['historical-specs:extract', '--dry-run']));
         $this->assertTrue((new HistoricalSpecsImportCommand())->matches(['historical-specs:import', '--dry-run']));
