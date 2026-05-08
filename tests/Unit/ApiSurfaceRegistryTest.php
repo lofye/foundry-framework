@@ -103,6 +103,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $history = $registry->classifyCliCommand(['history']);
         $historicalExtract = $registry->classifyCliCommand(['historical-specs:extract', '--dry-run']);
         $historicalEvidence = $registry->classifyCliCommand(['historical-specs:evidence', '--dry-run']);
+        $preCanonicalImport = $registry->classifyCliCommand(['precanonical:import', '--source=_import/precanonical/marked-archive.md']);
         $regressions = $registry->classifyCliCommand(['regressions']);
         $inspectCliSurface = $registry->classifyCliCommand(['inspect', 'cli-surface']);
         $verifyCliSurface = $registry->classifyCliCommand(['verify', 'cli-surface']);
@@ -161,6 +162,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertNotNull($history);
         $this->assertNotNull($historicalExtract);
         $this->assertNotNull($historicalEvidence);
+        $this->assertNotNull($preCanonicalImport);
         $this->assertNotNull($regressions);
         $this->assertNotNull($inspectCliSurface);
         $this->assertNotNull($verifyCliSurface);
@@ -334,6 +336,9 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('experimental', $historicalEvidence['stability']);
         $this->assertSame('App Scaffolding', $historicalEvidence['category']);
         $this->assertSame('historical-specs:evidence', $historicalEvidence['command_type']);
+        $this->assertSame('experimental', $preCanonicalImport['stability']);
+        $this->assertSame('App Scaffolding', $preCanonicalImport['category']);
+        $this->assertSame('precanonical:import', $preCanonicalImport['command_type']);
         $this->assertSame('experimental', $regressions['stability']);
         $this->assertSame('stable', $inspectCliSurface['stability']);
         $this->assertSame('Reference', $inspectCliSurface['category']);
@@ -396,6 +401,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('generate <intent>', $registry->resolveCliSignature(['generate', '--workflow']));
         $this->assertSame('historical-specs:extract', $registry->resolveCliSignature(['historical-specs:extract']));
         $this->assertSame('historical-specs:evidence', $registry->resolveCliSignature(['historical-specs:evidence']));
+        $this->assertSame('precanonical:import', $registry->resolveCliSignature(['precanonical:import']));
     }
 
     public function test_classifies_configuration_and_generated_metadata_paths(): void

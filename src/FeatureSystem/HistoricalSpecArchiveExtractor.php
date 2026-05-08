@@ -61,7 +61,7 @@ final class HistoricalSpecArchiveExtractor
             }
 
             $relativeFile = $this->outputPath($filePath);
-            foreach ($this->extractFileCandidates($contents) as $candidate) {
+            foreach ($this->extractFileCandidates($contents, basename($filePath)) as $candidate) {
                 $candidate['original_file'] = $relativeFile;
                 $rawCandidates[] = $candidate;
             }
@@ -119,6 +119,15 @@ final class HistoricalSpecArchiveExtractor
             }
 
             $path = str_replace('\\', '/', $fileInfo->getPathname());
+            if (preg_match('#/candidate-\\d{3}/#', $path) === 1) {
+                continue;
+            }
+
+            $basename = basename($path);
+            if (in_array($basename, ['evidence-map.json', 'evidence-map.md'], true)) {
+                continue;
+            }
+
             $extension = strtolower((string) pathinfo($path, \PATHINFO_EXTENSION));
             if (!in_array($extension, ['md', 'txt'], true)) {
                 continue;
@@ -151,14 +160,15 @@ final class HistoricalSpecArchiveExtractor
      *     original_file?:string
      * }>
      */
-    private function extractFileCandidates(string $contents): array
+    private function extractFileCandidates(string $contents, string $sourceFilename): array
     {
         $normalized = str_replace(["\r\n", "\r"], "\n", $contents);
         $lines = explode("\n", $normalized);
         $boundaries = $this->detectBoundaries($lines);
+        $rejectedRootSignals = $this->rejectedRootSignals($lines);
 
         if ($boundaries === []) {
-            $fallback = $this->fallbackCandidate($normalized);
+            $fallback = $this->fallbackCandidate($normalized, $sourceFilename, $rejectedRootSignals);
 
             return $fallback === null ? [] : [$fallback];
         }
@@ -166,14 +176,19 @@ final class HistoricalSpecArchiveExtractor
         $candidates = [];
         $count = count($boundaries);
         for ($index = 0; $index < $count; $index++) {
-            $start = $boundaries[$index];
-            $end = ($boundaries[$index + 1] ?? count($lines)) - 1;
+            $boundary = $boundaries[$index];
+            $start = (int) $boundary['line'];
+            $end = (int) (($boundaries[$index + 1]['line'] ?? count($lines)) - 1);
             if ($end < $start) {
                 continue;
             }
 
             $segment = implode("\n", array_slice($lines, $start, ($end - $start) + 1));
-            $candidate = $this->buildCandidate($segment);
+            $candidate = $this->buildCandidate(
+                $segment,
+                (string) $boundary['emission_reason'],
+                $this->rejectedRootSignals(array_slice($lines, $start, ($end - $start) + 1)),
+            );
             if ($candidate !== null) {
                 $candidate['source_segment'] = $index + 1;
                 $candidate['source_segments_total'] = $count;
@@ -186,15 +201,16 @@ final class HistoricalSpecArchiveExtractor
 
     /**
      * @param array<int,string> $lines
-     * @return list<int>
+     * @return list<array{line:int,emission_reason:string}>
      */
     private function detectBoundaries(array $lines): array
     {
         $boundaries = [];
 
         foreach ($lines as $index => $line) {
-            if ($this->isBoundaryLine($line)) {
-                $boundaries[] = $index;
+            $reason = $this->rootEmissionReason($line);
+            if ($reason !== null) {
+                $boundaries[] = ['line' => $index, 'emission_reason' => $reason];
             }
         }
 
@@ -202,36 +218,111 @@ final class HistoricalSpecArchiveExtractor
             return [];
         }
 
-        if ($boundaries[0] !== 0) {
+        if ((int) $boundaries[0]['line'] !== 0) {
             $boundaries = array_values(array_filter(
                 $boundaries,
-                static fn(int $line): bool => $line > 0,
+                static fn(array $boundary): bool => (int) $boundary['line'] > 0,
             ));
         }
 
         return $boundaries;
     }
 
-    private function isBoundaryLine(string $line): bool
+    private function rootEmissionReason(string $line): ?string
     {
         $trimmed = trim($line);
         if ($trimmed === '') {
-            return false;
+            return null;
         }
 
-        if (preg_match('/^#{1,6}\s*Execution Spec\s*:/i', $trimmed) === 1) {
-            return true;
+        if (preg_match('/^#{1,6}\s*Execution Spec\s*:\s*\S/i', $trimmed) === 1) {
+            return 'execution_spec_heading';
         }
 
-        if (preg_match('/^Execution Spec\s*:/i', $trimmed) === 1) {
-            return true;
+        if (preg_match('/^Execution Spec\s*:\s*\S/i', $trimmed) === 1) {
+            return 'execution_spec_heading';
         }
 
-        if (preg_match('/^#{1,6}\s*Spec(?:\s|:|$)/i', $trimmed) === 1) {
-            return true;
+        if (preg_match('/^#{0,6}\s*Spec\s*:\s*\S/i', $trimmed) === 1) {
+            return 'explicit_spec_heading';
         }
 
-        return preg_match('/^Spec\s+\d+[A-Za-z]*(?:-[0-9A-Za-z]+)?(?:\b|:|\s|-)/i', $trimmed) === 1;
+        return preg_match('/^#{0,6}\s*Spec\s+\d+[0-9A-Za-z]*(?:-[0-9A-Za-z]+)?(?:[ \t]*(?::|-|\x{2013}|\x{2014})[ \t]*\S.*)?\s*$/iu', $trimmed) === 1
+            ? 'explicit_spec_heading'
+            : null;
+    }
+
+    /**
+     * @param array<int,string> $lines
+     * @return list<array{text:string,reason:string}>
+     */
+    private function rejectedRootSignals(array $lines): array
+    {
+        $signals = [];
+
+        foreach ($lines as $line) {
+            $trimmed = trim($line);
+            if ($trimmed === '') {
+                continue;
+            }
+
+            if ($this->isSectionFragment($trimmed)) {
+                $signals[] = ['text' => $trimmed, 'reason' => 'section_fragment'];
+                continue;
+            }
+
+            if (preg_match('/^#{0,6}\s*Spec\s+\d+[0-9A-Za-z]*(?:-[0-9A-Za-z]+)?\s+[A-Za-z]/i', $trimmed) === 1) {
+                $signals[] = ['text' => $trimmed, 'reason' => 'embedded_prior_spec_reference'];
+            }
+        }
+
+        return $this->dedupeRejectedSignals($signals);
+    }
+
+    private function isSectionFragment(string $trimmed): bool
+    {
+        $normalized = strtolower(trim($trimmed, "# \t"));
+        $plainHeadings = [
+            'architecture',
+            'implementation',
+            'ux contract',
+            'foundation slice',
+            'intelligence layer',
+            'final polish',
+            'goals',
+            'non-goals',
+            'acceptance criteria',
+            'requirements',
+            'testing',
+            'verify',
+        ];
+
+        foreach ($plainHeadings as $heading) {
+            if ($normalized === $heading || str_starts_with($normalized, $heading . ' (')) {
+                return true;
+            }
+        }
+
+        return preg_match('/^(must|should):$/i', $normalized) === 1
+            || preg_match('/^(introduced|established|adds|completes)\b/i', $normalized) === 1;
+    }
+
+    /**
+     * @param list<array{text:string,reason:string}> $signals
+     * @return list<array{text:string,reason:string}>
+     */
+    private function dedupeRejectedSignals(array $signals): array
+    {
+        $deduped = [];
+        foreach ($signals as $signal) {
+            $key = (string) $signal['reason'] . "\n" . (string) $signal['text'];
+            $deduped[$key] = [
+                'text' => (string) $signal['text'],
+                'reason' => (string) $signal['reason'],
+            ];
+        }
+
+        return array_values($deduped);
     }
 
     /**
@@ -253,7 +344,7 @@ final class HistoricalSpecArchiveExtractor
      *     original_file?:string
      * }|null
      */
-    private function buildCandidate(string $segment): ?array
+    private function buildCandidate(string $segment, string $emissionReason, array $rejectedRootSignals = []): ?array
     {
         $sourceText = $this->normalizeText($segment);
         if ($sourceText === '') {
@@ -262,7 +353,8 @@ final class HistoricalSpecArchiveExtractor
 
         $label = $this->detectSpecLabel($sourceText);
         $title = $this->detectTitle($sourceText, $label);
-        $confidence = $this->detectConfidence($sourceText, $label, $title);
+        $candidateQuality = $this->candidateQuality($sourceText, $emissionReason);
+        $confidence = $this->detectConfidence($sourceText, $label, $title, $candidateQuality);
         $notes = $this->buildNotes($sourceText, $label, $title, $confidence);
         $cleaned = $this->cleanSpecText($sourceText);
         $result = $this->extractSection($sourceText, ['RESULT', 'OUTPUT']);
@@ -278,6 +370,10 @@ final class HistoricalSpecArchiveExtractor
             'suggested_slug' => $this->slugify($label . ' ' . $title),
             'suggested_module' => 'unknown',
             'confidence' => $confidence,
+            'emission_reason' => $emissionReason,
+            'candidate_quality' => $candidateQuality,
+            'rejected_root_signals' => $rejectedRootSignals,
+            'result_association_confidence' => $result !== null ? 'high' : 'unknown',
             'notes' => $notes,
             'result_detected' => $result !== null,
             'result_text' => $result ?? '',
@@ -305,28 +401,66 @@ final class HistoricalSpecArchiveExtractor
      *     original_file?:string
      * }|null
      */
-    private function fallbackCandidate(string $contents): ?array
+    private function fallbackCandidate(string $contents, string $sourceFilename, array $rejectedRootSignals): ?array
     {
         $sourceText = $this->normalizeText($contents);
         if ($sourceText === '') {
             return null;
         }
 
-        $hasTitle = preg_match('/^Title\s*:\s*(.+)$/im', $sourceText) === 1;
-        $hasPurpose = preg_match('/^Purpose\s*:\s*(.+)$/im', $sourceText) === 1;
-        if (!$hasTitle && !$hasPurpose) {
-            return null;
+        $filenameLabel = $this->detectFilenameSpecLabel($sourceFilename);
+        if ($filenameLabel !== '' && $this->hasContractSignal($sourceText)) {
+            $candidate = $this->buildCandidate($sourceText, 'legacy_filename_single_spec', $rejectedRootSignals);
+            if ($candidate === null) {
+                return null;
+            }
+
+            if ((string) $candidate['detected_spec_label'] === '') {
+                $candidate['detected_spec_label'] = $filenameLabel;
+                $candidate['suggested_slug'] = $this->slugify($filenameLabel . ' ' . (string) $candidate['detected_title']);
+            }
+
+            $candidate['confidence'] = 'medium';
+            $candidate['candidate_quality'] = 'probable';
+            $candidate['notes'][] = 'Legacy filename fallback used for single-spec source file.';
+
+            return $candidate;
         }
 
-        $candidate = $this->buildCandidate($sourceText);
-        if ($candidate === null) {
-            return null;
+        $result = $this->extractSection($sourceText, ['RESULT', 'OUTPUT', 'IMPLEMENTATION RESULT']);
+        if ($result !== null) {
+            return $this->supportingEvidenceCandidate($sourceText, $result, $rejectedRootSignals);
         }
 
-        $candidate['confidence'] = 'low';
-        $candidate['notes'][] = 'Weak boundary match; extracted using title/purpose fallback.';
+        return null;
+    }
 
-        return $candidate;
+    /**
+     * @param list<array{text:string,reason:string}> $rejectedRootSignals
+     * @return array<string,mixed>
+     */
+    private function supportingEvidenceCandidate(string $sourceText, string $resultText, array $rejectedRootSignals): array
+    {
+        return [
+            'source_text' => $sourceText,
+            'spec_text' => "# Supporting Evidence\n\nResult-only historical evidence; review before import.\n",
+            'source_segment' => 1,
+            'source_segments_total' => 1,
+            'detected_spec_label' => '',
+            'detected_title' => 'Supporting evidence',
+            'suggested_slug' => 'supporting-evidence',
+            'suggested_module' => 'unknown',
+            'confidence' => 'low',
+            'emission_reason' => 'supporting_evidence',
+            'candidate_quality' => 'supporting',
+            'rejected_root_signals' => $rejectedRootSignals,
+            'result_association_confidence' => 'low',
+            'notes' => ['Result/output evidence found without a valid spec root; emitted as supporting evidence.'],
+            'result_detected' => true,
+            'result_text' => $resultText,
+            'followups_detected' => false,
+            'followups_text' => '',
+        ];
     }
 
     /**
@@ -385,7 +519,7 @@ final class HistoricalSpecArchiveExtractor
             return trim((string) $match[1]);
         }
 
-        if (preg_match('/(?:^|\n)\s*#*\s*Spec\s+(\d+[A-Za-z]*(?:-[0-9A-Za-z]+)?)/i', $text, $match) === 1) {
+        if (preg_match('/(?:^|\n)[ \t]*#*[ \t]*Spec[ \t]+(\d+[0-9A-Za-z]*(?:-[0-9A-Za-z]+)?)(?:[ \t]*(?::|-|\x{2013}|\x{2014})|[ \t]*(?:\n|$))/iu', $text, $match) === 1) {
             return 'Spec ' . trim((string) $match[1]);
         }
 
@@ -430,13 +564,21 @@ final class HistoricalSpecArchiveExtractor
         return '';
     }
 
-    private function detectConfidence(string $text, string $label, string $title): string
+    private function detectConfidence(string $text, string $label, string $title, string $candidateQuality): string
     {
+        if ($candidateQuality === 'supporting') {
+            return 'low';
+        }
+
+        if ($candidateQuality === 'weak') {
+            return 'low';
+        }
+
         if (preg_match('/Execution Spec\s*:/i', $text) === 1) {
             return 'high';
         }
 
-        if ($label !== '' && preg_match('/^Spec\s+\d+[A-Za-z]*(?:-[0-9A-Za-z]+)?$/i', $label) === 1) {
+        if ($label !== '' && preg_match('/^Spec\s+\d+[0-9A-Za-z]*(?:-[0-9A-Za-z]+)?$/i', $label) === 1) {
             return 'high';
         }
 
@@ -452,6 +594,40 @@ final class HistoricalSpecArchiveExtractor
         }
 
         return 'low';
+    }
+
+    private function candidateQuality(string $text, string $emissionReason): string
+    {
+        if ($emissionReason === 'supporting_evidence') {
+            return 'supporting';
+        }
+
+        $hasContract = $this->hasContractSignal($text);
+        $hasBody = str_word_count(strip_tags($text)) >= 5;
+
+        if (in_array($emissionReason, ['explicit_spec_heading', 'execution_spec_heading'], true)) {
+            return $hasContract && $hasBody ? 'strong' : 'weak';
+        }
+
+        if ($emissionReason === 'legacy_filename_single_spec') {
+            return $hasContract && $hasBody ? 'probable' : 'weak';
+        }
+
+        return 'weak';
+    }
+
+    private function hasContractSignal(string $text): bool
+    {
+        return preg_match('/(?:^|\n)\s*#{0,6}\s*(Purpose|Goals|Non-Goals|Requirements|Acceptance Criteria|Testing|Implementation|CLI|Command|Output|Result|Done Means|Must|Should)\b\s*:?\s*/i', $text) === 1;
+    }
+
+    private function detectFilenameSpecLabel(string $sourceFilename): string
+    {
+        if (preg_match('/Foundry-Spec[-_ ]*(\d+[0-9A-Za-z]*(?:-[0-9A-Za-z]+)?)/i', $sourceFilename, $match) !== 1) {
+            return '';
+        }
+
+        return 'Spec ' . trim((string) $match[1]);
     }
 
     /**
@@ -544,6 +720,10 @@ final class HistoricalSpecArchiveExtractor
                 'suggested_slug' => $slug,
                 'suggested_module' => (string) ($candidate['suggested_module'] ?? 'unknown'),
                 'confidence' => (string) $candidate['confidence'],
+                'emission_reason' => (string) ($candidate['emission_reason'] ?? 'manual_anchor'),
+                'candidate_quality' => (string) ($candidate['candidate_quality'] ?? 'weak'),
+                'rejected_root_signals' => (array) ($candidate['rejected_root_signals'] ?? []),
+                'result_association_confidence' => (string) ($candidate['result_association_confidence'] ?? 'unknown'),
                 'notes' => (array) $candidate['notes'],
                 'result_detected' => (bool) ($candidate['result_detected'] ?? false),
                 'result_text' => (string) ($candidate['result_text'] ?? ''),
@@ -637,6 +817,16 @@ final class HistoricalSpecArchiveExtractor
             'suggested_slug' => (string) ($candidate['suggested_slug'] ?? ''),
             'suggested_module' => (string) ($candidate['suggested_module'] ?? 'unknown'),
             'confidence' => (string) ($candidate['confidence'] ?? 'low'),
+            'emission_reason' => (string) ($candidate['emission_reason'] ?? 'manual_anchor'),
+            'candidate_quality' => (string) ($candidate['candidate_quality'] ?? 'weak'),
+            'rejected_root_signals' => array_values(array_map(
+                static fn(array $signal): array => [
+                    'text' => (string) ($signal['text'] ?? ''),
+                    'reason' => (string) ($signal['reason'] ?? ''),
+                ],
+                array_filter((array) ($candidate['rejected_root_signals'] ?? []), 'is_array'),
+            )),
+            'result_association_confidence' => (string) ($candidate['result_association_confidence'] ?? 'unknown'),
             'notes' => array_values(array_map('strval', (array) ($candidate['notes'] ?? []))),
             'result_detected' => (bool) ($candidate['result_detected'] ?? false),
             'followups_detected' => (bool) ($candidate['followups_detected'] ?? false),
@@ -686,6 +876,10 @@ final class HistoricalSpecArchiveExtractor
             'suggested_slug' => (string) $candidate['suggested_slug'],
             'suggested_module' => (string) $candidate['suggested_module'],
             'confidence' => (string) $candidate['confidence'],
+            'emission_reason' => (string) ($candidate['emission_reason'] ?? 'manual_anchor'),
+            'candidate_quality' => (string) ($candidate['candidate_quality'] ?? 'weak'),
+            'rejected_root_signals' => array_values(array_filter((array) ($candidate['rejected_root_signals'] ?? []), 'is_array')),
+            'result_association_confidence' => (string) ($candidate['result_association_confidence'] ?? 'unknown'),
             'notes' => array_values(array_map('strval', (array) $candidate['notes'])),
             'result_detected' => (bool) ($candidate['result_detected'] ?? false),
             'followups_detected' => (bool) ($candidate['followups_detected'] ?? false),

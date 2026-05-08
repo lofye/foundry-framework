@@ -94,20 +94,24 @@ final class HistoricalSpecEvidenceMapper
                     continue;
                 }
 
+                $normalized = $this->normalizeText($contents);
                 $fallback = $this->buildCandidate(
                     sourceFile: $relativePath,
                     sourceFilename: $basename,
-                    segmentText: $this->normalizeText($contents),
+                    segmentText: $normalized,
                     segmentIndex: 1,
                     segmentTotal: 1,
                     anchors: $anchorConfig['anchors'],
                     transition: $transition,
                     withGitEvidence: $withGitEvidence,
                     isSupportingEvidence: $isSupporting,
+                    emissionReason: $this->detectFilenameLegacyLabel($basename) !== '' ? 'legacy_filename_single_spec' : 'supporting_evidence',
                 );
 
                 if ($fallback !== null) {
                     $candidates[] = $fallback;
+                } elseif ($normalized !== '') {
+                    $candidates[] = $this->supportingEvidenceCandidate($relativePath, $basename);
                 }
 
                 continue;
@@ -125,6 +129,7 @@ final class HistoricalSpecEvidenceMapper
                     transition: $transition,
                     withGitEvidence: $withGitEvidence,
                     isSupportingEvidence: $isSupporting,
+                    emissionReason: (string) ($segment['emission_reason'] ?? 'explicit_spec_heading'),
                 );
 
                 if ($candidate !== null) {
@@ -406,7 +411,7 @@ final class HistoricalSpecEvidenceMapper
     }
 
     /**
-     * @return list<array{text:string}>
+     * @return list<array{text:string,emission_reason:string}>
      */
     private function splitIntoSegments(string $contents): array
     {
@@ -415,8 +420,9 @@ final class HistoricalSpecEvidenceMapper
         $boundaries = [];
 
         foreach ($lines as $index => $line) {
-            if ($this->isBoundaryLine($line)) {
-                $boundaries[] = $index;
+            $reason = $this->rootEmissionReason($line);
+            if ($reason !== null) {
+                $boundaries[] = ['line' => $index, 'emission_reason' => $reason];
             }
         }
 
@@ -426,8 +432,8 @@ final class HistoricalSpecEvidenceMapper
 
         $segments = [];
         for ($index = 0; $index < count($boundaries); $index++) {
-            $start = $boundaries[$index];
-            $end = ($boundaries[$index + 1] ?? count($lines)) - 1;
+            $start = (int) $boundaries[$index]['line'];
+            $end = (int) (($boundaries[$index + 1]['line'] ?? count($lines)) - 1);
             if ($end < $start) {
                 continue;
             }
@@ -438,32 +444,34 @@ final class HistoricalSpecEvidenceMapper
                 continue;
             }
 
-            $segments[] = ['text' => $segment];
+            $segments[] = ['text' => $segment, 'emission_reason' => (string) $boundaries[$index]['emission_reason']];
         }
 
         return $segments;
     }
 
-    private function isBoundaryLine(string $line): bool
+    private function rootEmissionReason(string $line): ?string
     {
         $trimmed = trim($line);
         if ($trimmed === '') {
-            return false;
+            return null;
         }
 
-        if (preg_match('/^#{1,6}\s*Execution Spec\s*:/i', $trimmed) === 1) {
-            return true;
+        if (preg_match('/^#{1,6}\s*Execution Spec\s*:\s*\S/i', $trimmed) === 1) {
+            return 'execution_spec_heading';
         }
 
-        if (preg_match('/^Execution Spec\s*:\s*[0-9]/i', $trimmed) === 1) {
-            return true;
+        if (preg_match('/^Execution Spec\s*:\s*\S/i', $trimmed) === 1) {
+            return 'execution_spec_heading';
         }
 
-        if (preg_match('/^#{0,6}\s*Spec\s*[0-9][0-9A-Za-z-]*/i', $trimmed) === 1) {
-            return true;
+        if (preg_match('/^#{0,6}\s*Spec\s*:\s*\S/i', $trimmed) === 1) {
+            return 'explicit_spec_heading';
         }
 
-        return false;
+        return preg_match('/^#{0,6}\s*Spec\s+\d+[0-9A-Za-z]*(?:-[0-9A-Za-z]+)?(?:[ \t]*(?::|-|\x{2013}|\x{2014})[ \t]*\S.*)?\s*$/iu', $trimmed) === 1
+            ? 'explicit_spec_heading'
+            : null;
     }
 
     private function normalizeText(string $value): string
@@ -504,6 +512,8 @@ final class HistoricalSpecEvidenceMapper
             'existing_spec_path' => '',
             'implemented' => false,
             'confidence' => 'unknown',
+            'emission_reason' => 'supporting_evidence',
+            'candidate_quality' => 'supporting',
             'module_inference' => [
                 'suggested_module' => null,
                 'confidence' => 'low',
@@ -549,6 +559,7 @@ final class HistoricalSpecEvidenceMapper
         array $transition,
         bool $withGitEvidence,
         bool $isSupportingEvidence,
+        string $emissionReason,
     ): ?array {
         if (trim($segmentText) === '') {
             return null;
@@ -559,8 +570,10 @@ final class HistoricalSpecEvidenceMapper
         $legacyLabel = $internalLabel !== '' ? $internalLabel : $filenameLabel;
         $legacyOrderKey = $this->legacyOrderKey($legacyLabel);
         $title = $this->detectTitle($segmentText, $sourceFilename);
+        $candidateQuality = $this->candidateQuality($segmentText, $emissionReason, $isSupportingEvidence);
+        $effectiveSupportingEvidence = $isSupportingEvidence || $candidateQuality === 'supporting';
 
-        if ($legacyLabel === '' && $title === '') {
+        if ($legacyLabel === '' && $emissionReason !== 'supporting_evidence') {
             return null;
         }
 
@@ -570,7 +583,7 @@ final class HistoricalSpecEvidenceMapper
         }
 
         $transitionRelative = $this->canonicalTransitionRelative($legacyLabel, (string) ($transition['legacy_label'] ?? self::DEFAULT_TRANSITION['legacy_label']));
-        $era = $this->classifyEra($isSupportingEvidence, $transitionRelative, $legacyLabel);
+        $era = $this->classifyEra($effectiveSupportingEvidence, $transitionRelative, $legacyLabel);
 
         $resultSection = $this->extractSection($segmentText, ['RESULT', 'OUTPUT']);
         $followupsSection = $this->extractSection($segmentText, ['FOLLOWUPS', 'FOLLOW-UPS', 'FOLLOW UPS']);
@@ -602,13 +615,22 @@ final class HistoricalSpecEvidenceMapper
         }
 
         $importAction = $this->determineImportAction($era, $moduleInference, $existingSpecPath);
+        if ($candidateQuality === 'supporting') {
+            $importAction = 'ignore_supporting';
+        } elseif ($candidateQuality === 'weak' && $importAction === 'import') {
+            $importAction = 'review';
+        }
 
         if ($era === 'pre_canonical' && $importAction === 'review' && $moduleInference['suggested_module'] === null) {
             $notes[] = 'No confident module inference; candidate requires review before import.';
         }
 
-        if ($isSupportingEvidence) {
+        if ($effectiveSupportingEvidence) {
             $notes[] = 'Supporting or website-owned source; excluded from framework import.';
+        }
+
+        if ($candidateQuality === 'weak') {
+            $notes[] = 'Weak candidate quality; review before import.';
         }
 
         if ($segmentTotal > 1) {
@@ -662,6 +684,8 @@ final class HistoricalSpecEvidenceMapper
             'existing_spec_path' => $existingSpecPath,
             'implemented' => $implemented,
             'confidence' => $topConfidence,
+            'emission_reason' => $emissionReason,
+            'candidate_quality' => $candidateQuality,
             'module_inference' => [
                 'suggested_module' => $moduleInference['suggested_module'],
                 'confidence' => $this->normalizeConfidence((string) $moduleInference['confidence']),
@@ -684,7 +708,7 @@ final class HistoricalSpecEvidenceMapper
             return $this->normalizeLegacyLabel((string) $match[1]);
         }
 
-        if (preg_match('/(?:^|\n)\s*#{0,6}\s*Spec\s*([A-Za-z0-9.-]+(?:-[0-9]+)?)/i', $segmentText, $match) === 1) {
+        if (preg_match('/(?:^|\n)[ \t]*#{0,6}[ \t]*Spec[ \t]*([A-Za-z0-9.-]+(?:-[0-9]+)?)(?:[ \t]*(?::|-|\x{2013}|\x{2014})|[ \t]*(?:\n|$))/iu', $segmentText, $match) === 1) {
             return $this->normalizeLegacyLabel((string) $match[1]);
         }
 
@@ -737,6 +761,26 @@ final class HistoricalSpecEvidenceMapper
         $base = trim(str_replace(['_', '-'], ' ', $base));
 
         return $base;
+    }
+
+    private function candidateQuality(string $segmentText, string $emissionReason, bool $isSupportingEvidence): string
+    {
+        if ($isSupportingEvidence || $emissionReason === 'supporting_evidence') {
+            return 'supporting';
+        }
+
+        $hasContract = preg_match('/(?:^|\n)\s*#{0,6}\s*(Purpose|Goals|Non-Goals|Requirements|Acceptance Criteria|Testing|Implementation|CLI|Command|Output|Result|Done Means|Must|Should)\b\s*:?\s*/i', $segmentText) === 1;
+        $hasBody = str_word_count(strip_tags($segmentText)) >= 5;
+
+        if (in_array($emissionReason, ['explicit_spec_heading', 'execution_spec_heading'], true)) {
+            return $hasContract && $hasBody ? 'strong' : 'weak';
+        }
+
+        if ($emissionReason === 'legacy_filename_single_spec') {
+            return $hasContract && $hasBody ? 'probable' : 'weak';
+        }
+
+        return 'weak';
     }
 
     private function legacyOrderKey(string $legacyLabel): string
@@ -1386,6 +1430,8 @@ final class HistoricalSpecEvidenceMapper
             'existing_spec_path' => (string) ($candidate['existing_spec_path'] ?? ''),
             'implemented' => (bool) ($candidate['implemented'] ?? false),
             'confidence' => (string) ($candidate['confidence'] ?? 'unknown'),
+            'emission_reason' => (string) ($candidate['emission_reason'] ?? 'manual_anchor'),
+            'candidate_quality' => (string) ($candidate['candidate_quality'] ?? 'weak'),
             'module_inference' => (array) ($candidate['module_inference'] ?? []),
             'evidence' => (array) ($candidate['evidence'] ?? []),
             'notes' => array_values(array_map('strval', (array) ($candidate['notes'] ?? []))),

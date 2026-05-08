@@ -59,7 +59,7 @@ final class HistoricalSpecEvidenceMapperTest extends TestCase
             $payload['candidates'],
         );
         $this->assertSame('Spec1', $orderedLabels[0]);
-        $this->assertSame('', end($orderedLabels));
+        $this->assertContains('Spec35D7JA', $orderedLabels);
     }
 
     public function test_build_handles_summary_file_as_supporting_evidence(): void
@@ -172,7 +172,7 @@ TXT);
     public function test_build_classifies_eras_and_import_actions_around_transition_anchor(): void
     {
         $this->writeRawFile('Modules/ContextPersistence/specs/001-initial.md', "# Execution Spec: 001-initial\n");
-        $this->writeSpecFile('Foundry-Spec-35D.md', "Spec 35D\nTitle: Marketplace bridge\n");
+        $this->writeSpecFile('Foundry-Spec-35D.md', "Spec 35D\nTitle: Marketplace bridge\nPurpose: Marketplace bridge.\nRequirements: Import safely.\n");
         $this->writeSpecFile('Foundry-Spec-35D1.md', "Spec 35D1\nTitle: Canonical transition\n");
         $this->writeSpecFile('Foundry-Spec-35D2.md', "Spec 35D2\nTitle: Canonical after anchor\n");
         $this->writeSpecFile('Foundry-Spec-36.md', "Spec 36\nTitle: Canonical numeric era\n");
@@ -215,8 +215,8 @@ TXT);
 
         self::assertIsArray($ambiguous);
         $this->assertSame('', $ambiguous['legacy_label']);
-        $this->assertSame('ambiguous', $ambiguous['era']);
-        $this->assertSame('review', $ambiguous['import_action']);
+        $this->assertSame('supporting_evidence', $ambiguous['era']);
+        $this->assertSame('ignore_supporting', $ambiguous['import_action']);
         $this->assertSame('unknown', $ambiguous['canonical_transition_relative']);
     }
 
@@ -318,9 +318,40 @@ TXT);
         $this->assertSame([
             'pre_canonical' => 1,
             'canonical_existing' => 1,
-            'ambiguous' => 1,
-            'supporting_evidence' => 1,
+            'ambiguous' => 0,
+            'supporting_evidence' => 2,
         ], $payload['counts']);
+    }
+
+    public function test_build_does_not_resurrect_section_fragments_as_candidates(): void
+    {
+        $this->writeSpecFile('Foundry-Spec-19A.md', <<<'TXT'
+Spec 19A: CLI Entry
+Purpose: Implement CLI entry contracts.
+Requirements: Commands must remain deterministic.
+
+Architecture (what it is)
+Spec 19D established the foundations for foundry explain.
+must:
+
+Spec 19B: Core Models
+Purpose: Implement core models.
+Requirements: Models must remain deterministic.
+TXT);
+
+        $payload = $this->mapper()->build(
+            sourcePath: '_import/historical-specs',
+            anchorsPath: null,
+            withGitEvidence: false,
+            write: false,
+            dryRun: true,
+        );
+
+        $labels = array_map(static fn(array $candidate): string => (string) $candidate['legacy_label'], $payload['candidates']);
+
+        $this->assertSame(['Spec19A', 'Spec19B'], $labels);
+        $this->assertSame('explicit_spec_heading', $payload['candidates'][0]['emission_reason']);
+        $this->assertSame('strong', $payload['candidates'][0]['candidate_quality']);
     }
 
     public function test_write_and_dry_run_behaviors_are_deterministic(): void

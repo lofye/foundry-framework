@@ -62,6 +62,7 @@ use Foundry\CLI\Commands\PlanFeatureCommand;
 use Foundry\CLI\Commands\PlanReplayCommand;
 use Foundry\CLI\Commands\PlanShowCommand;
 use Foundry\CLI\Commands\PlanUndoCommand;
+use Foundry\CLI\Commands\PreCanonicalImportCommand;
 use Foundry\CLI\Commands\PreviewNotificationCommand;
 use Foundry\CLI\Commands\PromptCommand;
 use Foundry\CLI\Commands\QueueWorkCommand;
@@ -141,6 +142,7 @@ final class Application
             new HistoricalSpecsExtractCommand(),
             new HistoricalSpecsImportCommand(),
             new HistoricalSpecsReconstructCommand(),
+            new PreCanonicalImportCommand(),
             new RegressionsCommand(),
             new ExplainCommand(),
             new DiffCommand(),

@@ -624,3 +624,90 @@ Timestamp: 2026-05-08T09:15:00-04:00
 - Refresh Rule
 - Validation
 - Documentation Updates
+
+### Decision: harden historical extraction around credible spec roots
+
+Timestamp: 2026-05-08T10:30:00-04:00
+
+**Context**
+
+- Execution spec `012-extraction-boundary-and-root-detection-hardening` requires historical extraction to preserve legitimate multi-spec files while reducing phantom candidates from section headings and recap prose.
+- Prior extraction behavior treated too many contract-like or spec-reference lines as new candidate boundaries.
+
+**Decision**
+
+- Treat explicit spec headings, execution-spec headings, and legacy `Foundry-Spec-*` filename fallback as the valid candidate-root sources.
+- Suppress common section fragments and embedded prior-spec references as candidate roots while keeping them in the surrounding source segment.
+- Emit result/output-only content as supporting evidence instead of active spec candidates.
+- Add deterministic candidate metadata for `emission_reason`, `candidate_quality`, rejected root signals, and result association confidence.
+- Align the evidence mapper with the hardened extractor semantics so it does not recreate rejected fragments.
+
+**Reasoning**
+
+- The historical archive contains legitimate multi-spec files, so candidate count alone is not a correctness measure.
+- Root detection needs stronger evidence than headings like `must:` or prose references such as `Spec 19D established...`.
+- Review metadata lets humans and agents understand why a candidate exists without rereading every raw historical file.
+
+**Alternatives Considered**
+
+- Hard-code an expected candidate count for the 71-file archive.
+- Require manual delimiters in historical files.
+- Leave evidence mapping permissive while only tightening extraction.
+
+**Impact**
+
+- Historical extraction produces cleaner candidate folders for downstream import review.
+- Result/output transcripts remain preserved in sidecar files.
+- Weak and supporting candidates default to review or ignore-supporting behavior rather than import.
+
+**Spec Reference**
+
+- Core Principle
+- Root Spec Detection Model
+- Anti-Root / Section Fragment Detection
+- Result / Output Handling
+- Candidate Emission Reasons
+- Candidate Quality Classification
+
+### Decision: import explicitly marked pre-canonical archives into PreCanonical
+
+Timestamp: 2026-05-08T11:45:00-04:00
+
+**Context**
+
+- Execution spec `013-import-explicitly-marked-precanonical-archive` requires importing a manually marked pre-canonical archive where `S`, `R`, and `P` markers remove ambiguity that the historical extractor cannot safely infer.
+- Pre-canonical records predate the current module system, so assigning them to modern modules during import would be speculative.
+
+**Decision**
+
+- Add `precanonical:import` as a report-first CLI command with explicit `--apply`, optional `--force`, and default `--target-module=PreCanonical`.
+- Import marked `S` blocks as valid execution specs under `Modules/PreCanonical/specs/` and generate paired reconstruction notes under `Modules/PreCanonical/plans/`.
+- Pair marked `R` blocks to specs only by normalized `NAME:` text and preserve marked `P` blocks as associated or global preamble context.
+- Map legacy alphanumeric IDs into padded dot-separated canonical IDs without renumbering imported records into modern modules.
+
+**Reasoning**
+
+- The explicit archive markers are the strongest available boundary signal and avoid fuzzy extraction or module inference.
+- A dedicated PreCanonical module preserves lineage while keeping modern module ownership reviewable in later alignment work.
+- Idempotent generated files and implementation-log entries let repeated imports remain deterministic and safe.
+
+**Alternatives Considered**
+
+- Extend `historical-specs:import` to understand marked monolithic archives.
+- Infer current framework modules from legacy names or result content during this pass.
+- Preserve pre-canonical records only as raw `_import` files without validator-compatible specs.
+
+**Impact**
+
+- Marked pre-canonical archives can be converted into durable module context, execution specs, reconstruction notes, and implementation-log entries.
+- Orphan results, malformed legacy IDs, duplicate spec names with different content, and output conflicts fail deterministically.
+- Future specs can map PreCanonical lineage into modern modules without losing the original archive evidence.
+
+**Spec Reference**
+
+- Core Principle
+- Required Block Types
+- Canonical ID Mapping
+- Output Layout
+- CLI Command
+- Acceptance Criteria

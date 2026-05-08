@@ -6,10 +6,12 @@
 
 ## Decision Summary
 
-- Refreshed Through Spec: `011-add-decision-summaries-without-compacting-ledgers`
+- Refreshed Through Spec: `013-import-explicitly-marked-precanonical-archive`
 - FeatureSystem keeps module and feature decision ledgers append-only and non-destructive.
 - Decision history is summarized in module state (`## Decision Summary`) rather than by rewriting `.decisions.md`.
 - `spec:validate` surfaces deterministic non-blocking warnings for missing or possibly stale module decision summaries.
+- Historical extraction now distinguishes explicit spec roots from ordinary section headings, recaps, and result/output commentary.
+- Explicit pre-canonical imports preserve marked archive lineage in `Modules/PreCanonical` without inferring modern module ownership.
 
 ## Current State
 
@@ -41,7 +43,11 @@
 - Legacy labels such as `Spec 19FB`, `Spec 30C-2`, and `Spec 35D7JA` are parsed into stable sort keys used for deterministic candidate ordering.
 - `_import/historical-specs/evidence-map.json` and optional `_import/historical-specs/evidence-map.md` can now be generated through explicit write mode while keeping default command behavior non-mutating.
 - Historical extraction candidates now track source segment indexes and optional RESULT/FOLLOWUPS detection metadata for multi-spec source files.
+- Historical extraction candidates now include deterministic `emission_reason`, `candidate_quality`, rejected-root diagnostics, and result association confidence.
+- The extractor suppresses common section fragments (`must:`, `Architecture`, `Implementation`, `Final polish`, continuation prose) as standalone candidates while preserving them inside the nearest valid source segment.
+- Result/output-only historical content is emitted as supporting evidence with the transcript preserved in `result.md`, not as an active spec candidate.
 - Historical summary/planning files are treated as supporting evidence sources by default and are not imported as ordinary specs unless explicit extractable execution-spec headings are present.
+- `historical-specs:evidence` now shares the hardened root-detection semantics and does not independently resurrect rejected section fragments as importable candidates.
 - Historical evidence mapping now treats `Spec35D1` as the canonical transition anchor and emits deterministic candidate-era classification (`pre_canonical`, `canonical_existing`, `ambiguous`, `supporting_evidence`) with explicit import actions (`import`, `link_existing`, `review`, `ignore_supporting`).
 - Evidence-map candidates now include deterministic transition-relative metadata, canonical-existing linking/review behavior, and confidence-scored module inference evidence/alternatives to keep pre-canonical module assignment reviewable.
 - Evidence-map top-level output now includes deterministic `canonical_transition` and per-era `counts` fields for downstream historical import boundary enforcement.
@@ -67,6 +73,10 @@
 - Website-owned historical specs such as `*WS.md` are classified as supporting/ignored evidence and skipped by framework import.
 - Website-owned historical specs are excluded from downstream framework context, reconstruction-note, and implementation-log generation.
 - `spec:validate` now emits non-blocking `DECISION_SUMMARY_MISSING` and `DECISION_SUMMARY_POSSIBLY_STALE` warnings for module state files while keeping decision ledgers append-only.
+- `precanonical:import` now parses explicitly marked pre-canonical `S`, `R`, and `P` blocks from a single archive file with report-only default behavior.
+- Pre-canonical import maps legacy alphanumeric IDs such as `0A`, `19FB`, `30C-2`, and `35D7C` into padded dot-separated canonical IDs for `Modules/PreCanonical/specs/`.
+- Pre-canonical result blocks are paired to specs by normalized `NAME:` text, preamble blocks are preserved as associated or global context, and orphan results or malformed legacy IDs fail deterministically.
+- Pre-canonical apply mode writes specs, reconstruction notes, PreCanonical context files, and idempotent `Modules/implementation.log` entries without creating runtime source or test directories for `Modules/PreCanonical`.
 
 ## Open Questions
 
@@ -79,3 +89,4 @@
 - Continue incremental source/test localization through promoted execution specs.
 - Evaluate follow-up specs to migrate grandfathered legacy module plan documents into strict reconstruction-note format.
 - Use generated historical module context as the review surface before follow-up specs generate reconstruction notes or implementation-log entries from imported history.
+- Import explicitly marked pre-canonical archives only through `precanonical:import` and preserve modern module ownership mapping for later explicit alignment specs.

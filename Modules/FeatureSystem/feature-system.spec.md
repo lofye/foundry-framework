@@ -18,6 +18,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Provide deterministic historical-spec import from reviewed archive bundles into canonical module spec or draft paths without silently overwriting existing specs.
 - Provide deterministic historical module context generation for modules that contain imported historical specs.
 - Provide deterministic historical reconstruction-note and implementation-log generation for completed imported historical specs.
+- Provide deterministic explicitly marked pre-canonical archive import into a dedicated `Modules/PreCanonical` archive-lineage module without inferring modern module ownership.
 - Exclude website-owned historical specs such as `*WS.md` from framework import, context, reconstruction, and implementation-log generation.
 
 ## Non-Goals
@@ -39,6 +40,11 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - `verify features` reports boundary/duplication issues and enforcement status.
 - `historical-specs:extract` scans `_import/raw-historical-specs` and writes deterministic candidate archives under `_import/historical-specs` without importing into `Modules/*`.
 - Historical extraction candidates track source segment indexes and optional RESULT/FOLLOWUPS detection metadata for multi-spec source files.
+- Historical extraction uses hardened root detection so explicit spec headings and legacy `Foundry-Spec-*` filenames produce candidates, while recap prose, section fragments, and result-only content do not become active specs.
+- Historical extraction metadata includes deterministic emission reasons, candidate quality, rejected root-signal diagnostics, and result association confidence.
+- Historical extraction candidates include deterministic `emission_reason`, `candidate_quality`, rejected-root diagnostics, and result association confidence.
+- The extractor suppresses common section fragments (`must:`, `Architecture`, `Implementation`, `Final polish`, continuation prose) as standalone candidates while preserving them inside the nearest valid source segment.
+- Result/output-only historical content is emitted as supporting evidence with the transcript preserved in `result.md`, not as an active spec candidate.
 - `historical-specs:evidence` builds deterministic `_import/historical-specs/evidence-map.json` data (and optional markdown report) with legacy-order keys, module suggestions, confidence values, evidence-state fields, and supporting evidence-file references.
 - Historical evidence mapping treats `Spec35D1` as the canonical transition anchor and emits deterministic candidate-era classification (`pre_canonical`, `canonical_existing`, `ambiguous`, `supporting_evidence`) with explicit import actions (`import`, `link_existing`, `review`, `ignore_supporting`).
 - Evidence-map top-level output includes deterministic `canonical_transition` and per-era `counts` fields for downstream historical import boundary enforcement.
@@ -50,6 +56,9 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Missing module context files are created deterministically.
 - Decision ledger entries remain append-only.
 - `historical-specs:reconstruct` scans completed imported historical specs, creates missing reconstruction notes, appends canonical `Modules/implementation.log` entries once, summarizes embedded OUTPUT/RESULT evidence, and preserves uncertainty explicitly.
+- `precanonical:import` parses explicitly marked `S`, `R`, and `P` archive blocks from a single source file, maps legacy alphanumeric IDs to padded canonical IDs, and reports deterministic PreCanonical output paths in dry-run mode.
+- `precanonical:import --apply` writes imported specs, reconstruction notes, PreCanonical context files, and implementation-log entries under `Modules/PreCanonical` without creating runtime source or test directories.
+- Pre-canonical result blocks pair to specs only by normalized `NAME:` text, preamble blocks remain contextual evidence, orphan results and malformed legacy IDs fail deterministically, and modern module inference is intentionally deferred.
 - `spec:validate` emits non-blocking decision-summary warnings (`DECISION_SUMMARY_MISSING`, `DECISION_SUMMARY_POSSIBLY_STALE`) for module state files while keeping decision ledgers append-only.
 - Imported completed specs have reconstruction notes.
 - Imported completed specs have canonical implementation-log entries.
@@ -58,6 +67,8 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Website-owned historical specs such as `*WS.md` are classified as supporting/ignored evidence and skipped by framework import.
 - Legacy labels such as `Spec 19FB`, `Spec 30C-2`, and `Spec 35D7JA` are parsed into stable sort keys used for deterministic candidate ordering.
 - Known summary/planning files are treated as supporting evidence sources by default unless explicit extractable execution-spec headings are present.
+- Evidence mapping respects hardened extraction boundaries and does not resurrect rejected section fragments as importable candidates.
+- `historical-specs:evidence` shares the hardened root-detection semantics and does not independently resurrect rejected section fragments as importable candidates.
 - `verify features` enforces executable application feature-local runtime layout under `Features/<Feature>/` (`src/` and `tests/` required by default).
 - `verify features` permits omitted `specs/`, `plans/`, and `docs/` directories when absent, and fails deterministically when present paths are not directories.
 - `verify features` emits deterministic violations when attributable application-owned runtime/context files remain in legacy `app/features/<slug>` and `docs/features/<slug>` paths.
@@ -84,11 +95,13 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Historical ordering/evidence mapping remains explicit and non-authoritative until follow-up import specs are implemented.
 - Historical evidence output distinguishes `pre_canonical`, `canonical_existing`, `ambiguous`, and `supporting_evidence` candidates with deterministic `import_action`, transition-relative metadata, and confidence-scored module inference.
 - Historical import reports remain deterministic, repository-relative, timestamp-free, and machine-readable.
+- Historical extraction and evidence mapping preserve legitimate multi-spec historical files while suppressing common subsection fragments such as `must:`, `Architecture`, and continuation prose.
 - Historical import apply mode does not overwrite existing canonical specs silently and routes uncertain implementation status to drafts.
 - Historical context generation creates or repairs canonical `Modules/<Module>/<module>.md`, `Modules/<Module>/<module>.spec.md`, and `Modules/<Module>/<module>.decisions.md` files for modules with imported historical specs.
 - Historical context generation preserves existing context content and decision history while appending bounded historical-import sections and entries.
 - Historical reconstruction generation creates `Modules/<Module>/plans/<id-and-slug>.md` notes for completed imported specs and appends missing canonical `Modules/implementation.log` entries without duplication.
 - Historical reconstruction notes include explicit provenance, evidence levels, embedded RESULT/OUTPUT summaries, repository-alignment notes, and uncertainty sections.
+- Explicitly marked pre-canonical archives can be imported into `Modules/PreCanonical` with deterministic canonical IDs, paired result evidence, preserved preamble context, generated context files, and idempotent implementation-log entries.
 - Website-owned historical specs (`*WS.md`) are excluded from framework import and downstream context/reconstruction/log generation.
 
 ## Assumptions

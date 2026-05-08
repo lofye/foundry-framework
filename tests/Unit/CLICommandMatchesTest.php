@@ -58,6 +58,7 @@ use Foundry\CLI\Commands\PlanFeatureCommand;
 use Foundry\CLI\Commands\PlanReplayCommand;
 use Foundry\CLI\Commands\PlanShowCommand;
 use Foundry\CLI\Commands\PlanUndoCommand;
+use Foundry\CLI\Commands\PreCanonicalImportCommand;
 use Foundry\CLI\Commands\PreviewNotificationCommand;
 use Foundry\CLI\Commands\PromptCommand;
 use Foundry\CLI\Commands\QueueWorkCommand;
@@ -178,6 +179,7 @@ final class CLICommandMatchesTest extends TestCase
         $this->assertTrue((new HistoricalSpecsExtractCommand())->matches(['historical-specs:extract', '--dry-run']));
         $this->assertTrue((new HistoricalSpecsImportCommand())->matches(['historical-specs:import', '--dry-run']));
         $this->assertTrue((new HistoricalSpecsReconstructCommand())->matches(['historical-specs:reconstruct', '--dry-run']));
+        $this->assertTrue((new PreCanonicalImportCommand())->matches(['precanonical:import', '--source=_import/precanonical/marked-archive.md']));
         $this->assertTrue((new RegressionsCommand())->matches(['regressions']));
         $this->assertTrue((new LicenseCommand())->matches(['license', 'activate', 'key']));
         $this->assertTrue((new MarketplaceIdentityCommand())->matches(['login', '--user=demo', '--token=abc']));

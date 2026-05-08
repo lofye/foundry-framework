@@ -7,9 +7,6 @@ What follows is a single master prompt for Codex to implement Foundry Phase 0A: 
 
 This is the layer that turns Foundry from “LLM-friendly framework with generated indexes” into “LLM-first application compiler with a stable substrate for everything that comes next.”
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 0A — Foundational Compiler Layer
-
 Semantic Compiler, Application Graph, Projections, Diagnostics, Extensions, and Migrations
 The foundational compiler layer for the framework.
 
@@ -20,7 +17,9 @@ The goal is to create a stable foundation that future phases build on cleanly, s
 This is not a rewrite of Foundry from scratch.
 This is a focused evolution that introduces a compiler core and makes existing/generated runtime indexes become projections of a canonical compiled graph.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 0A — Foundational Compiler Layer
+
 
 Primary goals
 
@@ -1076,7 +1075,6 @@ My honest recommendation after this: implement Phase 0 first, then lightly revis
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 0A — Foundational Compiler Layer
 
-
 Implemented Phase 0 end-to-end with a new semantic compiler foundation and graph-driven runtime projections.
 
 **What I added**
@@ -2105,11 +2103,12 @@ Phase 0B changes currently satisfy your 90% minimum. If you want, I can add a CI
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 
-After Phase 0A and 0B are complete, Foundry will have something very rare:
+Foundry now has something very rare: a web application compiler platform.
 
-a web application compiler platform.
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 0C - Architecture Diagnostics, Visualization, and LLM-assisted Code Generation
 
-At that point, the next huge developer-facing feature becomes possible:
+The next huge developer-facing feature becomes possible:
 
 `foundry doctor`
 
@@ -2515,12 +2514,7 @@ It’s a forge where software systems can be shaped deliberately, with tools tha
 That is super duper cool. Can you create a master spec for codex to implement those 3 things after it implements Phase 0B, complete with preface?
 THEN after that's built, i'll do phases 1-3, which are more about building features on top of Foundry.
 
-
-
-
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 0C - Architecture Diagnostics, Visualization, and LLM-assisted Code Generation
-
+-----------
 
 Any time we are implementing a new spec or feature, overall test coverage must remain at 90% or higher.
 
@@ -2552,9 +2546,8 @@ Phase 0C introduces three core capabilities:
 These features should demonstrate the power of the compiler architecture while remaining deterministic, inspectable, and testable.
 
 
-⸻
-
-Master Spec for Codex: Implement Foundry Phase 0C
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 0C - Architecture Diagnostics, Visualization, and LLM-assisted Code Generation
 
 Goal
 
@@ -5148,7 +5141,7 @@ worked for 29 minutes
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 2 - Roadmap Phase 2 - Basic Features
 
 PHASE 2
@@ -5194,7 +5187,8 @@ This phase builds the next layer developers are highly likely to ask their LLMs 
 	•	docs generation from source contracts
 	•	deeper test generation
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 2 - Roadmap Phase 2 - Basic Features
 
 Master Prompt for Codex: Build Foundry Roadmap Phase 2
 
@@ -6069,7 +6063,7 @@ worked for 38 mins
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 3 - Roadmap Phase 3 - Billing, Workflows, Orchestration, Search, Localization, Roles, Inspect
 
 PHASE 3
@@ -6110,7 +6104,8 @@ Here’s a single master prompt for Codex for Foundry Roadmap Phase 3.
 
 This phase makes Foundry feel like a genuinely well-rounded modern framework for serious applications: billing, workflows, orchestration, richer search, realtime, i18n, roles/policies, and a visual inspect UI.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 3 - Roadmap Phase 3 - Billing, Workflows, Orchestration, Search, Localization, Roles, Inspect
 
 Master Prompt for Codex: Build Foundry Roadmap Phase 3
 
@@ -7933,7 +7928,7 @@ yes
 Absolutely — here’s a Codex-ready Master Spec
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4 - Roadmap Phase 4 - Documentation System and Website Integration (WR)
 
 
@@ -8026,11 +8021,6 @@ Whenever a new framework version is adopted in the website repo by updating the 
 In short:
 The website is not just marketing.
 It is a documentation and explanation layer built on top of a pinned checkout of the actual framework.
-
-
-
----
-
 
 
 Foundry Phases 0A through 3 have implemented the framework’s core architecture, including the semantic compiler, canonical application graph, extension system, architecture diagnostics, visualization tools, AI development loop, execution pipeline, guards and interceptors, and the higher-level framework capabilities.
@@ -8429,7 +8419,8 @@ Diagnostics.
 
 This generator should output Markdown files consumed by the website.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4 - Roadmap Phase 4 - Documentation System and Website Integration (WR)
 
 To make auto-generated, version-aware documentation practical and deterministic, the website repo must include a dedicated documentation build pipeline that reads from the Foundry framework submodule and emits both human-readable and machine-readable docs artifacts.
 
@@ -8889,13 +8880,9 @@ tests/run.php
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4A - Documentation Publishing and Versioned Docs Normalization
 
-Master Spec for Codex: Fix and formalize current/versioned/generated docs publishing
+Fix and formalize current/versioned/generated docs publishing
 
 You can hand this to Codex.
-
-⸻
-
-Phase 4A — Documentation Publishing and Versioned Docs Normalization
 
 Goal
 
@@ -9011,10 +8998,10 @@ Validation run:
 Current workspace includes updated generated artifacts and the new `public/docs/generated/` tree, ready for review/commit.
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4B - Homepage Version Display, Docs Version Switcher, and Auto-Generated Sidebar Navigation
 
-IMPORTANT CONTEXT FOR THIS PHASE (4B)
+IMPORTANT CONTEXT
 
 The documentation system intentionally maintains TWO copies of the rendered docs:
 
@@ -9077,9 +9064,8 @@ This spec covers:
 
 It assumes Phase 4A has already normalized current/versioned/generated docs publishing and manifests.
 
-⸻
-
-Master Spec 4B
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4B - Homepage Version Display, Docs Version Switcher, and Auto-Generated Sidebar Navigation
 
 Homepage Version Display, Docs Version Switcher, and Auto-Generated Sidebar Navigation
 
@@ -9714,7 +9700,7 @@ Implemented Phase 4B end-to-end with immutable snapshot behavior preserved.
 
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4C - Immutable Versioned Docs + LLM Context Bundles
 
 Below is a complete Master Spec 4C that includes everything from:
@@ -9724,12 +9710,6 @@ Below is a complete Master Spec 4C that includes everything from:
 	•	how it integrates with the docs architecture you now have
 
 This spec assumes 4A and 4B are already implemented.
-
-⸻
-
-Master Spec 4C
-
-Immutable Versioned Docs + LLM Context Bundles
 
 Preface
 
@@ -9759,7 +9739,9 @@ This phase strengthens Foundry’s goal of being LLM-first not only in code but 
 
 All new functionality must maintain deterministic docs builds and overall automated test coverage ≥ 90%.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4C - Immutable Versioned Docs + LLM Context Bundles
+
 
 Part 1 — Immutable Versioned Documentation Snapshots
 
@@ -10151,10 +10133,10 @@ Implemented Phase 4C in this repo.
 If you want, I can now prepare a commit with a clean commit message split (pipeline/tests/docs content).
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4D - Restore Premium Visual Design Across the Generated Docs Site
 
-IMPORTANT CONTEXT FOR THIS PHASE
+IMPORTANT CONTEXT
 
 The documentation site recently transitioned from a handcrafted HTML site to a markdown-driven documentation system.
 
@@ -10214,14 +10196,6 @@ The final result should feel like a modern framework documentation site rather t
 
 Codex should treat this phase as a **visual system upgrade**, not a content or architecture change.
 
-
-
-Master Spec 4D
-
-Restore Premium Visual Design Across the Generated Docs Site
-
-Preface
-
 Phase 4A normalized current/versioned/generated docs publishing.
 
 Phase 4B improved:
@@ -10251,7 +10225,8 @@ This phase should preserve:
 
 All new work must preserve overall automated test coverage ≥ 90%.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4D - Restore Premium Visual Design Across the Generated Docs Site
 
 Goals
 
@@ -10773,7 +10748,7 @@ Also regenerated rendered outputs/manifests in `public/` and `docs-build/build-m
 
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4E - Docs Search and LLM-Aware Docs Actions
 
 
@@ -10867,7 +10842,8 @@ The goal is to transform the docs site from a place developers merely read into 
 
 All new functionality must preserve deterministic site builds and overall automated test coverage ≥ 90%.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4E - Docs Search and LLM-Aware Docs Actions
 
 Goals
 
@@ -11411,7 +11387,7 @@ Implemented Phase 4E end-to-end on top of the existing deterministic/versioned d
   New snapshots include the new search/tooling outputs and tests validate that path.
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4F - Mobile Navigation System
 
 Yes — if we already know the best UX, it’s better to lock the decision in the spec so Codex doesn’t improvise something clumsy like a collapsing header blob.
@@ -11420,13 +11396,9 @@ A right-side slide-in panel will feel much more modern and consistent with the c
 
 Below is the rewritten Master Spec 4F with that decision baked in.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4F - Mobile Navigation System
 
-Master Spec 4F
-
-Mobile Navigation System (Slide-In Navigation Panel)
-
-Preface
 
 The Foundry documentation system currently provides a strong navigation experience on desktop screens through the header navigation and documentation sidebar.
 
@@ -11824,10 +11796,8 @@ Implemented Phase 4F mobile navigation with a right-side slide-in panel, while p
 
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4G - Ask the Docs
-
-Phase 4G is "Ask the Docs".
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4G - Ask the Docs (LLM-Integrated Documentation Assistance)
 
 This phase is deliberately small but powerful. It uses the structured documentation system you already built (metadata, LLM context bundles, search index, etc.) to create a first-class AI interface to the framework docs.
 
@@ -11842,11 +11812,8 @@ This keeps it:
 
 Below is the spec you can give Codex.
 
-⸻
-
-Master Spec 4G
-
-Ask the Docs: LLM-Integrated Documentation Assistance
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4G - Ask the Docs (LLM-Integrated Documentation Assistance)
 
 Preface
 
@@ -12225,9 +12192,10 @@ Implemented Phase 4G (`Ask the Docs`) on top of the existing docs system.
 
 
 
-Excellent catch on both points. You’re thinking about this exactly the right way.
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4H - Brand and Visual Identity Restoration
 
-You are correct: the docs background should not diverge from the site background. Creating a second ambient system would absolutely become a maintenance anti-pattern. The correct architecture is:
+The docs background should not diverge from the site background. Creating a second ambient system would absolutely become a maintenance anti-pattern. The correct architecture is:
 
 one background system → used everywhere
 
@@ -12817,22 +12785,10 @@ Implemented Phase 4H brand restoration while preserving the 4A–4G docs platfor
 - Existing immutable version snapshots were not regenerated (by design), but they inherit the restored brand system through shared stylesheet updates.
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4I - Live Architecture Explorer
 
-Spec 4I
-
-Live Architecture Explorer
-
-Now for the fun one.
-
 This phase leverages the metadata already produced by Foundry to allow developers to visually explore the framework’s architecture directly from the documentation site.
-
-⸻
-
-Master Spec 4I
-
-Live Architecture Explorer
 
 Preface
 
@@ -12852,7 +12808,8 @@ This explorer allows developers to see how Foundry components relate to one anot
 
 All functionality must remain deterministic and maintain automated test coverage ≥ 90%.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4I - Live Architecture Explorer
 
 Goals
 
@@ -13042,14 +12999,8 @@ Implemented Spec 4I end-to-end.
 
 Note: existing immutable version snapshots are not retroactively regenerated; newly created snapshots include the explorer page and its versioned graph artifact.
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4J-FR - Remove Public-Facing Phase/Spec References from the Framework Repo (FR)
-
-Master Spec 4J-FR
-
-Remove Public-Facing Phase/Spec References from the Framework Repo (FR)
-
-Preface
 
 The Foundry framework was evolved internally through phased specifications. Those phases were useful for implementation planning and LLM-assisted development coordination, but they are not part of the public framework model.
 
@@ -13085,7 +13036,8 @@ The public framework repository must present Foundry as a coherent finished fram
 
 All changes must preserve framework behavior and maintain automated test coverage ≥ 90%.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4J-FR - Remove Public-Facing Phase/Spec References from the Framework Repo (FR)
 
 Goals
 
@@ -13430,11 +13382,8 @@ Implemented. Public-facing phase/spec vocabulary is removed from the framework s
 - `XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-text` -> **Lines 90.80%**
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4J-WR - Remove Public-Facing Phase/Spec References from the Website Repo (WR)
-
-
-Master Spec 4J-WR
 
 Remove Public-Facing Phase/Spec References from the Website Repo (WR)
 
@@ -13468,7 +13417,8 @@ The public site must present Foundry as a coherent product and documentation pla
 
 All changes must preserve deterministic site generation and automated test coverage ≥ 90%.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4J-WR - Remove Public-Facing Phase/Spec References from the Website Repo (WR)
 
 Goals
 
@@ -13851,12 +13801,8 @@ Implemented. Public-facing phase/spec terminology is now removed from the websit
 - Repo-wide scan for forbidden terms across public/docs targets found no public-facing matches; remaining matches are internal pipeline/test code only.
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4K-FR - Remove All Phase/Spec References from the Framework Repository (FR)
-
-Phase 4K-FR
-
-Remove All Phase/Spec References from the Framework Repository (FR)
 
 Preface
 
@@ -13889,7 +13835,8 @@ Framework code, tests, CLI tools, and documentation must refer directly to featu
 
 All work must preserve framework behavior and maintain automated test coverage ≥ 90%.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4K-FR - Remove All Phase/Spec References from the Framework Repository (FR)
 
 Goals
 
@@ -14179,12 +14126,8 @@ Implemented Phase 4K-FR cleanup across the framework repo.
   - **Lines: 90.80%** (`12547/13819`).
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4K-WR - Remove All Phase/Spec References from the Website Repository (WR)
-
-Phase 4K-WR
-
-Remove All Phase/Spec References from the Foundry Website Repository
 
 Preface
 
@@ -14212,7 +14155,8 @@ Documentation must refer directly to features, systems, and architectural concep
 
 All work must preserve deterministic site generation and maintain automated test coverage ≥ 90%.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4K-WR - Remove All Phase/Spec References from the Website Repository (WR)
 
 Goals
 
@@ -14429,10 +14373,10 @@ Implemented 4K-WR cleanup across the website repo and regenerated outputs.
 Note: framework-domain terminology like CLI `--spec` and spec-format concepts remains where it is actual framework behavior, not internal milestone history.
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4L - Restore Approved Visual Design from Recovered Reference Files
 
-IMPORTANT CONTEXT FOR THIS PHASE
+IMPORTANT CONTEXT
 
 The files in:
 
@@ -14477,10 +14421,6 @@ must be preserved exactly or as close as practically possible.
 This phase is not a redesign.
 It is a restoration.
 
-⸻
-
-Master Spec 4L
-
 Restore Approved Visual Design from Recovered Reference Files
 
 Preface
@@ -14523,7 +14463,9 @@ Codex must preserve the current functional architecture, while transplanting the
 
 All automated test coverage must remain ≥ 90%.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4L - Restore Approved Visual Design from Recovered Reference Files
+
 
 Goals
 
@@ -14999,7 +14941,7 @@ Implemented the restoration using `design-reference/` as the visual source of tr
 - `composer test:coverage` passes with **91.14% line coverage** (>= 90%)
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 4M - Convert Flagship Narrative Pages to Custom HTML and Remove Homepage Section Generation
 
 IMPORTANT CONTEXT FOR THIS PHASE
@@ -15037,8 +14979,6 @@ That separation must remain intact after this work is complete.
 
 ⸻
 
-Master Spec 4M
-
 Convert Flagship Narrative Pages to Custom HTML and Remove Homepage Section Generation
 
 Preface
@@ -15073,7 +15013,8 @@ is now obsolete and must be removed entirely.
 
 All changes must preserve deterministic docs builds and automated test coverage ≥ 90%.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 4M - Convert Flagship Narrative Pages to Custom HTML and Remove Homepage Section Generation
 
 Goals
 
@@ -15603,7 +15544,7 @@ Once developers build real applications and the API stabilizes, then release:
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 5A - Testing System Modernization for the Foundry Website Repository (WR)
 
 Master Spec 5A
@@ -15639,7 +15580,8 @@ This phase applies only to the Foundry website/docs repository.
 
 All work must preserve deterministic docs builds and establish a credible, enforceable testing system for the repo.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 5A - Testing System Modernization for the Foundry Website Repository (WR)
 
 Goals
 
@@ -16082,7 +16024,7 @@ No result recorded
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 5B - Testing System Modernization for the Foundry Website Repository (WR)
 
 Absolutely — here’s a clean spec you can hand to Codex.
@@ -16108,7 +16050,8 @@ Therefore, the deploy script should:
 
 This phase updates the deploy script so that deployment is reproducible, deterministic, and less fragile in the presence of stale local submodule edits.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 5B - Testing System Modernization for the Foundry Website Repository (WR)
 
 Goals
 
@@ -16364,9 +16307,6 @@ No Result Recorded
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 6 - Add tag-triggered GitHub Actions deployment to Cloudways
-
-
-Yes. Here’s a spec you can hand to Codex.
 
 # Spec: Add tag-triggered GitHub Actions deployment to Cloudways
 
@@ -16667,7 +16607,7 @@ But deploy script created or updated
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 7 - Stable Public API Definition
 
 
@@ -16682,6 +16622,10 @@ Without this distinction, every release risks accidental breakage, documentation
 Spec 7 defines Foundry’s stable public API surface so that users, extension authors, and future maintainers know what is safe to depend on.
 
 All new code must maintain ≥ 90% automated test coverage.
+
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 7 - Stable Public API Definition
 
 Goals
 
@@ -16799,7 +16743,7 @@ tests/Unit/GraphDocsGeneratorTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 8 — Extension System Stabilization
 
 Preface
@@ -16811,6 +16755,9 @@ Extension authors need confidence that packs can be discovered, loaded, validate
 Spec 8 stabilizes the extension model.
 
 All new code must maintain ≥ 90% automated test coverage.
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 8 — Extension System Stabilization
 
 Goals
 
@@ -16945,16 +16892,17 @@ tests/Unit/GraphCompilerExtensionFailuresTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 9 — Framework Doctor and Environment Diagnostics
-
-Preface
 
 A mature framework should be able to explain what is wrong with an installation or app environment before users have to dig through stack traces.
 
 Foundry already points in this direction. Spec 9 turns foundry doctor into a robust environment and architecture diagnostics tool suitable for 1.0.
 
 All new code must maintain ≥ 90% automated test coverage.
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 9 — Framework Doctor and Environment Diagnostics
 
 Goals
 
@@ -17081,16 +17029,17 @@ tests/Unit/PipelineIntegrityInspectorTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 10 — Project Scaffolding Generator
-
-Preface
 
 Before 1.0, Foundry needs an excellent first-run experience. A developer should be able to create a working project quickly and immediately see the framework’s architecture in action.
 
 Spec 10 introduces stable project scaffolding commands and starter templates.
 
 All new code must maintain ≥ 90% automated test coverage.
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 10 — Project Scaffolding Generator
 
 Goals
 
@@ -17197,14 +17146,15 @@ tests/Unit/SchemaValidatorTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 11 — Graph Visualization CLI and Export System
-
-Preface
 
 Foundry’s architecture graph is one of its most distinctive strengths. Before 1.0, developers should be able to inspect and export that graph directly from the CLI in ways useful for humans, tooling, and docs.
 
 All new code must maintain ≥ 90% automated test coverage.
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 11 — Graph Visualization CLI and Export System
 
 Goals
 
@@ -17310,10 +17260,8 @@ tests/Unit/GraphVisualizerTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 12 — Configuration Schema Validation
-
-Preface
 
 Foundry’s explicit architecture makes it especially well suited to schema-driven configuration. Before 1.0, configs should be validated formally rather than loosely interpreted.
 
@@ -17325,6 +17273,10 @@ This will improve:
 	•	docs generation
 
 All new code must maintain ≥ 90% automated test coverage.
+
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 12 — Configuration Schema Validation
 
 Goals
 
@@ -17438,16 +17390,18 @@ tests/Unit/SchemaValidatorTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 13 — Upgrade Safety Tools
-
-Preface
 
 A real 1.0 framework needs a safe upgrade story. Users should be able to understand whether their app is ready for a new framework version before blindly upgrading.
 
 Spec 13 introduces upgrade-check and deprecation safety tools.
 
 All new code must maintain ≥ 90% automated test coverage.
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 13 — Upgrade Safety Tools
+
 
 Goals
 
@@ -17553,14 +17507,16 @@ tests/Unit/UpgradeAnalyzerTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 14 — Deterministic Compile Cache
-
-Preface
 
 Foundry’s compiler-oriented architecture should benefit from deterministic caching. Before 1.0, the framework should avoid unnecessary recompilation while preserving reproducibility and correctness.
 
 All new code must maintain ≥ 90% automated test coverage.
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 14 — Deterministic Compile Cache
+
 
 Goals
 
@@ -17668,16 +17624,17 @@ tests/Unit/UpgradeSupportTypesTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 15 — Official Example Applications
-
-Preface
 
 Before a true 1.0, Foundry should prove itself through examples. Example applications are not decorative; they are one of the clearest ways to teach architecture, validate developer experience, and demonstrate best practices.
 
 Thresholds is likely one major example, but Foundry should also provide smaller, focused examples.
 
 All new code must maintain ≥ 90% automated test coverage where applicable.
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 15 — Official Example Applications
 
 Goals
 
@@ -17875,10 +17832,8 @@ Is everything in examples/ up-to-date with the current version of the code in th
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 16 — Foundry Pro (CLI + Licensing Layer)
-
-Preface
 
 Foundry is an open-source framework (MIT) intended to remain fully usable without restriction.
 
@@ -17897,7 +17852,9 @@ The Pro layer must:
 
 All new code must maintain ≥ 90% automated test coverage.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 16 — Foundry Pro (CLI + Licensing Layer)
+
 
 Goals
 
@@ -18065,10 +18022,8 @@ tests/Unit/ProLicenseTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 17 — AI-Assisted Development Layer
-
-Preface
 
 One of Foundry’s primary goals is to enable reliable LLM-assisted development.
 
@@ -18084,7 +18039,9 @@ Spec 17 introduces an AI-assisted layer that leverages this structure.
 
 All new code must maintain ≥ 90% automated test coverage.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 17 — AI-Assisted Development Layer
+
 
 Goals
 
@@ -18247,10 +18204,8 @@ tests/Unit/PromptFeaturePlannerTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 18 — Documentation System (Site + Generation + Structure)
-
-Preface
 
 Foundry’s documentation is not just explanatory—it is a reflection of the architecture itself.
 
@@ -18261,7 +18216,9 @@ The docs system must:
 
 All new code must maintain ≥ 90% automated test coverage.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 18 — Documentation System (Site + Generation + Structure)
+
 
 Goals
 
@@ -18484,7 +18441,7 @@ Spec 19D → Foundation slice (safe starting point)
 Spec 19E → Intelligence layer (collectors + analyzers)
 Spec 19F → Final polish (rendering + contributors + docs)
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 19A - ARCHITECTURE FOR `foundry explain`
 
 
@@ -18537,7 +18494,9 @@ CLI Command
   -> Renderer
 
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19A - ARCHITECTURE FOR `foundry explain`
+
 
 Core concepts
 
@@ -19091,10 +19050,8 @@ Spec 19D → Foundation slice (safe starting point)
 Spec 19E → Intelligence layer (collectors + analyzers)
 Spec 19F → Final polish (rendering + contributors + docs)
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 19B - Implementation (how it works end-to-end)
-
-Preface
 
 Foundry’s canonical graph, compiler outputs, manifests, schemas, and execution pipeline make it possible to explain application structure deterministically.
 
@@ -19119,7 +19076,9 @@ The result should be useful for:
 
 All new code must maintain ≥ 90% automated test coverage.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19B - Implementation (how it works end-to-end)
+
 
 Goals
 
@@ -19581,16 +19540,15 @@ tests/Unit/ExplainEngineTest.php
 
 Please fix any issues and ensure that all Green-light criteria are met.
 
----
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19C - UX contract (what it feels like)
+
 
 What follows is the plan to implement a concrete, opinionated CLI UX for foundry explain, including:
 	•	realistic commands
 	•	before/after states
 	•	good vs bad architecture cases
 	•	human + JSON outputs
-
-
-
 
 In total, you will be receiving 6 specs in order to fully implement `foundry explain`.
 They are:
@@ -20246,7 +20204,7 @@ Spec 19D → Foundation slice (safe starting point)
 Spec 19E → Intelligence layer (collectors + analyzers)
 Spec 19F → Final polish (rendering + contributors + docs)
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 19D - Foundation slice (safe starting point)
 
 Implement this spec exactly as written.
@@ -20258,10 +20216,6 @@ Important constraints:
 - Do not put explanation logic in the CLI command
 - Keep all output deterministic
 - Maintain ≥ 90% automated test coverage
-
-# Spec 19D — Foundry Explain Foundations
-
-## Preface
 
 This spec implements the **foundational architecture** for `foundry explain`.
 
@@ -20288,7 +20242,9 @@ This phase must **not** collapse responsibilities together just to get something
 
 All new code must maintain **≥ 90% automated test coverage**.
 
----
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19D - Foundation slice (safe starting point)
+
 
 ## Goals
 
@@ -21318,6 +21274,9 @@ Spec 19F → Final polish (rendering + contributors + docs)
 
 You have completed Spec 19D.
 
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19E - Intelligence layer (collectors + analyzers)
+
 Before implementing the main body of Spec 19E, first perform the cleanup identified in the Spec 19D review.
 
 This cleanup is REQUIRED to prevent architectural drift as the explain subsystem becomes more complex.
@@ -21403,8 +21362,6 @@ Success criteria before continuing:
 - System remains fully deterministic
 - Test coverage remains ≥ 90%
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 19E - Intelligence layer (collectors + analyzers)
 
 Implement this spec exactly as written.
 
@@ -21416,13 +21373,7 @@ Important constraints:
 - Keep all output deterministic
 - Maintain ≥ 90% automated test coverage
 
-# Spec 19E — Foundry Explain Collectors, Analyzers, and Section Mapping
-
-## Preface
-
-Spec 19D established the foundational architecture for `foundry explain`.
-
-Spec 19E adds the **real analytical intelligence** of the subsystem by introducing:
+This spec adds the **real analytical intelligence** of the subsystem by introducing:
 
 - context collectors
 - subject analyzers
@@ -21444,7 +21395,8 @@ It must not depend on an LLM.
 
 All new code must maintain **≥ 90% automated test coverage**.
 
----
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19E - Intelligence layer (collectors + analyzers)
 
 ## Goals
 
@@ -22704,7 +22656,7 @@ Spec 19D → Foundation slice (safe starting point)
 Spec 19E → Intelligence layer (collectors + analyzers)
 Spec 19F → Final polish (rendering + contributors + docs)
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 19F - Final polish (rendering + contributors + docs)
 
 Implement this spec exactly as written.
@@ -22738,7 +22690,8 @@ This phase should make `foundry explain` feel like one of Foundry’s signature 
 
 All new code must maintain **≥ 90% automated test coverage**.
 
----
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19F - Final polish (rendering + contributors + docs)
 
 ## Goals
 
@@ -23730,7 +23683,7 @@ docs/public-api-policy.md
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 19G - Thresholds v2
 
 Thresholds v2 — Master Specification
@@ -23792,6 +23745,9 @@ It should become:
 	•	a showcase app
 
 All new code must maintain ≥ 90% automated test coverage.
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19G - Thresholds v2
 
 Core objective
 
@@ -24265,7 +24221,7 @@ php vendor/bin/foundry whatever-command
 
 Below is a Codex-ready master spec.
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 19H — Local foundry Executable for Installed Apps
 
 Preface
@@ -24298,7 +24254,9 @@ This command must remain deterministic, cross-platform-aware, and compatible wit
 
 All new code must maintain ≥ 90% automated test coverage.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19H — Local foundry Executable for Installed Apps
+
 
 Goals
 
@@ -24599,8 +24557,6 @@ tests/Unit/ImpactAnalyzerTest.php
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 19H2 — Normalize New-Project Bootstrap and App Layout
-
-# Spec: Normalize New-Project Bootstrap and App Layout
 
 ## Goal
 
@@ -24909,7 +24865,7 @@ If your intention really is “capture absolutely everything currently changed i
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 19I — CLI Surface Integrity & Verification
 
 ⸻
@@ -24946,7 +24902,8 @@ This creates risk in:
 
 This spec introduces a formal verification layer for the CLI surface.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19I — CLI Surface Integrity & Verification
 
 Goals
 	1.	Guarantee that every CLI signature is executable.
@@ -25310,12 +25267,8 @@ If you want, I can make the repo-side fixes next so `composer test:coverage` is 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 19J — Tooling, Observability, and Enforcement Layer
-
-⸻
-
-Preface
 
 Foundry already provides:
 	•	semantic compiler
@@ -25337,7 +25290,9 @@ to:
 
 operationally and measurably strong
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19J — Tooling, Observability, and Enforcement Layer
+
 
 Goals
 	1.	Add mandatory dev enforcement stack
@@ -25637,7 +25592,7 @@ tests/Unit/QualityToolRunnerTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 19K — Canonical Graph Specification & Integrity Upgrade
 
 Preface
@@ -25663,7 +25618,9 @@ This spec does not replace the existing graph.
 
 It hardens and formalizes it.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19K — Canonical Graph Specification & Integrity Upgrade
+
 
 Goals
 	1.	Define the graph as an explicit formal contract, not just an internal data structure.
@@ -26175,9 +26132,2086 @@ tests/Unit/GraphIntegrityVerifierTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-L,M,N,O,P must be website specs
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19L - Docs Sync, Source of Truth, and Layout Fix
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ONLY RUN THIS ON THE WEBSITE REPO
+
+Objective
+
+Fix documentation architecture so that:
+	•	framework/docs/ is the single source of truth
+	•	website repo imports and renders docs
+	•	no duplication or drift exists
+	•	future structure avoids naming conflicts
+
+⸻
+
+Non-Negotiable Rules
+	1.	Treat framework/docs/ as canonical authored docs
+	2.	Do NOT treat content/docs/authored/ as canonical for framework architecture
+	3.	Do NOT store website HTML pages in the framework repo
+	4.	Do NOT manually duplicate framework docs in the website repo
+	5.	Website repo = renderer only
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19L - Docs Sync, Source of Truth, and Layout Fix
+
+Step 1 — Audit (DO FIRST)
+
+Analyze current usage before changing anything.
+
+Determine:
+	1.	Which files in framework/docs/ are used by build-docs.php
+	2.	Which files in content/docs/authored/ are rendered to public/docs/
+	3.	Which files are unused in both locations
+	4.	Whether these files are generated or static:
+	•	public/index.html
+	•	public/build.html
+	•	public/contributing.html
+	•	public/how-foundry-works.html
+
+Output:
+
+Create a report listing:
+	•	used framework docs
+	•	unused framework docs
+	•	used website-authored docs
+	•	unused website-authored docs
+	•	generated vs static public pages
+
+Do NOT delete or move anything until this report exists.
+
+⸻
+
+Step 2 — Introduce Imported Docs Layer
+
+Create:
+
+content/docs/imported/
+
+This directory is:
+	•	populated from framework/docs/
+	•	NEVER manually edited
+
+⸻
+
+Step 3 — Sync Framework Docs
+
+Add logic (in build-docs.php or a pre-step) to:
+	1.	Read from:
+
+framework/docs/
+
+	2.	Copy selected docs into:
+
+content/docs/imported/
+
+Mapping rules:
+	•	Preserve directory structure if present
+	•	Flat files go under:
+
+content/docs/imported/legacy/
+
+
+⸻
+
+Step 4 — Rendering
+
+Ensure build pipeline renders BOTH:
+
+content/docs/authored/
+content/docs/imported/
+
+into:
+
+public/docs/{slug}/index.html
+
+
+⸻
+
+Step 5 — Framework Docs Structure (Forward Only)
+
+DO NOT reorganize all existing docs.
+
+ONLY enforce structure for new canonical docs:
+
+framework/docs/
+  philosophy/
+  architecture/
+  whitepapers/
+
+Required placements:
+	•	foundry-philosophy.md → philosophy/
+	•	execution-model.md → architecture/
+	•	graph-spec.md → architecture/
+	•	why-foundry-wins.md → whitepapers/
+
+⸻
+
+Step 6 — Website Docs Boundary
+
+Define clearly:
+
+Website-authored docs (keep in authored/)
+
+Examples:
+	•	getting-started
+	•	core-concepts
+	•	cli-reference
+	•	tutorials
+	•	onboarding
+	•	marketing explanations
+
+Framework docs (must come from framework/docs/)
+
+Examples:
+	•	execution model
+	•	graph spec
+	•	philosophy
+	•	architecture internals
+
+⸻
+
+Step 7 — Public HTML Pages
+
+Keep these ONLY in website repo:
+
+public/index.html
+public/build.html
+public/contributing.html
+public/how-foundry-works.html
+
+Do NOT move them into the framework repo.
+
+⸻
+
+Step 8 — AGENTS.md Update
+
+Add this exactly:
+
+⸻
+
+Docs Source of Truth
+	•	framework/docs/ is the canonical source of framework documentation
+	•	Everything in framework/docs/ is authored (not generated)
+
+⸻
+
+Website Docs Model
+	•	content/docs/imported/ → synced from framework (read-only)
+	•	content/docs/authored/ → website-authored docs
+	•	public/docs/ → generated output
+
+⸻
+
+Rules
+	•	Never edit imported docs manually
+	•	Never duplicate framework docs in authored/
+	•	Always update framework docs in the framework repo
+	•	Website only renders and presents docs
+
+⸻
+
+Mental Model
+
+framework/docs/         = truth
+content/docs/imported/  = synced copy
+content/docs/authored/  = website docs
+public/docs/            = output
+
+
+⸻
+
+Step 9 — Acceptance Criteria
+	•	Audit report exists
+	•	content/docs/imported/ exists
+	•	Framework docs are copied from submodule
+	•	Build renders imported + authored docs
+	•	No manual duplication of framework docs remains
+	•	New canonical docs use subdirectories
+	•	Website HTML pages remain in website repo
+	•	AGENTS.md updated
+
+⸻
+
+Final Clarification
+
+YES:
+
+Treat everything in framework/docs/ as authored canonical content.
+
+NO:
+
+Do not treat anything in the website repo as canonical for framework architecture.
+
+==========================================================================================
+
+R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19L - Docs Sync, Source of Truth, and Layout Fix
+
+No results recorded
+
+
+
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19M - Docs Usage Audit Script (Read-Only, No Build Changes Yet)
+
+Objective
+
+Create a separate, read-only audit script that determines which docs are actually wired into the current website docs build.
+
+This script must reduce uncertainty without changing the current working build/deploy system.
+
+⸻
+
+Critical Safety Rule
+
+Do not modify build-docs.php in this spec.
+
+Do not replace build-docs.php in this spec.
+
+Do not alter the current docs build/deploy flow in this spec.
+
+This spec is audit only.
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19M - Docs Usage Audit Script (Read-Only, No Build Changes Yet)
+
+Context
+
+The website build is currently operational.
+
+The docs architecture may be conceptually wrong or unclear, but the build/deploy path is working.
+
+Therefore:
+	•	first observe
+	•	then report
+	•	then decide
+	•	only later refactor
+
+⸻
+
+Deliverable
+
+Add a new standalone script such as:
+
+scripts/audit-docs-usage.php
+
+Optional Composer script:
+
+"audit:docs": "php scripts/audit-docs-usage.php"
+
+This script must be safe to run locally and in CI.
+
+⸻
+
+Inputs To Inspect
+
+The audit script must inspect, but not modify:
+	•	build-docs.php
+	•	framework/docs/
+	•	content/docs/authored/
+	•	content/docs/generated/
+	•	content/docs/imported/ if it exists
+	•	public/docs/
+	•	public/index.html
+	•	public/build.html
+	•	public/contributing.html
+	•	public/how-foundry-works.html
+
+⸻
+
+Outputs
+
+Write reports only.
+
+Required outputs:
+
+build/docs-usage-audit.json
+build/docs-usage-audit.md
+
+No other files may be changed.
+
+⸻
+
+Required Findings
+
+The script must determine, as accurately as possible, what is actually used by the current build.
+
+1. Build Pipeline Inspection
+
+Inspect build-docs.php and determine:
+	•	source directories read by the script
+	•	destination directories written by the script
+	•	whether content/docs/authored/ is used
+	•	whether content/docs/generated/ is used
+	•	whether framework/docs/ is used directly
+	•	whether content/docs/imported/ is used
+	•	whether root HTML pages are generated by the docs build or independent
+	•	versioned output behavior
+	•	generated metadata/manifests produced by the script
+
+Report all findings explicitly.
+
+⸻
+
+2. Framework Docs Inventory
+
+Enumerate all files under:
+
+framework/docs/
+
+For each file, classify as:
+	•	used_directly
+	•	used_indirectly
+	•	not_used_by_build
+	•	unknown
+
+Also report:
+	•	whether there is a matching imported file
+	•	whether there is a matching rendered public docs page
+	•	whether there is a likely duplicate in website-authored docs
+
+⸻
+
+3. Website Authored Docs Inventory
+
+Enumerate all files under:
+
+content/docs/authored/
+
+For each file, classify as:
+	•	rendered_by_build
+	•	referenced_only
+	•	duplicate_risk
+	•	not_used_by_build
+	•	unknown
+
+Do not delete or rewrite anything. Only report.
+
+⸻
+
+4. Imported Docs Inventory
+
+If content/docs/imported/ exists, enumerate it.
+
+For each file, classify as:
+	•	rendered_by_build
+	•	present_but_unused
+	•	missing_framework_source
+	•	stale_candidate
+	•	unknown
+
+⸻
+
+5. Generated Docs Inventory
+
+Enumerate files under:
+
+content/docs/generated/
+
+Determine whether they are:
+	•	consumed by build-docs.php
+	•	published to public/docs/generated/
+	•	otherwise unused
+
+⸻
+
+6. Public Docs Output Inventory
+
+Enumerate files under:
+
+public/docs/
+
+For each output page, infer likely origin:
+	•	authored markdown
+	•	generated docs data
+	•	imported markdown
+	•	framework direct source
+	•	unknown
+
+Classify as:
+	•	generated_from_authored
+	•	generated_from_generated
+	•	generated_from_imported
+	•	generated_from_framework_direct
+	•	unknown_origin
+
+⸻
+
+7. Public Root HTML Pages
+
+Audit these specifically:
+
+public/index.html
+public/build.html
+public/contributing.html
+public/how-foundry-works.html
+
+For each, classify as:
+	•	static_hand_authored
+	•	generated_by_docs_pipeline
+	•	derived_from_markdown
+	•	unknown
+
+⸻
+
+Detection Strategy
+
+Use only read-only analysis.
+
+A. Static inspection of build-docs.php
+
+Parse or inspect the script to detect:
+	•	directory reads
+	•	directory writes
+	•	slug generation logic
+	•	versioning behavior
+	•	publishing behavior
+
+B. Filesystem correlation
+
+Compare:
+	•	source markdown names
+	•	generated HTML slugs
+	•	output paths
+	•	versioned copies
+
+C. Content/title matching
+
+Use filename/slug/title matching to infer source-to-output relationships.
+
+D. Reference scanning
+
+Scan markdown, templates, and build files for references to:
+	•	docs files
+	•	docs slugs
+	•	root pages
+
+E. Duplicate-risk detection
+
+Flag likely overlap between framework canonical docs and website-authored docs.
+
+Examples likely to need reporting:
+	•	philosophy
+	•	execution model
+	•	how foundry works
+	•	architecture reference
+
+⸻
+
+Output Shape
+
+The JSON report must include at minimum:
+
+{
+  "build_pipeline": {},
+  "framework_docs": [],
+  "authored_docs": [],
+  "imported_docs": [],
+  "generated_docs": [],
+  "public_docs_outputs": [],
+  "public_root_pages": [],
+  "duplicates": [],
+  "unused": [],
+  "unknowns": [],
+  "summary": {}
+}
+
+
+⸻
+
+Markdown Report Sections
+
+The markdown report must include:
+	1.	Current build pipeline findings
+	2.	Framework docs used by current build
+	3.	Framework docs not used by current build
+	4.	Website-authored docs used by current build
+	5.	Website-authored docs not used by current build
+	6.	Imported docs status
+	7.	Generated docs status
+	8.	Public docs outputs and inferred sources
+	9.	Public root HTML pages classification
+	10.	Duplicate-risk docs
+	11.	Unknown/unresolved mappings
+	12.	Recommended next steps
+
+⸻
+
+Constraints
+	•	Do not modify build-docs.php
+	•	Do not modify source docs
+	•	Do not modify generated docs
+	•	Do not add sync logic yet
+	•	Do not change deployment behavior
+	•	Audit only
+
+⸻
+
+Acceptance Criteria
+	•	scripts/audit-docs-usage.php exists
+	•	script is standalone and read-only
+	•	build-docs.php is inspected but unchanged
+	•	JSON report is produced
+	•	Markdown report is produced
+	•	framework docs usage is classified
+	•	website-authored docs usage is classified
+	•	generated docs usage is classified
+	•	public docs output origins are inferred
+	•	public root HTML pages are classified
+	•	duplicate-risk docs are flagged
+	•	no build/deploy behavior is changed
+
+⸻
+
+Follow-Up Rule
+
+Do not refactor the docs build after this spec without first reviewing the audit report.
+
+The audit report becomes the basis for any later spec involving:
+	•	imported docs sync
+	•	build-docs.php changes
+	•	duplicate cleanup
+	•	framework/website boundary enforcement
+
+⸻
+
+If you want, the next clean step is for me to write the follow-up spec for a minimal pre-sync step that can be implemented after the audit, without rewriting build-docs.php.
+
+-----
+
+Here’s the exact, minimal workflow to run and review the docs usage audit safely.
+
+⸻
+
+1. Run the audit
+
+From the website repo root:
+
+php scripts/audit-docs-usage.php
+
+If you added the Composer script:
+
+composer audit:docs
+
+
+⸻
+
+2. What should happen
+
+The script should create:
+
+build/docs-usage-audit.json
+build/docs-usage-audit.md
+
+If those files don’t appear, the script either:
+	•	failed silently (bug)
+	•	or wrote somewhere else (check script output)
+
+⸻
+
+3. Review order (IMPORTANT)
+
+Do not open everything at once. Review in this order:
+
+⸻
+
+Step 1 — Open the markdown summary
+
+open build/docs-usage-audit.md
+
+(or just open it in your editor)
+
+Focus on these sections first:
+	1.	Current build pipeline findings
+	2.	Framework docs used by current build
+	3.	Website-authored docs used by current build
+	4.	Duplicate-risk docs
+
+This gives you a high-level map of reality.
+
+⸻
+
+Step 2 — Validate the pipeline understanding
+
+You’re looking for answers to:
+	•	Is framework/docs/ used directly? (likely: no)
+	•	Is content/docs/generated/ the real driver? (likely: yes)
+	•	Are authored/ docs actually rendered?
+	•	Are imported docs currently ignored?
+
+If this section is wrong → stop and fix the audit script before proceeding.
+
+⸻
+
+Step 3 — Check “unused” sections
+
+Look at:
+	•	framework docs not used
+	•	authored docs not used
+
+This is where you’ll likely find:
+	•	dead docs
+	•	docs you thought were used but aren’t
+
+Do not delete anything yet.
+
+⸻
+
+Step 4 — Check duplicates
+
+This is the most important section for your architecture cleanup.
+
+Look for things like:
+	•	execution-model in both:
+	•	framework/docs
+	•	content/docs/authored
+	•	philosophy duplicates
+	•	“how-foundry-works” overlaps
+
+These are your future cleanup targets.
+
+⸻
+
+Step 5 — Inspect unknowns
+
+Anything marked:
+
+unknown
+
+means the script couldn’t confidently map it.
+
+These are:
+	•	edge cases
+	•	naming mismatches
+	•	pipeline blind spots
+
+You may need to:
+	•	improve the audit script
+	•	or manually inspect a few of these
+
+⸻
+
+4. Deep dive (JSON)
+
+Open:
+
+open build/docs-usage-audit.json
+
+Use this when you want:
+	•	exact classifications
+	•	file-by-file breakdown
+	•	to debug Codex behavior later
+
+⸻
+
+5. Sanity checks (quick)
+
+Run these mental checks:
+
+Check 1
+
+“Are my important docs actually being rendered?”
+	•	execution model
+	•	philosophy
+	•	core concepts
+
+If not → your pipeline is not doing what you think.
+
+⸻
+
+Check 2
+
+“Are we rendering from generated JSON instead of markdown?”
+
+Very possible based on your current setup.
+
+⸻
+
+Check 3
+
+“Is anything coming from framework/docs/ directly?”
+
+Almost certainly no — which confirms the need for the sync step.
+
+⸻
+
+6. What NOT to do yet
+
+Do NOT:
+	•	edit build-docs.php
+	•	delete docs
+	•	move docs
+	•	merge authored/imported
+	•	“fix everything”
+
+You are still in observability mode.
+
+⸻
+
+7. What you should conclude
+
+After reviewing, you should be able to answer clearly:
+	1.	What actually feeds the docs build today?
+	2.	Which docs are real vs dead?
+	3.	Where duplication exists
+	4.	Whether your mental model was correct (it probably wasn’t 100%)
+
+⸻
+
+8. Next step (after review)
+
+Once you’re confident in the audit:
+
+👉 implement the pre-sync step (Spec we just wrote)
+
+That will:
+	•	introduce content/docs/imported/
+	•	start aligning reality with your intended architecture
+	•	without breaking your current build
+
+⸻
+
+If you want
+
+After you run it, you can paste:
+	•	the markdown report
+or
+	•	just the “pipeline findings” section
+
+and I’ll help you interpret exactly what your current system is actually doing (often surprising).
+
+------------------------------------------------------------------------------------------
+
+R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19M - Docs Usage Audit Script (Read-Only, No Build Changes Yet)
+
+RESULT
+
+Implemented the read-only audit script at [scripts/audit-docs-usage.php](/Users/lo_fye/code/foundry-website/scripts/audit-docs-usage.php). It does not call or modify the docs build, and I did not change [build-docs.php](/Users/lo_fye/code/foundry-website/scripts/build-docs.php) or the current deploy/build flow. Running it writes the two requested reports to [build/docs-usage-audit.json](/Users/lo_fye/code/foundry-website/build/docs-usage-audit.json) and [build/docs-usage-audit.md](/Users/lo_fye/code/foundry-website/build/docs-usage-audit.md).
+
+The main findings from the audit are straightforward. The current build reads all four docs layers: `framework/docs/`, `content/docs/authored/`, `content/docs/imported/`, and `content/docs/generated/`. It writes to `content/docs/imported/`, `content/docs/generated/`, `docs-build/`, `public/docs/`, and `public/docs/generated/`. `public/index.html`, `public/build.html`, and `public/how-foundry-works.html` are independent root pages; [public/contributing.html](/Users/lo_fye/code/foundry-website/public/contributing.html) is generated from markdown. The audit classified 16 framework docs as directly used, 1 framework doc as not used (`framework/docs/versions/README.md`), 9 website-authored docs as rendered, and 16 imported docs as rendered. The one duplicate-risk pair it flagged is the overlap between framework [reference.md](/Users/lo_fye/code/foundry-website/framework/docs/reference.md) and website [architecture-reference.md](/Users/lo_fye/code/foundry-website/content/docs/authored/architecture-reference.md). It also reports the current versioned snapshot behavior accurately: existing version snapshots are preserved rather than regenerated.
+
+Verification passed with `php -l scripts/audit-docs-usage.php` and `php scripts/audit-docs-usage.php`. The only new filesystem outputs are the audit script and the two report files under `build/`.
+
+1 file changed
+Undo
+scripts/audit-docs-usage.php
+
+------------------------------------------------------------------------------------------
+
+Make sure composer.js contains this script:
+
+"audit:docs": "php scripts/audit-docs-usage.php"
+
+------------------------------------------------------------------------------------------
+
+I have attached both docs-usage-audit.md and docs-usage-audit.json
+Please interpret them and make recommendations.
+
+------------------------------------------------------------------------------------------
+
+This is excellent. The audit removed most of the uncertainty.
+
+The big headline is: your current website docs build is already more correct than we thought. It already reads framework/docs/, writes content/docs/imported/, uses content/docs/authored/, uses content/docs/generated/, and publishes to public/docs/. scripts/build-docs.php delegates into DocsPipeline, and the pipeline is already doing imported-doc sync plus rendering.  ￼  ￼
+
+What this means in plain English:
+	•	You do not need to invent the imported-doc model from scratch.
+	•	You do not need to replace build-docs.php.
+	•	You do not need a speculative pre-sync step as a separate architecture move unless you want to refactor later.
+	•	You do need to clean up and formalize what already exists.
+
+The most important findings are these:
+
+Your current build already reads all four relevant sources/directories:
+	•	content/docs/authored
+	•	content/docs/generated
+	•	content/docs/imported
+	•	framework/docs  ￼
+
+The framework docs are not hypothetical inputs. Sixteen framework docs are classified as used_directly, and each of them already has an imported mirror plus a rendered public page.  ￼  ￼
+
+All nine website-authored docs are rendered by the build. None are currently unused.  ￼  ￼
+
+All sixteen imported docs are rendered by the build.  ￼  ￼
+
+Generated markdown is actively being merged into some authored/imported pages. For example:
+	•	architecture-reference pulls in generated references
+	•	execution-model pulls in pipeline-reference.md
+	•	extension-development pulls in generated extension references
+	•	framework-capabilities pulls in framework-summary.md  ￼  ￼
+
+Your root HTML pages are mixed:
+	•	public/index.html, public/build.html, and public/how-foundry-works.html are independent static pages
+	•	public/contributing.html is generated from content/docs/authored/contributing.md  ￼  ￼
+
+There is only one clear duplicate-risk pair detected:
+	•	framework/docs/reference.md
+	•	content/docs/authored/architecture-reference.md  ￼  ￼
+
+There are no unresolved mappings in the audit. That is a very good sign.  ￼  ￼
+
+So the architecture should now be updated from “design a docs sync model” to:
+
+document and harden the docs sync model that already exists.
+
+My recommendation now is:
+	1.	Do not replace build-docs.php.
+	2.	Do not add a separate pre-sync script right now.
+	3.	Update your specs and AGENTS.md to reflect reality:
+	•	imported-doc sync already exists
+	•	the website is already using framework docs directly
+	•	the website is already rendering imported docs
+	4.	Do a cleanup/formalization pass instead of a greenfield sync pass.
+
+Concretely, the next spec should probably be something like:
+
+Docs Pipeline Formalization & Duplicate Cleanup
+
+with goals like:
+	•	codify the current pipeline as intentional
+	•	formalize which framework docs map to which public slugs
+	•	formalize which authored docs are website-only
+	•	resolve the duplicate/reference overlap
+	•	decide whether execution-model should keep mapping from execution-pipeline.md or be renamed/migrated
+	•	decide whether new canonical docs like philosophy / execution model / graph spec should be added to framework/docs and imported/rendered intentionally
+
+One especially important nuance from the audit:
+
+public/docs/execution-model/index.html currently comes from imported legacy/execution-pipeline.md, not from a framework execution-model.md doc.  ￼  ￼
+
+That means if you add a new canonical framework/docs/execution-model.md, you should expect a slug/content collision unless you plan that migration deliberately.
+
+Similarly, extension-development currently comes from imported extensions-and-migrations.md, and architecture-reference is still website-authored while reference.md exists in the framework side.  ￼  ￼
+
+So the audit tells us the next job is not discovery anymore. It is intentional boundary-setting and slug ownership.
+
+My updated practical recommendation:
+	•	Keep framework/docs/ as canonical authored docs.
+	•	Keep content/docs/authored/ as website-authored docs.
+	•	Keep content/docs/imported/ as synced mirror.
+	•	Keep content/docs/generated/ as machine-generated supporting material.
+	•	Keep build-docs.php and DocsPipeline as the current engine.
+	•	Stop planning a new sync system.
+	•	Start planning a formalization and cleanup spec.
+
+The one thing I would change immediately in your mental model is this:
+
+Before the audit, the question was “How should we build the right architecture?”
+After the audit, the question is “How do we formalize and simplify the architecture that is already there?”
+
+That is a much safer and better place to be.
+
+If you want, I can write the next spec now as a short, imperative Codex spec for Docs Pipeline Formalization & Duplicate Cleanup based directly on this audit.
+
+------------------------------------------------------------------------------------------
+
+Questions: 
+1) should the website's content/docs/authored/* documents be moved into the framework's docs/ ?
+2) should i manually rename or remove legacy/execution-pipeline.md since we know framework's execution-model.md is the one we want?
+3) can you create a short imperative spec i can hand to Codex to make the other changes, cleanup, and formalization?
+
+------------------------------------------------------------------------------------------
+
+No
+No
+See next spec (Foundry-Spec-19N-WS.md)
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19N WS - Docs Pipeline Cleanup and Formalization
+
+Do First
+
+Use the docs usage audit as source of truth. Do not guess.
+Current pipeline already reads:
+	•	framework/docs/
+	•	content/docs/imported/
+	•	content/docs/authored/
+	•	content/docs/generated/
+
+and already writes public/docs/. Do not replace the pipeline.  ￼  ￼
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19N WS - Docs Pipeline Cleanup and Formalization
+
+Goals
+	1.	Formalize the current docs pipeline instead of redesigning it
+	2.	Define canonical vs website-only docs clearly
+	3.	Eliminate duplicate-risk docs
+	4.	Migrate execution-model to the canonical framework doc
+	5.	Keep the build working throughout
+
+⸻
+
+Rules
+	•	Do not replace scripts/build-docs.php
+	•	Do not remove imported legacy docs until replacement mapping is live
+	•	Do not move website landing HTML pages into the framework repo
+	•	Do not manually edit generated output
+	•	Treat framework/docs/ as canonical for framework truth
+	•	Treat content/docs/authored/ as website-only unless explicitly migrated
+
+⸻
+
+Required Canonical Framework Docs
+
+Ensure these canonical docs exist in the framework repo and are treated as source of truth:
+	•	framework/docs/philosophy/foundry-philosophy.md
+	•	framework/docs/architecture/execution-model.md
+	•	framework/docs/architecture/graph-spec.md
+
+If equivalent flat files already exist, support them temporarily but prefer the namespaced paths.
+
+⸻
+
+Required Website-Owned Docs
+
+Keep these in content/docs/authored/:
+	•	getting-started.md
+	•	docs-index.md
+	•	framework-capabilities.md
+	•	core-concepts.md
+	•	ai-development.md
+	•	architecture-explorer.md
+	•	contributing.md
+
+Do not migrate these into the framework repo in this spec.
+
+⸻
+
+Duplicate Cleanup
+
+Resolve the known duplicate-risk pair:
+	•	framework/docs/reference.md
+	•	content/docs/authored/architecture-reference.md
+
+Choose one owner.
+
+Preferred approach:
+	•	keep canonical framework reference in framework/docs/
+	•	keep website page only if it is a curated wrapper that clearly derives from framework/generated sources
+	•	otherwise retire the authored duplicate
+
+⸻
+
+Execution Model Migration
+
+Current public/docs/execution-model/ is sourced from:
+
+content/docs/imported/legacy/execution-pipeline.md
+
+Change this safely.
+
+Required sequence
+	1.	Add/confirm canonical framework execution model doc
+	2.	Update import/mapping logic so execution-model page uses canonical execution-model source
+	3.	Verify public/docs/execution-model/index.html
+	4.	Only after verification, remove or retire old legacy/execution-pipeline.md mapping
+
+Do not delete or rename the legacy file before the new mapping is live.
+
+⸻
+
+Imported Docs Structure
+
+Preserve imported docs.
+
+Use:
+	•	content/docs/imported/philosophy/
+	•	content/docs/imported/architecture/
+	•	content/docs/imported/whitepapers/
+	•	content/docs/imported/legacy/
+
+Map canonical framework docs into namespaced imported paths.
+
+Keep existing legacy imports working until replacements are confirmed.
+
+⸻
+
+Build Behavior
+
+Make only minimal build changes needed to:
+	1.	prefer canonical namespaced framework docs where available
+	2.	preserve legacy fallback where needed
+	3.	keep existing public slugs stable unless explicitly changed
+
+⸻
+
+Acceptance Criteria
+	•	Current docs build still works
+	•	Canonical framework docs are clearly defined
+	•	Website-only docs remain in authored/
+	•	Duplicate-risk reference overlap is resolved
+	•	execution-model page is migrated to canonical framework source
+	•	Legacy execution-pipeline import is only removed after migration succeeds
+	•	No generated output is manually edited
+	•	AGENTS.md is updated to match actual pipeline
+
+⸻
+
+This cleanup should be selective and mapping-first, not file-first.
+
+==========================================================================================
+
+R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19N WS - Docs Pipeline Cleanup and Formalization
+
+RESULT
+
+**Changed**
+- Added the missing canonical framework docs at [foundry-philosophy.md](/Users/lo_fye/code/foundry-website/framework/docs/philosophy/foundry-philosophy.md#L1), [execution-model.md](/Users/lo_fye/code/foundry-website/framework/docs/architecture/execution-model.md#L1), and [graph-spec.md](/Users/lo_fye/code/foundry-website/framework/docs/architecture/graph-spec.md#L1).
+- Updated [navigation.json](/Users/lo_fye/code/foundry-website/content/docs/navigation.json#L57) so `philosophy` and `graph-spec` are explicit canonical imported pages, and `execution-model` now prefers `architecture/execution-model.md` with `legacy/execution-pipeline.md` only as fallback.
+- Updated [DocsPipeline.php](/Users/lo_fye/code/foundry-website/scripts/lib/DocsPipeline.php#L1247) to resolve imported sections from preferred+fallback candidates and suppress duplicate auto-discovery during the migration.
+- Reframed [architecture-reference.md](/Users/lo_fye/code/foundry-website/content/docs/authored/architecture-reference.md#L1) as a website-owned companion instead of a competing source of truth, and aligned [AGENTS.md](/Users/lo_fye/code/foundry-website/AGENTS.md#L44) with the actual pipeline inputs and required canonical docs.
+
+**Verified**
+- `php scripts/build-docs.php` succeeded. The current docs alias now includes `/docs/philosophy/` and `/docs/graph-spec/`, and [public/docs/generated/navigation.json](/Users/lo_fye/code/foundry-website/public/docs/generated/navigation.json#L133) shows `execution-model` sourced from `content/docs/imported/architecture/execution-model.md` -> `framework/docs/architecture/execution-model.md`.
+- `php scripts/audit-docs-usage.php` succeeded. [build/docs-usage-audit.json](/Users/lo_fye/code/foundry-website/build/docs-usage-audit.json#L474) reports `content/docs/imported/architecture/execution-model.md` as `rendered_by_build`, [build/docs-usage-audit.json](/Users/lo_fye/code/foundry-website/build/docs-usage-audit.json#L573) reports `legacy/execution-pipeline.md` as `present_but_unused`, and [build/docs-usage-audit.json](/Users/lo_fye/code/foundry-website/build/docs-usage-audit.json#L2974) reports `duplicate_pairs: 0`.
+- The existing `v0.5.1` versioned snapshots were preserved and not regenerated by design, so the canonical migration is reflected in the current alias pages, not retroactively rewritten into preserved snapshots.
+- One follow-up to keep in mind: the new canonical framework docs live inside the `framework` submodule, and `git -C framework status --short` shows them as new files. If you want this landed cleanly, the submodule will need its own commit/pointer update alongside the website repo changes.
+
+8 files changed
++481
+-22
+Undo
+AGENTS.md
+content/docs/authored/architecture-reference.md
+content/docs/navigation.json
+framework/docs/architecture/execution-model.md
+framework/docs/architecture/graph-spec.md
+framework/docs/philosophy/foundry-philosophy.md
+scripts/audit-docs-usage.php
+scripts/lib/DocsPipeline.php
+
+
+------------------------------------------------------------------------------------------
+
+QUESTION
+
+1. Finish 19N WS (safe refactor, no semantic changes)
+2. Ask Question 1 (doc ownership + placement)
+3. Move files accordingly (or generate a move plan)
+
+
+QUESTION 1:
+
+You are analyzing the Foundry framework repo and the website repo.
+
+Goal:
+Determine which documents currently in:
+
+content/docs/authored/
+
+should be moved into the framework repository under:
+
+framework/docs/
+
+and where they belong structurally.
+
+---
+
+Inputs:
+
+• Website-authored docs:
+content/docs/authored/*.md
+
+• Framework docs structure:
+framework/docs/
+
+Subdirectories:
+- architecture/
+- philosophy/
+- (root of docs/)
+
+---
+
+Instructions:
+
+1. Read ALL files in content/docs/authored/
+
+2. For EACH file, classify it as one of:
+
+A) Framework canonical document
+   → belongs in framework/docs/
+
+B) Website-only document
+   → should remain in content/docs/authored/
+
+C) Hybrid/unclear
+   → explain reasoning and recommend placement
+
+---
+
+3. For every file classified as (A), determine:
+
+• exact destination path:
+  framework/docs/{subdirectory}/{filename}.md
+
+Where subdirectory must be one of:
+- architecture/
+- philosophy/
+- (root)
+
+---
+
+4. Use these decision rules:
+
+Framework docs contain:
+• canonical system behavior
+• architectural rules
+• execution model definitions
+• compiler semantics
+• reference definitions
+
+Website docs contain:
+• onboarding
+• tutorials
+• navigation pages
+• explanations of generated systems
+• UX-oriented explanations
+
+---
+
+5. Output MUST be:
+
+### Section 1 — Move to Framework
+
+- filename.md  
+  → framework/docs/{path}  
+  Reason: ...
+
+### Section 2 — Keep in Website
+
+- filename.md  
+  Reason: ...
+
+### Section 3 — Ambiguous / Needs Decision
+
+- filename.md  
+  Recommendation: ...
+  Reason: ...
+
+---
+
+6. Do NOT modify files.
+7. Do NOT move anything.
+8. This is an analysis + plan only.
+
+---
+
+Important:
+
+Be decisive.
+
+Avoid “could go either way” unless absolutely necessary.
+
+
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19O WS — Create Slug Ownership Map ONLY
+
+⸻
+
+Purpose
+
+Create the authoritative slug ownership map.
+
+Do NOT modify the docs pipeline yet.
+Do NOT enforce anything yet.
+Do NOT change rendering behavior yet.
+
+This step defines ownership only.
+
+⸻
+
+Deliverable
+
+Create:
+
+content/docs/slug-map.json
+
+⸻
+
+Required Slugs
+
+Define mappings for:
+	•	core-concepts
+	•	framework-capabilities
+	•	execution-model
+	•	execution-pipeline
+	•	reference
+	•	architecture-reference
+	•	getting-started
+	•	docs-index
+	•	ai-development
+	•	architecture-explorer
+	•	contributing
+
+⸻
+
+Ownership
+
+Use:
+
+framework-owned:
+	•	core-concepts
+	•	framework-capabilities
+	•	execution-model
+	•	execution-pipeline
+	•	reference
+
+website-owned:
+	•	architecture-reference
+	•	getting-started
+	•	docs-index
+	•	ai-development
+	•	architecture-explorer
+	•	contributing
+
+⸻
+
+Source Paths
+
+framework-owned → content/docs/imported/*
+website-owned → content/docs/authored/*
+
+Use actual existing paths in repo.
+
+⸻
+
+Rules
+	•	each slug MUST have exactly one entry
+	•	each entry MUST have exactly one source
+	•	DO NOT modify any pipeline code
+	•	DO NOT change rendering
+	•	DO NOT delete any files
+	•	DO NOT move any additional files
+
+⸻
+
+Output ONLY the JSON file.
+
+⸻
+
+Acceptance Criteria
+	•	slug-map.json exists
+	•	all required slugs are present
+	•	all sources resolve to real files
+	•	no duplicates
+	•	no missing entries
+
+------------------------------------------------------------------------------------------
+
+R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19O WS — Create Slug Ownership Map ONLY
+
+
+RESULT
+
+
+{
+  "core-concepts": {
+    "owner": "framework-owned",
+    "source": "content/docs/imported/architecture/core-concepts.md"
+  },
+  "framework-capabilities": {
+    "owner": "framework-owned",
+    "source": "content/docs/imported/legacy/framework-capabilities.md"
+  },
+  "execution-model": {
+    "owner": "framework-owned",
+    "source": "content/docs/imported/architecture/execution-model.md"
+  },
+  "execution-pipeline": {
+    "owner": "framework-owned",
+    "source": "content/docs/imported/legacy/execution-pipeline.md"
+  },
+  "reference": {
+    "owner": "framework-owned",
+    "source": "content/docs/imported/legacy/reference.md"
+  },
+  "architecture-reference": {
+    "owner": "website-owned",
+    "source": "content/docs/authored/architecture-reference.md"
+  },
+  "getting-started": {
+    "owner": "website-owned",
+    "source": "content/docs/authored/getting-started.md"
+  },
+  "docs-index": {
+    "owner": "website-owned",
+    "source": "content/docs/authored/docs-index.md"
+  },
+  "ai-development": {
+    "owner": "website-owned",
+    "source": "content/docs/authored/ai-development.md"
+  },
+  "architecture-explorer": {
+    "owner": "website-owned",
+    "source": "content/docs/authored/architecture-explorer.md"
+  },
+  "contributing": {
+    "owner": "website-owned",
+    "source": "content/docs/authored/contributing.md"
+  }
+}
+
+------------------------------------------------------------------------------------------
+
+PASTE THE ABOVE JSON TO CHATGPT
+
+------------------------------------------------------------------------------------------
+
+Update the file:
+
+content/docs/slug-map.json
+
+so that its contents EXACTLY match the JSON below.
+
+Do not add fields.
+Do not infer values.
+Do not modify keys.
+Do not preserve any previous structure.
+
+Replace the file contents entirely.
+
+{
+  "core-concepts": {
+    "owner": "framework",
+    "source": "content/docs/imported/architecture/core-concepts.md"
+  },
+  "framework-capabilities": {
+    "owner": "framework",
+    "source": "content/docs/imported/legacy/framework-capabilities.md"
+  },
+  "execution-model": {
+    "owner": "framework",
+    "source": "content/docs/imported/architecture/execution-model.md"
+  },
+  "execution-pipeline": {
+    "owner": "framework",
+    "source": "content/docs/imported/legacy/execution-pipeline.md"
+  },
+  "reference": {
+    "owner": "framework",
+    "source": "content/docs/imported/legacy/reference.md"
+  },
+  "architecture-reference": {
+    "owner": "website",
+    "source": "content/docs/authored/architecture-reference.md"
+  },
+  "getting-started": {
+    "owner": "website",
+    "source": "content/docs/authored/getting-started.md"
+  },
+  "index": {
+    "owner": "website",
+    "source": "content/docs/authored/docs-index.md"
+  },
+  "ai-development": {
+    "owner": "website",
+    "source": "content/docs/authored/ai-development.md"
+  },
+  "architecture-explorer": {
+    "owner": "website",
+    "source": "content/docs/authored/architecture-explorer.md"
+  },
+  "contributing": {
+    "owner": "website",
+    "source": "content/docs/authored/contributing.md"
+  }
+}
+
+------------------------------------------------------------------------------------------
+
+RESULT
+
+slug-map.json updated exactly as requested.
+All 11 source paths in slug-map.json exist on disk. No missing paths were found.
+
+------------------------------------------------------------------------------------------
+
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19O-B WS — Post-Move Docs Integration After Framework Ownership Changes (linker)
+
+Context
+
+Two website-authored docs have already been moved into the framework repo:
+	•	core-concepts.md
+	•	framework-capabilities.md
+
+The docs pipeline already:
+	•	reads framework/docs/
+	•	syncs into content/docs/imported/
+	•	reads content/docs/authored/
+	•	reads content/docs/generated/
+	•	renders public/docs/
+	•	preserves immutable version snapshots by framework tag.  ￼  ￼
+
+Do not redesign the pipeline. Integrate the move safely.
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19O-B WS — Post-Move Docs Integration After Framework Ownership Changes (linker)
+
+Goals
+	1.	Make the moved docs render from framework/imported sources instead of website-authored sources
+	2.	Keep existing public slugs stable unless a slug change is explicitly required
+	3.	Add explicit slug ownership
+	4.	Prevent duplicate source conflicts
+	5.	Keep current build + version snapshot behavior working
+	6.  Preserve current slugs wherever possible, and only change slugs when there is a semantic error to fix
+⸻
+
+Do Not
+	•	do not replace scripts/build-docs.php
+	•	do not replace DocsPipeline.php
+	•	do not manually edit public/docs/*
+	•	do not remove legacy imports unless they are no longer mapped
+	•	do not move website landing pages out of the website repo
+
+⸻
+
+Required Tasks
+	1.	Update the docs pipeline so the moved docs are sourced from the framework/imported side, not content/docs/authored/
+	2.	Remove the old website-authored copies from active rendering inputs if they still exist locally
+	3.	Add or update:
+
+content/docs/slug-map.json
+
+	4.	Put explicit ownership entries in the slug map for at least:
+
+	•	core-concepts
+	•	framework-capabilities
+	•	execution-model
+	•	execution-pipeline
+	•	reference
+	•	architecture-reference
+	•	getting-started
+	•	docs-index
+	•	ai-development
+	•	architecture-explorer
+	•	contributing
+
+	5.	Use these ownership rules:
+
+	•	core-concepts → framework-owned
+	•	framework-capabilities → framework-owned
+	•	execution-model → framework-owned
+	•	execution-pipeline → framework-owned
+	•	reference → framework-owned
+	•	architecture-reference → website-owned
+	•	getting-started → website-owned
+	•	docs-index → website-owned
+	•	ai-development → website-owned
+	•	architecture-explorer → website-owned
+	•	contributing → website-owned for now
+
+	6.	Fix the known wrong semantic mapping:
+
+	•	execution-model must not resolve from execution-pipeline
+	•	execution-model and execution-pipeline must be separate slugs/pages
+
+The attached docs prove these files are not equivalent:
+	•	execution-model.md is a high-level architectural doctrine document.  ￼
+	•	execution-pipeline.md is a concrete runtime subsystem document.  ￼
+
+	7.	Keep reference and architecture-reference as separate pages/slugs
+
+The attached docs prove these are not duplicates:
+	•	reference.md is a framework reference index page.  ￼
+	•	architecture-reference.md is a website-owned augmented explainer for generated metadata and LLM context.  ￼
+
+	8.	Add a slug resolution + enforcement pass to the existing pipeline:
+
+	•	fail if one slug has multiple owners
+	•	fail if mapped source file is missing
+	•	fail if framework + website both claim same slug
+	•	fail if canonical mapping exists but build silently uses a wrong legacy source
+
+Keep this as a small pre-render validation layer. Do not rewrite the build.
+	9.	Emit a deterministic report, e.g.:
+
+docs-build/slug-resolution-report.json
+
+including:
+	•	slug
+	•	owner
+	•	source
+	•	augmentations if any
+	•	validation errors/warnings
+
+	10.	Verify:
+
+	•	current docs build still works
+	•	version snapshots still work
+	•	core-concepts renders correctly from framework/imported source
+	•	framework-capabilities renders correctly from framework/imported source
+	•	execution-model and execution-pipeline are both present and separate
+	•	reference and architecture-reference are both present and separate
+
+⸻
+
+Acceptance Criteria
+	•	no duplicate ownership for moved docs
+	•	moved docs render from framework/imported source
+	•	website-authored docs still render where intended
+	•	slug map exists and is authoritative
+	•	slug enforcement runs before render
+	•	existing versioned docs process still works
+	•	no silent source collisions remain
+
+
+------------------------------------------------------------------------------------------
+
+R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19O-B WS — Post-Move Docs Integration After Framework Ownership Changes (linker)
+
+RESULT
+
+The linker pass is in place, and all changes stayed in the website repo only. [slug-map.json](/Users/lo_fye/code/foundry-website/content/docs/slug-map.json#L1) now defines the 11 required slugs with explicit `framework-owned` and `website-owned` entries, [navigation.json](/Users/lo_fye/code/foundry-website/content/docs/navigation.json#L57) now routes `core-concepts` and `framework-capabilities` from imported framework mirrors, splits `execution-model` from `execution-pipeline`, and keeps `reference` separate from `architecture-reference`, and [DocsPipeline.php](/Users/lo_fye/code/foundry-website/scripts/lib/DocsPipeline.php#L1144) now runs a pre-render slug validation pass that loads the slug map, writes [slug-resolution-report.json](/Users/lo_fye/code/foundry-website/docs-build/slug-resolution-report.json#L1), and fails on missing mapped sources, multiple active claims, framework/website ownership conflicts, or source mismatches. I did not edit anything under `framework/`.
+
+Verification passed. `php scripts/build-docs.php` completed successfully, and [slug-resolution-report.json](/Users/lo_fye/code/foundry-website/docs-build/slug-resolution-report.json#L1) shows `entry_count: 11`, `error_count: 0`, and `warning_count: 0`, with `core-concepts`, `execution-model`, `execution-pipeline`, `framework-capabilities`, and `reference` resolving from imported framework sources while `architecture-reference` stays website-owned. The live generated navigation confirms the active sources in [public/docs/generated/navigation.json](/Users/lo_fye/code/foundry-website/public/docs/generated/navigation.json#L69), and the rendered pages exist at [core-concepts](/Users/lo_fye/code/foundry-website/public/docs/core-concepts/index.html), [framework-capabilities](/Users/lo_fye/code/foundry-website/public/docs/framework-capabilities/index.html), [execution-model](/Users/lo_fye/code/foundry-website/public/docs/execution-model/index.html), [execution-pipeline](/Users/lo_fye/code/foundry-website/public/docs/execution-pipeline/index.html), [reference](/Users/lo_fye/code/foundry-website/public/docs/reference/index.html), and [architecture-reference](/Users/lo_fye/code/foundry-website/public/docs/architecture-reference/index.html). The old authored `core-concepts.md` and `framework-capabilities.md` copies are absent, so there is no remaining website-side active source for those moved docs, and the build preserved version snapshot behavior by reusing the existing `v0.5.2` snapshot instead of regenerating it.
+
+3 files changed
++343
+-20
+Undo
+content/docs/navigation.json
+content/docs/slug-map.json
+scripts/lib/DocsPipeline.php
+
+------------------------------------------------------------------------------------------
+
+Regarding updating the slug owner values, i want them to be framework instead of framework-owned, and website instead of website-owned. Also, if the public page is public/docs/index.html, then please change the docs-index slug from docs-index to index or whatever the pipeline actually uses as the canonical docs-home slug. After these changes are made, the slug-map should look just like the one I gave you earlier:
+
+{
+  "core-concepts": {
+    "owner": "framework",
+    "source": "content/docs/imported/architecture/core-concepts.md"
+  },
+  "framework-capabilities": {
+    "owner": "framework",
+    "source": "content/docs/imported/legacy/framework-capabilities.md"
+  },
+  "execution-model": {
+    "owner": "framework",
+    "source": "content/docs/imported/architecture/execution-model.md"
+  },
+  "execution-pipeline": {
+    "owner": "framework",
+    "source": "content/docs/imported/legacy/execution-pipeline.md"
+  },
+  "reference": {
+    "owner": "framework",
+    "source": "content/docs/imported/legacy/reference.md"
+  },
+  "architecture-reference": {
+    "owner": "website",
+    "source": "content/docs/authored/architecture-reference.md"
+  },
+  "getting-started": {
+    "owner": "website",
+    "source": "content/docs/authored/getting-started.md"
+  },
+  "index": {
+    "owner": "website",
+    "source": "content/docs/authored/docs-index.md"
+  },
+  "ai-development": {
+    "owner": "website",
+    "source": "content/docs/authored/ai-development.md"
+  },
+  "architecture-explorer": {
+    "owner": "website",
+    "source": "content/docs/authored/architecture-explorer.md"
+  },
+  "contributing": {
+    "owner": "website",
+    "source": "content/docs/authored/contributing.md"
+  }
+}
+
+------------------------------------------------------------------------------------------
+
+[slug-map.json](/Users/lo_fye/code/foundry-website/content/docs/slug-map.json#L1) now matches your JSON exactly: owner values are `framework` and `website`, and the docs-home slug is `index` instead of `docs-index`. I also updated the validator special case in [DocsPipeline.php](/Users/lo_fye/code/foundry-website/scripts/lib/DocsPipeline.php#L1587) so the canonical docs-home slug resolves as `index` to `content/docs/authored/docs-index.md`.
+
+I rebuilt the docs and rechecked the report. [slug-resolution-report.json](/Users/lo_fye/code/foundry-website/docs-build/slug-resolution-report.json#L1) now shows the `index` slug as website-owned, with `entry_count: 11`, `error_count: 0`, and `warning_count: 0`, and `public/docs/index.html` remains the rendered docs home.
+
+2 files changed
++13
+-13
+Undo
+content/docs/slug-map.json
+scripts/lib/DocsPipeline.php
+
+
+------------------------------------------------------------------------------------------
+
+git commit -m "implement Spec 19O-B WS"
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19P-B WS — Slug Resolution + Enforcement Pass
+
+Purpose
+
+Add a small, deterministic enforcement pass to the existing website docs pipeline.
+
+Do NOT replace the current docs build.
+Do NOT replace the current versioned snapshot system.
+Do NOT redesign immutable tag-based versioning.
+
+This spec only adds:
+
+• explicit slug ownership
+• deterministic source resolution
+• conflict detection
+• build failure on ambiguity
+
+⸻
+
+Context
+
+The current website docs build already works.
+
+It already:
+
+• reads framework docs
+• reads imported docs
+• reads authored docs
+• reads generated docs
+• renders current docs
+• publishes immutable version snapshots by framework tag
+
+Keep that behavior.
+
+This spec adds a validation/linking layer before rendering.
+
+⸻
+
+Non-Negotiable Rule
+
+Do NOT replace:
+
+• scripts/build-docs.php
+• DocsPipeline.php
+• current version snapshot logic
+
+Only add a pre-render enforcement phase.
+
+⸻
+
+Conceptual Model
+
+Current system already acts like:
+
+source docs → render → publish → version snapshot
+
+This spec adds:
+
+slug map → validate ownership → resolve source → existing render/publish/version flow
+
+⸻
+
+Deliverable
+
+Add a slug resolution + enforcement pass that runs before page rendering.
+
+This may be implemented as:
+
+• a new class called by DocsPipeline
+or
+• a small pre-pass in DocsPipeline itself
+or
+• a helper loaded by build-docs.php before rendering
+
+Use the smallest safe diff.
+
+⸻
+
+Required Input
+
+Add authoritative file:
+
+content/docs/slug-map.json
+
+Example shape:
+
+{
+“execution-model”: {
+“owner”: “framework”,
+“source”: “framework/docs/architecture/execution-model.md”
+},
+“execution-pipeline”: {
+“owner”: “framework”,
+“source”: “framework/docs/execution-pipeline.md”
+},
+“architecture-reference”: {
+“owner”: “website”,
+“source”: “content/docs/authored/architecture-reference.md”
+}
+}
+
+⸻
+
+Ownership Rules
+
+Allowed owners:
+
+• framework
+• website
+• generated
+
+Rules:
+	1.	every public docs slug must have exactly one owner
+	2.	every owner must resolve to exactly one source
+	3.	imported docs inherit ownership from framework
+	4.	generated docs may augment pages but do not own canonical framework concepts
+	5.	website docs may explain/wrap framework concepts, but may not silently replace them
+
+⸻
+
+Pass Behavior
+
+For each slug in slug-map.json:
+	1.	resolve owner
+	2.	resolve source path
+	3.	verify source file exists
+	4.	verify no competing source exists for same slug
+	5.	verify no legacy fallback is being used when canonical source exists
+	6.	pass resolved source into existing rendering flow
+
+⸻
+
+Strict Failure Conditions
+
+The build must fail if:
+
+• slug has no mapping
+• slug has multiple mapped sources
+• mapped source file does not exist
+• framework and website both claim same slug
+• legacy imported source is used when canonical mapped source exists
+• current pipeline would silently render from wrong source
+
+⸻
+
+Allowed Legacy Behavior
+
+Legacy mappings are allowed only if explicitly declared in slug-map.json.
+
+Example:
+
+{
+“execution-model”: {
+“owner”: “framework”,
+“source”: “content/docs/imported/legacy/execution-pipeline.md”,
+“legacy”: true,
+“migration_target”: “framework/docs/architecture/execution-model.md”
+}
+}
+
+Rules:
+
+• no implicit legacy fallback
+• all legacy usage must be visible
+• legacy mappings should emit warnings
+• canonical mappings should replace legacy mappings as soon as safe
+
+⸻
+
+Augmentation Rules
+
+Generated markdown may augment a page only when explicitly allowed.
+
+Example:
+
+{
+“architecture-reference”: {
+“owner”: “website”,
+“source”: “content/docs/authored/architecture-reference.md”,
+“augment”: [
+“content/docs/generated/graph-reference.md”,
+“content/docs/generated/pipeline-reference.md”
+]
+}
+}
+
+Rules:
+
+• augmentation does not change ownership
+• augmentation does not replace base source
+• augmentation must be deterministic
+• augmentation order must be explicit
+
+⸻
+
+Integration With Existing Pipeline
+
+Required sequence:
+	1.	load slug-map.json
+	2.	validate ownership and source resolution
+	3.	build resolved slug/source table
+	4.	pass resolved table into existing DocsPipeline rendering
+	5.	run existing current-doc build
+	6.	run existing immutable tag-based version snapshot logic
+
+Do not alter steps 5 or 6 beyond what is necessary to use resolved sources.
+
+⸻
+
+Diagnostics
+
+Emit deterministic diagnostics report, for example:
+
+docs-build/slug-resolution-report.json
+
+Include:
+
+• slug
+• owner
+• source
+• augmentation sources
+• legacy flag
+• validation status
+• warnings
+• errors
+
+Optional markdown summary:
+
+docs-build/slug-resolution-report.md
+
+⸻
+
+Minimum Required Slugs For This Spec
+
+At minimum, explicitly map and enforce these:
+
+• execution-model
+• execution-pipeline
+• reference
+• architecture-reference
+• getting-started
+• docs-index
+• framework-capabilities
+• core-concepts
+• ai-development
+• architecture-explorer
+• contributing
+
+Additional slugs may be added incrementally.
+
+⸻
+
+Primary Corrections Required
+	1.	execution-model must no longer resolve from execution-pipeline source
+	2.	execution-pipeline must have its own slug
+	3.	reference and architecture-reference must not conflict
+	4.	framework concepts must not be silently overridden by website docs
+
+⸻
+
+Acceptance Criteria
+
+• existing build still works
+• existing version snapshot behavior still works
+• slug ownership becomes explicit
+• execution-model and execution-pipeline are separate
+• reference and architecture-reference are separate
+• build fails on ambiguity
+• no silent source collisions remain
+• diagnostics report is emitted
+
+⸻
+
+Implementation Bias
+
+Prefer the smallest possible diff.
+
+This is an enforcement pass inside the current pipeline, not a replacement pipeline.
+
+⸻
+
+End Spec
+
+
+—
+
+This is the version I’d use.
+
+It preserves what already works:
+	•	current build
+	•	tag-based immutable versioning
+	•	DocsPipeline
+	•	generated metadata flow
+
+And adds what you’re missing:
+	•	source truth enforcement
+	•	correct semantic mapping
+	•	failure instead of silent wrongness
+
+What you’ve just done (important, non-fluffy)
+
+You now have:
+	•	19O WS → fixes the meaning
+	•	19P WS → enforces the mechanism
+
+Together, they turn your docs system into:
+
+a compiler with a type system (ownership) and a linker (slug resolution)
+
+Which is exactly consistent with Foundry’s philosophy.
+
+
+------------------------------------------------------------------------------------------
+
+R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19P-B WS — Slug Resolution + Enforcement Pass
+
+RESULT
+
+**Changed**
+- [slug-map.json](/Users/lo_fye/code/foundry-website/content/docs/slug-map.json#L1) is now the authoritative map for the required slug set, with explicit owners, base sources, and explicit `augment` lists where generated markdown is allowed.
+- [DocsPipeline.php](/Users/lo_fye/code/foundry-website/scripts/lib/DocsPipeline.php#L1407) now runs a deterministic pre-render enforcement pass that:
+  - validates required slug mappings
+  - accepts `framework`, `website`, and `generated` owners
+  - rejects missing or invalid sources
+  - rejects conflicting active claims
+  - rejects implicit augmentations
+  - emits `legacy`, `migration_target`, `validation_status`, `warnings`, and `errors` in the report
+- I kept the docs-home slug canonical as `index`, because the actual page is [public/docs/index.html](/Users/lo_fye/code/foundry-website/public/docs/index.html). The validator also accepts `docs-index` as an alias for the required-slug check, so the spec wording is covered without changing the live docs-home slug.
+
+**Verified**
+- `php scripts/build-docs.php` succeeded.
+- Existing immutable snapshot behavior stayed intact: the build reported the existing `v0.5.2` version snapshot and machine-readable snapshot were skipped, not regenerated.
+- [slug-resolution-report.json](/Users/lo_fye/code/foundry-website/docs-build/slug-resolution-report.json#L1) now contains 11 enforced entries with `error_count: 0` and `warning_count: 0`.
+- `execution-model` and `execution-pipeline` remain separate slugs/pages, and `reference` remains separate from `architecture-reference`, with the active sources recorded in the report and the generated docs metadata.
+
+2 files changed
++214
+-12
+Undo
+content/docs/slug-map.json
+scripts/lib/DocsPipeline.php
+
+------------------------------------------------------------------------------------------
+
+QUESTION 2
+
+You are analyzing the Foundry framework repository.
+
+Explain why the following items exist and whether they are still required:
+
+1. public/
+2. public/index.php
+3. docs/versions/ (with README.md)
+4. scripts/build-docs.php
+
+---
+
+For each item:
+
+• Describe its original purpose
+• Determine if it is:
+  - actively used
+  - legacy
+  - redundant with website repo
+  - potentially dangerous/confusing
+
+---
+
+Then provide:
+
+### Section 1 — Still Required
+(list + reasons)
+
+### Section 2 — Likely Legacy / Redundant
+(list + reasons)
+
+### Section 3 — Recommended Actions
+
+For each item:
+• keep as-is
+• move to website repo
+• remove
+• replace with clearer structure
+
+---
+
+Important constraints:
+
+• The website repo is the source of truth for docs rendering and publishing
+• The framework repo should NOT contain conflicting or duplicate docs pipelines
+• Avoid breaking changes unless clearly safe
+
+---
+
+Do NOT modify files.
+Do NOT delete anything.
+This is analysis only.
+
+------------------------------------------------------------------------------------------
+
+ANSWER
+
+This is the answer to Question 2, asked after successfully implementing Spec 19P-WS with no issues:
+
+### Section 1 — Still Required
+
+- `public/`: Original purpose was the framework repo’s web document root for running the root app and for scaffolding new Foundry apps. The framework CLI still points app serving at `public/index.php` in [ServeCommand.php](/Users/lo_fye/code/foundry-website/framework/src/CLI/Commands/ServeCommand.php#L24), scaffolds a `serve` script around it in [InitAppCommand.php](/Users/lo_fye/code/foundry-website/framework/src/CLI/Commands/InitAppCommand.php#L228), and writes that file into new apps in [InitAppCommand.php](/Users/lo_fye/code/foundry-website/framework/src/CLI/Commands/InitAppCommand.php#L351). Status: actively used; not legacy; not redundant with the website repo because this is runtime app infrastructure, not docs publishing; only mildly confusing because both repos have a `public/` directory.
+
+- `public/index.php`: Original purpose was and still is the HTTP front controller for a Foundry app. It boots the runtime kernel and emits the HTTP response in [public/index.php](/Users/lo_fye/code/foundry-website/framework/public/index.php#L1), and the README still tells developers to serve the framework repo through it in [README.md](/Users/lo_fye/code/foundry-website/framework/README.md#L70). Status: actively used; not legacy; not redundant with the website repo; only mildly confusing because the website repo also has a `public/` area, but that one is for the website itself.
+
+### Section 2 — Likely Legacy / Redundant
+
+- `docs/versions/` with `README.md`: Original purpose was to store hand-authored archived docs snapshots in the framework repo and let the framework-local docs builder publish them to `public/docs/versions/<tag>` as described in [docs/versions/README.md](/Users/lo_fye/code/foundry-website/framework/docs/versions/README.md#L1). That behavior is still active inside the old framework docs builder in [DocsSiteBuilder.php](/Users/lo_fye/code/foundry-website/framework/src/Documentation/DocsSiteBuilder.php#L28) and explicitly tested in [DocsSiteBuilderTest.php](/Users/lo_fye/code/foundry-website/framework/tests/Unit/DocsSiteBuilderTest.php#L25). Status: actively used by framework-local docs code/tests, but legacy relative to the current architecture; redundant with the website repo’s versioned docs publishing; potentially dangerous/confusing because it creates a second snapshot source and another publishing path.
+
+- `scripts/build-docs.php`: Original purpose was to be the framework repo’s standalone docs build entrypoint. It compiles the root app graph and invokes `DocsSiteBuilder` in [build-docs.php](/Users/lo_fye/code/foundry-website/framework/scripts/build-docs.php#L1), and the framework README still presents it as the docs build command in [README.md](/Users/lo_fye/code/foundry-website/framework/README.md#L249). Status: still runnable and still referenced, so not dead code, but effectively legacy for the overall product; redundant with the website repo’s docs rendering/publishing pipeline; potentially dangerous/confusing because it encourages contributors to build docs from the wrong repo and produce a competing `public/docs` tree.
+
+### Section 3 — Recommended Actions
+
+- `public/`: keep as-is. It is part of the framework’s runnable app/scaffolding model, not part of the docs publishing conflict.
+
+- `public/index.php`: keep as-is. It is the canonical front controller for serving a Foundry app locally and in generated app skeletons.
+
+- `docs/versions/`: replace with clearer structure. The safest direction is to stop treating it as the authoritative published snapshot source and make the website repo the only place that renders/publishes versioned docs. Do not remove it until the framework-local builder/tests/docs references are cleaned up.
+
+- `scripts/build-docs.php`: replace with clearer structure. It should no longer be presented as the canonical docs pipeline. Safest path is to deprecate it first, update framework docs to point at the website repo for rendering/publishing, and only then remove or narrow it to an explicitly internal preview helper if still needed.
+
+
+
+
+
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 19Q — Framework Docs Pipeline Deprecation and Cleanup
 
 L,M,N,O,P must be website specs
@@ -26212,7 +28246,9 @@ The framework repo still contains legacy docs-publishing artifacts:
 
 These are redundant with the website repo’s real docs rendering/versioning system and are now a source of confusion.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 19Q — Framework Docs Pipeline Deprecation and Cleanup
+
 
 Goals
 	1.	Stop presenting the framework repo as the place to render/publish public docs
@@ -26867,6 +28903,9 @@ tests/Unit/DocsSiteBuilderTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 25A — Framework Examples Alignment
+
 EXECUTION MODE: STRONG MODERNIZATION
 
 You are not performing a minimal diff.
@@ -26953,8 +28992,6 @@ Examples must become:
 - canonical
 
 They must not preserve outdated patterns just because they still work.
-
----
 
 Goals
 
@@ -27128,6 +29165,10 @@ No output recorded
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 25B — Thresholds Alignment
+
 
 EXECUTION MODE: STRONG MODERNIZATION (REAL APPLICATION)
 
@@ -27679,7 +29720,311 @@ tests/Integration/ExamplesStructureTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-28 must be a website spec (WR)
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 28-WS - Framework Internals Reference from framework/src/
+
+Purpose
+
+Add generated docs pages to the website that explain the framework’s src/ directory structure and major classes.
+
+Do NOT create hand-written pages for every file.
+Generate a structured reference from the framework codebase.
+
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 28-WS - Framework Internals Reference from framework/src/
+
+Goals
+	1.	Give developers and LLMs a trustworthy map of the framework internals
+	2.	Document major subsystems under framework/src/
+	3.	Provide concise per-class summaries where useful
+	4.	Keep the output deterministic and regenerable
+	5.	Avoid overwhelming first-time users
+
+⸻
+
+Non-Goals
+	•	Do not manually author one page per file
+	•	Do not turn the docs into raw API dumps
+	•	Do not duplicate canonical philosophy/execution/graph docs
+	•	Do not make internals reference the first thing new users see
+
+⸻
+
+Required Output
+
+Generate a new docs section under something like:
+
+public/docs/framework-internals/
+
+and corresponding machine-readable outputs under:
+
+public/docs/generated/
+
+Use the existing website docs pipeline. Do not replace it.
+
+⸻
+
+Required Pages
+
+Create generated pages for at least:
+	1.	Framework Internals Index
+	•	overview of major src/ subsystems
+	•	links to subsystem pages
+	2.	One page per major top-level subsystem under framework/src/
+Examples may include:
+	•	Compiler
+	•	CLI
+	•	Feature
+	•	Config
+	•	Auth
+	•	Cache
+	•	Queue
+	•	Events
+	•	Scheduler
+	•	Storage
+	•	Webhook
+	•	AI
+	•	Observability
+	•	Verification
+	•	Generation
+	•	Support
+	3.	Optional class detail pages or expandable sections for important classes
+
+⸻
+
+Per-Subsystem Page Requirements
+
+Each subsystem page should include:
+	•	subsystem name
+	•	directory path
+	•	purpose summary
+	•	major classes
+	•	short description of each major class
+	•	notable relationships to other subsystems
+	•	notable CLI/docs links where relevant
+
+Do not dump raw source code.
+
+Keep each class description concise and factual.
+
+⸻
+
+Class Inclusion Rules
+
+Include classes that are:
+	•	public-facing within the framework internals
+	•	architecturally important
+	•	entry points
+	•	registries
+	•	drivers
+	•	compilers
+	•	verifiers
+	•	runtime coordinators
+
+Lower-priority helper/value classes may be grouped rather than given full individual treatment.
+
+⸻
+
+Source of Truth
+
+Generate from:
+
+framework/src/
+
+Use:
+	•	namespace
+	•	class names
+	•	file paths
+	•	docblocks if useful
+	•	lightweight static analysis of constructor/method names if helpful
+
+Do not invent behavior not supported by code.
+
+⸻
+
+Generated Metadata
+
+Also emit machine-readable JSON, for example:
+
+content/docs/generated/framework-internals.json
+content/docs/generated/framework-internals/<subsystem>.json
+
+and publish them under:
+
+public/docs/generated/
+
+Include:
+	•	subsystem
+	•	class
+	•	path
+	•	summary
+	•	relationships
+	•	tags/categories
+
+This should be useful for LLM context and search.
+
+⸻
+
+Docs Positioning
+
+This new internals section must be discoverable, but not the first experience.
+
+Recommended placement:
+	•	linked from architecture docs
+	•	linked from reference docs
+	•	linked from architecture explorer
+	•	linked from contributor docs
+
+Do not make it replace “Getting Started.”
+
+⸻
+
+Cross-Linking
+
+Add links where useful to:
+	•	philosophy
+	•	execution model
+	•	graph spec
+	•	architecture overview
+	•	CLI reference
+	•	architecture reference
+	•	architecture explorer
+
+Internals docs should support the higher-level docs, not compete with them.
+
+⸻
+
+Rendering Style
+
+Optimize for:
+	•	clarity
+	•	scanability
+	•	stable headings
+	•	deterministic structure
+	•	LLM readability
+
+Avoid:
+	•	giant undifferentiated lists
+	•	excessive prose
+	•	duplicated explanations across pages
+
+⸻
+
+Acceptance Criteria
+	•	website generates a framework internals reference from framework/src/
+	•	there is an index page plus subsystem pages
+	•	output is deterministic
+	•	machine-readable JSON is emitted
+	•	pages are linked into the docs site
+	•	docs remain navigable and not overwhelming for new users
+	•	no hand-maintained per-file docs burden is introduced
+
+⸻
+
+Implementation Bias
+
+Prefer:
+	•	subsystem-level clarity first
+	•	important-class summaries second
+	•	exhaustive per-file detail only where clearly valuable
+
+The docs should help someone answer:
+
+“What is in the framework, where does it live, and what role does it play?”
+
+not:
+
+“Show me an unreadable dump of every class.”
+
+Link to these docs from:
+	•	architecture-reference
+	•	architecture-explorer
+	•	contributing
+	•	and a short note in the root README/docs index.
+
+
+------------------------------------------------------------------------------------------
+
+R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 28-WS - Framework Internals Reference from framework/src/
+
+RESULT
+
+**Implemented**
+- Added a deterministic `framework/src/` generator in [FrameworkInternalsGenerator.php](/Users/lo_fye/code/foundry-website/scripts/lib/FrameworkInternalsGenerator.php) and hooked it into the existing pipeline in [DocsPipeline.php](/Users/lo_fye/code/foundry-website/scripts/lib/DocsPipeline.php). The pipeline now writes a generated internals index plus subsystem pages and JSON, then lets the normal navigation/search/LLM/render flow consume them.
+- Added the landing-page nav entry in [navigation.json](/Users/lo_fye/code/foundry-website/content/docs/navigation.json) and linked the new section from [architecture-reference.md](/Users/lo_fye/code/foundry-website/content/docs/authored/architecture-reference.md), [architecture-explorer.md](/Users/lo_fye/code/foundry-website/content/docs/authored/architecture-explorer.md), [contributing.md](/Users/lo_fye/code/foundry-website/content/docs/authored/contributing.md), [docs-index.md](/Users/lo_fye/code/foundry-website/content/docs/authored/docs-index.md), and [README.md](/Users/lo_fye/code/foundry-website/README.md).
+
+**Verified**
+- `php scripts/build-docs.php` succeeded.
+- The current docs alias now includes 30 internals pages in [public/docs/generated/navigation.json](/Users/lo_fye/code/foundry-website/public/docs/generated/navigation.json), including [framework-internals/index.html](/Users/lo_fye/code/foundry-website/public/docs/framework-internals/index.html) and subsystem pages like [framework-internals-compiler/index.html](/Users/lo_fye/code/foundry-website/public/docs/framework-internals-compiler/index.html).
+- Machine-readable outputs are emitted at [framework-internals.json](/Users/lo_fye/code/foundry-website/content/docs/generated/framework-internals.json), per-subsystem JSON like [compiler.json](/Users/lo_fye/code/foundry-website/content/docs/generated/framework-internals/compiler.json), and matching public copies under [public/docs/generated/framework-internals.json](/Users/lo_fye/code/foundry-website/public/docs/generated/framework-internals.json).
+- Slug enforcement still passes with `error_count: 0` and `warning_count: 0` in [slug-resolution-report.json](/Users/lo_fye/code/foundry-website/docs-build/slug-resolution-report.json).
+- Existing immutable `v0.5.2` snapshot behavior was preserved. The new internals section is present in current `/docs` and current `/docs/generated`, but the already-existing `public/docs/versions/v0.5.2/` snapshot was not regenerated.
+
+8 files changed
++1640
+-8
+Undo
+README.md
+content/docs/authored/architecture-explorer.md
+content/docs/authored/architecture-reference.md
+content/docs/authored/contributing.md
+content/docs/authored/docs-index.md
+content/docs/navigation.json
+scripts/lib/DocsPipeline.php
+scripts/lib/FrameworkInternalsGenerator.php
+
+------------------------------------------------------------------------------------------
+
+That sounds excellent.
+
+Spec 28 appears to have landed in exactly the right way:
+	•	deterministic generator
+	•	integrated into the existing pipeline
+	•	no rewrite of the docs system
+	•	machine-readable outputs
+	•	navigation + docs cross-linking
+	•	slug enforcement still clean
+	•	immutable version snapshot behavior preserved
+
+That is the ideal outcome.
+
+That’s a strong result.
+
+The key things I like about it:
+	•	you integrated the internals generator into the existing docs pipeline instead of inventing a parallel one
+	•	it’s deterministic
+	•	it emits both human pages and machine-readable JSON
+	•	it cleanly plugs into navigation/search/LLM flows
+	•	it preserved slug enforcement
+	•	it did not mutate the existing immutable version snapshot
+
+That is exactly the right shape.
+
+The most important strategic win is this:
+
+Foundry now has a generated “map of itself” on the docs site.
+
+That makes the framework much easier for:
+	•	new contributors
+	•	advanced users
+	•	LLMs
+	•	future Pro / explain / generate tooling
+
+A few practical implications:
+	•	this makes your future explain and generate work more valuable, because the docs site now exposes subsystem structure in a deterministic way
+	•	it strengthens the “architecture platform” story, not just the “framework docs” story
+	•	it gives you a much better contributor ramp than relying only on prose docs
+
+I would treat Spec 28 as a success.
+
+The next small things I’d eventually want to confirm are:
+	•	whether the generated subsystem summaries are actually good enough semantically, not just present
+	•	whether the internals pages should link back to specific examples where useful
+	•	whether ARCHITECTURE.md / architecture-overview.md should explicitly point readers to this new internals section
+
+But none of those sound like blockers. This sounds like a clean landing.
+
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 29 - Release Readiness Reconciliation Pass
@@ -28126,7 +30471,7 @@ BUILD ORDER:
 30B → 30C → (31–35) → 30D → 30E → 30F → 30G → (36–43)
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 30B — Monetization Simplification & Terminology Standardization
 
 Preface
@@ -28143,7 +30488,9 @@ This spec simplifies the system before 1.0 by:
 	•	standardizing terminology across the framework
 	•	aligning CLI, docs, and architecture with a clean mental model
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 30B — Monetization Simplification & Terminology Standardization
+
 
 Goals
 
@@ -28428,20 +30775,11 @@ tests/Unit/ApiSurfaceRegistryTest.php
 tests/Unit/CLICommandMatchesTest.php
 tests/Unit/ProLicenseTest.php
 
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
 BUILD ORDER:
 30B → 30C → (31–35) → 30D → 30E → 30F → 30G → (36–43)
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 30C — Monetization UX & Product Layer (Framework)
-
-Preface
 
 Spec 30 introduced the monetization system.
 Spec 30B simplified and normalized it.
@@ -28451,7 +30789,9 @@ This spec defines how monetization is experienced by developers inside the frame
 	•	introducing confusion
 	•	or degrading the free experience
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 30C — Monetization UX & Product Layer (Framework)
+
 
 Goals
 	1.	Make monetization clear, minimal, and non-intrusive
@@ -28696,14 +31036,329 @@ tests/Unit/ApiSurfaceRegistryTest.php
 tests/Unit/CLICommandMatchesTest.php
 tests/Unit/MonetizationLicenseTest.php
 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+BUILD ORDER:
+30B → 30C → (31–35) → 30D → 30E → 30F → 30G → (36–43)
+
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 30C-WS — Monetization UX & Product Layer (Website, LLM-First Positioning)
+
+This spec defines how monetization is presented on:
+
+https://foundryframework.org
+
+This spec is self-contained and does not depend on framework repository specs.
+
+The website must accurately reflect Foundry’s identity as:
+
+an LLM-first, architecture-native framework
+
+Developers are first-class users, but the system is optimized for:
+	•	LLM interaction
+	•	structured generation
+	•	architecture-aware workflows
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 30C-WS — Monetization UX & Product Layer (Website, LLM-First Positioning)
+
+Goals
+	1.	Make pricing clear and credible
+	2.	Maintain trust with technical users
+	3.	Reflect Foundry’s LLM-first identity
+	4.	Support self-serve adoption
+	5.	Avoid SaaS-style marketing patterns
+
+⸻
+
+Core Messaging Principles
+
+1. LLM-first positioning
+
+All messaging must reinforce:
+	•	Foundry is designed for LLMs to build and modify applications
+	•	Developers guide, review, and collaborate with the system
+	•	The architecture exists to make LLM behavior reliable
+
+⸻
+
+2. Neutral monetization language
+
+Use:
+	•	“license”
+	•	“licensed features”
+	•	“advanced capabilities”
+
+Avoid:
+	•	“Pro mode”
+	•	“upgrade pressure”
+	•	marketing-heavy phrasing
+
+⸻
+
+3. Trust over conversion
+
+Prioritize:
+	•	clarity
+	•	transparency
+	•	technical credibility
+
+Over:
+	•	urgency
+	•	persuasion tactics
+	•	conversion tricks
+
+⸻
+
+Required Pages
+
+⸻
+
+A. /pricing
+
+Hero
+Headline:
+Simple licensing. No surprises.
+
+Subtext:
+Foundry is fully usable without a license.
+Advanced capabilities are available with a license.
+
+⸻
+
+Positioning Section (NEW — critical)
+Add a short section:
+
+How licensing fits into Foundry
+
+Foundry is designed to help LLMs understand and modify real systems safely.
+
+Some advanced capabilities—such as deeper analysis, structured generation, and extended diagnostics—require a license.
+
+Licensing does not change how Foundry works.
+It only expands what it can do.
+
+⸻
+
+⸻
+
+Plans Table
+
+Tier	Description
+Free	Core architecture system, explain, basic workflows
+Licensed	Advanced explain, generate, deep diagnostics, extended capabilities
+
+
+⸻
+
+⸻
+
+Guarantees Section
+
+Must include:
+	•	No background network calls
+	•	No hidden telemetry
+	•	Works fully offline
+	•	License is local-first
+	•	Deterministic behavior is preserved
+
+⸻
+
+⸻
+
+CLI Integration Section (important for LLM-first identity)
+
+Show:
+
+foundry license activate --key=YOUR_KEY
+
+Framed as:
+
+Foundry integrates licensing directly into its CLI and workflow.
+
+⸻
+
+⸻
+
+B. /docs/licensing
+
+Must explain:
+	•	what licensing affects (capabilities, not core behavior)
+	•	local license files
+	•	environment variables
+	•	optional validation
+	•	feature access model (high-level, not internal details)
+
+Include:
+
+Important clarification:
+
+Licensing does not affect:
+	•	your code ownership
+	•	your application structure
+	•	your ability to run Foundry locally
+
+⸻
+
+⸻
+
+C. Homepage Integration
+
+Add section:
+
+LLM-first by design
+
+Foundry is built for LLMs to understand and evolve applications.
+
+Developers remain in control—but the system is optimized for structured, reliable machine interaction.
+
+⸻
+
+Add monetization subsection:
+
+Free by default
+
+Foundry is fully usable without a license.
+
+When you need more advanced capabilities, you can activate a license—no lock-in, no surprises.
+
+⸻
+
+⸻
+
+D. Docs Integration
+
+In relevant pages (generate, explain, diagnostics):
+
+Add small, consistent note:
+
+Some advanced capabilities may require a license.
+
+Do not over-emphasize.
+
+⸻
+
+⸻
+
+Language Rules
+
+Always say:
+	•	license
+	•	licensed features
+	•	advanced capabilities
+
+Never say:
+	•	Pro mode
+	•	upgrade now
+	•	unlock everything
+	•	limited-time
+	•	growth plan
+	•	“for serious developers”
+
+⸻
+
+⸻
+
+Tone Guidelines
+
+Write like:
+	•	Stripe docs
+	•	early Vercel
+	•	Rust docs
+
+Avoid:
+	•	startup hype
+	•	emotional persuasion
+	•	exaggerated claims
+
+⸻
+
+⸻
+
+Acceptance Criteria
+	•	No references to “Pro” anywhere
+	•	Website stands alone (no spec references)
+	•	LLM-first positioning is explicit
+	•	Pricing page exists and is clear
+	•	Licensing docs exist and are accurate
+	•	Homepage reflects identity and monetization subtly
+	•	Messaging matches CLI behavior conceptually
+
+⸻
+
+⸻
+
+Result
+
+The website:
+	•	correctly positions Foundry as LLM-first
+	•	aligns with actual framework behavior
+	•	builds trust with technical users
+	•	introduces monetization without friction or confusion
+
+⸻
+
+⸻
+
+Final Insight
+
+If the framework says:
+
+“This system is built for LLMs”
+
+Then the website must say the same thing—clearly, consistently, and without dilution.
+
+Otherwise, users will misunderstand what Foundry actually is.
+
+------------------------------------------------------------------------------------------
+
+R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 30C-WS — Monetization UX & Product Layer (Website, LLM-First Positioning)
+
+RESULT
+
+Implemented the monetization layer across the current site. [public/pricing/index.html](/Users/lo_fye/code/foundry-website/public/pricing/index.html) now provides the new pricing page, and [public/index.html](/Users/lo_fye/code/foundry-website/public/index.html), [public/build.html](/Users/lo_fye/code/foundry-website/public/build.html), [public/how-foundry-works.html](/Users/lo_fye/code/foundry-website/public/how-foundry-works.html), and [public/contributing.html](/Users/lo_fye/code/foundry-website/public/contributing.html) now carry the pricing nav/footer language and the LLM-first, free-by-default positioning. The docs side now has a website-owned licensing reference at [content/docs/authored/licensing.md](/Users/lo_fye/code/foundry-website/content/docs/authored/licensing.md), wired through [content/docs/navigation.json](/Users/lo_fye/code/foundry-website/content/docs/navigation.json) and [content/docs/slug-map.json](/Users/lo_fye/code/foundry-website/content/docs/slug-map.json), with subtle licensing notes injected on the relevant explain/generate/diagnostics pages via [scripts/lib/DocsPipeline.php](/Users/lo_fye/code/foundry-website/scripts/lib/DocsPipeline.php).
+
+I also updated [scripts/lib/FrameworkInternalsGenerator.php](/Users/lo_fye/code/foundry-website/scripts/lib/FrameworkInternalsGenerator.php) and [scripts/build-docs.php](/Users/lo_fye/code/foundry-website/scripts/build-docs.php) so current docs builds prune stale generated pages instead of leaving old `framework-internals-pro` artifacts behind. `php scripts/build-docs.php` completes successfully, and a grep over the current site/docs tree found no remaining `Pro` or banned marketing language outside preserved historical version snapshots under `public/docs/versions/`.
+
+15 files changed
++597
+-22
+Undo
+content/docs/authored/ai-development.md
+content/docs/authored/cli-reference.md
+content/docs/authored/docs-index.md
+content/docs/authored/licensing.md
+content/docs/navigation.json
+content/docs/slug-map.json
+public/build.html
+public/contributing.html
+public/how-foundry-works.html
+public/index.html
+public/pricing/index.html
+scripts/build-docs.php
+DocsPipeline.php
++68
+-3
+Too large to render inline
+
+Review
+scripts/lib/FrameworkInternalsGenerator.php
+templates/layout.html
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 30C-2 — Monetization Realignment (Framework)
 
 Purpose
@@ -28713,7 +31368,9 @@ Reframe the existing monetization system (30–30C) so that:
 	•	Monetization is service-oriented, not feature-restrictive
 	•	Feature flags become capability descriptors, not locks
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 30C-2 — Monetization Realignment (Framework)
+
 
 Goals
 	1.	Remove all gating on:
@@ -28862,10 +31519,112 @@ tests/Unit/MonetizationLicenseTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 30C-2-WS — Website Realignment
+
+Purpose
+
+Align messaging with new philosophy:
+
+Foundry is fully powerful out of the box
+Monetization comes from ecosystem participation
+
+⸻
+
+Required Changes
+
+1. Remove ALL Feature Gating Language
+
+Delete phrases like:
+	•	“unlock”
+	•	“upgrade”
+	•	“Pro features”
+	•	“advanced features require license”
+
+⸻
+
+2. Replace with:
+
+“Foundry is fully functional locally.
+Licensing is only required for ecosystem features like the marketplace.”
+
+⸻
+
+3. Update Pricing Page Direction
+
+Instead of:
+	•	feature tiers
+
+Introduce:
+
+Future-oriented sections:
+	•	Marketplace access (future)
+	•	Verified packs (future)
+	•	Ecosystem participation
+
+⸻
+
+4. Reinforce Identity
+
+Change positioning to:
+
+LLM-first, fully capable locally, ecosystem-powered when connected
+
+⸻
+
+Acceptance Criteria
+	•	No mention of gated features anywhere
+	•	Messaging is consistent across:
+	•	homepage
+	•	docs
+	•	CLI references
+	
+	
+------------------------------------------------------------------------------------------
+
+R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 30C-2-WS — Website Realignment
+
+RESULT
+
+Updated the site to the new local-first ecosystem model. [public/index.html](/Users/lo_fye/code/foundry-website/public/index.html) and [public/pricing/index.html](/Users/lo_fye/code/foundry-website/public/pricing/index.html) now position Foundry as “LLM-first, fully capable locally, ecosystem-powered when connected,” with pricing reframed around marketplace access, verified packs, and ecosystem participation instead of gated feature tiers. The licensing docs in [content/docs/authored/licensing.md](/Users/lo_fye/code/foundry-website/content/docs/authored/licensing.md) and [content/docs/navigation.json](/Users/lo_fye/code/foundry-website/content/docs/navigation.json) now consistently say that Foundry is fully functional locally and licensing is only for ecosystem features like the marketplace.
+
+I also tightened the build layer so current generated docs don’t leak the old feature-gating model from the pinned framework checkout. [scripts/lib/DocsPipeline.php](/Users/lo_fye/code/foundry-website/scripts/lib/DocsPipeline.php) now rewrites the presented `architecture-tools` copy and the small docs callouts to the new wording, and [scripts/lib/FrameworkInternalsGenerator.php](/Users/lo_fye/code/foundry-website/scripts/lib/FrameworkInternalsGenerator.php) now excludes monetization from the current public internals surface and filters it out of public subsystem relationships. That removed the current [public/docs/framework-internals-monetization/index.html](/Users/lo_fye/code/foundry-website/public/docs/framework-internals-monetization/index.html) page.
+
+`php scripts/build-docs.php` completes successfully. I also ran focused greps across the current tree and found no remaining hits for `unlock`, `Pro features`, `advanced features require a license`, `licensed commands`, `feature gating`, or similar old gating language outside preserved version snapshots. One caveat: existing historical snapshots under [public/docs/versions](/Users/lo_fye/code/foundry-website/public/docs/versions) were left intact on purpose to respect the version-preservation rules, so they may still contain older wording.
+
+12 files changed
++175
+-109
+Undo
+content/docs/authored/ai-development.md
+content/docs/authored/cli-reference.md
+content/docs/authored/docs-index.md
+content/docs/authored/licensing.md
+content/docs/navigation.json
+public/build.html
+public/how-foundry-works.html
+public/index.html
+public/pricing/index.html
+scripts/lib/DocsPipeline.php
+scripts/lib/FrameworkInternalsGenerator.php
+templates/layout.html
+
+sorry i forgot to update your copy of the framework before having you do that spec. i have now updated the framework. can you please tweak the changes you made based on the updated version of the framework, as well as make any additional changes you need to make per Spec 30C-2-WS?
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+
 BUILD ORDER:
 30D, 30E, 30F, 30G, 36, 37, 38, 39, 40, 41, 42, 43, 44, 44B, 45A, 45B, 45C, 46, 47
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 30D — First-Run Experience (Zero → Value in 60 Seconds)
 
 Preface
@@ -28877,7 +31636,9 @@ This spec defines a deterministic, fast, and confidence-building first-run exper
 	•	demonstrates real value within 60 seconds
 	•	aligns with Foundry’s identity as an LLM-first architecture system
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 30D — First-Run Experience (Zero → Value in 60 Seconds)
+
 
 Goals
 	1.	Achieve time-to-value < 60 seconds
@@ -29543,7 +32304,7 @@ tests/Unit/ExampleLoaderTest.php
 BUILD ORDER:
 30E, 30F, 30G, 36, 37, 38, 39, 40, 41, 42, 43, 44, 44B, 45A, 45B, 45C, 46, 47
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 30E — Explain ⇄ Generate Feedback Loop (Tight Iteration UX)
 
 Preface
@@ -29564,7 +32325,9 @@ This spec formalizes that loop so that:
 This spec is not a UI flourish.
 It is a core product experience layer that makes Foundry feel coherent, trustworthy, and fast.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 30E — Explain ⇄ Generate Feedback Loop (Tight Iteration UX)
+
 
 Goals
 	1.	Create a tight, deterministic loop:
@@ -30486,7 +33249,7 @@ BUILD ORDER:
 30F, 30G, 36, 37, 38, 39, 40, 41, 42, 43, 44, 44B, 45A, 45B, 45C, 46, 47
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 30F — Confidence Scoring for Explain, Generate, and Iteration
 
 Preface
@@ -30500,7 +33263,9 @@ and how reliable the resulting change appears to be.
 
 This spec introduces a deterministic confidence scoring system.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 30F — Confidence Scoring for Explain, Generate, and Iteration
+
 
 Goals
 	1.	Provide confidence signals for explain output
@@ -30831,7 +33596,7 @@ BUILD ORDER:
 30G, 36, 37, 38, 39, 40, 41, 42, 43, 44, 44B, 45A, 45B, 45C, 46, 47
 
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 30G — Git Integration for Explain, Generate, Plans, and Replay
 
 Preface
@@ -30848,7 +33613,9 @@ To fit real developer workflows, Foundry must integrate cleanly with Git.
 
 This spec adds Git-aware workflows without making Git a hard dependency for core framework behavior.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 30G — Git Integration for Explain, Generate, Plans, and Replay
+
 
 Goals
 	1.	Make generate safer in real repositories
@@ -31150,7 +33917,7 @@ tests/Unit/GraphCompilerTest.php
 BUILD ORDER:
 31, 32, 33, 34, 35, 30D, 30E, 30F, 30G, 36, 37, 38, 39, 40, 41, 42, 43, 44, 44B, 45A, 45B, 45C, 46, 47
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 31 — Foundry Pack System Foundation
 
 Purpose
@@ -31166,7 +33933,9 @@ This spec establishes:
 
 This is the foundation for the later marketplace work, but it must work fully offline and without any remote dependency.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 31 — Foundry Pack System Foundation
+
 
 Core Principle
 
@@ -31511,16 +34280,8 @@ tests/Unit/PackManifestTest.php
 BUILD ORDER:
 32, 33, 34, 35, 30D, 30E, 30F, 30G, 36, 37, 38, 39, 40, 41, 42, 43, 44, 44B, 45A, 45B, 45C, 46, 47
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 32 — Hosted Marketplace (Minimal Viable)
-
-⸻
-
-Title
-
-Hosted Pack Registry (Read-Only, Public, No Auth)
-
-⸻
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 32 — Hosted Pack Registry (aka read-only, public, no auth Marketplace)
 
 Purpose
 
@@ -31543,7 +34304,8 @@ The hosted registry is a read-only index, not a control system.
 It provides discovery and metadata only.
 All installation and execution logic remains local.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 32 — Hosted Pack Registry (aka read-only, public, no auth Marketplace)
 
 Goals
 	1.	Provide a public JSON registry of packs
@@ -31886,7 +34648,7 @@ tests/Unit/PackArchiveExtractorTest.php
 BUILD ORDER:
 33, 34, 35, 30D, 30E, 30F, 30G, 36, 37, 38, 39, 40, 41, 42, 43, 44, 44B, 45A, 45B, 45C, 46, 47
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 33 — Explain System Hardening + Extension-Aware Architecture
 
 Canonical Model + Deterministic Contract + Marketplace Integration Surface
@@ -31921,7 +34683,9 @@ Not:
 
 a core-only introspection tool
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 33 — Explain System Hardening + Extension-Aware Architecture
+
 
 🎯 Goals (Updated)
 	1.	Normalize explain into a canonical data model
@@ -32274,14 +35038,9 @@ tests/Unit/ExplainPolishTest.php
 BUILD ORDER:
 34, 35, 30D, 30E, 30F, 30G, 36, 37, 38, 39, 40, 41, 42, 43, 44, 44B, 45A, 45B, 45C, 46, 47
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 34 — Foundry Marketplace System
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 34 — Deterministic Pack System + Local/Remote Marketplace Integration
 
-Title
-
-Deterministic Pack System + Local/Remote Marketplace Integration
-
-⸻
 
 🧭 Preface
 
@@ -32299,7 +35058,9 @@ This is a core architectural layer, not a UI feature.
 Packs extend the system through deterministic graph contributions.
 Installation, resolution, and execution must be fully explainable.
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 34 — Deterministic Pack System + Local/Remote Marketplace Integration
+
 
 🎯 Goals
 	1.	Introduce pack install/remove lifecycle
@@ -32632,7 +35393,7 @@ a deterministic, inspectable, extension ecosystem
 
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 34 — Foundry Marketplace System
+NAME: 34 — Deterministic Pack System + Local/Remote Marketplace Integration
 
 RESULT
 
@@ -32685,14 +35446,9 @@ tests/Unit/PackManifestTest.php
 BUILD ORDER:
 35, 30D, 30E, 30F, 30G, 36, 37, 38, 39, 40, 41, 42, 43, 44, 44B, 45A, 45B, 45C, 46, 47
 
-S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 NAME: 35 — Generate System (End-to-End, Explain-Driven, Pack-Aware)
 
-Title
-
-Generate System — Explain-Driven, Pack-Aware Architecture Modification Engine
-
-⸻
 
 🧭 Preface
 
@@ -32730,7 +35486,9 @@ intent
 → controlled execution
 → verification loop
 
-⸻
+S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+NAME: 35 — Generate System (End-to-End, Explain-Driven, Pack-Aware)
+
 
 🎯 Goals
 	1.	Make code generation architecture-aware

@@ -67,6 +67,23 @@ TXT);
         $this->assertSame([], $payload['candidates']);
     }
 
+    public function test_extract_ignores_generated_evidence_maps_and_candidate_directories(): void
+    {
+        $this->writeRawSpecFile('raw/spec.md', "Spec 1: Real\nPurpose: Real candidate.\n");
+        $this->writeRawSpecFile('evidence-map.md', "Spec 999: Generated report\nPurpose: Ignore me.\n");
+        $this->writeRawSpecFile('candidate-001/source.md', "Spec 888: Generated candidate\nPurpose: Ignore me.\n");
+
+        $payload = $this->extractor()->extract(
+            '_import/raw-historical-specs',
+            '_import/historical-specs',
+            true,
+        );
+
+        $this->assertSame(1, $payload['summary']['files_scanned']);
+        $this->assertSame(1, $payload['summary']['candidates']);
+        $this->assertSame('Spec 1', $payload['candidates'][0]['detected_spec_label']);
+    }
+
     public function test_extract_supports_weird_spec_headings_like_spec_35d_dash_2(): void
     {
         $this->writeRawSpecFile('raw/weird.md', <<<'TXT'
@@ -132,7 +149,7 @@ TXT);
         $this->assertSame('draft-shared-title-2', $payload['candidates'][1]['suggested_slug']);
     }
 
-    public function test_extract_marks_title_purpose_fallback_as_low_confidence(): void
+    public function test_extract_rejects_title_purpose_fallback_without_spec_root(): void
     {
         $this->writeRawSpecFile('raw/fallback.txt', <<<'TXT'
 Title: Legacy migration idea
@@ -145,12 +162,82 @@ TXT);
             true,
         );
 
-        $this->assertSame(1, $payload['summary']['candidates']);
-        $this->assertSame('low', $payload['candidates'][0]['confidence']);
-        $this->assertContains(
-            'Weak boundary match; extracted using title/purpose fallback.',
-            $payload['candidates'][0]['notes'],
+        $this->assertSame(0, $payload['summary']['candidates']);
+        $this->assertSame([], $payload['candidates']);
+    }
+
+    public function test_extract_uses_legacy_filename_fallback_for_single_spec_file(): void
+    {
+        $this->writeRawSpecFile('raw/Foundry-Spec-30C-2.md', <<<'TXT'
+Title: Historical module import
+Purpose: Preserve archive import behavior.
+Requirements: Keep output deterministic.
+TXT);
+
+        $payload = $this->extractor()->extract(
+            '_import/raw-historical-specs',
+            '_import/historical-specs',
+            true,
         );
+
+        $this->assertSame(1, $payload['summary']['candidates']);
+        $this->assertSame('Spec 30C-2', $payload['candidates'][0]['detected_spec_label']);
+        $this->assertSame('legacy_filename_single_spec', $payload['candidates'][0]['emission_reason']);
+        $this->assertSame('probable', $payload['candidates'][0]['candidate_quality']);
+    }
+
+    public function test_extract_suppresses_section_fragments_and_embedded_prior_spec_references(): void
+    {
+        $this->writeRawSpecFile('raw/recap.md', <<<'TXT'
+Spec 19A: CLI Entry
+Purpose: Implement CLI entry contracts.
+Requirements: Commands must remain deterministic.
+
+Architecture (what it is)
+Spec 19D established the foundations for foundry explain.
+must:
+introduced collectors and analyzers.
+
+Spec 19B: Core Models
+Purpose: Implement core models.
+Requirements: Models must remain deterministic.
+TXT);
+
+        $payload = $this->extractor()->extract(
+            '_import/raw-historical-specs',
+            '_import/historical-specs',
+            true,
+        );
+
+        $this->assertSame(2, $payload['summary']['candidates']);
+        $this->assertSame('Spec 19A', $payload['candidates'][0]['detected_spec_label']);
+        $this->assertSame('Spec 19B', $payload['candidates'][1]['detected_spec_label']);
+        $this->assertSame([
+            ['text' => 'Architecture (what it is)', 'reason' => 'section_fragment'],
+            ['text' => 'Spec 19D established the foundations for foundry explain.', 'reason' => 'embedded_prior_spec_reference'],
+            ['text' => 'must:', 'reason' => 'section_fragment'],
+            ['text' => 'introduced collectors and analyzers.', 'reason' => 'section_fragment'],
+        ], $payload['candidates'][0]['rejected_root_signals']);
+    }
+
+    public function test_extract_emits_result_only_content_as_supporting_evidence(): void
+    {
+        $this->writeRawSpecFile('raw/result-only.md', <<<'TXT'
+RESULT:
+Implementation completed in a prior session.
+TXT);
+
+        $payload = $this->extractor()->extract(
+            '_import/raw-historical-specs',
+            '_import/historical-specs',
+            false,
+        );
+
+        $this->assertSame(1, $payload['summary']['candidates']);
+        $this->assertSame('supporting_evidence', $payload['candidates'][0]['emission_reason']);
+        $this->assertSame('supporting', $payload['candidates'][0]['candidate_quality']);
+        $this->assertSame('low', $payload['candidates'][0]['result_association_confidence']);
+        $this->assertFileExists($this->project->root . '/_import/historical-specs/candidate-001/result.md');
     }
 
     public function test_dry_run_writes_nothing_to_target_directory(): void

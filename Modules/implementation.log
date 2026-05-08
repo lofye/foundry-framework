@@ -406,3 +406,15 @@
 - note: Added deterministic non-blocking decision-summary warnings to `spec:validate` (`DECISION_SUMMARY_MISSING`, `DECISION_SUMMARY_POSSIBLY_STALE`) for module state files while preserving append-only decision ledgers.
 - note: Added module-state `## Decision Summary` staleness checks via `Refreshed Through Spec:` markers compared against canonical `Modules/implementation.log` module spec references.
 - note: Updated validator/CLI output contracts to include warning counts and warning arrays in JSON and plain-text surfaces.
+
+## 2026-05-08 10:30:00 -0400
+- spec: Modules/FeatureSystem/specs/012-extraction-boundary-and-root-detection-hardening.md
+- note: Hardened historical extraction boundaries so explicit spec roots and legacy `Foundry-Spec-*` filename fallback emit candidates while section fragments, recap prose, and embedded prior-spec references remain attached to surrounding source.
+- note: Added deterministic candidate metadata for emission reasons, candidate quality, rejected root signals, and result association confidence.
+- note: Aligned historical evidence mapping with the hardened root semantics so weak/supporting candidates default to review or ignore-supporting instead of import.
+
+## 2026-05-08 11:45:00 -0400
+- spec: Modules/FeatureSystem/specs/013-import-explicitly-marked-precanonical-archive.md
+- note: Added deterministic `precanonical:import` report/apply CLI support for explicitly marked single-file pre-canonical archives with `S`, `R`, and `P` blocks.
+- note: Added legacy alphanumeric ID mapping into padded canonical PreCanonical spec IDs, normalized result pairing, preamble preservation, conflict refusal, and force replacement for generated PreCanonical artifacts.
+- note: Added PreCanonical spec, reconstruction-note, context-file, and idempotent implementation-log generation with focused unit/integration coverage for parsing, pairing, ID mapping, conflicts, and CLI behavior.
