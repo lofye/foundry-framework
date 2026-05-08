@@ -163,6 +163,25 @@ final class HistoricalSpecArchiveImporterTest extends TestCase
         $this->assertFileExists($this->project->root . '/Modules/FeatureSystem/specs/drafts/002-uncertain-import.md');
     }
 
+    public function test_website_specs_are_skipped_even_when_metadata_maps_to_framework_module(): void
+    {
+        $this->writeArchiveCandidate('Foundry-Spec-19L-WS', [
+            'module' => 'FeatureSystem',
+            'spec_id' => '019',
+            'slug' => 'website-only',
+            'implemented' => true,
+            'original_file' => '_import/historical-specs/Foundry-Spec-19L-WS.md',
+        ], "Purpose: Website-only behavior.\n");
+
+        $payload = $this->importer()->import('historical-specs', true, false, false);
+
+        $this->assertSame(1, $payload['summary']['skipped_website']);
+        $this->assertSame(0, $payload['summary']['written']);
+        $this->assertSame('website_skipped', $payload['candidates'][0]['status']);
+        $this->assertSame('HISTORICAL_SPEC_IMPORT_WEBSITE_SPEC_SKIPPED', $payload['candidates'][0]['code']);
+        $this->assertFileDoesNotExist($this->project->root . '/Modules/FeatureSystem/specs/019-website-only.md');
+    }
+
     public function test_report_ordering_is_deterministic(): void
     {
         $this->writeArchiveCandidate('z-last', [

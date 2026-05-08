@@ -86,6 +86,25 @@ final class HistoricalSpecEvidenceMapperTest extends TestCase
         $this->assertSame('ignore_supporting', $rowsBySource['_import/historical-specs/Foundry-Spec-Summaries.md']['import_action']);
     }
 
+    public function test_build_classifies_ws_specs_as_website_supporting_evidence(): void
+    {
+        $this->writeSpecFile('Foundry-Spec-19L-WS.md', "Spec 19L\nTitle: Website checkout\n");
+
+        $payload = $this->mapper()->build(
+            sourcePath: '_import/historical-specs',
+            anchorsPath: null,
+            withGitEvidence: false,
+            write: false,
+            dryRun: true,
+        );
+
+        $candidate = $payload['candidates'][0];
+        $this->assertContains('_import/historical-specs/Foundry-Spec-19L-WS.md', $payload['supporting_evidence_files']);
+        $this->assertSame('supporting_evidence', $candidate['era']);
+        $this->assertSame('ignore_supporting', $candidate['import_action']);
+        $this->assertContains('Supporting or website-owned source; excluded from framework import.', $candidate['notes']);
+    }
+
     public function test_build_supports_multi_spec_segments_result_detection_and_filename_mismatch_note(): void
     {
         $this->writeSpecFile('Foundry-Spec-35D7G-015.md', <<<'TXT'

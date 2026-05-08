@@ -393,3 +393,10 @@
 - note: Added deterministic historical module context generation through `historical-specs:context` with report-only default behavior, explicit `--apply` write mode, module filtering, and stable repository-relative output.
 - note: Added FeatureSystem context generation that creates missing module state/spec/decision files, updates existing files without destructive rewrite, appends decision-ledger reconstruction entries, and keeps inferred or draft-only import caveats explicit.
 - note: Added shape-based imported-spec detection so prose examples are not misclassified as imported history, plus focused unit/integration coverage for creation, updates, decision appends, uncertainty marking, deterministic ordering, and context validation.
+
+## 2026-05-07 21:40:43 -0400
+- spec: Modules/FeatureSystem/specs/010-generate-historical-reconstruction-notes-and-log-entries.md
+- note: Added deterministic historical reconstruction generation through `historical-specs:reconstruct` with report-only default behavior, explicit `--apply` write mode, module filtering, and stable repository-relative output.
+- note: Added completed-import handling that creates missing historical reconstruction notes, preserves existing notes, excludes draft imports, and appends canonical `Modules/implementation.log` entries exactly once.
+- note: Added embedded OUTPUT/RESULT evidence extraction with bounded implementation, verification, stabilization, path-reference, repository-alignment, and uncertainty summaries plus focused unit/integration coverage.
+- note: Excluded website-owned `*WS.md` historical specs from framework import by classifying them as supporting/ignored evidence and skipping import writes even when metadata appears to map them to a framework module.

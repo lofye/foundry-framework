@@ -20,7 +20,7 @@ final class HistoricalSpecArchiveImporter
      *     apply:bool,
      *     force:bool,
      *     source_path:string,
-     *     summary:array{candidates:int,importable:int,written:int,already_imported:int,conflicts:int,unmapped:int,invalid_metadata:int},
+     *     summary:array{candidates:int,importable:int,written:int,already_imported:int,conflicts:int,unmapped:int,invalid_metadata:int,skipped_website:int},
      *     candidates:list<array<string,mixed>>
      * }
      */
@@ -141,6 +141,14 @@ final class HistoricalSpecArchiveImporter
             'rendered_content' => '',
         ];
 
+        if ($this->isWebsiteCandidate($directory, null)) {
+            $base['status'] = 'website_skipped';
+            $base['code'] = 'HISTORICAL_SPEC_IMPORT_WEBSITE_SPEC_SKIPPED';
+            $base['message'] = 'Website historical spec is excluded from framework import.';
+
+            return $base;
+        }
+
         if ($metadata['status'] === 'missing') {
             return $base;
         }
@@ -155,6 +163,14 @@ final class HistoricalSpecArchiveImporter
 
         /** @var array<string,mixed> $data */
         $data = $metadata['data'];
+        if ($this->isWebsiteCandidate($directory, $data)) {
+            $base['status'] = 'website_skipped';
+            $base['code'] = 'HISTORICAL_SPEC_IMPORT_WEBSITE_SPEC_SKIPPED';
+            $base['message'] = 'Website historical spec is excluded from framework import.';
+
+            return $base;
+        }
+
         $validation = $this->validateMetadata($data);
         if ($validation !== []) {
             $base['status'] = 'invalid_metadata';
@@ -217,6 +233,37 @@ final class HistoricalSpecArchiveImporter
             : 'Candidate implementation status is uncertain; candidate maps to drafts.';
 
         return $base;
+    }
+
+    /**
+     * @param array<string,mixed>|null $metadata
+     */
+    private function isWebsiteCandidate(string $directory, ?array $metadata): bool
+    {
+        $values = [basename($directory), $this->outputPath($directory)];
+        if (is_array($metadata)) {
+            foreach (['original_file', 'source_file', 'source_path', 'filename', 'slug', 'detected_spec_label', 'legacy_label', 'repo', 'repository', 'project'] as $key) {
+                $value = trim((string) ($metadata[$key] ?? ''));
+                if ($value !== '') {
+                    $values[] = $value;
+                }
+            }
+        }
+
+        foreach ($values as $value) {
+            $basename = basename(str_replace('\\', '/', $value));
+            if (preg_match('/(?:^|[-_])WS(?:\.md)?$/i', $basename) === 1) {
+                return true;
+            }
+            if (preg_match('/(?:^|[-_])website(?:[-_.]|$)/i', $basename) === 1) {
+                return true;
+            }
+            if (preg_match('/^(?:ws|website)$/i', $value) === 1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -335,7 +382,7 @@ final class HistoricalSpecArchiveImporter
 
     /**
      * @param list<array<string,mixed>> $candidates
-     * @return array{candidates:int,importable:int,written:int,already_imported:int,conflicts:int,unmapped:int,invalid_metadata:int}
+     * @return array{candidates:int,importable:int,written:int,already_imported:int,conflicts:int,unmapped:int,invalid_metadata:int,skipped_website:int}
      */
     private function summary(array $candidates, int $written): array
     {
@@ -347,6 +394,7 @@ final class HistoricalSpecArchiveImporter
             'conflicts' => 0,
             'unmapped' => 0,
             'invalid_metadata' => 0,
+            'skipped_website' => 0,
         ];
 
         foreach ($candidates as $candidate) {
@@ -361,6 +409,8 @@ final class HistoricalSpecArchiveImporter
                 $summary['unmapped']++;
             } elseif ($status === 'invalid_metadata') {
                 $summary['invalid_metadata']++;
+            } elseif ($status === 'website_skipped') {
+                $summary['skipped_website']++;
             }
         }
 

@@ -533,3 +533,51 @@ Timestamp: 2026-05-07T20:38:36-04:00
 - Historical Import Marking
 - Determinism Requirements
 - Testing Requirements
+
+### Decision: generate historical reconstruction notes and canonical log entries conservatively
+
+Timestamp: 2026-05-07T21:40:43-04:00
+
+**Context**
+
+- Execution spec `010-generate-historical-reconstruction-notes-and-log-entries` requires completed imported historical specs to receive reconstruction notes and canonical implementation-log entries.
+- Historical evidence can include embedded OUTPUT/RESULT sections, partial verification transcripts, and file references, but full original implementation sessions may be unavailable.
+
+**Decision**
+
+- Add `historical-specs:reconstruct` as a report/apply command backed by a FeatureSystem historical reconstruction generator.
+- Target only completed imported historical specs under active `Modules/<Module>/specs/*.md`; draft imports remain excluded.
+- Generate missing `Modules/<Module>/plans/<id-and-slug>.md` notes with historical provenance, evidence summaries, verification/stabilization sections, repository alignment, and uncertainty notes.
+- Preserve existing reconstruction notes instead of overwriting them silently.
+- Append missing canonical `Modules/implementation.log` entries exactly once in deterministic spec-path order.
+- Classify website-owned historical specs such as `*WS.md` as supporting/ignored evidence and skip them during framework import.
+
+**Reasoning**
+
+- Completed imported specs must satisfy validation without pretending that incomplete historical evidence is fully known.
+- Excluding drafts prevents uncertain historical specs from being marked complete prematurely.
+- Summarizing embedded evidence protects against copying large transcripts while preserving useful implementation, verification, and stabilization signals.
+- Idempotent log-entry generation keeps repeated apply runs safe.
+- Website specs belong to the website repository, so importing them into framework modules would pollute framework context with out-of-scope application/product work.
+
+**Alternatives Considered**
+
+- Overwrite existing reconstruction notes with generated versions.
+- Treat draft imports as completed historical specs.
+- Copy full embedded RESULT/OUTPUT transcripts into reconstruction notes.
+- Import `*WS.md` records and mark them uncertain inside framework context.
+
+**Impact**
+
+- Imported completed historical specs can satisfy reconstruction-note and implementation-log validation.
+- Historical evidence remains explicit, summarized, and uncertainty-marked.
+- Future follow-up specs can build on generated reconstruction artifacts without re-solving log idempotency or evidence extraction.
+- Website-owned historical records remain visible as ignored/supporting evidence without becoming framework module specs.
+
+**Spec Reference**
+
+- Goals
+- Embedded OUTPUT / RESULT Extraction
+- Historical Provenance Language
+- Implementation Log Entries
+- Acceptance Criteria

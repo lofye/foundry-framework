@@ -51,6 +51,14 @@
 - Missing module context files are created deterministically.
 - Decision ledger entries remain append-only.
 - Historical context generation appends decision-ledger reconstruction entries and keeps inferred or draft-only import caveats explicit.
+- `historical-specs:reconstruct` now provides deterministic report/apply reconstruction-note and implementation-log generation for completed imported historical specs.
+- Imported completed specs have reconstruction notes.
+- Imported completed specs have canonical implementation-log entries.
+- Embedded OUTPUT/RESULT evidence is incorporated into reconstruction notes when available.
+- No duplicate log entries are generated for imported historical specs.
+- Historical reconstruction notes include explicit provenance, evidence levels, embedded RESULT/OUTPUT summaries, current repository alignment, and uncertainty sections.
+- Website-owned historical specs such as `*WS.md` are classified as supporting/ignored evidence and skipped by framework import.
+- Website-owned historical specs are excluded from downstream framework context, reconstruction-note, and implementation-log generation.
 
 ## Open Questions
 

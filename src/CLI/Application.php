@@ -35,6 +35,7 @@ use Foundry\CLI\Commands\HistoricalSpecsContextCommand;
 use Foundry\CLI\Commands\HistoricalSpecsEvidenceCommand;
 use Foundry\CLI\Commands\HistoricalSpecsExtractCommand;
 use Foundry\CLI\Commands\HistoricalSpecsImportCommand;
+use Foundry\CLI\Commands\HistoricalSpecsReconstructCommand;
 use Foundry\CLI\Commands\ImpactCommand;
 use Foundry\CLI\Commands\ImplementFeatureCommand;
 use Foundry\CLI\Commands\ImplementSpecCommand;
@@ -139,6 +140,7 @@ final class Application
             new HistoricalSpecsEvidenceCommand(),
             new HistoricalSpecsExtractCommand(),
             new HistoricalSpecsImportCommand(),
+            new HistoricalSpecsReconstructCommand(),
             new RegressionsCommand(),
             new ExplainCommand(),
             new DiffCommand(),

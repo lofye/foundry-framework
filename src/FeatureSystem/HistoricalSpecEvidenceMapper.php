@@ -80,7 +80,8 @@ final class HistoricalSpecEvidenceMapper
                 continue;
             }
 
-            $isSupporting = in_array($basename, self::SUPPORTING_EVIDENCE_FILES, true);
+            $isWebsiteSpec = $this->isWebsiteSpecFile($basename);
+            $isSupporting = in_array($basename, self::SUPPORTING_EVIDENCE_FILES, true) || $isWebsiteSpec;
             if ($isSupporting) {
                 $supportingEvidenceFiles[] = $relativePath;
             }
@@ -89,7 +90,7 @@ final class HistoricalSpecEvidenceMapper
 
             if ($segments === []) {
                 if ($isSupporting) {
-                    $candidates[] = $this->supportingEvidenceCandidate($relativePath, $basename);
+                    $candidates[] = $this->supportingEvidenceCandidate($relativePath, $basename, $isWebsiteSpec);
                     continue;
                 }
 
@@ -102,7 +103,7 @@ final class HistoricalSpecEvidenceMapper
                     anchors: $anchorConfig['anchors'],
                     transition: $transition,
                     withGitEvidence: $withGitEvidence,
-                    isSupportingEvidence: false,
+                    isSupportingEvidence: $isSupporting,
                 );
 
                 if ($fallback !== null) {
@@ -123,7 +124,7 @@ final class HistoricalSpecEvidenceMapper
                     anchors: $anchorConfig['anchors'],
                     transition: $transition,
                     withGitEvidence: $withGitEvidence,
-                    isSupportingEvidence: false,
+                    isSupportingEvidence: $isSupporting,
                 );
 
                 if ($candidate !== null) {
@@ -476,10 +477,16 @@ final class HistoricalSpecEvidenceMapper
         return rtrim($normalized, "\n") . "\n";
     }
 
+    private function isWebsiteSpecFile(string $basename): bool
+    {
+        return preg_match('/(?:^|[-_])WS\.md$/i', $basename) === 1
+            || preg_match('/(?:^|[-_])website(?:[-_.]|$)/i', $basename) === 1;
+    }
+
     /**
      * @return array<string,mixed>
      */
-    private function supportingEvidenceCandidate(string $sourceFile, string $sourceFilename): array
+    private function supportingEvidenceCandidate(string $sourceFile, string $sourceFilename, bool $isWebsiteSpec = false): array
     {
         return [
             'candidate_id' => '',
@@ -516,7 +523,9 @@ final class HistoricalSpecEvidenceMapper
                 'git_commit' => 'unknown',
                 'current_source' => 'unknown',
             ],
-            'notes' => ['Supporting evidence source; not importable spec candidate by default.'],
+            'notes' => [$isWebsiteSpec
+                ? 'Website historical spec; excluded from framework import.'
+                : 'Supporting evidence source; not importable spec candidate by default.'],
             'result_detected' => false,
             'result_text' => null,
             'followups_detected' => false,
@@ -596,6 +605,10 @@ final class HistoricalSpecEvidenceMapper
 
         if ($era === 'pre_canonical' && $importAction === 'review' && $moduleInference['suggested_module'] === null) {
             $notes[] = 'No confident module inference; candidate requires review before import.';
+        }
+
+        if ($isSupportingEvidence) {
+            $notes[] = 'Supporting or website-owned source; excluded from framework import.';
         }
 
         if ($segmentTotal > 1) {
