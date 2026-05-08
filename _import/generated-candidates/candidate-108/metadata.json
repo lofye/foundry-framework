@@ -1,0 +1,29 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+    "candidate_id": "candidate-108",
+    "source_segment": 27,
+    "source_segments_total": 27,
+    "detected_spec_label": "Spec 24",
+    "detected_title": "\u2014 Contributor Portal",
+    "suggested_slug": "spec-24-contributor-portal-2",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Non-goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Implementation",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

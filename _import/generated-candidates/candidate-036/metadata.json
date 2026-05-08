@@ -1,0 +1,33 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-19K.md",
+    "candidate_id": "candidate-036",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 19K",
+    "detected_title": "",
+    "suggested_slug": "spec-19k",
+    "suggested_module": "unknown",
+    "confidence": "medium",
+    "emission_reason": "legacy_filename_single_spec",
+    "candidate_quality": "probable",
+    "rejected_root_signals": [
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Non-Goals",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Spec label not detected from explicit heading.",
+        "Title not detected from heading or Title: field.",
+        "Low-confidence extraction; manual review recommended.",
+        "Purpose field not explicitly detected.",
+        "Legacy filename fallback used for single-spec source file."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

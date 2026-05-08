@@ -1,0 +1,33 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-9.md",
+    "candidate_id": "candidate-081",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 9",
+    "detected_title": "\u2014 Framework Doctor and Environment Diagnostics",
+    "suggested_slug": "spec-9-framework-doctor-and-environment-diagnostics",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Spec 9 must:",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "Requirements",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

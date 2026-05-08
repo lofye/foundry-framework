@@ -1,0 +1,37 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-7.md",
+    "candidate_id": "candidate-079",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 7",
+    "detected_title": "\u2014 Stable Public API Definition",
+    "suggested_slug": "spec-7-stable-public-api-definition",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Spec 7 defines Foundry\u2019s stable public API surface so that users, extension authors, and future maintainers know what is safe to depend on.",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Spec 7 must:",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "Requirements",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

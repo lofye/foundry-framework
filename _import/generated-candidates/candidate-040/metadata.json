@@ -1,0 +1,33 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-19O-WS.md",
+    "candidate_id": "candidate-040",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 19O",
+    "detected_title": "B WS - Post-Move Docs Integration After Framework Ownership Changes (linker)",
+    "suggested_slug": "spec-19o-b-ws-post-move-docs-integration-after-framework-ownership-changes-linker",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Spec 19O-B WS - Post-Move Docs Integration After Framework Ownership Changes (linker)",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Acceptance Criteria",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

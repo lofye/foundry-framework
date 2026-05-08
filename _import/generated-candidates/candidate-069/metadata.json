@@ -1,0 +1,33 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-32 - Thresholds App Modernization.md",
+    "candidate_id": "candidate-069",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 32",
+    "detected_title": "\u2014 Hosted Marketplace (Minimal Viable)",
+    "suggested_slug": "spec-32-hosted-marketplace-minimal-viable",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Non-Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Spec 32 is implemented. Foundry now has a minimal hosted pack registry client in [HostedPackRegistry.php](/Users/lo_fye/code/foundry-framework/src/Packs/HostedPackRegistry.php) and [HostedPackRegistryEntry.php](/Users/lo_fye/code/foundry-framework/src/Packs/HostedPackRegistryEntry.php), plus secure zip extraction in [PackArchiveExtractor.php](/Users/lo_fye/code/foundry-framework/src/Packs/PackArchiveExtractor.php). `pack install` now resolves local paths first and valid `vendor/pack` names second through the hosted registry inside [PackManager.php](/Users/lo_fye/code/foundry-framework/src/Packs/PackManager.php), so remote installs still reuse the same local install/activation pipeline from Spec 31 after download and extraction. The CLI now supports `foundry pack search <query>` and hosted installs in [PackCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/PackCommand.php), with help/discovery/docs surfaced through [ApiSurfaceRegistry.php](/Users/lo_fye/code/foundry-framework/src/Support/ApiSurfaceRegistry.php), [Application.php](/Users/lo_fye/code/foundry-framework/src/CLI/Application.php), and [CommandCatalog.php](/Users/lo_fye/code/foundry-framework/src/Documentation/CommandCatalog.php).",
+            "reason": "embedded_prior_spec_reference"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

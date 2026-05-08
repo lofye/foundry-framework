@@ -1,0 +1,25 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-30C-2-WS.md",
+    "candidate_id": "candidate-058",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 30C-2",
+    "detected_title": "WS \u2014 Website Realignment",
+    "suggested_slug": "spec-30c-2-ws-website-realignment",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Acceptance Criteria",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

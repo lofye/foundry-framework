@@ -1,0 +1,35 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-19N-WS.md",
+    "candidate_id": "candidate-039",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 19N-WS",
+    "detected_title": "Section 1 \u2014 Move to Framework",
+    "suggested_slug": "spec-19n-ws-section-1-move-to-framework",
+    "suggested_module": "unknown",
+    "confidence": "medium",
+    "emission_reason": "legacy_filename_single_spec",
+    "candidate_quality": "probable",
+    "rejected_root_signals": [
+        {
+            "text": "Spec 19N WS - Docs Pipeline Cleanup and Formalization",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Acceptance Criteria",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Spec label not detected from explicit heading.",
+        "Purpose field not explicitly detected.",
+        "Legacy filename fallback used for single-spec source file."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

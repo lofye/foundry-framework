@@ -1,0 +1,21 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-35D-Contexting.md",
+    "candidate_id": "candidate-075",
+    "source_segment": 3,
+    "source_segments_total": 3,
+    "detected_spec_label": "docs/specs/blog-1.md",
+    "detected_title": "Spec Version",
+    "suggested_slug": "docs-specs-blog-1-md-spec-version",
+    "suggested_module": "unknown",
+    "confidence": "low",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "weak",
+    "rejected_root_signals": [],
+    "result_association_confidence": "unknown",
+    "notes": [
+        "Low-confidence extraction; manual review recommended.",
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": false,
+    "followups_detected": false
+}

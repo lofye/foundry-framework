@@ -1,0 +1,22 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-0C.md",
+    "candidate_id": "candidate-009",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 0C",
+    "detected_title": "What was added",
+    "suggested_slug": "spec-0c-what-was-added",
+    "suggested_module": "unknown",
+    "confidence": "medium",
+    "emission_reason": "legacy_filename_single_spec",
+    "candidate_quality": "probable",
+    "rejected_root_signals": [],
+    "result_association_confidence": "high",
+    "notes": [
+        "Spec label not detected from explicit heading.",
+        "Purpose field not explicitly detected.",
+        "Legacy filename fallback used for single-spec source file."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

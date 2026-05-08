@@ -1,0 +1,41 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-19E-spec-foundry-explain-collectors-analyzers.md",
+    "candidate_id": "candidate-027",
+    "source_segment": 2,
+    "source_segments_total": 2,
+    "detected_spec_label": "Spec 19E",
+    "detected_title": "Spec 19E \u2014 Foundry Explain Collectors, Analyzers, and Section Mapping",
+    "suggested_slug": "spec-19e-spec-19e-foundry-explain-collectors-analyzers-and-section-mapping",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Spec 19D established the foundational architecture for `foundry explain`.",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "Spec 19E adds the **real analytical intelligence** of the subsystem by introducing:",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "## Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Spec 19E must:",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "## Verify",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

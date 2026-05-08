@@ -1,0 +1,25 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-35 - Generate System End-to-End.md",
+    "candidate_id": "candidate-072",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 35",
+    "detected_title": "\u2014 Generate System (End-to-End, Explain-Driven, Pack-Aware)",
+    "suggested_slug": "spec-35-generate-system-end-to-end-explain-driven-pack-aware",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Must:",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

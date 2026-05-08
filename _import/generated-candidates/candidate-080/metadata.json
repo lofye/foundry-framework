@@ -1,0 +1,41 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-8.md",
+    "candidate_id": "candidate-080",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 8",
+    "detected_title": "\u2014 Extension System Stabilization",
+    "suggested_slug": "spec-8-extension-system-stabilization",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Spec 8 stabilizes the extension model.",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Spec 8 must:",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "Requirements",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Spec 8 is implemented. The core of it is in [ExtensionRegistry.php](/Users/lo_fye/code/foundry-framework/src/Compiler/Extensions/ExtensionRegistry.php), [ExtensionMetadataValidator.php](/Users/lo_fye/code/foundry-framework/src/Compiler/Extensions/ExtensionMetadataValidator.php), [ExtensionDescriptor.php](/Users/lo_fye/code/foundry-framework/src/Compiler/Extensions/ExtensionDescriptor.php), and [PackDefinition.php](/Users/lo_fye/code/foundry-framework/src/Compiler/Extensions/PackDefinition.php). Extensions now have explicit metadata schema, lifecycle state, deterministic dependency/load ordering, duplicate/conflict handling, and surfaced diagnostics. Compiler integration was updated in [GraphCompiler.php](/Users/lo_fye/code/foundry-framework/src/Compiler/GraphCompiler.php) so extension pass failures become `FDY7020` diagnostics instead of aborting the compile. CLI/reporting now exposes the stabilized surface through [InspectGraphCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/InspectGraphCommand.php), [VerifyCompatibilityCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/VerifyCompatibilityCommand.php), [DoctorCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/DoctorCommand.php), [CompatibilityChecker.php](/Users/lo_fye/code/foundry-framework/src/Compiler/Extensions/CompatibilityChecker.php), and [CompatibilityReport.php](/Users/lo_fye/code/foundry-framework/src/Compiler/Extensions/CompatibilityReport.php).",
+            "reason": "embedded_prior_spec_reference"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

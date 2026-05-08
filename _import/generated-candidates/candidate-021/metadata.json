@@ -1,0 +1,25 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-19A.md",
+    "candidate_id": "candidate-021",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 19A",
+    "detected_title": "ARCHITECTURE FOR `foundry explain`",
+    "suggested_slug": "spec-19a-architecture-for-foundry-explain",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "## Verify",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

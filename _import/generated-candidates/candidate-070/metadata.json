@@ -1,0 +1,20 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-33 - ExplainEngine Data Model Hardening.md",
+    "candidate_id": "candidate-070",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 33",
+    "detected_title": "\u2014 Explain System Hardening + Extension-Aware Architecture",
+    "suggested_slug": "spec-33-explain-system-hardening-extension-aware-architecture",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

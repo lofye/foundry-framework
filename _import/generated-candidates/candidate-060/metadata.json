@@ -1,0 +1,26 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-30C-2.md",
+    "candidate_id": "candidate-060",
+    "source_segment": 2,
+    "source_segments_total": 2,
+    "detected_spec_label": "Spec 30C",
+    "detected_title": "2 is in place. [MonetizationService.php](/Users/lo_fye/code/foundry-framework/src/Monetization/MonetizationService.php) is now non-restrictive: core capability flags always resolve as available, command usage is only tracked through the opt-in tracker, and licenses are treated as future identity/service access rather than feature unlocks. [FeatureFlags.php](/Users/lo_fye/code/foundry-framework/src/Monetization/FeatureFlags.php) now describes each flag with `type` and `monetization`, and [LicenseValidator.php](/Users/lo_fye/code/foundry-framework/src/Monetization/LicenseValidator.php) now models license entitlements around service access instead of core tooling.",
+    "suggested_slug": "spec-30c-2-is-in-place-monetizationservice-php-users-lo-fye-code-foundry-framework-src-monetization-monetizationservice-php-is-now-non-restrictive-core-capability-flags-always-resolve-as-available-command-usage-is-only-tracked-through-the-opt-in-tracker-and-licenses-are-treated-as-future-identity-service-access-rather-than-feature-unlocks-featureflags-php-users-lo-fye-code-foundry-framework-src-monetization-featureflags-php-now-describes-each-flag-with-type-and-monetization-and-licensevalidator-php-users-lo-fye-code-foundry-framework-src-monetization-licensevalidator-php-now-models-license-entitlements-around-service-access-instead-of-core-tooling",
+    "suggested_module": "unknown",
+    "confidence": "low",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "weak",
+    "rejected_root_signals": [
+        {
+            "text": "Spec 30C-2 is in place. [MonetizationService.php](/Users/lo_fye/code/foundry-framework/src/Monetization/MonetizationService.php) is now non-restrictive: core capability flags always resolve as available, command usage is only tracked through the opt-in tracker, and licenses are treated as future identity/service access rather than feature unlocks. [FeatureFlags.php](/Users/lo_fye/code/foundry-framework/src/Monetization/FeatureFlags.php) now describes each flag with `type` and `monetization`, and [LicenseValidator.php](/Users/lo_fye/code/foundry-framework/src/Monetization/LicenseValidator.php) now models license entitlements around service access instead of core tooling.",
+            "reason": "embedded_prior_spec_reference"
+        }
+    ],
+    "result_association_confidence": "unknown",
+    "notes": [
+        "Low-confidence extraction; manual review recommended.",
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": false,
+    "followups_detected": false
+}

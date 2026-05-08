@@ -1,0 +1,46 @@
+**Changes**
+Git awareness is now wired into the shipped surfaces only, per your scope choice. [GitRepositoryInspector.php](/Users/lo_fye/code/foundry-framework/src/Git/GitRepositoryInspector.php) handles repo detection, branch/HEAD lookup, dirty-tree parsing, relevant-file commit metadata, and explicit scoped commits. [GenerateEngine.php](/Users/lo_fye/code/foundry-framework/src/Generate/GenerateEngine.php), [GenerateCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/GenerateCommand.php), and [Intent.php](/Users/lo_fye/code/foundry-framework/src/Generate/Intent.php) now make `generate` Git-aware: dirty repos warn or fail unless `--allow-dirty`, conflicting untracked targets fail before writes, `--git-commit` can create an explicit post-verification commit, and generate runs are persisted into existing history via [BuildArtifactStore.php](/Users/lo_fye/code/foundry-framework/src/Tooling/BuildArtifactStore.php). `foundry explain <target> --git` is now supported in [ExplainCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/ExplainCommand.php), and the CLI/help contract was updated in [ApiSurfaceRegistry.php](/Users/lo_fye/code/foundry-framework/src/Support/ApiSurfaceRegistry.php).
+
+I also added coverage in [GitRepositoryInspectorTest.php](/Users/lo_fye/code/foundry-framework/tests/Unit/GitRepositoryInspectorTest.php), [CLIGenerateCommandTest.php](/Users/lo_fye/code/foundry-framework/tests/Integration/CLIGenerateCommandTest.php), [CLILicensedCommandsTest.php](/Users/lo_fye/code/foundry-framework/tests/Integration/CLILicensedCommandsTest.php), [ApiSurfaceRegistryTest.php](/Users/lo_fye/code/foundry-framework/tests/Unit/ApiSurfaceRegistryTest.php), and [CLIApplicationTest.php](/Users/lo_fye/code/foundry-framework/tests/Integration/CLIApplicationTest.php), plus a small stability fix in [GraphCompilerTest.php](/Users/lo_fye/code/foundry-framework/tests/Unit/GraphCompilerTest.php) so it ignores volatile timestamp/build-id fields instead of flaking on runtime speed. Docs were aligned in [README.md](/Users/lo_fye/code/foundry-framework/README.md), [docs/explain.md](/Users/lo_fye/code/foundry-framework/docs/explain.md), [docs/generate.md](/Users/lo_fye/code/foundry-framework/docs/generate.md), [docs/architecture-tools.md](/Users/lo_fye/code/foundry-framework/docs/architecture-tools.md), [APP-README.md](/Users/lo_fye/code/foundry-framework/APP-README.md), and [APP-AGENTS.md](/Users/lo_fye/code/foundry-framework/APP-AGENTS.md).
+
+**Verification**
+- `php bin/foundry verify cli-surface --json` -> `131` valid, `0` invalid, `0` ambiguous, coverage `1`
+- `php bin/foundry compile graph --json` -> success
+- `php bin/foundry verify graph --json` -> `ok: true`
+- `php vendor/bin/phpunit` -> `423` tests, `3453` assertions, all passing
+
+No `plan:*`, replay, or undo commands were added; this stays limited to current shipped surfaces: `generate`, `explain`, and persisted generate/history flows.
+
+19 files changed
++1380
+-12
+Undo
+APP-AGENTS.md
+APP-README.md
+README.md
+docs/architecture-tools.md
+docs/explain.md
+docs/generate.md
+src/CLI/Commands/ExplainCommand.php
+src/CLI/Commands/GenerateCommand.php
+src/Generate/GenerateEngine.php
+src/Generate/Intent.php
+src/Git/GitRepositoryInspector.php
+src/Support/ApiSurfaceRegistry.php
+src/Tooling/BuildArtifactStore.php
+tests/Integration/CLIApplicationTest.php
+tests/Integration/CLIGenerateCommandTest.php
+tests/Integration/CLILicensedCommandsTest.php
+tests/Unit/ApiSurfaceRegistryTest.php
+tests/Unit/GitRepositoryInspectorTest.php
+tests/Unit/GraphCompilerTest.php
+
+------------------------------------------------------------------------------------------
+
+
+
+------------------------------------------------------------------------------------------
+
+
+
+------------------------------------------------------------------------------------------

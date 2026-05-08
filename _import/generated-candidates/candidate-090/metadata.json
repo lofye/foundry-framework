@@ -1,0 +1,20 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+    "candidate_id": "candidate-090",
+    "source_segment": 9,
+    "source_segments_total": 27,
+    "detected_spec_label": "Spec 15",
+    "detected_title": "\u2014 Official Example Applications",
+    "suggested_slug": "spec-15-official-example-applications-2",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [],
+    "result_association_confidence": "unknown",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": false,
+    "followups_detected": false
+}

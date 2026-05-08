@@ -1,0 +1,21 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+    "candidate_id": "candidate-091",
+    "source_segment": 10,
+    "source_segments_total": 27,
+    "detected_spec_label": "Spec 7",
+    "detected_title": "\u2014 Public API",
+    "suggested_slug": "spec-7-public-api",
+    "suggested_module": "unknown",
+    "confidence": "low",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "weak",
+    "rejected_root_signals": [],
+    "result_association_confidence": "unknown",
+    "notes": [
+        "Low-confidence extraction; manual review recommended.",
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": false,
+    "followups_detected": false
+}

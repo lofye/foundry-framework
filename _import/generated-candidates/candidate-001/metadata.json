@@ -1,0 +1,20 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Plans-for-19A-19F.md",
+    "candidate_id": "candidate-001",
+    "source_segment": 1,
+    "source_segments_total": 6,
+    "detected_spec_label": "Spec 19A",
+    "detected_title": "Spec 19A \u2014 CLI Entry + Target Resolution",
+    "suggested_slug": "spec-19a-spec-19a-cli-entry-target-resolution",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [],
+    "result_association_confidence": "unknown",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": false,
+    "followups_detected": false
+}

@@ -1,0 +1,37 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-31 - Examples System Expansion.md",
+    "candidate_id": "candidate-068",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 31",
+    "detected_title": "\u2014 Foundry Pack System Foundation",
+    "suggested_slug": "spec-31-foundry-pack-system-foundation",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Non-Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Acceptance Criteria",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Spec 31 is implemented. Foundry now has a real offline pack foundation: local install/remove/list/info CLI support via [PackCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/PackCommand.php), manifest validation in [PackManifest.php](/Users/lo_fye/code/foundry-framework/src/Packs/PackManifest.php), deterministic storage and activation state in [InstalledPackRegistry.php](/Users/lo_fye/code/foundry-framework/src/Packs/InstalledPackRegistry.php), and pack boot/loading through [LocalPackLoader.php](/Users/lo_fye/code/foundry-framework/src/Packs/LocalPackLoader.php), [PackContext.php](/Users/lo_fye/code/foundry-framework/src/Packs/PackContext.php), and [PackServiceProvider.php](/Users/lo_fye/code/foundry-framework/src/Packs/PackServiceProvider.php). Packs install into `.foundry/packs/{vendor}/{pack}/{version}/`, activate through `.foundry/packs/installed.json`, load in deterministic name/version order, and fail explicitly on command/schema collisions or duplicate graph node ids.",
+            "reason": "embedded_prior_spec_reference"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

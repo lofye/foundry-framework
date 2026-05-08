@@ -1,0 +1,25 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-27-Examples-Taxonomy-Cleanup.md",
+    "candidate_id": "candidate-052",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 27",
+    "detected_title": "Examples Taxonomy Cleanup",
+    "suggested_slug": "spec-27-examples-taxonomy-cleanup",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Acceptance Criteria",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

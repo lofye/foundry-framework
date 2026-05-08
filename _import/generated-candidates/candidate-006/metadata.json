@@ -1,0 +1,20 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Plans-for-19A-19F.md",
+    "candidate_id": "candidate-006",
+    "source_segment": 6,
+    "source_segments_total": 6,
+    "detected_spec_label": "Spec 19F",
+    "detected_title": "Spec 19F \u2014 Final UX, Contributors, and Deep Mode",
+    "suggested_slug": "spec-19f-spec-19f-final-ux-contributors-and-deep-mode",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [],
+    "result_association_confidence": "unknown",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": false,
+    "followups_detected": false
+}

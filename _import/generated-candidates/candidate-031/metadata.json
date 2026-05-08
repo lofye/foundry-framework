@@ -1,0 +1,29 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-19G-Thresholds-v2.md",
+    "candidate_id": "candidate-031",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 19G-Thresholds",
+    "detected_title": "",
+    "suggested_slug": "spec-19g-thresholds",
+    "suggested_module": "unknown",
+    "confidence": "medium",
+    "emission_reason": "legacy_filename_single_spec",
+    "candidate_quality": "probable",
+    "rejected_root_signals": [
+        {
+            "text": "Non-goals",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Spec label not detected from explicit heading.",
+        "Title not detected from heading or Title: field.",
+        "Low-confidence extraction; manual review recommended.",
+        "Purpose field not explicitly detected.",
+        "Legacy filename fallback used for single-spec source file."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

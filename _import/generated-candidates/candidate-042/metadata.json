@@ -1,0 +1,29 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-19Q.md",
+    "candidate_id": "candidate-042",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 19Q",
+    "detected_title": "\u2014 Framework Docs Pipeline Deprecation and Cleanup",
+    "suggested_slug": "spec-19q-framework-docs-pipeline-deprecation-and-cleanup",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Acceptance Criteria",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

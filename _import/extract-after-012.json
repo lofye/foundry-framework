@@ -1,0 +1,3693 @@
+{
+    "status": "ok",
+    "dry_run": false,
+    "source_path": "_import/historical-specs",
+    "target_path": "_import/generated-candidates",
+    "summary": {
+        "files_scanned": 71,
+        "candidates": 108,
+        "written": 108
+    },
+    "candidates": [
+        {
+            "candidate_id": "candidate-001",
+            "original_file": "_import/historical-specs/Foundry-Plans-for-19A-19F.md",
+            "source_segment": 1,
+            "source_segments_total": 6,
+            "detected_spec_label": "Spec 19A",
+            "detected_title": "Spec 19A \u2014 CLI Entry + Target Resolution",
+            "suggested_slug": "spec-19a-spec-19a-cli-entry-target-resolution",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-001",
+                "spec": "_import/generated-candidates/candidate-001/spec.md",
+                "source": "_import/generated-candidates/candidate-001/source.md",
+                "metadata": "_import/generated-candidates/candidate-001/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-002",
+            "original_file": "_import/historical-specs/Foundry-Plans-for-19A-19F.md",
+            "source_segment": 2,
+            "source_segments_total": 6,
+            "detected_spec_label": "Spec 19B",
+            "detected_title": "Spec 19B \u2014 Core Models + Engine Skeleton",
+            "suggested_slug": "spec-19b-spec-19b-core-models-engine-skeleton",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-002",
+                "spec": "_import/generated-candidates/candidate-002/spec.md",
+                "source": "_import/generated-candidates/candidate-002/source.md",
+                "metadata": "_import/generated-candidates/candidate-002/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-003",
+            "original_file": "_import/historical-specs/Foundry-Plans-for-19A-19F.md",
+            "source_segment": 3,
+            "source_segments_total": 6,
+            "detected_spec_label": "Spec 19C",
+            "detected_title": "Spec 19C \u2014 Plan Assembly + Renderers",
+            "suggested_slug": "spec-19c-spec-19c-plan-assembly-renderers",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-003",
+                "spec": "_import/generated-candidates/candidate-003/spec.md",
+                "source": "_import/generated-candidates/candidate-003/source.md",
+                "metadata": "_import/generated-candidates/candidate-003/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-004",
+            "original_file": "_import/historical-specs/Foundry-Plans-for-19A-19F.md",
+            "source_segment": 4,
+            "source_segments_total": 6,
+            "detected_spec_label": "Spec 19D",
+            "detected_title": "Spec 19D \u2014 Context Collection Layer",
+            "suggested_slug": "spec-19d-spec-19d-context-collection-layer",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-004",
+                "spec": "_import/generated-candidates/candidate-004/spec.md",
+                "source": "_import/generated-candidates/candidate-004/source.md",
+                "metadata": "_import/generated-candidates/candidate-004/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-005",
+            "original_file": "_import/historical-specs/Foundry-Plans-for-19A-19F.md",
+            "source_segment": 5,
+            "source_segments_total": 6,
+            "detected_spec_label": "Spec 19E",
+            "detected_title": "Spec 19E \u2014 Analyzers + Section Builders",
+            "suggested_slug": "spec-19e-spec-19e-analyzers-section-builders",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-005",
+                "spec": "_import/generated-candidates/candidate-005/spec.md",
+                "source": "_import/generated-candidates/candidate-005/source.md",
+                "metadata": "_import/generated-candidates/candidate-005/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-006",
+            "original_file": "_import/historical-specs/Foundry-Plans-for-19A-19F.md",
+            "source_segment": 6,
+            "source_segments_total": 6,
+            "detected_spec_label": "Spec 19F",
+            "detected_title": "Spec 19F \u2014 Final UX, Contributors, and Deep Mode",
+            "suggested_slug": "spec-19f-spec-19f-final-ux-contributors-and-deep-mode",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-006",
+                "spec": "_import/generated-candidates/candidate-006/spec.md",
+                "source": "_import/generated-candidates/candidate-006/source.md",
+                "metadata": "_import/generated-candidates/candidate-006/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-007",
+            "original_file": "_import/historical-specs/Foundry-Spec-0A.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 0A",
+            "detected_title": "",
+            "suggested_slug": "spec-0a",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-007",
+                "spec": "_import/generated-candidates/candidate-007/spec.md",
+                "source": "_import/generated-candidates/candidate-007/source.md",
+                "metadata": "_import/generated-candidates/candidate-007/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-008",
+            "original_file": "_import/historical-specs/Foundry-Spec-0B.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 0B",
+            "detected_title": "",
+            "suggested_slug": "spec-0b",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-008",
+                "spec": "_import/generated-candidates/candidate-008/spec.md",
+                "source": "_import/generated-candidates/candidate-008/source.md",
+                "metadata": "_import/generated-candidates/candidate-008/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-009",
+            "original_file": "_import/historical-specs/Foundry-Spec-0C.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 0C",
+            "detected_title": "What was added",
+            "suggested_slug": "spec-0c-what-was-added",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [],
+            "result_association_confidence": "high",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-009",
+                "spec": "_import/generated-candidates/candidate-009/spec.md",
+                "source": "_import/generated-candidates/candidate-009/source.md",
+                "metadata": "_import/generated-candidates/candidate-009/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-010",
+            "original_file": "_import/historical-specs/Foundry-Spec-0D.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 0D",
+            "detected_title": "Middleware",
+            "suggested_slug": "spec-0d-middleware",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-010",
+                "spec": "_import/generated-candidates/candidate-010/spec.md",
+                "source": "_import/generated-candidates/candidate-010/source.md",
+                "metadata": "_import/generated-candidates/candidate-010/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-011",
+            "original_file": "_import/historical-specs/Foundry-Spec-1.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 1",
+            "detected_title": "",
+            "suggested_slug": "spec-1",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-011",
+                "spec": "_import/generated-candidates/candidate-011/spec.md",
+                "source": "_import/generated-candidates/candidate-011/source.md",
+                "metadata": "_import/generated-candidates/candidate-011/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-012",
+            "original_file": "_import/historical-specs/Foundry-Spec-10.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 10",
+            "detected_title": "\u2014 Project Scaffolding Generator",
+            "suggested_slug": "spec-10-project-scaffolding-generator",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 10 introduces stable project scaffolding commands and starter templates.",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 10 must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-012",
+                "spec": "_import/generated-candidates/candidate-012/spec.md",
+                "source": "_import/generated-candidates/candidate-012/source.md",
+                "metadata": "_import/generated-candidates/candidate-012/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-013",
+            "original_file": "_import/historical-specs/Foundry-Spec-11.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 11",
+            "detected_title": "\u2014 Graph Visualization CLI and Export System",
+            "suggested_slug": "spec-11-graph-visualization-cli-and-export-system",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 11 must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-013",
+                "spec": "_import/generated-candidates/candidate-013/spec.md",
+                "source": "_import/generated-candidates/candidate-013/source.md",
+                "metadata": "_import/generated-candidates/candidate-013/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-014",
+            "original_file": "_import/historical-specs/Foundry-Spec-12.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 12",
+            "detected_title": "\u2014 Configuration Schema Validation",
+            "suggested_slug": "spec-12-configuration-schema-validation",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 12 must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-014",
+                "spec": "_import/generated-candidates/candidate-014/spec.md",
+                "source": "_import/generated-candidates/candidate-014/source.md",
+                "metadata": "_import/generated-candidates/candidate-014/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-015",
+            "original_file": "_import/historical-specs/Foundry-Spec-13.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 13",
+            "detected_title": "\u2014 Upgrade Safety Tools",
+            "suggested_slug": "spec-13-upgrade-safety-tools",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 13 introduces upgrade-check and deprecation safety tools.",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 13 must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-015",
+                "spec": "_import/generated-candidates/candidate-015/spec.md",
+                "source": "_import/generated-candidates/candidate-015/source.md",
+                "metadata": "_import/generated-candidates/candidate-015/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-016",
+            "original_file": "_import/historical-specs/Foundry-Spec-14.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 14",
+            "detected_title": "\u2014 Deterministic Compile Cache",
+            "suggested_slug": "spec-14-deterministic-compile-cache",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 14 must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-016",
+                "spec": "_import/generated-candidates/candidate-016/spec.md",
+                "source": "_import/generated-candidates/candidate-016/source.md",
+                "metadata": "_import/generated-candidates/candidate-016/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-017",
+            "original_file": "_import/historical-specs/Foundry-Spec-15.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 15",
+            "detected_title": "\u2014 Official Example Applications",
+            "suggested_slug": "spec-15-official-example-applications",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 15 must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-017",
+                "spec": "_import/generated-candidates/candidate-017/spec.md",
+                "source": "_import/generated-candidates/candidate-017/source.md",
+                "metadata": "_import/generated-candidates/candidate-017/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-018",
+            "original_file": "_import/historical-specs/Foundry-Spec-16.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 16",
+            "detected_title": "\u2014 Foundry Pro (CLI + Licensing Layer)",
+            "suggested_slug": "spec-16-foundry-pro-cli-licensing-layer",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 16 must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-018",
+                "spec": "_import/generated-candidates/candidate-018/spec.md",
+                "source": "_import/generated-candidates/candidate-018/source.md",
+                "metadata": "_import/generated-candidates/candidate-018/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-019",
+            "original_file": "_import/historical-specs/Foundry-Spec-17-AI-Assisted-Development.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 17",
+            "detected_title": "\u2014 AI-Assisted Development Layer",
+            "suggested_slug": "spec-17-ai-assisted-development-layer",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 17 introduces an AI-assisted layer that leverages this structure.",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 17 must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-019",
+                "spec": "_import/generated-candidates/candidate-019/spec.md",
+                "source": "_import/generated-candidates/candidate-019/source.md",
+                "metadata": "_import/generated-candidates/candidate-019/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-020",
+            "original_file": "_import/historical-specs/Foundry-Spec-18.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 18",
+            "detected_title": "",
+            "suggested_slug": "spec-18",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 18 must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-020",
+                "spec": "_import/generated-candidates/candidate-020/spec.md",
+                "source": "_import/generated-candidates/candidate-020/source.md",
+                "metadata": "_import/generated-candidates/candidate-020/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-021",
+            "original_file": "_import/historical-specs/Foundry-Spec-19A.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19A",
+            "detected_title": "ARCHITECTURE FOR `foundry explain`",
+            "suggested_slug": "spec-19a-architecture-for-foundry-explain",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "## Verify",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-021",
+                "spec": "_import/generated-candidates/candidate-021/spec.md",
+                "source": "_import/generated-candidates/candidate-021/source.md",
+                "metadata": "_import/generated-candidates/candidate-021/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-022",
+            "original_file": "_import/historical-specs/Foundry-Spec-19B.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19B",
+            "detected_title": "Implementation (how it works end-to-end)",
+            "suggested_slug": "spec-19b-implementation-how-it-works-end-to-end",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 19A introduced foundry explain, a CLI command that turns Foundry\u2019s compiled architecture into clear, structured explanations for humans and tools.",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 19B must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "## Verify",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-022",
+                "spec": "_import/generated-candidates/candidate-022/spec.md",
+                "source": "_import/generated-candidates/candidate-022/source.md",
+                "metadata": "_import/generated-candidates/candidate-022/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-023",
+            "original_file": "_import/historical-specs/Foundry-Spec-19C.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19C",
+            "detected_title": "UX contract (what it feels like)",
+            "suggested_slug": "spec-19c-ux-contract-what-it-feels-like",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "## Verify",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-023",
+                "spec": "_import/generated-candidates/candidate-023/spec.md",
+                "source": "_import/generated-candidates/candidate-023/source.md",
+                "metadata": "_import/generated-candidates/candidate-023/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-024",
+            "original_file": "_import/historical-specs/Foundry-Spec-19D-foundry-explain-foundations.md",
+            "source_segment": 1,
+            "source_segments_total": 2,
+            "detected_spec_label": "Spec 19D",
+            "detected_title": "Foundation slice (safe starting point)",
+            "suggested_slug": "spec-19d-foundation-slice-safe-starting-point",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-024",
+                "spec": "_import/generated-candidates/candidate-024/spec.md",
+                "source": "_import/generated-candidates/candidate-024/source.md",
+                "metadata": "_import/generated-candidates/candidate-024/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-025",
+            "original_file": "_import/historical-specs/Foundry-Spec-19D-foundry-explain-foundations.md",
+            "source_segment": 2,
+            "source_segments_total": 2,
+            "detected_spec_label": "Spec 19D",
+            "detected_title": "Spec 19D \u2014 Foundry Explain Foundations",
+            "suggested_slug": "spec-19d-spec-19d-foundry-explain-foundations",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "## Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 19D must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "## Verify",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-025",
+                "spec": "_import/generated-candidates/candidate-025/spec.md",
+                "source": "_import/generated-candidates/candidate-025/source.md",
+                "metadata": "_import/generated-candidates/candidate-025/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-026",
+            "original_file": "_import/historical-specs/Foundry-Spec-19E-spec-foundry-explain-collectors-analyzers.md",
+            "source_segment": 1,
+            "source_segments_total": 2,
+            "detected_spec_label": "Spec 19E",
+            "detected_title": "Intelligence layer (collectors + analyzers)",
+            "suggested_slug": "spec-19e-intelligence-layer-collectors-analyzers",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-026",
+                "spec": "_import/generated-candidates/candidate-026/spec.md",
+                "source": "_import/generated-candidates/candidate-026/source.md",
+                "metadata": "_import/generated-candidates/candidate-026/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-027",
+            "original_file": "_import/historical-specs/Foundry-Spec-19E-spec-foundry-explain-collectors-analyzers.md",
+            "source_segment": 2,
+            "source_segments_total": 2,
+            "detected_spec_label": "Spec 19E",
+            "detected_title": "Spec 19E \u2014 Foundry Explain Collectors, Analyzers, and Section Mapping",
+            "suggested_slug": "spec-19e-spec-19e-foundry-explain-collectors-analyzers-and-section-mapping",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 19D established the foundational architecture for `foundry explain`.",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Spec 19E adds the **real analytical intelligence** of the subsystem by introducing:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "## Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 19E must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "## Verify",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-027",
+                "spec": "_import/generated-candidates/candidate-027/spec.md",
+                "source": "_import/generated-candidates/candidate-027/source.md",
+                "metadata": "_import/generated-candidates/candidate-027/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-028",
+            "original_file": "_import/historical-specs/Foundry-Spec-19F-spec-foundry-explain-renderers-contributors-docs.md",
+            "source_segment": 1,
+            "source_segments_total": 2,
+            "detected_spec_label": "Spec 19F",
+            "detected_title": "Final polish (rendering + contributors + docs)",
+            "suggested_slug": "spec-19f-final-polish-rendering-contributors-docs",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-028",
+                "spec": "_import/generated-candidates/candidate-028/spec.md",
+                "source": "_import/generated-candidates/candidate-028/source.md",
+                "metadata": "_import/generated-candidates/candidate-028/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-029",
+            "original_file": "_import/historical-specs/Foundry-Spec-19F-spec-foundry-explain-renderers-contributors-docs.md",
+            "source_segment": 2,
+            "source_segments_total": 2,
+            "detected_spec_label": "Spec 19F",
+            "detected_title": "Spec 19F \u2014 Foundry Explain Renderers, Contributors, Docs, and Final Integration",
+            "suggested_slug": "spec-19f-spec-19f-foundry-explain-renderers-contributors-docs-and-final-integration",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 19D established the foundations for `foundry explain`.",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Spec 19E introduced collectors, analyzers, and rich explanation sections.",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Spec 19F completes the feature by adding:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "## Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 19F must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "### Requirements",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "### Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "## Verify",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-029",
+                "spec": "_import/generated-candidates/candidate-029/spec.md",
+                "source": "_import/generated-candidates/candidate-029/source.md",
+                "metadata": "_import/generated-candidates/candidate-029/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-030",
+            "original_file": "_import/historical-specs/Foundry-Spec-19FB-Spec-Freeze-1.0.0.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19FB-Spec",
+            "detected_title": "",
+            "suggested_slug": "spec-19fb-spec",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [],
+            "result_association_confidence": "high",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-030",
+                "spec": "_import/generated-candidates/candidate-030/spec.md",
+                "source": "_import/generated-candidates/candidate-030/source.md",
+                "metadata": "_import/generated-candidates/candidate-030/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-031",
+            "original_file": "_import/historical-specs/Foundry-Spec-19G-Thresholds-v2.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19G-Thresholds",
+            "detected_title": "",
+            "suggested_slug": "spec-19g-thresholds",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [
+                {
+                    "text": "Non-goals",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-031",
+                "spec": "_import/generated-candidates/candidate-031/spec.md",
+                "source": "_import/generated-candidates/candidate-031/source.md",
+                "metadata": "_import/generated-candidates/candidate-031/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-032",
+            "original_file": "_import/historical-specs/Foundry-Spec-19H.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19H",
+            "detected_title": "\u2014 Local foundry Executable for Installed Apps",
+            "suggested_slug": "spec-19h-local-foundry-executable-for-installed-apps",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 19H must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-032",
+                "spec": "_import/generated-candidates/candidate-032/spec.md",
+                "source": "_import/generated-candidates/candidate-032/source.md",
+                "metadata": "_import/generated-candidates/candidate-032/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-033",
+            "original_file": "_import/historical-specs/Foundry-Spec-19H2.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "",
+            "detected_title": "Spec: Normalize New-Project Bootstrap and App Layout",
+            "suggested_slug": "spec-normalize-new-project-bootstrap-and-app-layout",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "## Non-goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "## Acceptance criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-033",
+                "spec": "_import/generated-candidates/candidate-033/spec.md",
+                "source": "_import/generated-candidates/candidate-033/source.md",
+                "metadata": "_import/generated-candidates/candidate-033/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-034",
+            "original_file": "_import/historical-specs/Foundry-Spec-19I.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19I",
+            "detected_title": "",
+            "suggested_slug": "spec-19i",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-034",
+                "spec": "_import/generated-candidates/candidate-034/spec.md",
+                "source": "_import/generated-candidates/candidate-034/source.md",
+                "metadata": "_import/generated-candidates/candidate-034/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-035",
+            "original_file": "_import/historical-specs/Foundry-Spec-19J.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19J",
+            "detected_title": "",
+            "suggested_slug": "spec-19j",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 19J is wired through the framework now. The enforcement stack and scripts live in [composer.json](/Users/lo_fye/code/foundry-framework/composer.json#L13), with repo configs in [phpstan.neon](/Users/lo_fye/code/foundry-framework/phpstan.neon#L1), [phpstan-baseline.neon](/Users/lo_fye/code/foundry-framework/phpstan-baseline.neon), [pint.json](/Users/lo_fye/code/foundry-framework/pint.json#L1), [rector.php](/Users/lo_fye/code/foundry-framework/rector.php#L1), and CI in [.github/workflows/quality.yml](/Users/lo_fye/code/foundry-framework/.github/workflows/quality.yml#L1). `doctor` now supports `--static`, `--style`, `--quality`, and optional test summaries in [src/CLI/Commands/DoctorCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/DoctorCommand.php#L50).",
+                    "reason": "embedded_prior_spec_reference"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-035",
+                "spec": "_import/generated-candidates/candidate-035/spec.md",
+                "source": "_import/generated-candidates/candidate-035/source.md",
+                "metadata": "_import/generated-candidates/candidate-035/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-036",
+            "original_file": "_import/historical-specs/Foundry-Spec-19K.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19K",
+            "detected_title": "",
+            "suggested_slug": "spec-19k",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-036",
+                "spec": "_import/generated-candidates/candidate-036/spec.md",
+                "source": "_import/generated-candidates/candidate-036/source.md",
+                "metadata": "_import/generated-candidates/candidate-036/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-037",
+            "original_file": "_import/historical-specs/Foundry-Spec-19L-WS.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19L-WS",
+            "detected_title": "",
+            "suggested_slug": "spec-19l-ws",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [],
+            "result_association_confidence": "high",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-037",
+                "spec": "_import/generated-candidates/candidate-037/spec.md",
+                "source": "_import/generated-candidates/candidate-037/source.md",
+                "metadata": "_import/generated-candidates/candidate-037/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-038",
+            "original_file": "_import/historical-specs/Foundry-Spec-19M-WS.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19M",
+            "detected_title": "Docs Usage Audit Script (Read-Only, No Build Changes Yet)",
+            "suggested_slug": "spec-19m-docs-usage-audit-script-read-only-no-build-changes-yet",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-038",
+                "spec": "_import/generated-candidates/candidate-038/spec.md",
+                "source": "_import/generated-candidates/candidate-038/source.md",
+                "metadata": "_import/generated-candidates/candidate-038/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-039",
+            "original_file": "_import/historical-specs/Foundry-Spec-19N-WS.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19N-WS",
+            "detected_title": "Section 1 \u2014 Move to Framework",
+            "suggested_slug": "spec-19n-ws-section-1-move-to-framework",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 19N WS - Docs Pipeline Cleanup and Formalization",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-039",
+                "spec": "_import/generated-candidates/candidate-039/spec.md",
+                "source": "_import/generated-candidates/candidate-039/source.md",
+                "metadata": "_import/generated-candidates/candidate-039/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-040",
+            "original_file": "_import/historical-specs/Foundry-Spec-19O-WS.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19O",
+            "detected_title": "B WS - Post-Move Docs Integration After Framework Ownership Changes (linker)",
+            "suggested_slug": "spec-19o-b-ws-post-move-docs-integration-after-framework-ownership-changes-linker",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 19O-B WS - Post-Move Docs Integration After Framework Ownership Changes (linker)",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-040",
+                "spec": "_import/generated-candidates/candidate-040/spec.md",
+                "source": "_import/generated-candidates/candidate-040/source.md",
+                "metadata": "_import/generated-candidates/candidate-040/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-041",
+            "original_file": "_import/historical-specs/Foundry-Spec-19P-WS.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19P-WS",
+            "detected_title": "\u2014 Slug Resolution + Enforcement Pass",
+            "suggested_slug": "spec-19p-ws-slug-resolution-enforcement-pass",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-041",
+                "spec": "_import/generated-candidates/candidate-041/spec.md",
+                "source": "_import/generated-candidates/candidate-041/source.md",
+                "metadata": "_import/generated-candidates/candidate-041/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-042",
+            "original_file": "_import/historical-specs/Foundry-Spec-19Q.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 19Q",
+            "detected_title": "\u2014 Framework Docs Pipeline Deprecation and Cleanup",
+            "suggested_slug": "spec-19q-framework-docs-pipeline-deprecation-and-cleanup",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-042",
+                "spec": "_import/generated-candidates/candidate-042/spec.md",
+                "source": "_import/generated-candidates/candidate-042/source.md",
+                "metadata": "_import/generated-candidates/candidate-042/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-043",
+            "original_file": "_import/historical-specs/Foundry-Spec-2.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 2",
+            "detected_title": "",
+            "suggested_slug": "spec-2",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [],
+            "result_association_confidence": "high",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-043",
+                "spec": "_import/generated-candidates/candidate-043/spec.md",
+                "source": "_import/generated-candidates/candidate-043/source.md",
+                "metadata": "_import/generated-candidates/candidate-043/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-044",
+            "original_file": "_import/historical-specs/Foundry-Spec-20.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 20",
+            "detected_title": "\u2014 Interactive Architecture Explorer",
+            "suggested_slug": "spec-20-interactive-architecture-explorer",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-044",
+                "spec": "_import/generated-candidates/candidate-044/spec.md",
+                "source": "_import/generated-candidates/candidate-044/source.md",
+                "metadata": "_import/generated-candidates/candidate-044/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-045",
+            "original_file": "_import/historical-specs/Foundry-Spec-21.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 21",
+            "detected_title": "\u2014 Command Playground",
+            "suggested_slug": "spec-21-command-playground",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-045",
+                "spec": "_import/generated-candidates/candidate-045/spec.md",
+                "source": "_import/generated-candidates/candidate-045/source.md",
+                "metadata": "_import/generated-candidates/candidate-045/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-046",
+            "original_file": "_import/historical-specs/Foundry-Spec-22.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 22",
+            "detected_title": "\u2014 Guided Learning Paths",
+            "suggested_slug": "spec-22-guided-learning-paths",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-046",
+                "spec": "_import/generated-candidates/candidate-046/spec.md",
+                "source": "_import/generated-candidates/candidate-046/source.md",
+                "metadata": "_import/generated-candidates/candidate-046/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-047",
+            "original_file": "_import/historical-specs/Foundry-Spec-23.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 23",
+            "detected_title": "\u2014 Interactive CLI Index",
+            "suggested_slug": "spec-23-interactive-cli-index",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-047",
+                "spec": "_import/generated-candidates/candidate-047/spec.md",
+                "source": "_import/generated-candidates/candidate-047/source.md",
+                "metadata": "_import/generated-candidates/candidate-047/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-048",
+            "original_file": "_import/historical-specs/Foundry-Spec-24.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 24",
+            "detected_title": "\u2014 Contributor Portal",
+            "suggested_slug": "spec-24-contributor-portal",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-048",
+                "spec": "_import/generated-candidates/candidate-048/spec.md",
+                "source": "_import/generated-candidates/candidate-048/source.md",
+                "metadata": "_import/generated-candidates/candidate-048/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-049",
+            "original_file": "_import/historical-specs/Foundry-Spec-25A-Examples.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 25A",
+            "detected_title": "\u2014 Framework Examples Alignment",
+            "suggested_slug": "spec-25a-framework-examples-alignment",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-049",
+                "spec": "_import/generated-candidates/candidate-049/spec.md",
+                "source": "_import/generated-candidates/candidate-049/source.md",
+                "metadata": "_import/generated-candidates/candidate-049/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-050",
+            "original_file": "_import/historical-specs/Foundry-Spec-25B-Thresholds.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 25B",
+            "detected_title": "\u2014 Thresholds Alignment",
+            "suggested_slug": "spec-25b-thresholds-alignment",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-050",
+                "spec": "_import/generated-candidates/candidate-050/spec.md",
+                "source": "_import/generated-candidates/candidate-050/source.md",
+                "metadata": "_import/generated-candidates/candidate-050/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-051",
+            "original_file": "_import/historical-specs/Foundry-Spec-26-cleanup.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 26",
+            "detected_title": "Storage Surface Cleanup \u2014 Remove Unfinished Object Storage Support",
+            "suggested_slug": "spec-26-storage-surface-cleanup-remove-unfinished-object-storage-support",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-051",
+                "spec": "_import/generated-candidates/candidate-051/spec.md",
+                "source": "_import/generated-candidates/candidate-051/source.md",
+                "metadata": "_import/generated-candidates/candidate-051/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-052",
+            "original_file": "_import/historical-specs/Foundry-Spec-27-Examples-Taxonomy-Cleanup.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 27",
+            "detected_title": "Examples Taxonomy Cleanup",
+            "suggested_slug": "spec-27-examples-taxonomy-cleanup",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-052",
+                "spec": "_import/generated-candidates/candidate-052/spec.md",
+                "source": "_import/generated-candidates/candidate-052/source.md",
+                "metadata": "_import/generated-candidates/candidate-052/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-053",
+            "original_file": "_import/historical-specs/Foundry-Spec-28-WS.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 28-WS",
+            "detected_title": "Framework Internals Reference from framework/src/",
+            "suggested_slug": "spec-28-ws-framework-internals-reference-from-framework-src",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 28 appears to have landed in exactly the right way:",
+                    "reason": "embedded_prior_spec_reference"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-053",
+                "spec": "_import/generated-candidates/candidate-053/spec.md",
+                "source": "_import/generated-candidates/candidate-053/source.md",
+                "metadata": "_import/generated-candidates/candidate-053/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-054",
+            "original_file": "_import/historical-specs/Foundry-Spec-29.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 29",
+            "detected_title": "Release Readiness Reconciliation Pass",
+            "suggested_slug": "spec-29-release-readiness-reconciliation-pass",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-054",
+                "spec": "_import/generated-candidates/candidate-054/spec.md",
+                "source": "_import/generated-candidates/candidate-054/source.md",
+                "metadata": "_import/generated-candidates/candidate-054/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-055",
+            "original_file": "_import/historical-specs/Foundry-Spec-3.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 3",
+            "detected_title": "",
+            "suggested_slug": "spec-3",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-055",
+                "spec": "_import/generated-candidates/candidate-055/spec.md",
+                "source": "_import/generated-candidates/candidate-055/source.md",
+                "metadata": "_import/generated-candidates/candidate-055/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-056",
+            "original_file": "_import/historical-specs/Foundry-Spec-30 - Monetization System Integration.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 30",
+            "detected_title": "Spec 30 \u2014 Monetization System Integration",
+            "suggested_slug": "spec-30-spec-30-monetization-system-integration",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "## Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "## Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "## Architecture",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "## Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-056",
+                "spec": "_import/generated-candidates/candidate-056/spec.md",
+                "source": "_import/generated-candidates/candidate-056/source.md",
+                "metadata": "_import/generated-candidates/candidate-056/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-057",
+            "original_file": "_import/historical-specs/Foundry-Spec-30B.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 30B",
+            "detected_title": "\u2014 Monetization Simplification & Terminology Standardization",
+            "suggested_slug": "spec-30b-monetization-simplification-terminology-standardization",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 30 introduced a shared monetization system with licensing, feature flags, and CLI commands.",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-057",
+                "spec": "_import/generated-candidates/candidate-057/spec.md",
+                "source": "_import/generated-candidates/candidate-057/source.md",
+                "metadata": "_import/generated-candidates/candidate-057/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-058",
+            "original_file": "_import/historical-specs/Foundry-Spec-30C-2-WS.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 30C-2",
+            "detected_title": "WS \u2014 Website Realignment",
+            "suggested_slug": "spec-30c-2-ws-website-realignment",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-058",
+                "spec": "_import/generated-candidates/candidate-058/spec.md",
+                "source": "_import/generated-candidates/candidate-058/source.md",
+                "metadata": "_import/generated-candidates/candidate-058/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-059",
+            "original_file": "_import/historical-specs/Foundry-Spec-30C-2.md",
+            "source_segment": 1,
+            "source_segments_total": 2,
+            "detected_spec_label": "Spec 30C-2",
+            "detected_title": "\u2014 Monetization Realignment (Framework)",
+            "suggested_slug": "spec-30c-2-monetization-realignment-framework",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-059",
+                "spec": "_import/generated-candidates/candidate-059/spec.md",
+                "source": "_import/generated-candidates/candidate-059/source.md",
+                "metadata": "_import/generated-candidates/candidate-059/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-060",
+            "original_file": "_import/historical-specs/Foundry-Spec-30C-2.md",
+            "source_segment": 2,
+            "source_segments_total": 2,
+            "detected_spec_label": "Spec 30C",
+            "detected_title": "2 is in place. [MonetizationService.php](/Users/lo_fye/code/foundry-framework/src/Monetization/MonetizationService.php) is now non-restrictive: core capability flags always resolve as available, command usage is only tracked through the opt-in tracker, and licenses are treated as future identity/service access rather than feature unlocks. [FeatureFlags.php](/Users/lo_fye/code/foundry-framework/src/Monetization/FeatureFlags.php) now describes each flag with `type` and `monetization`, and [LicenseValidator.php](/Users/lo_fye/code/foundry-framework/src/Monetization/LicenseValidator.php) now models license entitlements around service access instead of core tooling.",
+            "suggested_slug": "spec-30c-2-is-in-place-monetizationservice-php-users-lo-fye-code-foundry-framework-src-monetization-monetizationservice-php-is-now-non-restrictive-core-capability-flags-always-resolve-as-available-command-usage-is-only-tracked-through-the-opt-in-tracker-and-licenses-are-treated-as-future-identity-service-access-rather-than-feature-unlocks-featureflags-php-users-lo-fye-code-foundry-framework-src-monetization-featureflags-php-now-describes-each-flag-with-type-and-monetization-and-licensevalidator-php-users-lo-fye-code-foundry-framework-src-monetization-licensevalidator-php-now-models-license-entitlements-around-service-access-instead-of-core-tooling",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 30C-2 is in place. [MonetizationService.php](/Users/lo_fye/code/foundry-framework/src/Monetization/MonetizationService.php) is now non-restrictive: core capability flags always resolve as available, command usage is only tracked through the opt-in tracker, and licenses are treated as future identity/service access rather than feature unlocks. [FeatureFlags.php](/Users/lo_fye/code/foundry-framework/src/Monetization/FeatureFlags.php) now describes each flag with `type` and `monetization`, and [LicenseValidator.php](/Users/lo_fye/code/foundry-framework/src/Monetization/LicenseValidator.php) now models license entitlements around service access instead of core tooling.",
+                    "reason": "embedded_prior_spec_reference"
+                }
+            ],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-060",
+                "spec": "_import/generated-candidates/candidate-060/spec.md",
+                "source": "_import/generated-candidates/candidate-060/source.md",
+                "metadata": "_import/generated-candidates/candidate-060/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-061",
+            "original_file": "_import/historical-specs/Foundry-Spec-30C-WS.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 30C-WS",
+            "detected_title": "\u2014 Monetization UX & Product Layer (Website, LLM-First Positioning)",
+            "suggested_slug": "spec-30c-ws-monetization-ux-product-layer-website-llm-first-positioning",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-061",
+                "spec": "_import/generated-candidates/candidate-061/spec.md",
+                "source": "_import/generated-candidates/candidate-061/source.md",
+                "metadata": "_import/generated-candidates/candidate-061/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-062",
+            "original_file": "_import/historical-specs/Foundry-Spec-30C.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 30C",
+            "detected_title": "\u2014 Monetization UX & Product Layer (Framework)",
+            "suggested_slug": "spec-30c-monetization-ux-product-layer-framework",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 30 introduced the monetization system.",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Spec 30B simplified and normalized it.",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Implementation",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 30C is implemented. Gated commands now raise a dedicated [FeatureNotLicensed.php](/Users/lo_fye/code/foundry-framework/src/Monetization/Exceptions/FeatureNotLicensed.php) exception, and the CLI renders it centrally through [ExceptionRenderer.php](/Users/lo_fye/code/foundry-framework/src/CLI/ExceptionRenderer.php), so every unlicensed feature now shows the same license-first message with the activation command and pricing link. [LicenseCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/LicenseCommand.php) now reports `License`, `Tier`, and product-facing enabled/disabled features, [FeaturesCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/FeaturesCommand.php) adds `foundry features`, and [Application.php](/Users/lo_fye/code/foundry-framework/src/CLI/Application.php) plus [ApiSurfaceRegistry.php](/Users/lo_fye/code/foundry-framework/src/Support/ApiSurfaceRegistry.php) now surface the new help/discovery hint: \u201cSome advanced features require a license. Run: `foundry license status`\u201d.",
+                    "reason": "embedded_prior_spec_reference"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-062",
+                "spec": "_import/generated-candidates/candidate-062/spec.md",
+                "source": "_import/generated-candidates/candidate-062/source.md",
+                "metadata": "_import/generated-candidates/candidate-062/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-063",
+            "original_file": "_import/historical-specs/Foundry-Spec-30D-2.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 30D-2",
+            "detected_title": "\u2014 First-Run Experience Cleanup and Truthfulness Pass",
+            "suggested_slug": "spec-30d-2-first-run-experience-cleanup-and-truthfulness-pass",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 30D landed successfully, but one implementation choice introduced a truthfulness gap:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Spec 30D introduced deterministic default subject selection in ExplainCommand when no target is provided.",
+                    "reason": "embedded_prior_spec_reference"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-063",
+                "spec": "_import/generated-candidates/candidate-063/spec.md",
+                "source": "_import/generated-candidates/candidate-063/source.md",
+                "metadata": "_import/generated-candidates/candidate-063/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-064",
+            "original_file": "_import/historical-specs/Foundry-Spec-30D-First-Run.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 30D",
+            "detected_title": "\u2014 First-Run Experience (Zero \u2192 Value in 60 Seconds)",
+            "suggested_slug": "spec-30d-first-run-experience-zero-value-in-60-seconds",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Implementation",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-064",
+                "spec": "_import/generated-candidates/candidate-064/spec.md",
+                "source": "_import/generated-candidates/candidate-064/source.md",
+                "metadata": "_import/generated-candidates/candidate-064/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-065",
+            "original_file": "_import/historical-specs/Foundry-Spec-30E.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 30E",
+            "detected_title": "\u2014 Explain \u21c4 Generate Feedback Loop (Tight Iteration UX)",
+            "suggested_slug": "spec-30e-explain-generate-feedback-loop-tight-iteration-ux",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Implementation",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-065",
+                "spec": "_import/generated-candidates/candidate-065/spec.md",
+                "source": "_import/generated-candidates/candidate-065/source.md",
+                "metadata": "_import/generated-candidates/candidate-065/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-066",
+            "original_file": "_import/historical-specs/Foundry-Spec-30F.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 30F",
+            "detected_title": "\u2014 Confidence Scoring for Explain, Generate, and Iteration",
+            "suggested_slug": "spec-30f-confidence-scoring-for-explain-generate-and-iteration",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-066",
+                "spec": "_import/generated-candidates/candidate-066/spec.md",
+                "source": "_import/generated-candidates/candidate-066/source.md",
+                "metadata": "_import/generated-candidates/candidate-066/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-067",
+            "original_file": "_import/historical-specs/Foundry-Spec-30G.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 30G",
+            "detected_title": "\u2014 Git Integration for Explain, Generate, Plans, and Replay",
+            "suggested_slug": "spec-30g-git-integration-for-explain-generate-plans-and-replay",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-067",
+                "spec": "_import/generated-candidates/candidate-067/spec.md",
+                "source": "_import/generated-candidates/candidate-067/source.md",
+                "metadata": "_import/generated-candidates/candidate-067/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-068",
+            "original_file": "_import/historical-specs/Foundry-Spec-31 - Examples System Expansion.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 31",
+            "detected_title": "\u2014 Foundry Pack System Foundation",
+            "suggested_slug": "spec-31-foundry-pack-system-foundation",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Acceptance Criteria",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 31 is implemented. Foundry now has a real offline pack foundation: local install/remove/list/info CLI support via [PackCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/PackCommand.php), manifest validation in [PackManifest.php](/Users/lo_fye/code/foundry-framework/src/Packs/PackManifest.php), deterministic storage and activation state in [InstalledPackRegistry.php](/Users/lo_fye/code/foundry-framework/src/Packs/InstalledPackRegistry.php), and pack boot/loading through [LocalPackLoader.php](/Users/lo_fye/code/foundry-framework/src/Packs/LocalPackLoader.php), [PackContext.php](/Users/lo_fye/code/foundry-framework/src/Packs/PackContext.php), and [PackServiceProvider.php](/Users/lo_fye/code/foundry-framework/src/Packs/PackServiceProvider.php). Packs install into `.foundry/packs/{vendor}/{pack}/{version}/`, activate through `.foundry/packs/installed.json`, load in deterministic name/version order, and fail explicitly on command/schema collisions or duplicate graph node ids.",
+                    "reason": "embedded_prior_spec_reference"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-068",
+                "spec": "_import/generated-candidates/candidate-068/spec.md",
+                "source": "_import/generated-candidates/candidate-068/source.md",
+                "metadata": "_import/generated-candidates/candidate-068/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-069",
+            "original_file": "_import/historical-specs/Foundry-Spec-32 - Thresholds App Modernization.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 32",
+            "detected_title": "\u2014 Hosted Marketplace (Minimal Viable)",
+            "suggested_slug": "spec-32-hosted-marketplace-minimal-viable",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Non-Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 32 is implemented. Foundry now has a minimal hosted pack registry client in [HostedPackRegistry.php](/Users/lo_fye/code/foundry-framework/src/Packs/HostedPackRegistry.php) and [HostedPackRegistryEntry.php](/Users/lo_fye/code/foundry-framework/src/Packs/HostedPackRegistryEntry.php), plus secure zip extraction in [PackArchiveExtractor.php](/Users/lo_fye/code/foundry-framework/src/Packs/PackArchiveExtractor.php). `pack install` now resolves local paths first and valid `vendor/pack` names second through the hosted registry inside [PackManager.php](/Users/lo_fye/code/foundry-framework/src/Packs/PackManager.php), so remote installs still reuse the same local install/activation pipeline from Spec 31 after download and extraction. The CLI now supports `foundry pack search <query>` and hosted installs in [PackCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/PackCommand.php), with help/discovery/docs surfaced through [ApiSurfaceRegistry.php](/Users/lo_fye/code/foundry-framework/src/Support/ApiSurfaceRegistry.php), [Application.php](/Users/lo_fye/code/foundry-framework/src/CLI/Application.php), and [CommandCatalog.php](/Users/lo_fye/code/foundry-framework/src/Documentation/CommandCatalog.php).",
+                    "reason": "embedded_prior_spec_reference"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-069",
+                "spec": "_import/generated-candidates/candidate-069/spec.md",
+                "source": "_import/generated-candidates/candidate-069/source.md",
+                "metadata": "_import/generated-candidates/candidate-069/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-070",
+            "original_file": "_import/historical-specs/Foundry-Spec-33 - ExplainEngine Data Model Hardening.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 33",
+            "detected_title": "\u2014 Explain System Hardening + Extension-Aware Architecture",
+            "suggested_slug": "spec-33-explain-system-hardening-extension-aware-architecture",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-070",
+                "spec": "_import/generated-candidates/candidate-070/spec.md",
+                "source": "_import/generated-candidates/candidate-070/source.md",
+                "metadata": "_import/generated-candidates/candidate-070/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-071",
+            "original_file": "_import/historical-specs/Foundry-Spec-34 - Explain to Generate Context Bridge.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 34",
+            "detected_title": "\u2014 Foundry Marketplace System",
+            "suggested_slug": "spec-34-foundry-marketplace-system",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-071",
+                "spec": "_import/generated-candidates/candidate-071/spec.md",
+                "source": "_import/generated-candidates/candidate-071/source.md",
+                "metadata": "_import/generated-candidates/candidate-071/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-072",
+            "original_file": "_import/historical-specs/Foundry-Spec-35 - Generate System End-to-End.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 35",
+            "detected_title": "\u2014 Generate System (End-to-End, Explain-Driven, Pack-Aware)",
+            "suggested_slug": "spec-35-generate-system-end-to-end-explain-driven-pack-aware",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Must:",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-072",
+                "spec": "_import/generated-candidates/candidate-072/spec.md",
+                "source": "_import/generated-candidates/candidate-072/source.md",
+                "metadata": "_import/generated-candidates/candidate-072/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-073",
+            "original_file": "_import/historical-specs/Foundry-Spec-35D-Contexting.md",
+            "source_segment": 1,
+            "source_segments_total": 3,
+            "detected_spec_label": "Spec 19A",
+            "detected_title": "",
+            "suggested_slug": "spec-19a",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-073",
+                "spec": "_import/generated-candidates/candidate-073/spec.md",
+                "source": "_import/generated-candidates/candidate-073/source.md",
+                "metadata": "_import/generated-candidates/candidate-073/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-074",
+            "original_file": "_import/historical-specs/Foundry-Spec-35D-Contexting.md",
+            "source_segment": 2,
+            "source_segments_total": 3,
+            "detected_spec_label": "Spec 19B",
+            "detected_title": "",
+            "suggested_slug": "spec-19b",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-074",
+                "spec": "_import/generated-candidates/candidate-074/spec.md",
+                "source": "_import/generated-candidates/candidate-074/source.md",
+                "metadata": "_import/generated-candidates/candidate-074/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-075",
+            "original_file": "_import/historical-specs/Foundry-Spec-35D-Contexting.md",
+            "source_segment": 3,
+            "source_segments_total": 3,
+            "detected_spec_label": "docs/specs/blog-1.md",
+            "detected_title": "Spec Version",
+            "suggested_slug": "docs-specs-blog-1-md-spec-version",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-075",
+                "spec": "_import/generated-candidates/candidate-075/spec.md",
+                "source": "_import/generated-candidates/candidate-075/source.md",
+                "metadata": "_import/generated-candidates/candidate-075/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-076",
+            "original_file": "_import/historical-specs/Foundry-Spec-4.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 4I",
+            "detected_title": "Added in Phase 0C",
+            "suggested_slug": "spec-4i-added-in-phase-0c",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "# introduced during Phase 4H",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "introduced in Phase 4E",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 4H restored branding",
+                    "reason": "embedded_prior_spec_reference"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-076",
+                "spec": "_import/generated-candidates/candidate-076/spec.md",
+                "source": "_import/generated-candidates/candidate-076/source.md",
+                "metadata": "_import/generated-candidates/candidate-076/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-077",
+            "original_file": "_import/historical-specs/Foundry-Spec-5.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 5",
+            "detected_title": "",
+            "suggested_slug": "spec-5",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "legacy_filename_single_spec",
+            "candidate_quality": "probable",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Title not detected from heading or Title: field.",
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected.",
+                "Legacy filename fallback used for single-spec source file."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-077",
+                "spec": "_import/generated-candidates/candidate-077/spec.md",
+                "source": "_import/generated-candidates/candidate-077/source.md",
+                "metadata": "_import/generated-candidates/candidate-077/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-078",
+            "original_file": "_import/historical-specs/Foundry-Spec-6-HardenDeploy.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "",
+            "detected_title": "Spec: Add tag-triggered GitHub Actions deployment to Cloudways",
+            "suggested_slug": "spec-add-tag-triggered-github-actions-deployment-to-cloudways",
+            "suggested_module": "unknown",
+            "confidence": "medium",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "## Non-goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "## Acceptance criteria",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Spec label not detected from explicit heading.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-078",
+                "spec": "_import/generated-candidates/candidate-078/spec.md",
+                "source": "_import/generated-candidates/candidate-078/source.md",
+                "metadata": "_import/generated-candidates/candidate-078/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-079",
+            "original_file": "_import/historical-specs/Foundry-Spec-7.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 7",
+            "detected_title": "\u2014 Stable Public API Definition",
+            "suggested_slug": "spec-7-stable-public-api-definition",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 7 defines Foundry\u2019s stable public API surface so that users, extension authors, and future maintainers know what is safe to depend on.",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 7 must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-079",
+                "spec": "_import/generated-candidates/candidate-079/spec.md",
+                "source": "_import/generated-candidates/candidate-079/source.md",
+                "metadata": "_import/generated-candidates/candidate-079/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-080",
+            "original_file": "_import/historical-specs/Foundry-Spec-8.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 8",
+            "detected_title": "\u2014 Extension System Stabilization",
+            "suggested_slug": "spec-8-extension-system-stabilization",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Spec 8 stabilizes the extension model.",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 8 must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 8 is implemented. The core of it is in [ExtensionRegistry.php](/Users/lo_fye/code/foundry-framework/src/Compiler/Extensions/ExtensionRegistry.php), [ExtensionMetadataValidator.php](/Users/lo_fye/code/foundry-framework/src/Compiler/Extensions/ExtensionMetadataValidator.php), [ExtensionDescriptor.php](/Users/lo_fye/code/foundry-framework/src/Compiler/Extensions/ExtensionDescriptor.php), and [PackDefinition.php](/Users/lo_fye/code/foundry-framework/src/Compiler/Extensions/PackDefinition.php). Extensions now have explicit metadata schema, lifecycle state, deterministic dependency/load ordering, duplicate/conflict handling, and surfaced diagnostics. Compiler integration was updated in [GraphCompiler.php](/Users/lo_fye/code/foundry-framework/src/Compiler/GraphCompiler.php) so extension pass failures become `FDY7020` diagnostics instead of aborting the compile. CLI/reporting now exposes the stabilized surface through [InspectGraphCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/InspectGraphCommand.php), [VerifyCompatibilityCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/VerifyCompatibilityCommand.php), [DoctorCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/DoctorCommand.php), [CompatibilityChecker.php](/Users/lo_fye/code/foundry-framework/src/Compiler/Extensions/CompatibilityChecker.php), and [CompatibilityReport.php](/Users/lo_fye/code/foundry-framework/src/Compiler/Extensions/CompatibilityReport.php).",
+                    "reason": "embedded_prior_spec_reference"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-080",
+                "spec": "_import/generated-candidates/candidate-080/spec.md",
+                "source": "_import/generated-candidates/candidate-080/source.md",
+                "metadata": "_import/generated-candidates/candidate-080/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-081",
+            "original_file": "_import/historical-specs/Foundry-Spec-9.md",
+            "source_segment": 1,
+            "source_segments_total": 1,
+            "detected_spec_label": "Spec 9",
+            "detected_title": "\u2014 Framework Doctor and Environment Diagnostics",
+            "suggested_slug": "spec-9-framework-doctor-and-environment-diagnostics",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Spec 9 must:",
+                    "reason": "embedded_prior_spec_reference"
+                },
+                {
+                    "text": "Requirements",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-081",
+                "spec": "_import/generated-candidates/candidate-081/spec.md",
+                "source": "_import/generated-candidates/candidate-081/source.md",
+                "metadata": "_import/generated-candidates/candidate-081/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-082",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 1,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 7",
+            "detected_title": "\u2014 Stable Public API Definition",
+            "suggested_slug": "spec-7-stable-public-api-definition-2",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-082",
+                "spec": "_import/generated-candidates/candidate-082/spec.md",
+                "source": "_import/generated-candidates/candidate-082/source.md",
+                "metadata": "_import/generated-candidates/candidate-082/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-083",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 2,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 12",
+            "detected_title": "\u2014 Configuration Schema Validation",
+            "suggested_slug": "spec-12-configuration-schema-validation-2",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-083",
+                "spec": "_import/generated-candidates/candidate-083/spec.md",
+                "source": "_import/generated-candidates/candidate-083/source.md",
+                "metadata": "_import/generated-candidates/candidate-083/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-084",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 3,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 8",
+            "detected_title": "\u2014 Extension System Stabilization",
+            "suggested_slug": "spec-8-extension-system-stabilization-2",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-084",
+                "spec": "_import/generated-candidates/candidate-084/spec.md",
+                "source": "_import/generated-candidates/candidate-084/source.md",
+                "metadata": "_import/generated-candidates/candidate-084/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-085",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 4,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 9",
+            "detected_title": "\u2014 Framework Doctor",
+            "suggested_slug": "spec-9-framework-doctor",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-085",
+                "spec": "_import/generated-candidates/candidate-085/spec.md",
+                "source": "_import/generated-candidates/candidate-085/source.md",
+                "metadata": "_import/generated-candidates/candidate-085/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-086",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 5,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 13",
+            "detected_title": "\u2014 Upgrade Safety Tools",
+            "suggested_slug": "spec-13-upgrade-safety-tools-2",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-086",
+                "spec": "_import/generated-candidates/candidate-086/spec.md",
+                "source": "_import/generated-candidates/candidate-086/source.md",
+                "metadata": "_import/generated-candidates/candidate-086/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-087",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 6,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 10",
+            "detected_title": "\u2014 Project Scaffolding Generator",
+            "suggested_slug": "spec-10-project-scaffolding-generator-2",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-087",
+                "spec": "_import/generated-candidates/candidate-087/spec.md",
+                "source": "_import/generated-candidates/candidate-087/source.md",
+                "metadata": "_import/generated-candidates/candidate-087/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-088",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 7,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 11",
+            "detected_title": "\u2014 Graph Visualization CLI",
+            "suggested_slug": "spec-11-graph-visualization-cli",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-088",
+                "spec": "_import/generated-candidates/candidate-088/spec.md",
+                "source": "_import/generated-candidates/candidate-088/source.md",
+                "metadata": "_import/generated-candidates/candidate-088/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-089",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 8,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 14",
+            "detected_title": "\u2014 Deterministic Compile Cache",
+            "suggested_slug": "spec-14-deterministic-compile-cache-2",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-089",
+                "spec": "_import/generated-candidates/candidate-089/spec.md",
+                "source": "_import/generated-candidates/candidate-089/source.md",
+                "metadata": "_import/generated-candidates/candidate-089/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-090",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 9,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 15",
+            "detected_title": "\u2014 Official Example Applications",
+            "suggested_slug": "spec-15-official-example-applications-2",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-090",
+                "spec": "_import/generated-candidates/candidate-090/spec.md",
+                "source": "_import/generated-candidates/candidate-090/source.md",
+                "metadata": "_import/generated-candidates/candidate-090/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-091",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 10,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 7",
+            "detected_title": "\u2014 Public API",
+            "suggested_slug": "spec-7-public-api",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-091",
+                "spec": "_import/generated-candidates/candidate-091/spec.md",
+                "source": "_import/generated-candidates/candidate-091/source.md",
+                "metadata": "_import/generated-candidates/candidate-091/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-092",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 11,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 8",
+            "detected_title": "\u2014 Extensions",
+            "suggested_slug": "spec-8-extensions",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-092",
+                "spec": "_import/generated-candidates/candidate-092/spec.md",
+                "source": "_import/generated-candidates/candidate-092/source.md",
+                "metadata": "_import/generated-candidates/candidate-092/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-093",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 12,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 9",
+            "detected_title": "\u2014 Doctor",
+            "suggested_slug": "spec-9-doctor",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-093",
+                "spec": "_import/generated-candidates/candidate-093/spec.md",
+                "source": "_import/generated-candidates/candidate-093/source.md",
+                "metadata": "_import/generated-candidates/candidate-093/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-094",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 13,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 10",
+            "detected_title": "\u2014 Scaffolding",
+            "suggested_slug": "spec-10-scaffolding",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-094",
+                "spec": "_import/generated-candidates/candidate-094/spec.md",
+                "source": "_import/generated-candidates/candidate-094/source.md",
+                "metadata": "_import/generated-candidates/candidate-094/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-095",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 14,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 12",
+            "detected_title": "\u2014 Config validation",
+            "suggested_slug": "spec-12-config-validation",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-095",
+                "spec": "_import/generated-candidates/candidate-095/spec.md",
+                "source": "_import/generated-candidates/candidate-095/source.md",
+                "metadata": "_import/generated-candidates/candidate-095/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-096",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 15,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 13",
+            "detected_title": "\u2014 Upgrade safety",
+            "suggested_slug": "spec-13-upgrade-safety",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-096",
+                "spec": "_import/generated-candidates/candidate-096/spec.md",
+                "source": "_import/generated-candidates/candidate-096/source.md",
+                "metadata": "_import/generated-candidates/candidate-096/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-097",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 16,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 11",
+            "detected_title": "\u2014 Graph CLI",
+            "suggested_slug": "spec-11-graph-cli",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-097",
+                "spec": "_import/generated-candidates/candidate-097/spec.md",
+                "source": "_import/generated-candidates/candidate-097/source.md",
+                "metadata": "_import/generated-candidates/candidate-097/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-098",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 17,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 14",
+            "detected_title": "\u2014 Compile cache",
+            "suggested_slug": "spec-14-compile-cache",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-098",
+                "spec": "_import/generated-candidates/candidate-098/spec.md",
+                "source": "_import/generated-candidates/candidate-098/source.md",
+                "metadata": "_import/generated-candidates/candidate-098/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-099",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 18,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 15",
+            "detected_title": "\u2014 Example apps",
+            "suggested_slug": "spec-15-example-apps",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-099",
+                "spec": "_import/generated-candidates/candidate-099/spec.md",
+                "source": "_import/generated-candidates/candidate-099/source.md",
+                "metadata": "_import/generated-candidates/candidate-099/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-100",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 19,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 16",
+            "detected_title": "\u2014 monetization (without burden)",
+            "suggested_slug": "spec-16-monetization-without-burden",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-100",
+                "spec": "_import/generated-candidates/candidate-100/spec.md",
+                "source": "_import/generated-candidates/candidate-100/source.md",
+                "metadata": "_import/generated-candidates/candidate-100/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-101",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 20,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 17",
+            "detected_title": "\u2014 your actual innovation (LLM + architecture)",
+            "suggested_slug": "spec-17-your-actual-innovation-llm-architecture",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-101",
+                "spec": "_import/generated-candidates/candidate-101/spec.md",
+                "source": "_import/generated-candidates/candidate-101/source.md",
+                "metadata": "_import/generated-candidates/candidate-101/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-102",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 21,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 18",
+            "detected_title": "\u2014 how people understand and adopt Foundry",
+            "suggested_slug": "spec-18-how-people-understand-and-adopt-foundry",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-102",
+                "spec": "_import/generated-candidates/candidate-102/spec.md",
+                "source": "_import/generated-candidates/candidate-102/source.md",
+                "metadata": "_import/generated-candidates/candidate-102/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-103",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 22,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 19G",
+            "detected_title": "Thresholds v2 update",
+            "suggested_slug": "spec-19g-thresholds-v2-update",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-103",
+                "spec": "_import/generated-candidates/candidate-103/spec.md",
+                "source": "_import/generated-candidates/candidate-103/source.md",
+                "metadata": "_import/generated-candidates/candidate-103/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-104",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 23,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 20",
+            "detected_title": "\u2014 Interactive Architecture Explorer",
+            "suggested_slug": "spec-20-interactive-architecture-explorer-2",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-104",
+                "spec": "_import/generated-candidates/candidate-104/spec.md",
+                "source": "_import/generated-candidates/candidate-104/source.md",
+                "metadata": "_import/generated-candidates/candidate-104/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-105",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 24,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 21",
+            "detected_title": "\u2014 Command Playground",
+            "suggested_slug": "spec-21-command-playground-2",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-105",
+                "spec": "_import/generated-candidates/candidate-105/spec.md",
+                "source": "_import/generated-candidates/candidate-105/source.md",
+                "metadata": "_import/generated-candidates/candidate-105/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-106",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 25,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 22",
+            "detected_title": "\u2014 Guided Learning Paths",
+            "suggested_slug": "spec-22-guided-learning-paths-2",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-106",
+                "spec": "_import/generated-candidates/candidate-106/spec.md",
+                "source": "_import/generated-candidates/candidate-106/source.md",
+                "metadata": "_import/generated-candidates/candidate-106/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-107",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 26,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 23",
+            "detected_title": "\u2014 Interactive CLI Index",
+            "suggested_slug": "spec-23-interactive-cli-index-2",
+            "suggested_module": "unknown",
+            "confidence": "low",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "weak",
+            "rejected_root_signals": [],
+            "result_association_confidence": "unknown",
+            "notes": [
+                "Low-confidence extraction; manual review recommended.",
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": false,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-107",
+                "spec": "_import/generated-candidates/candidate-107/spec.md",
+                "source": "_import/generated-candidates/candidate-107/source.md",
+                "metadata": "_import/generated-candidates/candidate-107/metadata.json"
+            }
+        },
+        {
+            "candidate_id": "candidate-108",
+            "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+            "source_segment": 27,
+            "source_segments_total": 27,
+            "detected_spec_label": "Spec 24",
+            "detected_title": "\u2014 Contributor Portal",
+            "suggested_slug": "spec-24-contributor-portal-2",
+            "suggested_module": "unknown",
+            "confidence": "high",
+            "emission_reason": "explicit_spec_heading",
+            "candidate_quality": "strong",
+            "rejected_root_signals": [
+                {
+                    "text": "Non-goals",
+                    "reason": "section_fragment"
+                },
+                {
+                    "text": "Implementation",
+                    "reason": "section_fragment"
+                }
+            ],
+            "result_association_confidence": "high",
+            "notes": [
+                "Purpose field not explicitly detected."
+            ],
+            "result_detected": true,
+            "followups_detected": false,
+            "output_paths": {
+                "directory": "_import/generated-candidates/candidate-108",
+                "spec": "_import/generated-candidates/candidate-108/spec.md",
+                "source": "_import/generated-candidates/candidate-108/source.md",
+                "metadata": "_import/generated-candidates/candidate-108/metadata.json"
+            }
+        }
+    ]
+}

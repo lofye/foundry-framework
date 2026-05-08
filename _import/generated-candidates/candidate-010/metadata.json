@@ -1,0 +1,20 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-0D.md",
+    "candidate_id": "candidate-010",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 0D",
+    "detected_title": "Middleware",
+    "suggested_slug": "spec-0d-middleware",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [],
+    "result_association_confidence": "unknown",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": false,
+    "followups_detected": false
+}

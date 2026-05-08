@@ -1,0 +1,53 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-19F-spec-foundry-explain-renderers-contributors-docs.md",
+    "candidate_id": "candidate-029",
+    "source_segment": 2,
+    "source_segments_total": 2,
+    "detected_spec_label": "Spec 19F",
+    "detected_title": "Spec 19F \u2014 Foundry Explain Renderers, Contributors, Docs, and Final Integration",
+    "suggested_slug": "spec-19f-spec-19f-foundry-explain-renderers-contributors-docs-and-final-integration",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Spec 19D established the foundations for `foundry explain`.",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "Spec 19E introduced collectors, analyzers, and rich explanation sections.",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "Spec 19F completes the feature by adding:",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "## Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Spec 19F must:",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "### Requirements",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "### Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "## Verify",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

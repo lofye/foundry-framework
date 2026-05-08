@@ -1,0 +1,20 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Plans-for-19A-19F.md",
+    "candidate_id": "candidate-004",
+    "source_segment": 4,
+    "source_segments_total": 6,
+    "detected_spec_label": "Spec 19D",
+    "detected_title": "Spec 19D \u2014 Context Collection Layer",
+    "suggested_slug": "spec-19d-spec-19d-context-collection-layer",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

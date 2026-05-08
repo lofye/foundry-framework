@@ -1,0 +1,25 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-19M-WS.md",
+    "candidate_id": "candidate-038",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 19M",
+    "detected_title": "Docs Usage Audit Script (Read-Only, No Build Changes Yet)",
+    "suggested_slug": "spec-19m-docs-usage-audit-script-read-only-no-build-changes-yet",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Acceptance Criteria",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

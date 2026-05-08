@@ -1,0 +1,20 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Plans-for-19A-19F.md",
+    "candidate_id": "candidate-002",
+    "source_segment": 2,
+    "source_segments_total": 6,
+    "detected_spec_label": "Spec 19B",
+    "detected_title": "Spec 19B \u2014 Core Models + Engine Skeleton",
+    "suggested_slug": "spec-19b-spec-19b-core-models-engine-skeleton",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

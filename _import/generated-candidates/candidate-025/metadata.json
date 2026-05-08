@@ -1,0 +1,33 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-19D-foundry-explain-foundations.md",
+    "candidate_id": "candidate-025",
+    "source_segment": 2,
+    "source_segments_total": 2,
+    "detected_spec_label": "Spec 19D",
+    "detected_title": "Spec 19D \u2014 Foundry Explain Foundations",
+    "suggested_slug": "spec-19d-spec-19d-foundry-explain-foundations",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "## Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Spec 19D must:",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "## Verify",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

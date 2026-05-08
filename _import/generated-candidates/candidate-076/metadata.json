@@ -1,0 +1,41 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-4.md",
+    "candidate_id": "candidate-076",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 4I",
+    "detected_title": "Added in Phase 0C",
+    "suggested_slug": "spec-4i-added-in-phase-0c",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Requirements",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "# introduced during Phase 4H",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "introduced in Phase 4E",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Spec 4H restored branding",
+            "reason": "embedded_prior_spec_reference"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

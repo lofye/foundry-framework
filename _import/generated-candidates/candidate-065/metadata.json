@@ -1,0 +1,41 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-30E.md",
+    "candidate_id": "candidate-065",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 30E",
+    "detected_title": "\u2014 Explain \u21c4 Generate Feedback Loop (Tight Iteration UX)",
+    "suggested_slug": "spec-30e-explain-generate-feedback-loop-tight-iteration-ux",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Non-Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Requirements",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Implementation",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Acceptance Criteria",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

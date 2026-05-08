@@ -1,0 +1,30 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-19H2.md",
+    "candidate_id": "candidate-033",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "",
+    "detected_title": "Spec: Normalize New-Project Bootstrap and App Layout",
+    "suggested_slug": "spec-normalize-new-project-bootstrap-and-app-layout",
+    "suggested_module": "unknown",
+    "confidence": "medium",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "## Non-goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "## Acceptance criteria",
+            "reason": "section_fragment"
+        }
+    ],
+    "result_association_confidence": "unknown",
+    "notes": [
+        "Spec label not detected from explicit heading.",
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": false,
+    "followups_detected": false
+}

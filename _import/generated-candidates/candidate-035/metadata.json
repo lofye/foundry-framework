@@ -1,0 +1,41 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-19J.md",
+    "candidate_id": "candidate-035",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 19J",
+    "detected_title": "",
+    "suggested_slug": "spec-19j",
+    "suggested_module": "unknown",
+    "confidence": "medium",
+    "emission_reason": "legacy_filename_single_spec",
+    "candidate_quality": "probable",
+    "rejected_root_signals": [
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Non-Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Acceptance Criteria",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Spec 19J is wired through the framework now. The enforcement stack and scripts live in [composer.json](/Users/lo_fye/code/foundry-framework/composer.json#L13), with repo configs in [phpstan.neon](/Users/lo_fye/code/foundry-framework/phpstan.neon#L1), [phpstan-baseline.neon](/Users/lo_fye/code/foundry-framework/phpstan-baseline.neon), [pint.json](/Users/lo_fye/code/foundry-framework/pint.json#L1), [rector.php](/Users/lo_fye/code/foundry-framework/rector.php#L1), and CI in [.github/workflows/quality.yml](/Users/lo_fye/code/foundry-framework/.github/workflows/quality.yml#L1). `doctor` now supports `--static`, `--style`, `--quality`, and optional test summaries in [src/CLI/Commands/DoctorCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/DoctorCommand.php#L50).",
+            "reason": "embedded_prior_spec_reference"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Spec label not detected from explicit heading.",
+        "Title not detected from heading or Title: field.",
+        "Low-confidence extraction; manual review recommended.",
+        "Purpose field not explicitly detected.",
+        "Legacy filename fallback used for single-spec source file."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

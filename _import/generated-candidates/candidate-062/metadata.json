@@ -1,0 +1,53 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-30C.md",
+    "candidate_id": "candidate-062",
+    "source_segment": 1,
+    "source_segments_total": 1,
+    "detected_spec_label": "Spec 30C",
+    "detected_title": "\u2014 Monetization UX & Product Layer (Framework)",
+    "suggested_slug": "spec-30c-monetization-ux-product-layer-framework",
+    "suggested_module": "unknown",
+    "confidence": "high",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "strong",
+    "rejected_root_signals": [
+        {
+            "text": "Spec 30 introduced the monetization system.",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "Spec 30B simplified and normalized it.",
+            "reason": "embedded_prior_spec_reference"
+        },
+        {
+            "text": "Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Requirements",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Implementation",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Acceptance Criteria",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Non-Goals",
+            "reason": "section_fragment"
+        },
+        {
+            "text": "Spec 30C is implemented. Gated commands now raise a dedicated [FeatureNotLicensed.php](/Users/lo_fye/code/foundry-framework/src/Monetization/Exceptions/FeatureNotLicensed.php) exception, and the CLI renders it centrally through [ExceptionRenderer.php](/Users/lo_fye/code/foundry-framework/src/CLI/ExceptionRenderer.php), so every unlicensed feature now shows the same license-first message with the activation command and pricing link. [LicenseCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/LicenseCommand.php) now reports `License`, `Tier`, and product-facing enabled/disabled features, [FeaturesCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/FeaturesCommand.php) adds `foundry features`, and [Application.php](/Users/lo_fye/code/foundry-framework/src/CLI/Application.php) plus [ApiSurfaceRegistry.php](/Users/lo_fye/code/foundry-framework/src/Support/ApiSurfaceRegistry.php) now surface the new help/discovery hint: \u201cSome advanced features require a license. Run: `foundry license status`\u201d.",
+            "reason": "embedded_prior_spec_reference"
+        }
+    ],
+    "result_association_confidence": "high",
+    "notes": [
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": true,
+    "followups_detected": false
+}

@@ -1,0 +1,21 @@
+{
+    "original_file": "_import/historical-specs/Foundry-Spec-Summaries.md",
+    "candidate_id": "candidate-089",
+    "source_segment": 8,
+    "source_segments_total": 27,
+    "detected_spec_label": "Spec 14",
+    "detected_title": "\u2014 Deterministic Compile Cache",
+    "suggested_slug": "spec-14-deterministic-compile-cache-2",
+    "suggested_module": "unknown",
+    "confidence": "low",
+    "emission_reason": "explicit_spec_heading",
+    "candidate_quality": "weak",
+    "rejected_root_signals": [],
+    "result_association_confidence": "unknown",
+    "notes": [
+        "Low-confidence extraction; manual review recommended.",
+        "Purpose field not explicitly detected."
+    ],
+    "result_detected": false,
+    "followups_detected": false
+}
