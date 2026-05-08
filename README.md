@@ -39,6 +39,7 @@ These paths mean:
 - `Modules/<Module>/<module>.spec.md` → authoritative module intent
 - `Modules/<Module>/<module>.md` → current state
 - `Modules/<Module>/<module>.decisions.md` → append-only decision history
+- Keep module decision ledgers append-only; do not compact historical entries. Summarize accumulated decisions in a `## Decision Summary` section inside `Modules/<Module>/<module>.md`.
 - `Modules/<Module>/specs/*.md` → execution specs (planning artifacts, non-authoritative after implementation)
 - `Modules/<Module>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
 - `Modules/<Module>/plans/*.md` → implementation reconstruction notes (post-implementation artifacts)

@@ -57,6 +57,7 @@ If a step fails or leaves unresolved issues:
   Features/<Feature>/plans/<id>-<slug>.md for application-feature specs
 - Reconstruction notes are post-implementation records, not speculative plans
 - Include implemented spec path, implementation summary, files introduced/modified, runtime contracts, deterministic outputs, tests, verification commands, decisions/tradeoffs, reconstruction notes, and follow-up dependencies
+- Keep decision ledgers append-only; when history grows, add or refresh a `## Decision Summary` section in the module/feature state file instead of compacting `.decisions.md`.
 
 ---
 

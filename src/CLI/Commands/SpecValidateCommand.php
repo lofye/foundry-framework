@@ -38,8 +38,9 @@ final class SpecValidateCommand extends Command
     /**
      * @param array{
      *     ok:bool,
-     *     summary:array{checked_files:int,features:int,violations:int},
-     *     violations:list<array<string,mixed>>
+     *     summary:array{checked_files:int,features:int,violations:int,warnings:int},
+     *     violations:list<array<string,mixed>>,
+     *     warnings:list<array<string,mixed>>
      * } $payload
      */
     private function renderMessage(array $payload): string
@@ -50,6 +51,7 @@ final class SpecValidateCommand extends Command
                 '',
                 'Checked files: ' . $payload['summary']['checked_files'],
                 'Violations: 0',
+                'Warnings: ' . $payload['summary']['warnings'],
             ]);
         }
 
@@ -64,9 +66,17 @@ final class SpecValidateCommand extends Command
         }
 
         $lines[] = '';
+        if (($payload['warnings'] ?? []) !== []) {
+            $lines[] = 'Warnings:';
+            foreach ((array) $payload['warnings'] as $warning) {
+                $lines[] = $this->renderViolation((array) $warning);
+            }
+            $lines[] = '';
+        }
         $lines[] = 'Summary:';
         $lines[] = '- Checked files: ' . $payload['summary']['checked_files'];
         $lines[] = '- Violations: ' . $payload['summary']['violations'];
+        $lines[] = '- Warnings: ' . $payload['summary']['warnings'];
 
         return implode(PHP_EOL, $lines);
     }
@@ -96,7 +106,7 @@ final class SpecValidateCommand extends Command
 
         $parts = [];
 
-        foreach (['feature', 'location', 'parent_id', 'id', 'field', 'line', 'expected_heading', 'actual_heading', 'missing_id', 'expected_missing_id', 'next_observed_id', 'plan_path'] as $key) {
+        foreach (['feature', 'module', 'location', 'parent_id', 'id', 'field', 'line', 'expected_heading', 'actual_heading', 'missing_id', 'expected_missing_id', 'next_observed_id', 'plan_path', 'latest_implemented_spec', 'refreshed_through_spec'] as $key) {
             if (!array_key_exists($key, $details)) {
                 continue;
             }

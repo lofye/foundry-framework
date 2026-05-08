@@ -4,6 +4,13 @@
 
 - Record the implemented state of canonical feature workspace boundaries and migration-safe compatibility behavior.
 
+## Decision Summary
+
+- Refreshed Through Spec: `011-add-decision-summaries-without-compacting-ledgers`
+- FeatureSystem keeps module and feature decision ledgers append-only and non-destructive.
+- Decision history is summarized in module state (`## Decision Summary`) rather than by rewriting `.decisions.md`.
+- `spec:validate` surfaces deterministic non-blocking warnings for missing or possibly stale module decision summaries.
+
 ## Current State
 
 - `feature:list` returns deterministic feature rows from canonical and legacy sources.
@@ -59,6 +66,7 @@
 - Historical reconstruction notes include explicit provenance, evidence levels, embedded RESULT/OUTPUT summaries, current repository alignment, and uncertainty sections.
 - Website-owned historical specs such as `*WS.md` are classified as supporting/ignored evidence and skipped by framework import.
 - Website-owned historical specs are excluded from downstream framework context, reconstruction-note, and implementation-log generation.
+- `spec:validate` now emits non-blocking `DECISION_SUMMARY_MISSING` and `DECISION_SUMMARY_POSSIBLY_STALE` warnings for module state files while keeping decision ledgers append-only.
 
 ## Open Questions
 

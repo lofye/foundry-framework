@@ -243,6 +243,7 @@ Canonical feature context files:
 - `Features/<Feature>/<feature>.spec.md` = authoritative feature intent
 - `Features/<Feature>/<feature>.md` = current state
 - `Features/<Feature>/<feature>.decisions.md` = append-only decision history
+- Keep decision ledgers append-only; do not compact or rewrite history. Add or refresh a `## Decision Summary` section in `Features/<Feature>/<feature>.md` when decision history grows.
 
 Execution specs live at `Features/<Feature>/specs/*.md`, but they are:
 

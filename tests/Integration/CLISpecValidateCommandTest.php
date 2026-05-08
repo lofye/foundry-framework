@@ -38,10 +38,11 @@ final class CLISpecValidateCommandTest extends TestCase
         $this->assertSame(0, $json['status']);
         $this->assertTrue($json['payload']['ok']);
         $this->assertSame(
-            ['checked_files' => 2, 'features' => 1, 'violations' => 0],
+            ['checked_files' => 2, 'features' => 1, 'violations' => 0, 'warnings' => 0],
             $json['payload']['summary'],
         );
         $this->assertSame([], $json['payload']['violations']);
+        $this->assertSame([], $json['payload']['warnings']);
 
         $this->assertSame(0, $raw['status']);
         $this->assertSame(<<<'TEXT'
@@ -49,6 +50,7 @@ Spec validation passed
 
 Checked files: 2
 Violations: 0
+Warnings: 0
 TEXT . "\n", $raw['output']);
     }
 
@@ -226,6 +228,38 @@ TEXT . "\n", $raw['output']);
         $this->assertSame('EXECUTION_SPEC_IMPLEMENTATION_LOG_PATH_NOT_CANONICAL', $json['payload']['violations'][0]['code']);
         $this->assertSame('feature-system/001-normalized-log.md', $json['payload']['violations'][0]['details']['entry']);
         $this->assertSame('Modules/FeatureSystem/specs/001-normalized-log.md', $json['payload']['violations'][0]['details']['expected']);
+    }
+
+    public function test_spec_validate_reports_decision_summary_warnings_without_failing(): void
+    {
+        $this->writeRawFile(
+            'Modules/FeatureSystem/specs/001-decision-summary.md',
+            "# Execution Spec: 001-decision-summary\n",
+        );
+        $this->writeRawFile(
+            'Modules/FeatureSystem/plans/001-decision-summary.md',
+            "# Implementation Plan: 001-decision-summary\n",
+        );
+        $this->writeRawFile(
+            'Modules/FeatureSystem/feature-system.md',
+            "# Feature: feature-system\n\n## Current State\n\n- baseline\n",
+        );
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-08 12:00:00 -0400\n- spec: Modules/FeatureSystem/specs/001-decision-summary.md\n",
+        );
+
+        $json = $this->runCommand(['foundry', 'spec:validate', '--json']);
+        $raw = $this->runRawCommand(['foundry', 'spec:validate']);
+
+        $this->assertSame(0, $json['status']);
+        $this->assertTrue($json['payload']['ok']);
+        $this->assertSame([], $json['payload']['violations']);
+        $this->assertSame('DECISION_SUMMARY_MISSING', $json['payload']['warnings'][0]['code']);
+        $this->assertSame(1, $json['payload']['summary']['warnings']);
+
+        $this->assertSame(0, $raw['status']);
+        $this->assertStringContainsString('Warnings: 1', $raw['output']);
     }
 
     /**

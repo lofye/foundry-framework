@@ -605,7 +605,8 @@ Spec reflects current intent only.
 - append-only
 - never edit
 - never delete
-- never summarize
+- never compact, rewrite, or remove prior decision entries
+- add or refresh a `## Decision Summary` section in the module/feature state document when the ledger grows
 
 Each entry must include:
 

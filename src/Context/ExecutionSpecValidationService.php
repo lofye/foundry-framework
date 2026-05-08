@@ -46,13 +46,15 @@ final class ExecutionSpecValidationService
     /**
      * @return array{
      *     ok:bool,
-     *     summary:array{checked_files:int,features:int,violations:int},
-     *     violations:list<array<string,mixed>>
+     *     summary:array{checked_files:int,features:int,violations:int,warnings:int},
+     *     violations:list<array<string,mixed>>,
+     *     warnings:list<array<string,mixed>>
      * }
      */
     public function validate(bool $requirePlans = false): array
     {
         $violations = [];
+        $warnings = [];
         $checkedFiles = 0;
         $features = [];
         $seenIds = [];
@@ -154,6 +156,7 @@ final class ExecutionSpecValidationService
                         'feature' => $placement['feature'],
                         'name' => $parsedName['name'],
                         'spec_path' => $relativePath,
+                        'feature_dir' => (string) $placement['feature_dir'],
                         'expected_note_path' => $this->moduleReconstructionNotePath((string) $placement['feature_dir'], $parsedName['name']),
                     ];
                     $activeModuleLegacyReferences[$relativePath] = (string) $placement['feature'] . '/' . $parsedName['name'] . '.md';
@@ -529,7 +532,15 @@ final class ExecutionSpecValidationService
             }
         }
 
+        $warnings = $this->decisionSummaryWarnings($activeModuleSpecs);
+
         usort($violations, static function (array $left, array $right): int {
+            return strcmp(
+                (string) (($left['file_path'] ?? '') . "\n" . ($left['code'] ?? '')),
+                (string) (($right['file_path'] ?? '') . "\n" . ($right['code'] ?? '')),
+            );
+        });
+        usort($warnings, static function (array $left, array $right): int {
             return strcmp(
                 (string) (($left['file_path'] ?? '') . "\n" . ($left['code'] ?? '')),
                 (string) (($right['file_path'] ?? '') . "\n" . ($right['code'] ?? '')),
@@ -542,8 +553,10 @@ final class ExecutionSpecValidationService
                 'checked_files' => $checkedFiles,
                 'features' => count($features),
                 'violations' => count($violations),
+                'warnings' => count($warnings),
             ],
             'violations' => $violations,
+            'warnings' => $warnings,
         ];
     }
 
@@ -879,6 +892,124 @@ final class ExecutionSpecValidationService
             'file_path' => $filePath,
             'details' => $details,
         ];
+    }
+
+    /**
+     * @param list<array<string,mixed>> $activeModuleSpecs
+     * @return list<array<string,mixed>>
+     */
+    private function decisionSummaryWarnings(array $activeModuleSpecs): array
+    {
+        $warnings = [];
+        $latestImplementedByModule = $this->latestImplementedModuleSpecNames();
+        $modules = [];
+
+        foreach ($activeModuleSpecs as $moduleSpec) {
+            $moduleName = (string) ($moduleSpec['feature_dir'] ?? '');
+            if ($moduleName === '') {
+                continue;
+            }
+            $modules[$moduleName] = true;
+        }
+
+        foreach (array_keys($modules) as $moduleName) {
+            $moduleSlug = $this->slugFromPascal($moduleName);
+            $statePath = 'Modules/' . $moduleName . '/' . $moduleSlug . '.md';
+            $stateAbsolutePath = $this->paths->join($statePath);
+            if (!is_file($stateAbsolutePath)) {
+                continue;
+            }
+
+            $contents = file_get_contents($stateAbsolutePath);
+            if ($contents === false) {
+                continue;
+            }
+
+            $summary = $this->decisionSummarySection($contents);
+            $latestImplemented = $latestImplementedByModule[$moduleName] ?? null;
+
+            if ($summary === null) {
+                $warnings[] = $this->violation(
+                    'DECISION_SUMMARY_MISSING',
+                    $statePath,
+                    'Module state should include a `## Decision Summary` section so decision-ledger history remains append-only.',
+                    ['module' => $moduleName],
+                );
+                continue;
+            }
+
+            if ($latestImplemented === null) {
+                continue;
+            }
+
+            $refreshedName = $this->summaryRefreshedSpecName($summary);
+            if ($refreshedName === null || $refreshedName !== $latestImplemented) {
+                $details = ['module' => $moduleName, 'latest_implemented_spec' => $latestImplemented];
+                if ($refreshedName !== null) {
+                    $details['refreshed_through_spec'] = $refreshedName;
+                }
+
+                $warnings[] = $this->violation(
+                    'DECISION_SUMMARY_POSSIBLY_STALE',
+                    $statePath,
+                    'Decision summary may be stale; refresh it after implemented specs while preserving the append-only decision ledger.',
+                    $details,
+                );
+            }
+        }
+
+        return $warnings;
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    private function latestImplementedModuleSpecNames(): array
+    {
+        $latestByModule = [];
+        $logPath = $this->paths->join('Modules/implementation.log');
+        if (!is_file($logPath)) {
+            return $latestByModule;
+        }
+
+        $contents = file_get_contents($logPath);
+        if ($contents === false) {
+            return $latestByModule;
+        }
+
+        foreach (preg_split('/\R/', $contents) ?: [] as $line) {
+            if (
+                preg_match(
+                    '#^- spec: Modules/(?<module>[A-Z][A-Za-z0-9]*)/specs/(?<name>[0-9]{3}(?:\.[0-9]{3})*-[a-z0-9]+(?:-[a-z0-9]+)*)\.md$#',
+                    $line,
+                    $matches,
+                ) !== 1
+            ) {
+                continue;
+            }
+
+            $latestByModule[(string) $matches['module']] = (string) $matches['name'];
+        }
+
+        return $latestByModule;
+    }
+
+    private function decisionSummarySection(string $contents): ?string
+    {
+        if (preg_match('/^## Decision Summary\s*$(?<body>[\s\S]*?)(?=^##\s|\z)/m', $contents, $matches) !== 1) {
+            return null;
+        }
+
+        return trim((string) ($matches['body'] ?? ''));
+    }
+
+    private function summaryRefreshedSpecName(string $summary): ?string
+    {
+        if (preg_match('/Refreshed Through Spec:\s*`?(?<name>[0-9]{3}(?:\.[0-9]{3})*-[a-z0-9]+(?:-[a-z0-9]+)*)`?/i', $summary, $matches) !== 1) {
+            return null;
+        }
+
+        return (string) $matches['name'];
     }
 
     private function implementationLogPath(): string

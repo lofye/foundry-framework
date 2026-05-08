@@ -581,3 +581,46 @@ Timestamp: 2026-05-07T21:40:43-04:00
 - Historical Provenance Language
 - Implementation Log Entries
 - Acceptance Criteria
+
+### Decision: add module decision summaries as non-destructive context guidance
+
+Timestamp: 2026-05-08T09:15:00-04:00
+
+**Context**
+
+- Execution spec `011-add-decision-summaries-without-compacting-ledgers` requires better decision-history readability without rewriting append-only ledgers.
+- Existing instructions strongly preserved append-only decision files but lacked deterministic validator guidance for summary freshness.
+
+**Decision**
+
+- Keep `.decisions.md` ledgers append-only and non-destructive.
+- Add deterministic `spec:validate` warning codes `DECISION_SUMMARY_MISSING` and `DECISION_SUMMARY_POSSIBLY_STALE` for module state files.
+- Standardize module state summaries under `## Decision Summary` with a `Refreshed Through Spec: <id-slug>` marker to support deterministic staleness checks.
+- Keep decision-summary checks non-blocking in this migration phase.
+
+**Reasoning**
+
+- Summary sections improve human/LLM context loading while preserving raw historical evidence.
+- Non-blocking warnings avoid destabilizing existing modules that have not yet adopted summaries.
+- A deterministic refresh marker allows stable stale-summary detection without mutating ledger history.
+
+**Alternatives Considered**
+
+- Compact or rewrite decision ledgers directly.
+- Introduce hard failures for missing summaries immediately.
+- Store summaries in separate required summary files for every module.
+
+**Impact**
+
+- Validation now surfaces decision-summary guidance without failing strict spec-validation gates.
+- Contributor docs and skills now direct agents to refresh summaries instead of compacting decisions.
+- FeatureSystem module state now includes a Decision Summary refreshed through spec 011.
+
+**Spec Reference**
+
+- Core Principle
+- Goals
+- Summary Location
+- Refresh Rule
+- Validation
+- Documentation Updates

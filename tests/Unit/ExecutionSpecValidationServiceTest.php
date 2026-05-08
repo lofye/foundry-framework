@@ -48,7 +48,7 @@ MD,
 
         $this->assertTrue($result['ok']);
         $this->assertSame(
-            ['checked_files' => 2, 'features' => 1, 'violations' => 0],
+            ['checked_files' => 2, 'features' => 1, 'violations' => 0, 'warnings' => 0],
             $result['summary'],
         );
         $this->assertSame([], $result['violations']);
@@ -88,7 +88,7 @@ MD,
 
         $this->assertFalse($result['ok']);
         $this->assertSame(
-            ['checked_files' => 6, 'features' => 1, 'violations' => 5],
+            ['checked_files' => 6, 'features' => 1, 'violations' => 5, 'warnings' => 0],
             $result['summary'],
         );
         $this->assertSame(
@@ -534,9 +534,53 @@ MD,
 
         $this->assertTrue($result['ok']);
         $this->assertSame(
-            ['checked_files' => 1, 'features' => 1, 'violations' => 0],
+            ['checked_files' => 1, 'features' => 1, 'violations' => 0, 'warnings' => 0],
             $result['summary'],
         );
+    }
+
+    public function test_validate_warns_when_module_decision_summary_is_missing(): void
+    {
+        $this->writeRawFile('Modules/FeatureSystem/specs/001-summary-warning.md', '# Execution Spec: 001-summary-warning');
+        $this->writeRawFile('Modules/FeatureSystem/plans/001-summary-warning.md', '# Implementation Plan: 001-summary-warning');
+        $this->writeRawFile(
+            'Modules/FeatureSystem/feature-system.md',
+            "# Feature: feature-system\n\n## Current State\n\n- baseline\n",
+        );
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-08 10:00:00 -0400\n- spec: Modules/FeatureSystem/specs/001-summary-warning.md\n",
+        );
+
+        $result = $this->service()->validate();
+
+        $this->assertTrue($result['ok']);
+        $this->assertSame([], $result['violations']);
+        $this->assertSame(1, $result['summary']['warnings']);
+        $this->assertSame('DECISION_SUMMARY_MISSING', $result['warnings'][0]['code']);
+    }
+
+    public function test_validate_warns_when_module_decision_summary_is_possibly_stale(): void
+    {
+        $this->writeRawFile('Modules/FeatureSystem/specs/001-summary.md', '# Execution Spec: 001-summary');
+        $this->writeRawFile('Modules/FeatureSystem/plans/001-summary.md', '# Implementation Plan: 001-summary');
+        $this->writeRawFile('Modules/FeatureSystem/specs/002-summary.md', '# Execution Spec: 002-summary');
+        $this->writeRawFile('Modules/FeatureSystem/plans/002-summary.md', '# Implementation Plan: 002-summary');
+        $this->writeRawFile(
+            'Modules/FeatureSystem/feature-system.md',
+            "# Feature: feature-system\n\n## Decision Summary\n\nRefreshed Through Spec: `001-summary`\n",
+        );
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## 2026-05-08 10:00:00 -0400\n- spec: Modules/FeatureSystem/specs/001-summary.md\n\n## 2026-05-08 10:00:01 -0400\n- spec: Modules/FeatureSystem/specs/002-summary.md\n",
+        );
+
+        $result = $this->service()->validate();
+
+        $this->assertTrue($result['ok']);
+        $this->assertSame([], $result['violations']);
+        $this->assertSame(1, $result['summary']['warnings']);
+        $this->assertSame('DECISION_SUMMARY_POSSIBLY_STALE', $result['warnings'][0]['code']);
     }
 
     public function test_validate_rejects_orphan_plan_and_bad_heading(): void

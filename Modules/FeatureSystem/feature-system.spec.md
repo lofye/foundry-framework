@@ -50,6 +50,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Missing module context files are created deterministically.
 - Decision ledger entries remain append-only.
 - `historical-specs:reconstruct` scans completed imported historical specs, creates missing reconstruction notes, appends canonical `Modules/implementation.log` entries once, summarizes embedded OUTPUT/RESULT evidence, and preserves uncertainty explicitly.
+- `spec:validate` emits non-blocking decision-summary warnings (`DECISION_SUMMARY_MISSING`, `DECISION_SUMMARY_POSSIBLY_STALE`) for module state files while keeping decision ledgers append-only.
 - Imported completed specs have reconstruction notes.
 - Imported completed specs have canonical implementation-log entries.
 - Embedded OUTPUT/RESULT evidence is incorporated into reconstruction notes when available.
@@ -64,6 +65,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - `spec:validate` validates canonical `Modules/*/specs` and `Modules/*/plans` paths.
 - `spec:validate` requires reconstruction-note coverage for active framework module specs and reports deterministic violations when notes are missing or malformed.
 - `spec:validate` rejects slug-style framework implementation-log references and reports deterministic canonical-path violations.
+- `spec:validate` reports deterministic decision-summary warnings for module state files without failing validation.
 - Active-spec implementation logging uses `Modules/implementation.log` when canonical module workspace is present.
 - Framework contributor docs, app-facing docs, and implementation skills align terminology and path contracts so framework-module work resolves from `Modules/*` while application-feature work resolves from `Features/*`.
 

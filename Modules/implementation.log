@@ -400,3 +400,9 @@
 - note: Added completed-import handling that creates missing historical reconstruction notes, preserves existing notes, excludes draft imports, and appends canonical `Modules/implementation.log` entries exactly once.
 - note: Added embedded OUTPUT/RESULT evidence extraction with bounded implementation, verification, stabilization, path-reference, repository-alignment, and uncertainty summaries plus focused unit/integration coverage.
 - note: Excluded website-owned `*WS.md` historical specs from framework import by classifying them as supporting/ignored evidence and skipping import writes even when metadata appears to map them to a framework module.
+
+## 2026-05-08 09:15:00 -0400
+- spec: Modules/FeatureSystem/specs/011-add-decision-summaries-without-compacting-ledgers.md
+- note: Added deterministic non-blocking decision-summary warnings to `spec:validate` (`DECISION_SUMMARY_MISSING`, `DECISION_SUMMARY_POSSIBLY_STALE`) for module state files while preserving append-only decision ledgers.
+- note: Added module-state `## Decision Summary` staleness checks via `Refreshed Through Spec:` markers compared against canonical `Modules/implementation.log` module spec references.
+- note: Updated validator/CLI output contracts to include warning counts and warning arrays in JSON and plain-text surfaces.
