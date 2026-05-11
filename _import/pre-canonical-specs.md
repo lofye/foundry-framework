@@ -8819,7 +8819,7 @@ Versioned documentation.
 Machine-readable documentation exports.
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4 - Roadmap Phase 4 - Documentation System and Website Integration
+NAME: 4 - Roadmap Phase 4 - Documentation System and Website Integration (WR)
 
 RESULT
 
@@ -12157,7 +12157,7 @@ The system must remain:
 ------------------------------------------------------------------------------------------
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4G - Ask the Docs
+NAME: 4G - Ask the Docs (LLM-Integrated Documentation Assistance)
 
 Implemented Phase 4G (`Ask the Docs`) on top of the existing docs system.
 
@@ -13000,7 +13000,7 @@ Implemented Spec 4I end-to-end.
 Note: existing immutable version snapshots are not retroactively regenerated; newly created snapshots include the explorer page and its versioned graph artifact.
 
 P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4J-FR - Remove Public-Facing Phase/Spec References from the Framework Repo (FR)
+NAME: 4J1 - Remove Public-Facing Phase/Spec References from the Framework Repo (FR)
 
 The Foundry framework was evolved internally through phased specifications. Those phases were useful for implementation planning and LLM-assisted development coordination, but they are not part of the public framework model.
 
@@ -13037,7 +13037,7 @@ The public framework repository must present Foundry as a coherent finished fram
 All changes must preserve framework behavior and maintain automated test coverage ≥ 90%.
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4J-FR - Remove Public-Facing Phase/Spec References from the Framework Repo (FR)
+NAME: 4J1 - Remove Public-Facing Phase/Spec References from the Framework Repo (FR)
 
 Goals
 
@@ -13319,7 +13319,7 @@ Optimize for:
 	•	test coverage ≥ 90%
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4J-FR - Remove Public-Facing Phase/Spec References from the Framework Repo (FR)
+NAME: 4J1 - Remove Public-Facing Phase/Spec References from the Framework Repo (FR)
 
 RESULT
 
@@ -13383,7 +13383,7 @@ Implemented. Public-facing phase/spec vocabulary is removed from the framework s
 
 
 P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4J-WR - Remove Public-Facing Phase/Spec References from the Website Repo (WR)
+NAME: 4J2 - Remove Public-Facing Phase/Spec References from the Website Repo (WR)
 
 Remove Public-Facing Phase/Spec References from the Website Repo (WR)
 
@@ -13418,7 +13418,7 @@ The public site must present Foundry as a coherent product and documentation pla
 All changes must preserve deterministic site generation and automated test coverage ≥ 90%.
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4J-WR - Remove Public-Facing Phase/Spec References from the Website Repo (WR)
+NAME: 4J2 - Remove Public-Facing Phase/Spec References from the Website Repo (WR)
 
 Goals
 
@@ -13759,7 +13759,7 @@ Optimize for:
 
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4J-WR - Remove Public-Facing Phase/Spec References from the Website Repo (WR)
+NAME: 4J2 - Remove Public-Facing Phase/Spec References from the Website Repo (WR)
 
 RESULT
 
@@ -13802,7 +13802,7 @@ Implemented. Public-facing phase/spec terminology is now removed from the websit
 
 
 P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4K-FR - Remove All Phase/Spec References from the Framework Repository (FR)
+NAME: 4K1 - Remove All Phase/Spec References from the Framework Repository (FR)
 
 Preface
 
@@ -13836,11 +13836,11 @@ Framework code, tests, CLI tools, and documentation must refer directly to featu
 All work must preserve framework behavior and maintain automated test coverage ≥ 90%.
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4K-FR - Remove All Phase/Spec References from the Framework Repository (FR)
+NAME: 4K1 - Remove All Phase/Spec References from the Framework Repository (FR)
 
 Goals
 
-Phase 4K-FR must:
+Phase 4K1 must:
 	1.	remove every remaining phase/spec reference from the framework repo
 	2.	remove references from both public and internal code
 	3.	rename files, classes, tests, and comments that contain phase/spec names
@@ -14069,18 +14069,18 @@ Codex must:
 
 Final Instruction
 
-After Phase 4K-FR is complete, the Foundry framework repository must contain no references to phases or specs whatsoever.
+After Phase 4K1 is complete, the Foundry framework repository must contain no references to phases or specs whatsoever.
 
 The repository should describe only the architecture and features of the framework itself.
 
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4K-FR - Remove All Phase/Spec References from the Framework Repository (FR)
+NAME: 4K1 - Remove All Phase/Spec References from the Framework Repository (FR)
 
 RESULT
 
 
-Implemented Phase 4K-FR cleanup across the framework repo.
+Implemented Phase 4K1 cleanup across the framework repo.
 
 **Result**
 - All targeted phase/spec terminology is removed from repository source/docs/tests/comments.
@@ -14127,7 +14127,7 @@ Implemented Phase 4K-FR cleanup across the framework repo.
 
 
 P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4K-WR - Remove All Phase/Spec References from the Website Repository (WR)
+NAME: 4K2 - Remove All Phase/Spec References from the Website Repository (WR)
 
 Preface
 
@@ -14156,11 +14156,11 @@ Documentation must refer directly to features, systems, and architectural concep
 All work must preserve deterministic site generation and maintain automated test coverage ≥ 90%.
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4K-WR - Remove All Phase/Spec References from the Website Repository (WR)
+NAME: 4K2 - Remove All Phase/Spec References from the Website Repository (WR)
 
 Goals
 
-Phase 4K-WR must:
+Phase 4K2 must:
 	1.	remove all phase/spec references from the website repository
 	2.	remove references from both public docs and internal metadata
 	3.	remove references from generated documentation artifacts
@@ -14329,17 +14329,17 @@ Codex must:
 
 Final Instruction
 
-After Phase 4K-WR is complete, the Foundry website repository must contain no references to phases or specs whatsoever.
+After Phase 4K2 is complete, the Foundry website repository must contain no references to phases or specs whatsoever.
 
 Documentation should describe the framework’s architecture and capabilities, not the internal development process used to build it.
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 4K-WR - Remove All Phase/Spec References from the Website Repository (WR)
+NAME: 4K2 - Remove All Phase/Spec References from the Website Repository (WR)
 
 RESULT
 
 
-Implemented 4K-WR cleanup across the website repo and regenerated outputs.
+Implemented 4K2 cleanup across the website repo and regenerated outputs.
 
 **What I changed**
 - Reworded contributor guardrail to remove internal phase/spec wording in [README.md](/Users/lo_fye/code/foundryframework/README.md:75).
@@ -27331,7 +27331,7 @@ Avoid “could go either way” unless absolutely necessary.
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 19O WS — Create Slug Ownership Map ONLY
+NAME: 19O1 — Create Slug Ownership Map ONLY (WS)
 
 ⸻
 
@@ -27426,7 +27426,7 @@ Acceptance Criteria
 ------------------------------------------------------------------------------------------
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 19O WS — Create Slug Ownership Map ONLY
+NAME: 19O1 — Create Slug Ownership Map ONLY (WS)
 
 
 RESULT
@@ -27555,7 +27555,7 @@ All 11 source paths in slug-map.json exist on disk. No missing paths were found.
 ------------------------------------------------------------------------------------------
 
 P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 19O-B WS — Post-Move Docs Integration After Framework Ownership Changes (linker)
+NAME: 19O2 — Post-Move Docs Integration After Framework Ownership Changes (linker) (WS)
 
 Context
 
@@ -27574,7 +27574,7 @@ The docs pipeline already:
 Do not redesign the pipeline. Integrate the move safely.
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 19O-B WS — Post-Move Docs Integration After Framework Ownership Changes (linker)
+NAME: 19O2 — Post-Move Docs Integration After Framework Ownership Changes (linker) (WS)
 
 Goals
 	1.	Make the moved docs render from framework/imported sources instead of website-authored sources
@@ -27687,7 +27687,7 @@ Acceptance Criteria
 ------------------------------------------------------------------------------------------
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 19O-B WS — Post-Move Docs Integration After Framework Ownership Changes (linker)
+NAME: 19O2 — Post-Move Docs Integration After Framework Ownership Changes (linker) (WS)
 
 RESULT
 
@@ -27780,7 +27780,7 @@ git commit -m "implement Spec 19O-B WS"
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 19P-B WS — Slug Resolution + Enforcement Pass
+NAME: 19P-B — Slug Resolution + Enforcement Pass (WS)
 
 Purpose
 
@@ -28095,7 +28095,7 @@ Which is exactly consistent with Foundry’s philosophy.
 ------------------------------------------------------------------------------------------
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 19P-B WS — Slug Resolution + Enforcement Pass
+NAME: 19P-B — Slug Resolution + Enforcement Pass (WS)
 
 RESULT
 
@@ -31047,7 +31047,7 @@ BUILD ORDER:
 30B → 30C → (31–35) → 30D → 30E → 30F → 30G → (36–43)
 
 P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 30C-WS — Monetization UX & Product Layer (Website, LLM-First Positioning)
+NAME: 30C2 — Monetization UX & Product Layer (Website, LLM-First Positioning) (WS)
 
 This spec defines how monetization is presented on:
 
@@ -31065,7 +31065,7 @@ Developers are first-class users, but the system is optimized for:
 	•	architecture-aware workflows
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 30C-WS — Monetization UX & Product Layer (Website, LLM-First Positioning)
+NAME: 30C2 — Monetization UX & Product Layer (Website, LLM-First Positioning) (WS)
 
 Goals
 	1.	Make pricing clear and credible
@@ -31318,7 +31318,7 @@ Otherwise, users will misunderstand what Foundry actually is.
 ------------------------------------------------------------------------------------------
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 30C-WS — Monetization UX & Product Layer (Website, LLM-First Positioning)
+NAME: 30C2 — Monetization UX & Product Layer (Website, LLM-First Positioning) (WS)
 
 RESULT
 
@@ -31359,7 +31359,7 @@ templates/layout.html
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 P@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 30C-2 — Monetization Realignment (Framework)
+NAME: 30C3 — Monetization Realignment (Framework)
 
 Purpose
 
@@ -31369,7 +31369,7 @@ Reframe the existing monetization system (30–30C) so that:
 	•	Feature flags become capability descriptors, not locks
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 30C-2 — Monetization Realignment (Framework)
+NAME: 30C3 — Monetization Realignment (Framework)
 
 
 Goals
@@ -31470,11 +31470,11 @@ Acceptance Criteria
 	•	Codebase compiles cleanly with no dead logic
 	
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 30C-2 — Monetization Realignment (Framework)
+NAME: 30C3 — Monetization Realignment (Framework)
 
 RESULT
 
-Spec 30C-2 is in place. [MonetizationService.php](/Users/lo_fye/code/foundry-framework/src/Monetization/MonetizationService.php) is now non-restrictive: core capability flags always resolve as available, command usage is only tracked through the opt-in tracker, and licenses are treated as future identity/service access rather than feature unlocks. [FeatureFlags.php](/Users/lo_fye/code/foundry-framework/src/Monetization/FeatureFlags.php) now describes each flag with `type` and `monetization`, and [LicenseValidator.php](/Users/lo_fye/code/foundry-framework/src/Monetization/LicenseValidator.php) now models license entitlements around service access instead of core tooling.
+Spec 30C3 is in place. [MonetizationService.php](/Users/lo_fye/code/foundry-framework/src/Monetization/MonetizationService.php) is now non-restrictive: core capability flags always resolve as available, command usage is only tracked through the opt-in tracker, and licenses are treated as future identity/service access rather than feature unlocks. [FeatureFlags.php](/Users/lo_fye/code/foundry-framework/src/Monetization/FeatureFlags.php) now describes each flag with `type` and `monetization`, and [LicenseValidator.php](/Users/lo_fye/code/foundry-framework/src/Monetization/LicenseValidator.php) now models license entitlements around service access instead of core tooling.
 
 The CLI surface was realigned too. [LicenseCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/LicenseCommand.php) now reports core capabilities as always available and shows service access separately, [FeaturesCommand.php](/Users/lo_fye/code/foundry-framework/src/CLI/Commands/FeaturesCommand.php) now renders descriptor-style rows (`feature / type / monetization / status`), and [Application.php](/Users/lo_fye/code/foundry-framework/src/CLI/Application.php) plus [ApiSurfaceRegistry.php](/Users/lo_fye/code/foundry-framework/src/Support/ApiSurfaceRegistry.php) no longer advertise `explain`, `generate`, `trace`, `diff`, or `doctor --deep` as licensed/blocked. I also removed the dead gating path entirely by deleting `FeatureGate` and `FeatureNotLicensed`, and updated the public docs in [README.md](/Users/lo_fye/code/foundry-framework/README.md) and [docs/architecture-tools.md](/Users/lo_fye/code/foundry-framework/docs/architecture-tools.md).
 
@@ -31520,7 +31520,7 @@ tests/Unit/MonetizationLicenseTest.php
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 S@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 30C-2-WS — Website Realignment
+NAME: 30C3B — Website Realignment (WS)
 
 Purpose
 
@@ -31583,7 +31583,7 @@ Acceptance Criteria
 ------------------------------------------------------------------------------------------
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 30C-2-WS — Website Realignment
+NAME: 30C3B — Website Realignment (WS)
 
 RESULT
 
@@ -31610,7 +31610,7 @@ scripts/lib/DocsPipeline.php
 scripts/lib/FrameworkInternalsGenerator.php
 templates/layout.html
 
-sorry i forgot to update your copy of the framework before having you do that spec. i have now updated the framework. can you please tweak the changes you made based on the updated version of the framework, as well as make any additional changes you need to make per Spec 30C-2-WS?
+sorry i forgot to update your copy of the framework before having you do that spec. i have now updated the framework. can you please tweak the changes you made based on the updated version of the framework, as well as make any additional changes you need to make per Spec 30C3-WS?
 
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -34601,7 +34601,7 @@ on top of it cleanly, without rewriting this layer later.
 
 
 R@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NAME: 32 — Hosted Marketplace (Minimal Viable)
+NAME: 32 — Hosted Pack Registry (aka read-only, public, no auth Marketplace)
 
 RESULT
 
