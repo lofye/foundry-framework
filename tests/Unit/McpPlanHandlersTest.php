@@ -8,6 +8,7 @@ use Foundry\CLI\Application;
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
 use Foundry\MCP\CliReadBridge;
+use Foundry\MCP\Handlers\GenerateApplyHandler;
 use Foundry\MCP\Handlers\GeneratePlanHandler;
 use Foundry\MCP\Handlers\ValidatePlanHandler;
 use Foundry\Support\FoundryError;
@@ -119,6 +120,202 @@ final class McpPlanHandlersTest extends TestCase
             $handler->handle([
                 'intent' => 'Create blog',
                 'allow_pack_install' => 'yes',
+            ]);
+        } catch (FoundryError $error) {
+            $this->assertSame('MCP_INPUT_INVALID', $error->errorCode);
+            throw $error;
+        }
+    }
+
+    public function test_apply_plan_dry_run_uses_strict_preflight_only(): void
+    {
+        $handler = new GenerateApplyHandler($this->bridge(static function (array $args): array {
+            TestCase::assertSame(['plan:replay', 'plan-123', '--dry-run', '--strict'], $args);
+
+            return [
+                'status' => 0,
+                'payload' => [
+                    'execution_state' => 'executable',
+                    'entitlements' => [
+                        'status' => 'complete',
+                        'required' => [],
+                        'granted' => [],
+                        'missing' => [],
+                        'expired' => [],
+                        'unknown' => [],
+                    ],
+                    'pack_requirements' => [],
+                ],
+                'message' => null,
+            ];
+        }));
+
+        $result = $handler->handle([
+            'plan_id' => 'plan-123',
+            'dry_run' => true,
+            'strict' => true,
+        ]);
+
+        $this->assertSame('preflight_passed', $result['status']);
+        $this->assertTrue($result['dry_run']);
+        $this->assertSame('executable', $result['execution_state']);
+        $this->assertNull($result['result']);
+        $this->assertNull($result['error']);
+    }
+
+    public function test_apply_plan_applies_after_preflight(): void
+    {
+        $calls = [];
+        $handler = new GenerateApplyHandler($this->bridge(static function (array $args) use (&$calls): array {
+            $calls[] = $args;
+            if (in_array('--dry-run', $args, true)) {
+                return [
+                    'status' => 0,
+                    'payload' => [
+                        'execution_state' => 'executable',
+                        'entitlements' => [
+                            'status' => 'complete',
+                            'required' => [],
+                            'granted' => [],
+                            'missing' => [],
+                            'expired' => [],
+                            'unknown' => [],
+                        ],
+                    ],
+                    'message' => null,
+                ];
+            }
+
+            return [
+                'status' => 0,
+                'payload' => [
+                    'execution_state' => 'executable',
+                    'status' => 'replayed',
+                ],
+                'message' => null,
+            ];
+        }));
+
+        $result = $handler->handle(['plan_id' => 'plan-123', 'strict' => false]);
+
+        $this->assertSame([
+            ['plan:replay', 'plan-123', '--dry-run'],
+            ['plan:replay', 'plan-123'],
+        ], $calls);
+        $this->assertSame('applied', $result['status']);
+        $this->assertFalse($result['dry_run']);
+        $this->assertSame('executable', $result['execution_state']);
+        $this->assertNull($result['error']);
+    }
+
+    public function test_apply_plan_maps_stale_preflight_to_blocked_status(): void
+    {
+        $handler = new GenerateApplyHandler($this->bridge(static fn(array $args): array => [
+            'status' => 1,
+            'payload' => [
+                'error' => [
+                    'code' => 'PLAN_REPLAY_STRICT_DRIFT',
+                    'message' => 'Strict replay cannot proceed because material drift was detected.',
+                    'details' => [
+                        'current_execution_state' => 'executable',
+                    ],
+                ],
+            ],
+            'message' => null,
+        ]));
+
+        $result = $handler->handle(['plan_id' => 'plan-123']);
+
+        $this->assertSame('blocked', $result['status']);
+        $this->assertSame('stale', $result['execution_state']);
+        $this->assertSame('PLAN_STALE', $result['error']['code']);
+    }
+
+    public function test_apply_plan_maps_state_changed_entitlements_to_blocked_state(): void
+    {
+        $handler = new GenerateApplyHandler($this->bridge(static fn(array $args): array => [
+            'status' => 1,
+            'payload' => [
+                'error' => [
+                    'code' => 'ENTITLEMENT_STATE_CHANGED',
+                    'message' => 'Marketplace entitlement state changed and now blocks execution.',
+                    'details' => [
+                        'pack' => 'foundry/blog',
+                        'current_execution_state' => 'blocked_missing_entitlement',
+                        'current_entitlements' => [
+                            'status' => 'incomplete',
+                            'required' => ['foundry/blog'],
+                            'granted' => [],
+                            'missing' => ['foundry/blog'],
+                            'expired' => [],
+                            'unknown' => [],
+                        ],
+                    ],
+                ],
+            ],
+            'message' => null,
+        ]));
+
+        $result = $handler->handle(['plan_id' => 'plan-123']);
+
+        $this->assertSame('blocked', $result['status']);
+        $this->assertSame('blocked_missing_entitlement', $result['execution_state']);
+        $this->assertSame('ENTITLEMENT_STATE_CHANGED', $result['error']['code']);
+    }
+
+    public function test_apply_plan_surfaces_verification_failures_deterministically(): void
+    {
+        $calls = 0;
+        $handler = new GenerateApplyHandler($this->bridge(static function (array $args) use (&$calls): array {
+            $calls++;
+            if ($calls === 1) {
+                return [
+                    'status' => 0,
+                    'payload' => [
+                        'execution_state' => 'executable',
+                        'entitlements' => ['status' => 'complete'],
+                    ],
+                    'message' => null,
+                ];
+            }
+
+            return [
+                'status' => 1,
+                'payload' => [
+                    'error' => [
+                        'code' => 'PLAN_REPLAY_VERIFICATION_FAILED',
+                        'message' => 'Replay was rolled back because verification failed.',
+                        'details' => [
+                            'verification' => ['ok' => false],
+                        ],
+                    ],
+                ],
+                'message' => null,
+            ];
+        }));
+
+        $result = $handler->handle(['plan_id' => 'plan-123']);
+
+        $this->assertSame('invalid', $result['status']);
+        $this->assertSame('invalid', $result['execution_state']);
+        $this->assertSame('VERIFY_FAILED', $result['error']['code']);
+    }
+
+    public function test_apply_plan_requires_valid_boolean_flags_and_rejects_inline_plan(): void
+    {
+        $handler = new GenerateApplyHandler($this->bridge(static fn(array $args): array => [
+            'status' => 0,
+            'payload' => [],
+            'message' => null,
+        ]));
+
+        $this->expectException(FoundryError::class);
+
+        try {
+            $handler->handle([
+                'plan_id' => 'plan-123',
+                'strict' => 'yes',
+                'plan' => ['origin' => 'core'],
             ]);
         } catch (FoundryError $error) {
             $this->assertSame('MCP_INPUT_INVALID', $error->errorCode);

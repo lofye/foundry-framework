@@ -64,7 +64,7 @@ final class CLIMcpServeCommandTest extends TestCase
         $this->assertSame($cli['payload'], $mcp['payload']['data']);
     }
 
-    public function test_mcp_generate_plan_and_apply_tools_surface_entitlement_and_apply_contracts(): void
+    public function test_mcp_generate_plan_surfaces_entitlement_contract(): void
     {
         $app = new Application();
 
@@ -81,30 +81,162 @@ final class CLIMcpServeCommandTest extends TestCase
         $this->assertSame('blocked_pack_unavailable', $planBlocked['payload']['data']['execution_state']);
         $this->assertSame('blocked', $planBlocked['payload']['data']['validation']['status']);
         $this->assertSame(['foundry/blog'], $planBlocked['payload']['data']['entitlements']['required']);
+    }
 
+    public function test_mcp_apply_plan_dry_run_runs_preflight_without_mutation(): void
+    {
+        $app = new Application();
         $generate = $this->runCommand($app, [
             'foundry',
             'generate',
             'Create',
             'comments',
             '--mode=new',
+            '--dry-run',
             '--json',
         ]);
         $this->assertSame(0, $generate['status']);
         $planId = (string) ($generate['payload']['plan_record']['plan_id'] ?? '');
         $this->assertNotSame('', $planId);
+        $affected = (string) ($generate['payload']['plan']['affected_files'][0] ?? '');
+        $this->assertNotSame('', $affected);
+        $featurePath = $this->project->root . '/' . $affected;
+        $this->assertFileDoesNotExist($featurePath, 'Preflight should not apply planned file mutations.');
 
         $apply = $this->runCommand($app, [
             'foundry',
             'mcp:serve',
-            '--tool=generate_apply',
-            '--input={"plan_id":"' . $planId . '","strict":true}',
+            '--tool=apply_plan',
+            '--input={"plan_id":"' . $planId . '","strict":true,"dry_run":true}',
             '--json',
         ]);
         $this->assertSame(0, $apply['status']);
-        $this->assertSame('generate_apply', $apply['payload']['tool']);
-        $this->assertSame('applied', $apply['payload']['data']['status']);
+        $this->assertSame('apply_plan', $apply['payload']['tool']);
+        $this->assertSame('preflight_passed', $apply['payload']['data']['status']);
         $this->assertSame($planId, $apply['payload']['data']['plan_id']);
+        $this->assertTrue($apply['payload']['data']['dry_run']);
+        $this->assertSame('passed', $apply['payload']['data']['preflight']['status']);
+        $this->assertNull($apply['payload']['data']['result']);
+        $this->assertNull($apply['payload']['data']['error']);
+        $this->assertFileDoesNotExist($featurePath);
+    }
+
+    public function test_mcp_apply_plan_applies_after_preflight_and_generate_apply_alias_matches_contract(): void
+    {
+        $app = new Application();
+        $generate = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            'Create',
+            'comments',
+            '--mode=new',
+            '--dry-run',
+            '--json',
+        ]);
+        $this->assertSame(0, $generate['status']);
+
+        $planId = (string) ($generate['payload']['plan_record']['plan_id'] ?? '');
+        $this->assertNotSame('', $planId);
+        $affected = (string) ($generate['payload']['plan']['affected_files'][0] ?? '');
+        $this->assertNotSame('', $affected);
+        $featurePath = $this->project->root . '/' . $affected;
+        $this->assertFileDoesNotExist($featurePath);
+
+        $canonical = $this->runCommand($app, [
+            'foundry',
+            'mcp:serve',
+            '--tool=apply_plan',
+            '--input={"plan_id":"' . $planId . '","strict":true}',
+            '--json',
+        ]);
+        $this->assertSame(0, $canonical['status']);
+        $this->assertSame('apply_plan', $canonical['payload']['tool']);
+        $this->assertSame('applied', $canonical['payload']['data']['status']);
+        $this->assertFalse($canonical['payload']['data']['dry_run']);
+        $this->assertSame('passed', $canonical['payload']['data']['preflight']['status']);
+        $this->assertNull($canonical['payload']['data']['error']);
+        $this->assertFileExists($featurePath);
+
+        $alias = $this->runCommand($app, [
+            'foundry',
+            'mcp:serve',
+            '--tool=generate_apply',
+            '--input={"plan_id":"missing-plan"}',
+            '--json',
+        ]);
+        $this->assertSame(0, $alias['status']);
+        $this->assertSame('generate_apply', $alias['payload']['tool']);
+        $this->assertSame('invalid', $alias['payload']['data']['status']);
+        $this->assertSame('PLAN_RECORD_NOT_FOUND', $alias['payload']['data']['error']['code']);
+    }
+
+    public function test_mcp_apply_plan_requires_plan_id_input(): void
+    {
+        $result = $this->runCommand(new Application(), [
+            'foundry',
+            'mcp:serve',
+            '--tool=apply_plan',
+            '--input={"strict":true}',
+            '--json',
+        ]);
+
+        $this->assertSame(1, $result['status']);
+        $this->assertSame('MCP_INPUT_INVALID', $result['payload']['error']['code']);
+    }
+
+    public function test_mcp_apply_plan_returns_invalid_for_unknown_plan_id(): void
+    {
+        $result = $this->runCommand(new Application(), [
+            'foundry',
+            'mcp:serve',
+            '--tool=apply_plan',
+            '--input={"plan_id":"missing-plan"}',
+            '--json',
+        ]);
+
+        $this->assertSame(0, $result['status']);
+        $this->assertSame('invalid', $result['payload']['data']['status']);
+        $this->assertSame('invalid', $result['payload']['data']['execution_state']);
+        $this->assertSame('PLAN_RECORD_NOT_FOUND', $result['payload']['data']['error']['code']);
+    }
+
+    public function test_mcp_apply_plan_blocks_stale_plan_before_mutation(): void
+    {
+        $app = new Application();
+        $generate = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            'Create',
+            'comments',
+            '--mode=new',
+            '--dry-run',
+            '--json',
+        ]);
+        $this->assertSame(0, $generate['status']);
+        $planId = (string) $generate['payload']['plan_record']['plan_id'];
+        $recordPath = $this->project->root . '/' . $generate['payload']['plan_record']['storage_path'];
+        $record = json_decode((string) file_get_contents($recordPath), true, 512, JSON_THROW_ON_ERROR);
+        $record['metadata']['source_hash'] = 'mcp-apply-stale-source-hash';
+        file_put_contents($recordPath, json_encode($record, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) . PHP_EOL);
+
+        $affected = (string) ($generate['payload']['plan']['affected_files'][0] ?? '');
+        $this->assertNotSame('', $affected);
+        $featurePath = $this->project->root . '/' . $affected;
+        $this->assertFileDoesNotExist($featurePath);
+
+        $apply = $this->runCommand($app, [
+            'foundry',
+            'mcp:serve',
+            '--tool=apply_plan',
+            '--input={"plan_id":"' . $planId . '","strict":true}',
+            '--json',
+        ]);
+
+        $this->assertSame(0, $apply['status']);
+        $this->assertSame('blocked', $apply['payload']['data']['status']);
+        $this->assertSame('stale', $apply['payload']['data']['execution_state']);
+        $this->assertSame('PLAN_STALE', $apply['payload']['data']['error']['code']);
+        $this->assertFileDoesNotExist($featurePath);
     }
 
     public function test_mcp_generate_plan_requires_intent_input(): void

@@ -8,6 +8,7 @@ Define the deterministic MCP surface for Foundry introspection, planning, valida
 
 - Expose stable MCP tooling for canonical read operations.
 - Expose deterministic plan-generation and plan-validation MCP tools that reuse existing Generate and Marketplace runtime logic.
+- Expose a deterministic, guarded plan-apply MCP tool that reuses existing replay/apply runtime logic.
 - Preserve CLI parity by delegating to existing read models and command surfaces.
 - Keep MCP planning deterministic and side-effect free unless an explicit apply tool is invoked.
 
@@ -37,6 +38,8 @@ Define the deterministic MCP surface for Foundry introspection, planning, valida
 - MCP startup manifest includes planning tool list:
 - `generate_plan`
 - `validate_plan`
+- `apply_plan`
+- `generate_apply` (backward-compatible alias of `apply_plan`)
 - MCP tool responses use canonical wrapper shape:
 - `{"tool":"<name>","data":{...}}`
 - MCP `explain_target` reuses canonical explain behavior.
@@ -47,6 +50,8 @@ Define the deterministic MCP surface for Foundry introspection, planning, valida
 - MCP `list_examples` reflects canonical example catalog behavior.
 - MCP `generate_plan` returns deterministic planning payloads including execution state, validation summary, entitlements, and pack requirements.
 - MCP `validate_plan` validates persisted-plan ids and inline plan payloads without source mutation and reports deterministic `valid|blocked|stale|invalid` status.
+- MCP `apply_plan` accepts explicit persisted `plan_id` input only, runs replay dry-run preflight before live mutation, and fail-closes with deterministic guard codes/execution-state mapping.
+- MCP `generate_apply` delegates to the same implementation and response contract as `apply_plan`.
 
 ## Acceptance Criteria
 
@@ -55,6 +60,7 @@ Define the deterministic MCP surface for Foundry introspection, planning, valida
 - Tool outputs preserve parity with existing CLI read surfaces.
 - Pack-aware data is visible through MCP read tools.
 - Planning/validation MCP tools return deterministic payloads and do not mutate source files.
+- Apply MCP tools run explicit preflight guards and never mutate source files when preflight fails or when `dry_run` is true.
 
 ## Assumptions
 

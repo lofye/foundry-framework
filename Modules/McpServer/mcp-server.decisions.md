@@ -158,3 +158,48 @@ Timestamp: 2026-05-27T16:45:00-04:00
 - `validate_plan` Input Contract
 - `validate_plan` Output Contract
 - Determinism Requirements
+
+### Decision: add canonical MCP `apply_plan` with strict preflight guards and retain `generate_apply` as an alias
+
+Timestamp: 2026-05-27T18:20:00-04:00
+
+**Context**
+
+- Active execution spec `003-mcp-apply-layer-and-guard-enforcement` requires a canonical MCP mutation boundary that applies persisted plans explicitly and fail-closes on guard violations.
+- Existing MCP runtime had only `generate_apply`, and its contract did not include dry-run preflight status, deterministic guard mapping, or the full apply response shape required by the spec.
+- Existing Generate replay/apply runtime already enforced strict drift checks, entitlement revalidation, policy/precondition checks, verification rollback, and deterministic error codes.
+
+**Decision**
+
+- Register canonical MCP tool `apply_plan` and keep `generate_apply` as a backward-compatible alias that routes to the same handler implementation.
+- Require explicit `plan_id` input for MCP apply, reject inline plan payloads, and require boolean `strict`/`dry_run` flags when provided.
+- Always run replay dry-run preflight before live apply and return deterministic guard payloads (`blocked`/`invalid`) when preflight or apply fails.
+- Normalize replay/apply failures into deterministic MCP execution-state values and guard codes (`PLAN_STALE`, `PLAN_CONFLICT`, `POLICY_VIOLATION`, `VERIFY_FAILED`, and entitlement/pack blockers) without introducing a parallel mutation pipeline.
+
+**Reasoning**
+
+- Reusing `plan:replay` for both preflight and apply preserves parity with existing Generate contracts and prevents drift between MCP and CLI behavior.
+- Shared handler logic between `apply_plan` and `generate_apply` avoids duplicated guard mapping paths and keeps backward compatibility deterministic.
+- Explicit preflight and fail-closed output makes MCP mutation safe for automation clients while preserving existing rollback and verification semantics.
+
+**Alternatives Considered**
+
+- Keep `generate_apply` only and avoid introducing a canonical `apply_plan` name.
+- Implement a new MCP-local apply executor instead of delegating to replay.
+- Return raw replay errors without deterministic MCP mapping.
+
+**Impact**
+
+- MCP startup manifest now includes canonical `apply_plan` plus `generate_apply` alias wired to the same implementation path.
+- MCP apply now enforces persisted-plan-only input, strict preflight-before-mutation behavior, and deterministic blocked/invalid responses.
+- Integration and unit tests now cover canonical apply name, alias behavior, dry-run non-mutation behavior, stale-plan blocking, invalid plan-id handling, and surfaced verification failures.
+
+**Spec Reference**
+
+- Tool Surface
+- Input Contract
+- Apply Behavior
+- Output Contract
+- Guard Rules
+- Backward Compatibility
+- Required Tests

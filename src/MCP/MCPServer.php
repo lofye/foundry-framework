@@ -25,13 +25,15 @@ final class MCPServer
     {
         $bridge ??= new CliReadBridge();
         $registry = new ToolRegistry();
+        $apply = new GenerateApplyHandler($bridge);
 
         $registry->register('doctor', new DoctorHandler($bridge));
         $registry->register('event.inspect', new EventInspectHandler($bridge));
         $registry->register('event.list', new EventListHandler($bridge));
         $registry->register('explain_pack', new ExplainPackHandler($bridge));
         $registry->register('explain_target', new ExplainTargetHandler($bridge));
-        $registry->register('generate_apply', new GenerateApplyHandler($bridge));
+        $registry->register('apply_plan', $apply);
+        $registry->register('generate_apply', $apply);
         $registry->register('generate_plan', new GeneratePlanHandler($bridge));
         $registry->register('inspect_graph', new InspectGraphHandler($bridge));
         $registry->register('list_examples', new ListExamplesHandler($bridge));
