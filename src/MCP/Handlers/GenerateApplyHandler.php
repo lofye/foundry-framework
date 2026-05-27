@@ -305,9 +305,15 @@ final class GenerateApplyHandler implements ToolHandler
         array $packRequirements,
     ): string {
         $state = trim($state);
-        $missing = $this->sortedStrings($entitlements['missing'] ?? []);
-        if ($missing !== [] || in_array($code, ['MISSING_ENTITLEMENT'], true)) {
-            return 'blocked_missing_entitlement';
+        $invalid = $this->sortedStrings($entitlements['invalid'] ?? []);
+        if ($invalid !== [] || (string) ($entitlements['status'] ?? '') === 'invalid'
+            || in_array($code, ['MARKETPLACE_DISTRIBUTION_METADATA_INVALID', 'ENTITLEMENT_VALIDATION_FAILED'], true)) {
+            return 'invalid';
+        }
+
+        if ($this->packRequirementHasCode($packRequirements, 'MARKETPLACE_PACK_NOT_AVAILABLE')
+            || in_array($code, ['MARKETPLACE_PACK_NOT_AVAILABLE'], true)) {
+            return 'blocked_pack_unavailable';
         }
 
         $expired = $this->sortedStrings($entitlements['expired'] ?? []);
@@ -315,9 +321,9 @@ final class GenerateApplyHandler implements ToolHandler
             return 'blocked_expired_entitlement';
         }
 
-        if ($this->packRequirementHasCode($packRequirements, 'MARKETPLACE_PACK_NOT_AVAILABLE')
-            || in_array($code, ['MARKETPLACE_PACK_NOT_AVAILABLE'], true)) {
-            return 'blocked_pack_unavailable';
+        $missing = $this->sortedStrings($entitlements['missing'] ?? []);
+        if ($missing !== [] || in_array($code, ['MISSING_ENTITLEMENT'], true)) {
+            return 'blocked_missing_entitlement';
         }
 
         $unknown = $this->sortedStrings($entitlements['unknown'] ?? []);
@@ -361,15 +367,20 @@ final class GenerateApplyHandler implements ToolHandler
         $missing = $this->sortedStrings($entitlements['missing'] ?? []);
         $expired = $this->sortedStrings($entitlements['expired'] ?? []);
         $unknown = $this->sortedStrings($entitlements['unknown'] ?? []);
+        $invalid = $this->sortedStrings($entitlements['invalid'] ?? []);
 
         $status = trim((string) ($entitlements['status'] ?? ''));
-        if ($status === '') {
+        if (!in_array($status, ['complete', 'incomplete', 'unknown', 'invalid', 'not_required'], true)) {
             if ($required === []) {
                 $status = 'not_required';
-            } elseif ($missing === [] && $expired === [] && $unknown === []) {
-                $status = 'complete';
-            } else {
+            } elseif ($invalid !== []) {
+                $status = 'invalid';
+            } elseif ($unknown !== []) {
+                $status = 'unknown';
+            } elseif ($missing !== [] || $expired !== []) {
                 $status = 'incomplete';
+            } else {
+                $status = 'complete';
             }
         }
 
@@ -380,6 +391,7 @@ final class GenerateApplyHandler implements ToolHandler
             'missing' => $missing,
             'expired' => $expired,
             'unknown' => $unknown,
+            'invalid' => $invalid,
         ];
     }
 
@@ -389,26 +401,47 @@ final class GenerateApplyHandler implements ToolHandler
      */
     private function normalizePackRequirements(mixed $value): array
     {
-        $rows = array_values(array_filter((array) $value, 'is_array'));
-        $rows = array_map(static function (array $row): array {
-            if (isset($row['pack'])) {
-                $row['pack'] = trim((string) $row['pack']);
+        $rows = [];
+        foreach (array_values(array_filter((array) $value, 'is_array')) as $raw) {
+            $pack = trim((string) ($raw['pack'] ?? ''));
+            if ($pack === '') {
+                continue;
             }
+            $source = trim((string) ($raw['source'] ?? 'unknown'));
+            if (!in_array($source, ['local', 'marketplace', 'unknown'], true)) {
+                $source = 'unknown';
+            }
+            $distribution = trim((string) ($raw['distribution'] ?? ($source === 'local' ? 'local' : 'unknown')));
+            if (!in_array($distribution, ['local', 'free', 'licensed', 'premium', 'unknown'], true)) {
+                $distribution = 'unknown';
+            }
+            $entitlement = is_array($raw['entitlement'] ?? null) ? $raw['entitlement'] : [];
+            $entitlementStatus = trim((string) ($entitlement['status'] ?? ($distribution === 'free' || $distribution === 'local' ? 'not_required' : 'unknown')));
+            if (!in_array($entitlementStatus, ['not_required', 'granted', 'missing', 'expired', 'unknown', 'invalid'], true)) {
+                $entitlementStatus = 'invalid';
+            }
+            $rows[$pack] = [
+                'pack' => $pack,
+                'source' => $source,
+                'version' => is_string($raw['version'] ?? null) ? trim((string) $raw['version']) : null,
+                'distribution' => $distribution,
+                'entitlement_required' => (bool) ($raw['entitlement_required'] ?? (($distribution !== 'free' && $distribution !== 'local'))),
+                'entitlement' => [
+                    'required' => (bool) ($entitlement['required'] ?? ($distribution !== 'free' && $distribution !== 'local')),
+                    'status' => $entitlementStatus,
+                    'tier' => trim((string) ($entitlement['tier'] ?? $distribution)),
+                    'expires_at' => is_string($entitlement['expires_at'] ?? null) ? $entitlement['expires_at'] : null,
+                ],
+                'executable' => (bool) ($raw['executable'] ?? ($entitlementStatus === 'granted' || $entitlementStatus === 'not_required')),
+                'message' => is_string($raw['message'] ?? null) ? (string) $raw['message'] : null,
+                'code' => is_string($raw['code'] ?? null) ? (string) $raw['code'] : null,
+            ];
+        }
 
-            return $row;
-        }, $rows);
+        $rows = array_values($rows);
+        usort($rows, static fn(array $left, array $right): int => strcmp((string) $left['pack'], (string) $right['pack']));
 
-        usort($rows, static fn(array $left, array $right): int => [
-            (string) ($left['pack'] ?? ''),
-            (string) ($left['code'] ?? ''),
-            (string) ($left['source'] ?? ''),
-        ] <=> [
-            (string) ($right['pack'] ?? ''),
-            (string) ($right['code'] ?? ''),
-            (string) ($right['source'] ?? ''),
-        ]);
-
-        return array_values($rows);
+        return $rows;
     }
 
     /**

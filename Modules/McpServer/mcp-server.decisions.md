@@ -203,3 +203,91 @@ Timestamp: 2026-05-27T18:20:00-04:00
 - Guard Rules
 - Backward Compatibility
 - Required Tests
+
+### Decision: normalize Marketplace entitlement and pack metadata contracts across MCP plan/validate/apply surfaces
+
+Timestamp: 2026-05-27T19:05:00-04:00
+
+**Context**
+
+- Active execution spec `004-mcp-marketplace-and-entitlement-integration` requires MCP tools to expose Marketplace-aware pack requirement rows and entitlement summaries with deterministic execution-state mapping.
+- Existing MCP handlers normalized only partial entitlement metadata and did not consistently include `invalid` entitlement summaries or full pack requirement contracts.
+- Existing `PackRequirementResolver` already centralized Marketplace and entitlement decisions through `PackEntitlementResolver`, but output shape and state precedence needed tightening for MCP contracts.
+
+**Decision**
+
+- Expand shared `PackRequirementResolver` outputs to include normalized Marketplace row fields (`source`, `distribution`, `version`, `entitlement_required`, entitlement metadata, `message`) and deterministic entitlement-summary `invalid` support.
+- Update MCP generate/validate/apply handlers to normalize pack requirement rows and entitlement summaries consistently, including canonical status values and deterministic deduped ordering.
+- Align MCP execution-state precedence for Marketplace blockers to treat invalid metadata first, then pack-unavailable, expired, missing, unknown, before non-Marketplace blockers.
+
+**Reasoning**
+
+- Keeping normalization in shared resolver + MCP adapters preserves centralized entitlement policy while giving MCP clients a stable machine contract.
+- Deterministic shape + ordering prevents client-side drift and makes blocked plans inspectable rather than opaque.
+- Explicit invalid entitlement handling avoids over-reporting unknown/missing states when metadata integrity is compromised.
+
+**Alternatives Considered**
+
+- Add Marketplace-specific branching directly in each MCP handler.
+- Leave resolver shape unchanged and only patch response rendering at MCP boundary.
+- Preserve previous unknown/invalid conflation in execution-state mapping.
+
+**Impact**
+
+- MCP plan/validate/apply payloads now expose stable Marketplace entitlement context for local/free/licensed/premium/unknown pack cases.
+- Unit coverage now locks resolver behavior for malformed entitlement state and MCP handler normalization expectations.
+- Existing CLI/runtime entitlement logic remains centralized; MCP does not parse entitlement cache files directly.
+
+**Spec Reference**
+
+- Required Shared Runtime
+- Pack Requirement Contract
+- Plan Entitlement Summary Contract
+- Execution State Mapping
+- MCP Planning Requirements
+- MCP Validation Requirements
+- MCP Apply Requirements
+
+### Decision: add shared persisted-plan explanation for MCP and CLI developer UX
+
+Timestamp: 2026-05-27T15:48:00-04:00
+
+**Context**
+
+- Active execution spec `005-mcp-plan-explainability-and-dev-ux` requires deterministic explanation of persisted plans through both MCP and CLI.
+- Existing MCP plan/validate/apply handlers already normalized execution state, entitlement blockers, and Marketplace pack requirement rows, while persisted plan records already contained intent, mode, plan actions, context packets, and replayable plan data.
+- The implementation needed CLI/MCP parity without creating a new planning engine or applying plans.
+
+**Decision**
+
+- Add a shared `PlanExplanationService` that loads persisted plan records, performs strict replay dry-run readiness checks, normalizes pack/entitlement/change/validation data, and redacts token, secret, and raw license-key details.
+- Add `foundry explain plan <plan_id> --json` as the canonical CLI JSON explanation surface.
+- Register MCP tool `explain_plan` and delegate it to the CLI/read bridge so MCP returns the same data object inside the canonical wrapper.
+
+**Reasoning**
+
+- A shared service preserves deterministic CLI/MCP parity and avoids duplicating explainability policy inside the MCP handler.
+- Strict replay dry-run reuses existing Generate and Marketplace readiness contracts without mutating source files.
+- Structured readiness reasons and next actions make the safe developer flow explicit while preserving `plan:show` unchanged.
+
+**Alternatives Considered**
+
+- Add MCP-only explanation logic.
+- Extend `plan:show` instead of adding an explain-specific command path.
+- Explain only stored metadata without replay dry-run validation.
+
+**Impact**
+
+- MCP startup now includes `explain_plan`.
+- Developers and agents can inspect persisted plan readiness through `foundry explain plan <plan_id> --json` and MCP `explain_plan`.
+- Explanation payloads include deterministic readiness, pack reasoning, entitlement state, validation, changes, and next actions, while missing/malformed plans return structured failure payloads.
+
+**Spec Reference**
+
+- Tool And CLI Surface
+- Output Contract
+- Explanation Requirements
+- CLI JSON Contract
+- Developer UX Flow
+- Determinism Rules
+- Required Tests

@@ -8,6 +8,7 @@ use Foundry\CLI\Application;
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
 use Foundry\MCP\CliReadBridge;
+use Foundry\MCP\Handlers\ExplainPlanHandler;
 use Foundry\MCP\Handlers\GenerateApplyHandler;
 use Foundry\MCP\Handlers\GeneratePlanHandler;
 use Foundry\MCP\Handlers\ValidatePlanHandler;
@@ -16,6 +17,43 @@ use PHPUnit\Framework\TestCase;
 
 final class McpPlanHandlersTest extends TestCase
 {
+    public function test_explain_plan_delegates_to_cli_plan_explain_path(): void
+    {
+        $handler = new ExplainPlanHandler($this->bridge(static function (array $args): array {
+            TestCase::assertSame(['explain', 'plan', 'plan-123'], $args);
+
+            return [
+                'status' => 0,
+                'payload' => [
+                    'plan_id' => 'plan-123',
+                    'status' => 'explainable',
+                    'execution_state' => 'executable',
+                ],
+                'message' => null,
+            ];
+        }));
+
+        $result = $handler->handle(['plan_id' => 'plan-123']);
+
+        $this->assertSame('plan-123', $result['plan_id']);
+        $this->assertSame('explainable', $result['status']);
+        $this->assertSame('executable', $result['execution_state']);
+    }
+
+    public function test_explain_plan_requires_plan_id_input(): void
+    {
+        $handler = new ExplainPlanHandler($this->bridge(static fn(array $args): array => []));
+
+        $this->expectException(FoundryError::class);
+
+        try {
+            $handler->handle([]);
+        } catch (FoundryError $error) {
+            $this->assertSame('MCP_INPUT_INVALID', $error->errorCode);
+            throw $error;
+        }
+    }
+
     public function test_generate_plan_returns_normalized_planned_payload(): void
     {
         $handler = new GeneratePlanHandler($this->bridge(static function (array $args): array {
@@ -90,6 +128,10 @@ final class McpPlanHandlersTest extends TestCase
                         ],
                         'pack_requirements' => [[
                             'pack' => 'foundry/blog',
+                            'source' => 'marketplace',
+                            'distribution' => 'premium',
+                            'entitlement_required' => true,
+                            'entitlement' => ['required' => true, 'status' => 'unknown', 'tier' => 'premium'],
                             'code' => 'MARKETPLACE_PACK_NOT_AVAILABLE',
                         ]],
                     ],
@@ -104,6 +146,9 @@ final class McpPlanHandlersTest extends TestCase
         $this->assertSame('blocked_pack_unavailable', $result['execution_state']);
         $this->assertSame('blocked', $result['validation']['status']);
         $this->assertSame('GENERATE_PACK_INSTALL_REQUIRED', $result['error']['code']);
+        $this->assertSame('marketplace', $result['pack_requirements'][0]['source']);
+        $this->assertSame('premium', $result['pack_requirements'][0]['distribution']);
+        $this->assertTrue($result['pack_requirements'][0]['entitlement_required']);
     }
 
     public function test_generate_plan_rejects_non_boolean_flag_inputs(): void

@@ -56,7 +56,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame('GENERATE_PACK_INSTALL_REQUIRED', $result['payload']['error']['code']);
         $this->assertSame(['pack:foundry/blog'], $result['payload']['error']['details']['missing_capabilities']);
         $this->assertSame(['foundry/blog'], $result['payload']['error']['details']['suggested_packs']);
-        $this->assertSame('invalid', $result['payload']['error']['details']['execution_state']);
+        $this->assertSame('blocked_pack_unavailable', $result['payload']['error']['details']['execution_state']);
         $this->assertSame(['foundry/blog'], $result['payload']['error']['details']['entitlements']['required']);
         $this->assertFileExists($this->project->root . '/.foundry/snapshots/pre-generate.json');
         $this->assertFileDoesNotExist($this->project->root . '/.foundry/snapshots/post-generate.json');

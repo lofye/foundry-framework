@@ -38,16 +38,21 @@ final class PackRequirementResolver
 
         foreach ($packHints as $pack) {
             if ($packs->has($pack)) {
+                $local = $packs->get($pack);
                 $packRequirements[] = [
                     'pack' => $pack,
                     'source' => 'local',
+                    'version' => $local?->version,
                     'distribution' => 'local',
+                    'entitlement_required' => false,
                     'entitlement' => [
                         'required' => false,
                         'status' => 'not_required',
                         'tier' => 'local',
+                        'expires_at' => null,
                     ],
                     'executable' => true,
+                    'message' => 'Pack is already installed locally.',
                 ];
                 continue;
             }
@@ -123,7 +128,7 @@ final class PackRequirementResolver
             );
         } catch (FoundryError $error) {
             return [
-                'requirement' => $this->unknownRequirement($pack, 'ENTITLEMENT_VALIDATION_FAILED'),
+                'requirement' => $this->invalidRequirement($pack),
                 'error' => [
                     'code' => 'ENTITLEMENT_VALIDATION_FAILED',
                     'pack' => $pack,
@@ -142,7 +147,9 @@ final class PackRequirementResolver
             'requirement' => [
                 'pack' => $pack,
                 'source' => 'marketplace',
+                'version' => is_string($metadata['version'] ?? null) ? trim((string) $metadata['version']) : null,
                 'distribution' => $tier,
+                'entitlement_required' => $required,
                 'entitlement' => [
                     'required' => $required,
                     'status' => $normalizedStatus,
@@ -150,6 +157,7 @@ final class PackRequirementResolver
                     'expires_at' => is_string($decision['expires_at'] ?? null) ? $decision['expires_at'] : null,
                 ],
                 'executable' => !$required || $status === 'granted',
+                'message' => $this->requirementMessage($normalizedStatus),
             ],
             'error' => null,
         ];
@@ -163,14 +171,41 @@ final class PackRequirementResolver
         return [
             'pack' => $pack,
             'source' => 'marketplace',
+            'version' => null,
             'distribution' => 'unknown',
+            'entitlement_required' => true,
             'entitlement' => [
                 'required' => true,
                 'status' => 'unknown',
                 'tier' => 'unknown',
+                'expires_at' => null,
             ],
             'executable' => false,
+            'message' => 'Marketplace pack is not available.',
             'code' => $code,
+        ];
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    private function invalidRequirement(string $pack): array
+    {
+        return [
+            'pack' => $pack,
+            'source' => 'marketplace',
+            'version' => null,
+            'distribution' => 'unknown',
+            'entitlement_required' => true,
+            'entitlement' => [
+                'required' => true,
+                'status' => 'invalid',
+                'tier' => 'unknown',
+                'expires_at' => null,
+            ],
+            'executable' => false,
+            'message' => 'Marketplace entitlement metadata is invalid.',
+            'code' => 'ENTITLEMENT_VALIDATION_FAILED',
         ];
     }
 
@@ -182,7 +217,8 @@ final class PackRequirementResolver
      *   granted:array<int,string>,
      *   missing:array<int,string>,
      *   expired:array<int,string>,
-     *   unknown:array<int,string>
+     *   unknown:array<int,string>,
+     *   invalid:array<int,string>
      * }
      */
     private function entitlementSummary(array $requirements): array
@@ -192,6 +228,7 @@ final class PackRequirementResolver
         $missing = [];
         $expired = [];
         $unknown = [];
+        $invalid = [];
 
         foreach ($requirements as $requirement) {
             $pack = (string) ($requirement['pack'] ?? '');
@@ -220,6 +257,11 @@ final class PackRequirementResolver
                 continue;
             }
 
+            if ($status === 'invalid') {
+                $invalid[] = $pack;
+                continue;
+            }
+
             $unknown[] = $pack;
         }
 
@@ -228,14 +270,29 @@ final class PackRequirementResolver
         $missing = $this->sortedUnique($missing);
         $expired = $this->sortedUnique($expired);
         $unknown = $this->sortedUnique($unknown);
+        $invalid = $this->sortedUnique($invalid);
+
+        $status = 'not_required';
+        if ($required !== []) {
+            if ($invalid !== []) {
+                $status = 'invalid';
+            } elseif ($unknown !== []) {
+                $status = 'unknown';
+            } elseif ($missing !== [] || $expired !== []) {
+                $status = 'incomplete';
+            } else {
+                $status = 'complete';
+            }
+        }
 
         return [
-            'status' => ($missing === [] && $expired === [] && $unknown === []) ? 'complete' : 'incomplete',
+            'status' => $status,
             'required' => $required,
             'granted' => $granted,
             'missing' => $missing,
             'expired' => $expired,
             'unknown' => $unknown,
+            'invalid' => $invalid,
         ];
     }
 
@@ -245,8 +302,13 @@ final class PackRequirementResolver
      */
     private function executionState(array $entitlements, array $errors): string
     {
-        if ($errors !== []) {
+        if ((string) ($entitlements['status'] ?? '') === 'invalid'
+            || array_values(array_map('strval', (array) ($entitlements['invalid'] ?? []))) !== []) {
             return 'invalid';
+        }
+
+        if ($this->errorHasCode($errors, 'MARKETPLACE_PACK_NOT_AVAILABLE')) {
+            return 'blocked_pack_unavailable';
         }
 
         $missing = array_values(array_map('strval', (array) ($entitlements['missing'] ?? [])));
@@ -261,10 +323,40 @@ final class PackRequirementResolver
 
         $unknown = array_values(array_map('strval', (array) ($entitlements['unknown'] ?? [])));
         if ($unknown !== []) {
+            return 'blocked_unknown_entitlement';
+        }
+
+        if ($errors !== []) {
             return 'invalid';
         }
 
         return 'executable';
+    }
+
+    /**
+     * @param array<int,array<string,mixed>> $errors
+     */
+    private function errorHasCode(array $errors, string $code): bool
+    {
+        foreach ($errors as $error) {
+            if ((string) ($error['code'] ?? '') === $code) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function requirementMessage(string $status): string
+    {
+        return match ($status) {
+            'not_required' => 'Marketplace entitlement is not required.',
+            'granted' => 'Marketplace entitlement is granted.',
+            'missing' => 'Marketplace entitlement is missing.',
+            'expired' => 'Marketplace entitlement is expired.',
+            'invalid' => 'Marketplace entitlement metadata is invalid.',
+            default => 'Marketplace entitlement state is unknown.',
+        };
     }
 
     /**

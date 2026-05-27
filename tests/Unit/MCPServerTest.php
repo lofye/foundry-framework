@@ -70,11 +70,13 @@ final class MCPServerTest extends TestCase
         $manifest = MCPServer::boot()->manifest();
 
         $this->assertContains('apply_plan', $manifest['tools']);
+        $this->assertContains('explain_plan', $manifest['tools']);
         $this->assertContains('generate_plan', $manifest['tools']);
         $this->assertContains('validate_plan', $manifest['tools']);
         $this->assertContains('generate_apply', $manifest['tools']);
         $this->assertSame($manifest['tools'], array_values(array_unique($manifest['tools'])));
         $this->assertSame(1, count(array_filter($manifest['tools'], static fn(string $tool): bool => $tool === 'apply_plan')));
+        $this->assertSame(1, count(array_filter($manifest['tools'], static fn(string $tool): bool => $tool === 'explain_plan')));
         $this->assertSame(1, count(array_filter($manifest['tools'], static fn(string $tool): bool => $tool === 'generate_apply')));
         $this->assertSame(1, count(array_filter($manifest['tools'], static fn(string $tool): bool => $tool === 'generate_plan')));
         $this->assertSame(1, count(array_filter($manifest['tools'], static fn(string $tool): bool => $tool === 'validate_plan')));

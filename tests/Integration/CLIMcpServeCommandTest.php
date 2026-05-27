@@ -121,6 +121,47 @@ final class CLIMcpServeCommandTest extends TestCase
         $this->assertFileDoesNotExist($featurePath);
     }
 
+    public function test_mcp_explain_plan_matches_cli_plan_explain_payload(): void
+    {
+        $app = new Application();
+        $generate = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            'Create',
+            'comments',
+            '--mode=new',
+            '--dry-run',
+            '--json',
+        ]);
+        $this->assertSame(0, $generate['status']);
+        $planId = (string) ($generate['payload']['plan_record']['plan_id'] ?? '');
+        $this->assertNotSame('', $planId);
+
+        $cli = $this->runCommand($app, [
+            'foundry',
+            'explain',
+            'plan',
+            $planId,
+            '--json',
+        ]);
+        $this->assertSame(0, $cli['status']);
+
+        $mcp = $this->runCommand($app, [
+            'foundry',
+            'mcp:serve',
+            '--tool=explain_plan',
+            '--input={"plan_id":"' . $planId . '"}',
+            '--json',
+        ]);
+
+        $this->assertSame(0, $mcp['status']);
+        $this->assertSame('explain_plan', $mcp['payload']['tool']);
+        $this->assertSame($cli['payload'], $mcp['payload']['data']);
+        $this->assertSame('explainable', $mcp['payload']['data']['status']);
+        $this->assertSame('ready', $mcp['payload']['data']['readiness']['status']);
+        $this->assertSame('apply_plan', $mcp['payload']['data']['readiness']['next_actions'][0]['type']);
+    }
+
     public function test_mcp_apply_plan_applies_after_preflight_and_generate_apply_alias_matches_contract(): void
     {
         $app = new Application();

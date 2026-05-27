@@ -10,6 +10,7 @@ use Foundry\CLI\Commands\Concerns\InteractsWithLicensing;
 use Foundry\Compiler\CompileOptions;
 use Foundry\Explain\Diff\ExplainDiffService;
 use Foundry\Explain\ExplainOptions;
+use Foundry\Explain\PlanExplanationService;
 use Foundry\Explain\ExplainSupport;
 use Foundry\Explain\ExplainTarget;
 use Foundry\Explain\Snapshot\ExplainSnapshotService;
@@ -38,6 +39,10 @@ final class ExplainCommand extends Command
     public function run(array $args, CommandContext $context): array
     {
         $this->monetizationContext('explain', [FeatureFlags::PRO_EXPLAIN_PLUS]);
+        if (($args[1] ?? null) === 'plan') {
+            return $this->explainPlan($args, $context);
+        }
+
         [$target, $targetKind, $options, $diff, $includeGit] = $this->parseExplainArgs($args);
 
         if ($diff) {
@@ -83,6 +88,67 @@ final class ExplainCommand extends Command
             'message' => $context->expectsJson() ? null : $message,
             'payload' => $context->expectsJson() ? $payload : null,
         ];
+    }
+
+    /**
+     * @param array<int,string> $args
+     * @return array{status:int,payload:array<string,mixed>|null,message:string|null}
+     */
+    private function explainPlan(array $args, CommandContext $context): array
+    {
+        $planId = trim((string) ($args[2] ?? ''));
+        if ($planId === '') {
+            throw new FoundryError(
+                'PLAN_EXPLAIN_ID_REQUIRED',
+                'validation',
+                [],
+                'Plan id required.',
+            );
+        }
+
+        $payload = (new PlanExplanationService(
+            $context->paths(),
+            $context->apiSurfaceRegistry(),
+        ))->explain($planId);
+
+        return [
+            'status' => 0,
+            'message' => $context->expectsJson() ? null : $this->renderPlanExplanation($payload),
+            'payload' => $context->expectsJson() ? $payload : null,
+        ];
+    }
+
+    /**
+     * @param array<string,mixed> $payload
+     */
+    private function renderPlanExplanation(array $payload): string
+    {
+        $readiness = is_array($payload['readiness'] ?? null) ? $payload['readiness'] : [];
+        $lines = [
+            'Plan explanation: ' . (string) ($payload['plan_id'] ?? ''),
+            'Status: ' . (string) ($payload['status'] ?? ''),
+            'Execution state: ' . (string) ($payload['execution_state'] ?? ''),
+            'Readiness: ' . (string) ($readiness['status'] ?? ''),
+            'Intent: ' . (string) ($payload['intent'] ?? ''),
+            'Mode: ' . (string) ($payload['mode'] ?? ''),
+        ];
+
+        $nextActions = array_values(array_filter((array) ($readiness['next_actions'] ?? []), 'is_array'));
+        if ($nextActions !== []) {
+            $lines[] = 'Next actions:';
+            foreach ($nextActions as $action) {
+                $line = '- ' . (string) ($action['type'] ?? 'unknown');
+                if (isset($action['pack'])) {
+                    $line .= ' ' . (string) $action['pack'];
+                }
+                if (isset($action['command'])) {
+                    $line .= ' :: ' . (string) $action['command'];
+                }
+                $lines[] = $line;
+            }
+        }
+
+        return implode(PHP_EOL, $lines);
     }
 
     /**

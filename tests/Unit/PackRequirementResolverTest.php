@@ -58,6 +58,9 @@ final class PackRequirementResolverTest extends TestCase
 
         $this->assertSame([], $result['missing_capabilities']);
         $this->assertSame([], $result['suggested_packs']);
+        $this->assertSame('local', $result['pack_requirements'][0]['source']);
+        $this->assertSame('local', $result['pack_requirements'][0]['distribution']);
+        $this->assertSame('not_required', $result['pack_requirements'][0]['entitlement']['status']);
     }
 
     public function test_resolver_surfaces_marketplace_entitlement_summary_for_missing_packs(): void
@@ -101,6 +104,12 @@ final class PackRequirementResolverTest extends TestCase
         $this->assertSame([], $result['entitlements']['missing']);
         $this->assertSame([], $result['entitlements']['unknown']);
         $this->assertSame([], $result['errors']);
+        $byPack = [];
+        foreach ($result['pack_requirements'] as $row) {
+            $byPack[(string) $row['pack']] = $row;
+        }
+        $this->assertSame('not_required', $byPack['foundry/free-pack']['entitlement']['status']);
+        $this->assertSame('granted', $byPack['foundry/premium-pack']['entitlement']['status']);
     }
 
     public function test_resolver_marks_unknown_marketplace_packs_invalid(): void
@@ -115,10 +124,33 @@ final class PackRequirementResolverTest extends TestCase
             new PackRegistry(),
         );
 
-        $this->assertSame('invalid', $result['execution_state']);
+        $this->assertSame('blocked_pack_unavailable', $result['execution_state']);
         $this->assertSame(['foundry/missing-pack'], $result['entitlements']['required']);
         $this->assertSame(['foundry/missing-pack'], $result['entitlements']['unknown']);
         $this->assertSame('MARKETPLACE_PACK_NOT_AVAILABLE', $result['errors'][0]['code']);
+    }
+
+    public function test_resolver_surfaces_invalid_entitlement_state_when_cache_is_malformed(): void
+    {
+        $path = $this->project->root . '/.foundry/marketplace/entitlements.json';
+        @mkdir(dirname($path), 0777, true);
+        file_put_contents($path, "{invalid-json}\n");
+
+        $resolver = new PackRequirementResolver(
+            hostedRegistry: $this->registry([
+                $this->entry('foundry/invalid-premium', 'premium', true),
+            ]),
+            entitlementResolver: new PackEntitlementResolver(new MarketplaceEntitlementCache(Paths::fromCwd($this->project->root))),
+        );
+
+        $result = $resolver->resolve(
+            new Intent(raw: 'Create invalid premium flow', mode: 'new', packHints: ['foundry/invalid-premium']),
+            new PackRegistry(),
+        );
+
+        $this->assertSame('invalid', $result['execution_state']);
+        $this->assertSame(['foundry/invalid-premium'], $result['entitlements']['invalid']);
+        $this->assertSame('ENTITLEMENT_VALIDATION_FAILED', $result['errors'][0]['code']);
     }
 
     /**

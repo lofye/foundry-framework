@@ -9,6 +9,8 @@ Define the deterministic MCP surface for Foundry introspection, planning, valida
 - Expose stable MCP tooling for canonical read operations.
 - Expose deterministic plan-generation and plan-validation MCP tools that reuse existing Generate and Marketplace runtime logic.
 - Expose a deterministic, guarded plan-apply MCP tool that reuses existing replay/apply runtime logic.
+- Expose Marketplace-aware MCP contracts for planning, validation, and apply preflight entitlement state.
+- Expose deterministic plan explanation for persisted plans, including readiness, pack reasoning, entitlement blockers, changes, validation, and next actions.
 - Preserve CLI parity by delegating to existing read models and command surfaces.
 - Keep MCP planning deterministic and side-effect free unless an explicit apply tool is invoked.
 
@@ -38,6 +40,7 @@ Define the deterministic MCP surface for Foundry introspection, planning, valida
 - MCP startup manifest includes planning tool list:
 - `generate_plan`
 - `validate_plan`
+- `explain_plan`
 - `apply_plan`
 - `generate_apply` (backward-compatible alias of `apply_plan`)
 - MCP tool responses use canonical wrapper shape:
@@ -50,8 +53,14 @@ Define the deterministic MCP surface for Foundry introspection, planning, valida
 - MCP `list_examples` reflects canonical example catalog behavior.
 - MCP `generate_plan` returns deterministic planning payloads including execution state, validation summary, entitlements, and pack requirements.
 - MCP `validate_plan` validates persisted-plan ids and inline plan payloads without source mutation and reports deterministic `valid|blocked|stale|invalid` status.
+- MCP `explain_plan` explains persisted plans without planning, applying, or acquiring entitlements and returns deterministic readiness, pack, change, validation, and next-action data.
+- CLI `explain plan <plan_id> --json` returns the same normalized plan explanation data object as MCP `explain_plan`, without the outer MCP wrapper.
+- Plan explanations include plan identity, original intent, mode, execution state, readiness reasons, next actions, sorted pack reasoning, entitlement state, sorted changes, and validation status/errors/warnings.
+- Missing or malformed plan records return structured `missing` or `invalid` explanation payloads and do not trigger fresh planning.
+- Plan explanations redact raw tokens, secrets, and raw license-key fields from structured validation details.
 - MCP `apply_plan` accepts explicit persisted `plan_id` input only, runs replay dry-run preflight before live mutation, and fail-closes with deterministic guard codes/execution-state mapping.
 - MCP `generate_apply` delegates to the same implementation and response contract as `apply_plan`.
+- MCP planning/validation/apply preflight responses normalize Marketplace pack requirement metadata (`source`, `distribution`, `version`, `entitlement_required`, entitlement status) and deterministic entitlement summaries.
 
 ## Acceptance Criteria
 
@@ -61,6 +70,8 @@ Define the deterministic MCP surface for Foundry introspection, planning, valida
 - Pack-aware data is visible through MCP read tools.
 - Planning/validation MCP tools return deterministic payloads and do not mutate source files.
 - Apply MCP tools run explicit preflight guards and never mutate source files when preflight fails or when `dry_run` is true.
+- Marketplace entitlement outcomes (`missing`, `expired`, `unknown`, `invalid`, pack unavailable) map to deterministic MCP execution states and blocked/invalid status contracts.
+- Persisted plan explanations preserve CLI parity through `foundry explain plan <plan_id> --json` and never expose raw tokens or license keys.
 
 ## Assumptions
 

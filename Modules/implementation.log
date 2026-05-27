@@ -766,3 +766,11 @@
 ## 2026-05-27 18:20:00 -0400
 - spec: Modules/McpServer/specs/003-mcp-apply-layer-and-guard-enforcement.md
 - note: Added canonical MCP `apply_plan` with strict preflight-first guarded replay/apply behavior, preserved `generate_apply` as a shared alias path, and enforced deterministic blocked/invalid guard mapping with explicit dry-run/non-mutation contracts.
+
+## 2026-05-27 19:05:00 -0400
+- spec: Modules/McpServer/specs/004-mcp-marketplace-and-entitlement-integration.md
+- note: Normalized Marketplace-aware MCP entitlement/pack-requirement contracts across generate/validate/apply paths, including deterministic local/marketplace metadata rows, entitlement-invalid summaries, and blocker precedence mapping.
+
+## 2026-05-27 15:48:53 -0400
+- spec: Modules/McpServer/specs/005-mcp-plan-explainability-and-dev-ux.md
+- note: Added deterministic persisted-plan explanation through CLI `explain plan` and MCP `explain_plan`, including readiness, pack reasoning, entitlement blockers, sorted changes, validation, next actions, and secret-safe structured failures.
