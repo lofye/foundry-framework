@@ -3,6 +3,15 @@
 ## Purpose
 - Make implementation completion stricter and more trustworthy.
 
+## Decision Summary
+
+Refreshed Through Spec: `001.002-eliminate-phpunit-warning-and-risky-state-blockers`
+
+- Foundry-owned implementation completion requires the shared quality gate rather than relying on guidance alone.
+- Full PHPUnit, parseable coverage, global coverage at or above 90%, and changed PHP source coverage at or above 90% all participate in completion status.
+- Quality-gate failures downgrade implementation results instead of allowing final success payloads.
+- Changed-surface coverage ignores docs, generated internals, vendor content, storage artifacts, stubs, and tests so enforcement stays focused on owned source.
+
 ## Current State
 - Existing contributor guidance about keeping affected areas at or above 90% coverage remains part of the workflow, but final completion enforcement moves into Foundry-owned implementation workflows.
 - A shared repository-owned quality gate exists for Foundry-owned implementation completion.

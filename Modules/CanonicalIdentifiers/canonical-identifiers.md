@@ -4,6 +4,14 @@
 - Define and enforce canonical identifier behavior across Foundry.
 - Improve CLI ergonomics while preserving a single source of truth for identifiers.
 
+## Decision Summary
+
+Refreshed Through Spec: `001-accept-normalized-input-and-canonicalize-visibly`
+
+- Canonical identifier normalization is owned by this standalone module because identifier policy is cross-cutting framework behavior.
+- Accepted alternate input forms must canonicalize immediately, use canonical identifiers internally, and make normalization visible in user-facing output.
+- Invalid identifiers must continue to fail clearly and deterministically rather than being silently guessed.
+
 ## Current State
 
 ## Open Questions

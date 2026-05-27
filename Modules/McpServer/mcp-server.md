@@ -4,6 +4,15 @@
 
 - Record the current repository state for Foundry's deterministic, read-only MCP server surface.
 
+## Decision Summary
+
+Refreshed Through Spec: `001-read-layer`
+
+- MCP V1 is a deterministic structured read interface over existing CLI/read models, not a divergent implementation path.
+- The read-layer tool wrapper is stable as `{"tool":"<name>","data":{...}}`, with tools registered in deterministic order.
+- Read tools reuse canonical explain, graph, pack, doctor, examples, and event inspection behavior.
+- Mutation-capable MCP behavior must stay behind explicit promoted specs and guard/revalidation contracts before it is treated as complete MCP module scope.
+
 ## Current State
 
 - `foundry mcp:serve` is implemented and callable locally.

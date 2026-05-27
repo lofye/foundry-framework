@@ -4,6 +4,16 @@
 - Introduce feature-level context files for Foundry.
 - Support resumable, deterministic feature work.
 
+## Decision Summary
+
+Refreshed Through Spec: `025-rule-deduplication-and-issue-coalescing`
+
+- Canonical context is the proceed/fail gate for meaningful feature work, with spec, state, and decision files validated before execution.
+- Doctor, alignment, inspect, repair, and verify surfaces share deterministic context services rather than maintaining separate rule paths.
+- Draft execution specs are planning artifacts only; `implement spec` resolves active specs and blocks draft-only matches until promotion.
+- State and spec write paths normalize framework-owned documents conservatively while decision ledgers remain append-only.
+- Planning produces draft execution specs only when a bounded, concrete next step can be derived from canonical context.
+
 ## Current State
 - Canonical spec, state, and decision-ledger files exist for this feature.
 - Validators check canonical feature context structure and required sections.

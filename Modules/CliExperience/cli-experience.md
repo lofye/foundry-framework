@@ -3,6 +3,14 @@
 ## Purpose
 - Improve the usability, discoverability, and ergonomics of the Foundry CLI.
 
+## Decision Summary
+
+Refreshed Through Spec: `002-repair-cli-experience-context-alignment`
+
+- CLI ergonomics are treated as a first-class framework module while preserving stable command contracts.
+- Completion support is deterministic, registry-backed, and currently focused on bash, zsh, and active execution-spec workflows.
+- Draft execution specs remain excluded from default implementation completion so shell assistance does not blur promotion boundaries.
+
 ## Current State
 - Foundry provides a reliable command surface for human and agent workflows.
 - Canonical CLI commands remain stable and verifiable through the current command registry and CLI surface verification.

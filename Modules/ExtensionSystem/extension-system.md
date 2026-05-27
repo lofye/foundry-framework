@@ -4,6 +4,15 @@
 
 - Provide the current implementation context for Foundry’s deterministic extension and pack loading subsystem.
 
+## Decision Summary
+
+Refreshed Through Spec: `002-extension-marketplace-integration`
+
+- Extension state is assembled through `ExtensionRegistry::forPaths()` with deterministic built-in extension seeding and explicit app/pack registration files.
+- Pack activation validates manifests, installed paths, checksums, dependencies, conflicts, and compatibility before runtime enablement.
+- Pack provider contributions are surfaced through inspect/explain metadata, while only implemented registries become executable runtime behavior.
+- Hosted registry and local pack workflows are deterministic; publishing, range solving, cryptographic signature verification, and uninstall semantics remain future decisions.
+
 ## Current State
 
 - `ExtensionRegistry::forPaths()` is the canonical assembly path for extension state.

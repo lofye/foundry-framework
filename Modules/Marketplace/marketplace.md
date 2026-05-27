@@ -4,6 +4,15 @@
 
 - Record the implemented Marketplace backend + identity/authentication + entitlement/license-activation + purchase-flow state for deterministic pack distribution and authenticated Marketplace access contracts.
 
+## Decision Summary
+
+Refreshed Through Spec: `005-marketplace-mcp-and-generate-entitlement-integration`
+
+- Marketplace state is deterministic and fail-closed: missing metadata is empty, malformed metadata fails verification, and secret values are redacted.
+- Identity, entitlement cache, license activation, and purchase flows use centralized services with stable inspect/verify/CLI payloads.
+- Entitlement-required pack access flows through shared entitlement resolution so Marketplace, Generate, and MCP behavior do not duplicate policy logic.
+- MCP planning/apply integration surfaces entitlement state and revalidates before mutation, while richer plan explainability remains future work.
+
 ## Current State
 
 - Missing `.foundry/marketplace/packs.json` is treated as an empty marketplace.

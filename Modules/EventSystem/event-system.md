@@ -4,6 +4,14 @@
 
 - Record the current repository state for Foundry's deterministic synchronous event system.
 
+## Decision Summary
+
+Refreshed Through Spec: `001-registry-synchronous-deterministic-dispatch`
+
+- Event dispatch is synchronous and deterministic in V1, with listener failures wrapped in stable `FoundryError` metadata.
+- Event registry read models are exposed through aligned CLI and MCP inspection tools.
+- Advanced capabilities such as async dispatch or wildcard listeners remain future decisions that require promoted specs.
+
 ## Current State
 
 - `Foundry\Event\EventRegistry` supports deterministic registration and inspection via `register()`, `listenersFor()`, and `all()`.

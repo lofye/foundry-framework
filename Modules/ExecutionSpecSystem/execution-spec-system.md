@@ -4,6 +4,16 @@
 
 - Define and enforce canonical execution-spec naming, identity, heading, validation, draft-creation, implementation-log, conflict-detection, and framework-repository safety rules.
 
+## Decision Summary
+
+Refreshed Through Spec: `010-enforce-feature-scoped-gapless-spec-ids`
+
+- Execution-spec identity is filename-based: active specs and drafts use canonical padded IDs, filename-mirrored headings, and no separate metadata IDs.
+- Draft specs are non-executable planning artifacts; active spec resolution, logging, and implementation workflows reject draft-only targets.
+- Active specs require exact implementation-log coverage, and completed framework specs require matching reconstruction notes.
+- Validation enforces placement, heading, duplicate ID, forbidden metadata, implementation-log, plan-coverage, and ID-continuity rules deterministically.
+- Framework-internal specs are blocked from the generic app scaffolding implementation path until a dedicated framework execution path exists.
+
 ## Current State
 
 - Active execution specs live at `docs/features/<feature>/specs/<id>-<slug>.md`, and drafts live under `docs/features/<feature>/specs/drafts/<id>-<slug>.md`.

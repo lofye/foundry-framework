@@ -4,6 +4,15 @@
 
 - Record the current repository state for Foundry's deterministic local SQLite state-store foundation.
 
+## Decision Summary
+
+Refreshed Through Spec: `001-sqlite-layer`
+
+- The initial state-store foundation is local, SQLite-backed, project-root isolated, and deterministic.
+- Inspect and verify commands expose metadata and readiness without dumping arbitrary stored values or creating missing databases on read.
+- `.foundry/state/` is framework-owned generated state and is ignored by scaffold and framework gitignore surfaces.
+- Future migrations from ad hoc persistence into namespaced state-store entries require promoted specs.
+
 ## Current State
 
 - `SqliteStateStore` exposes deterministic path resolution, schema initialization, typed state read/write, and metadata inspection.

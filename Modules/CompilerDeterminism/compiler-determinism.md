@@ -3,6 +3,14 @@
 ## Purpose
 - Ensure compiler outputs are deterministic when inputs and explicitly controlled environmental factors are the same.
 
+## Decision Summary
+
+Refreshed Through Spec: `001-freeze-time-for-deterministic-graph-compilation`
+
+- Compiler-owned time must flow through an injectable `Clock` abstraction instead of direct wall-clock reads.
+- Determinism tests may pin time and compare complete graph/projection outputs without timestamp flakiness.
+- Production behavior still uses real UTC time by default, while tests and controlled workflows can provide fixed time explicitly.
+
 ## Current State
 - Compiler-owned timestamps are now obtained through an injectable `Clock` abstraction rather than direct wall-clock calls inside compiler logic.
 - Graph/compiler tests can inject fixed time and compare full outputs directly.

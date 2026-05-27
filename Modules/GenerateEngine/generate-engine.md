@@ -4,6 +4,16 @@
 
 - Provide a deterministic explain-driven generation surface for evolving Foundry applications safely.
 
+## Decision Summary
+
+Refreshed Through Spec: `010-generate-metrics-and-insights`
+
+- Generate plans from the explain-derived model and routes all mutation through validated plans, explicit modes, git safety, policy checks, and verification.
+- Interactive, workflow, template, replay, and undo flows extend the same plan-record contract instead of creating parallel histories.
+- Every terminal generate outcome persists an inspectable plan record with provenance, execution status, rollback inputs where available, and deterministic IDs.
+- Repository-local policies may block generation unless an explicit visible override is allowed by the current policy model.
+- Marketplace pack requirements and entitlement state are surfaced during planning and revalidated before replay/apply mutations.
+
 ## Current State
 
 - `foundry generate` already plans work from the current explain-derived model using explicit `new`, `modify`, and `repair` modes with deterministic target resolution.
