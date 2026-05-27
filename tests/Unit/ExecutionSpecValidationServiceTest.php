@@ -803,6 +803,44 @@ MD,
         $this->assertSame([], $result['violations']);
     }
 
+    public function test_validate_treats_precanonical_module_specs_as_archive_lineage(): void
+    {
+        $this->writeRawFile(
+            'Modules/PreCanonical/specs/001-first.md',
+            "# Execution Spec: 001-first\n\nstatus: historical\n",
+        );
+        $this->writeRawFile(
+            'Modules/PreCanonical/plans/001-first.md',
+            "# Implementation Plan: 001-first\n\nstatus: historical\n",
+        );
+        $this->writeRawFile(
+            'Modules/PreCanonical/specs/003-third.md',
+            "# Execution Spec: 003-third\n\nstatus: historical\n",
+        );
+        $this->writeRawFile(
+            'Modules/PreCanonical/plans/003-third.md',
+            "# Implementation Plan: 003-third\n\nstatus: historical\n",
+        );
+        $this->writeRawFile(
+            'Modules/PreCanonical/pre-canonical.md',
+            "# Feature: pre-canonical\n\n## Decision Summary\n\nRefreshed Through Spec: `003-third`\n",
+        );
+        $this->writeRawFile(
+            'Modules/implementation.log',
+            "## PreCanonical historical import: 001-first\n- spec: Modules/PreCanonical/specs/001-first.md\n\n## PreCanonical historical import: 003-third\n- spec: Modules/PreCanonical/specs/003-third.md\n",
+        );
+
+        $result = $this->service()->validate();
+
+        $this->assertTrue($result['ok']);
+        $this->assertSame(
+            ['checked_files' => 4, 'features' => 1, 'violations' => 0, 'warnings' => 0],
+            $result['summary'],
+        );
+        $this->assertSame([], $result['violations']);
+        $this->assertSame([], $result['warnings']);
+    }
+
     private function service(): ExecutionSpecValidationService
     {
         return new ExecutionSpecValidationService(new Paths($this->project->root));

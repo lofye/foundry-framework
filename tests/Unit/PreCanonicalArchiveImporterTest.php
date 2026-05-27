@@ -193,6 +193,12 @@ final class PreCanonicalArchiveImporterTest extends TestCase
             fn() => $this->importer()->import('missing-name.md', 'PreCanonical', false, false),
         );
 
+        $this->writeFile('empty-name.md', "S@@@@@@@@@@@@@@@@\nNAME:   \nSpec without name.\n");
+        $this->assertFoundryError(
+            'PRECANONICAL_ARCHIVE_BLOCK_NAME_MISSING',
+            fn() => $this->importer()->import('empty-name.md', 'PreCanonical', false, false),
+        );
+
         $this->writeFile('bad-id.md', "S@@@@@@@@@@@@@@@@\nNAME: Alpha — No numeric legacy id\nBody.\n");
         $this->assertFoundryError(
             'PRECANONICAL_ARCHIVE_LEGACY_ID_INVALID',
@@ -210,9 +216,22 @@ final class PreCanonicalArchiveImporterTest extends TestCase
             fn() => $this->importer()->import('archive.md', 'PreCanonical', true, false),
         );
 
+        $dryRun = $this->importer()->import('archive.md', 'PreCanonical', false, true);
+        $this->assertSame('would_replace', $dryRun['artifacts'][0]['action']);
+
         $payload = $this->importer()->import('archive.md', 'PreCanonical', true, true);
         $this->assertSame(1, $payload['summary']['replaced']);
         $this->assertStringContainsString('## Original Pre-Canonical Spec', (string) file_get_contents($this->project->root . '/Modules/PreCanonical/specs/001-first-spec.md'));
+    }
+
+    public function test_fails_for_invalid_target_module_name(): void
+    {
+        $this->writeFile('archive.md', "S@@@@@@@@@@@@@@@@\nNAME: 1 — First Spec\nSpec.\n");
+
+        $this->assertFoundryError(
+            'PRECANONICAL_ARCHIVE_TARGET_MODULE_INVALID',
+            fn() => $this->importer()->import('archive.md', 'pre-canonical', false, false),
+        );
     }
 
     private function importer(): PreCanonicalArchiveImporter

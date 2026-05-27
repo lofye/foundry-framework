@@ -1,0 +1,1832 @@
+{
+    "status": "ok",
+    "apply": true,
+    "dry_run": false,
+    "force": true,
+    "source_path": "_import/pre-canonical-specs.md",
+    "target_module": "PreCanonical",
+    "summary": {
+        "spec_blocks": 85,
+        "result_blocks": 85,
+        "preamble_blocks": 67,
+        "paired_result_blocks": 85,
+        "associated_preamble_blocks": 67,
+        "global_preamble_blocks": 0,
+        "orphan_result_blocks": 0,
+        "duplicate_spec_names": 0,
+        "canonical_id_collisions": 0,
+        "conflicts": 0,
+        "artifacts": 174,
+        "written": 2,
+        "replaced": 2
+    },
+    "specs": [
+        {
+            "legacy_name": "0A \u2014 Foundational Compiler Layer",
+            "normalized_name": "0a - foundational compiler layer",
+            "legacy_id": "0A",
+            "canonical_id": "000.001",
+            "slug": "foundational-compiler-layer",
+            "spec_path": "Modules/PreCanonical/specs/000.001-foundational-compiler-layer.md",
+            "plan_path": "Modules/PreCanonical/plans/000.001-foundational-compiler-layer.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "0B - Extensions, Packs, Spec Migrations, Codemods, and Versioning Strategy",
+            "normalized_name": "0b - extensions, packs, spec migrations, codemods, and versioning strategy",
+            "legacy_id": "0B",
+            "canonical_id": "000.002",
+            "slug": "extensions-packs-spec-migrations-codemods-and-versioning-strategy",
+            "spec_path": "Modules/PreCanonical/specs/000.002-extensions-packs-spec-migrations-codemods-and-versioning-strategy.md",
+            "plan_path": "Modules/PreCanonical/plans/000.002-extensions-packs-spec-migrations-codemods-and-versioning-strategy.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "0C - Architecture Diagnostics, Visualization, and LLM-assisted Code Generation",
+            "normalized_name": "0c - architecture diagnostics, visualization, and llm-assisted code generation",
+            "legacy_id": "0C",
+            "canonical_id": "000.003",
+            "slug": "architecture-diagnostics-visualization-and-llm-assisted-code-generation",
+            "spec_path": "Modules/PreCanonical/specs/000.003-architecture-diagnostics-visualization-and-llm-assisted-code-generation.md",
+            "plan_path": "Modules/PreCanonical/plans/000.003-architecture-diagnostics-visualization-and-llm-assisted-code-generation.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "0D - Request/Execution Pipeline, Feature Guards, and Interceptors",
+            "normalized_name": "0d - request/execution pipeline, feature guards, and interceptors",
+            "legacy_id": "0D",
+            "canonical_id": "000.004",
+            "slug": "request-execution-pipeline-feature-guards-and-interceptors",
+            "spec_path": "Modules/PreCanonical/specs/000.004-request-execution-pipeline-feature-guards-and-interceptors.md",
+            "plan_path": "Modules/PreCanonical/plans/000.004-request-execution-pipeline-feature-guards-and-interceptors.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "1 - Roadmap Phase 1 - Foundation",
+            "normalized_name": "1 - roadmap phase 1 - foundation",
+            "legacy_id": "1",
+            "canonical_id": "001",
+            "slug": "roadmap-phase-1-foundation",
+            "spec_path": "Modules/PreCanonical/specs/001-roadmap-phase-1-foundation.md",
+            "plan_path": "Modules/PreCanonical/plans/001-roadmap-phase-1-foundation.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "2 - Roadmap Phase 2 - Basic Features",
+            "normalized_name": "2 - roadmap phase 2 - basic features",
+            "legacy_id": "2",
+            "canonical_id": "002",
+            "slug": "roadmap-phase-2-basic-features",
+            "spec_path": "Modules/PreCanonical/specs/002-roadmap-phase-2-basic-features.md",
+            "plan_path": "Modules/PreCanonical/plans/002-roadmap-phase-2-basic-features.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "3 - Roadmap Phase 3 - Billing, Workflows, Orchestration, Search, Localization, Roles, Inspect",
+            "normalized_name": "3 - roadmap phase 3 - billing, workflows, orchestration, search, localization, roles, inspect",
+            "legacy_id": "3",
+            "canonical_id": "003",
+            "slug": "roadmap-phase-3-billing-workflows-orchestration-search-localization-roles-inspect",
+            "spec_path": "Modules/PreCanonical/specs/003-roadmap-phase-3-billing-workflows-orchestration-search-localization-roles-inspect.md",
+            "plan_path": "Modules/PreCanonical/plans/003-roadmap-phase-3-billing-workflows-orchestration-search-localization-roles-inspect.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4 - Roadmap Phase 4 - Documentation System and Website Integration (WR)",
+            "normalized_name": "4 - roadmap phase 4 - documentation system and website integration (wr)",
+            "legacy_id": "4",
+            "canonical_id": "004",
+            "slug": "roadmap-phase-4-documentation-system-and-website-integration-wr",
+            "spec_path": "Modules/PreCanonical/specs/004-roadmap-phase-4-documentation-system-and-website-integration-wr.md",
+            "plan_path": "Modules/PreCanonical/plans/004-roadmap-phase-4-documentation-system-and-website-integration-wr.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4A - Documentation Publishing and Versioned Docs Normalization",
+            "normalized_name": "4a - documentation publishing and versioned docs normalization",
+            "legacy_id": "4A",
+            "canonical_id": "004.001",
+            "slug": "documentation-publishing-and-versioned-docs-normalization",
+            "spec_path": "Modules/PreCanonical/specs/004.001-documentation-publishing-and-versioned-docs-normalization.md",
+            "plan_path": "Modules/PreCanonical/plans/004.001-documentation-publishing-and-versioned-docs-normalization.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "4B - Homepage Version Display, Docs Version Switcher, and Auto-Generated Sidebar Navigation",
+            "normalized_name": "4b - homepage version display, docs version switcher, and auto-generated sidebar navigation",
+            "legacy_id": "4B",
+            "canonical_id": "004.002",
+            "slug": "homepage-version-display-docs-version-switcher-and-auto-generated-sidebar-navigation",
+            "spec_path": "Modules/PreCanonical/specs/004.002-homepage-version-display-docs-version-switcher-and-auto-generated-sidebar-navigation.md",
+            "plan_path": "Modules/PreCanonical/plans/004.002-homepage-version-display-docs-version-switcher-and-auto-generated-sidebar-navigation.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4C - Immutable Versioned Docs + LLM Context Bundles",
+            "normalized_name": "4c - immutable versioned docs + llm context bundles",
+            "legacy_id": "4C",
+            "canonical_id": "004.003",
+            "slug": "immutable-versioned-docs-llm-context-bundles",
+            "spec_path": "Modules/PreCanonical/specs/004.003-immutable-versioned-docs-llm-context-bundles.md",
+            "plan_path": "Modules/PreCanonical/plans/004.003-immutable-versioned-docs-llm-context-bundles.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4D - Restore Premium Visual Design Across the Generated Docs Site",
+            "normalized_name": "4d - restore premium visual design across the generated docs site",
+            "legacy_id": "4D",
+            "canonical_id": "004.004",
+            "slug": "restore-premium-visual-design-across-the-generated-docs-site",
+            "spec_path": "Modules/PreCanonical/specs/004.004-restore-premium-visual-design-across-the-generated-docs-site.md",
+            "plan_path": "Modules/PreCanonical/plans/004.004-restore-premium-visual-design-across-the-generated-docs-site.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4E - Docs Search and LLM-Aware Docs Actions",
+            "normalized_name": "4e - docs search and llm-aware docs actions",
+            "legacy_id": "4E",
+            "canonical_id": "004.005",
+            "slug": "docs-search-and-llm-aware-docs-actions",
+            "spec_path": "Modules/PreCanonical/specs/004.005-docs-search-and-llm-aware-docs-actions.md",
+            "plan_path": "Modules/PreCanonical/plans/004.005-docs-search-and-llm-aware-docs-actions.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4F - Mobile Navigation System",
+            "normalized_name": "4f - mobile navigation system",
+            "legacy_id": "4F",
+            "canonical_id": "004.006",
+            "slug": "mobile-navigation-system",
+            "spec_path": "Modules/PreCanonical/specs/004.006-mobile-navigation-system.md",
+            "plan_path": "Modules/PreCanonical/plans/004.006-mobile-navigation-system.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4G - Ask the Docs (LLM-Integrated Documentation Assistance)",
+            "normalized_name": "4g - ask the docs (llm-integrated documentation assistance)",
+            "legacy_id": "4G",
+            "canonical_id": "004.007",
+            "slug": "ask-the-docs-llm-integrated-documentation-assistance",
+            "spec_path": "Modules/PreCanonical/specs/004.007-ask-the-docs-llm-integrated-documentation-assistance.md",
+            "plan_path": "Modules/PreCanonical/plans/004.007-ask-the-docs-llm-integrated-documentation-assistance.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4H - Brand and Visual Identity Restoration",
+            "normalized_name": "4h - brand and visual identity restoration",
+            "legacy_id": "4H",
+            "canonical_id": "004.008",
+            "slug": "brand-and-visual-identity-restoration",
+            "spec_path": "Modules/PreCanonical/specs/004.008-brand-and-visual-identity-restoration.md",
+            "plan_path": "Modules/PreCanonical/plans/004.008-brand-and-visual-identity-restoration.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4I - Live Architecture Explorer",
+            "normalized_name": "4i - live architecture explorer",
+            "legacy_id": "4I",
+            "canonical_id": "004.009",
+            "slug": "live-architecture-explorer",
+            "spec_path": "Modules/PreCanonical/specs/004.009-live-architecture-explorer.md",
+            "plan_path": "Modules/PreCanonical/plans/004.009-live-architecture-explorer.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4J1 - Remove Public-Facing Phase/Spec References from the Framework Repo (FR)",
+            "normalized_name": "4j1 - remove public-facing phase/spec references from the framework repo (fr)",
+            "legacy_id": "4J1",
+            "canonical_id": "004.010.001",
+            "slug": "remove-public-facing-phase-spec-references-from-the-framework-repo-fr",
+            "spec_path": "Modules/PreCanonical/specs/004.010.001-remove-public-facing-phase-spec-references-from-the-framework-repo-fr.md",
+            "plan_path": "Modules/PreCanonical/plans/004.010.001-remove-public-facing-phase-spec-references-from-the-framework-repo-fr.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4J2 - Remove Public-Facing Phase/Spec References from the Website Repo (WR)",
+            "normalized_name": "4j2 - remove public-facing phase/spec references from the website repo (wr)",
+            "legacy_id": "4J2",
+            "canonical_id": "004.010.002",
+            "slug": "remove-public-facing-phase-spec-references-from-the-website-repo-wr",
+            "spec_path": "Modules/PreCanonical/specs/004.010.002-remove-public-facing-phase-spec-references-from-the-website-repo-wr.md",
+            "plan_path": "Modules/PreCanonical/plans/004.010.002-remove-public-facing-phase-spec-references-from-the-website-repo-wr.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4K1 - Remove All Phase/Spec References from the Framework Repository (FR)",
+            "normalized_name": "4k1 - remove all phase/spec references from the framework repository (fr)",
+            "legacy_id": "4K1",
+            "canonical_id": "004.011.001",
+            "slug": "remove-all-phase-spec-references-from-the-framework-repository-fr",
+            "spec_path": "Modules/PreCanonical/specs/004.011.001-remove-all-phase-spec-references-from-the-framework-repository-fr.md",
+            "plan_path": "Modules/PreCanonical/plans/004.011.001-remove-all-phase-spec-references-from-the-framework-repository-fr.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4K2 - Remove All Phase/Spec References from the Website Repository (WR)",
+            "normalized_name": "4k2 - remove all phase/spec references from the website repository (wr)",
+            "legacy_id": "4K2",
+            "canonical_id": "004.011.002",
+            "slug": "remove-all-phase-spec-references-from-the-website-repository-wr",
+            "spec_path": "Modules/PreCanonical/specs/004.011.002-remove-all-phase-spec-references-from-the-website-repository-wr.md",
+            "plan_path": "Modules/PreCanonical/plans/004.011.002-remove-all-phase-spec-references-from-the-website-repository-wr.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4L - Restore Approved Visual Design from Recovered Reference Files",
+            "normalized_name": "4l - restore approved visual design from recovered reference files",
+            "legacy_id": "4L",
+            "canonical_id": "004.012",
+            "slug": "restore-approved-visual-design-from-recovered-reference-files",
+            "spec_path": "Modules/PreCanonical/specs/004.012-restore-approved-visual-design-from-recovered-reference-files.md",
+            "plan_path": "Modules/PreCanonical/plans/004.012-restore-approved-visual-design-from-recovered-reference-files.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "4M - Convert Flagship Narrative Pages to Custom HTML and Remove Homepage Section Generation",
+            "normalized_name": "4m - convert flagship narrative pages to custom html and remove homepage section generation",
+            "legacy_id": "4M",
+            "canonical_id": "004.013",
+            "slug": "convert-flagship-narrative-pages-to-custom-html-and-remove-homepage-section-generation",
+            "spec_path": "Modules/PreCanonical/specs/004.013-convert-flagship-narrative-pages-to-custom-html-and-remove-homepage-section-generation.md",
+            "plan_path": "Modules/PreCanonical/plans/004.013-convert-flagship-narrative-pages-to-custom-html-and-remove-homepage-section-generation.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "5A - Testing System Modernization for the Foundry Website Repository (WR)",
+            "normalized_name": "5a - testing system modernization for the foundry website repository (wr)",
+            "legacy_id": "5A",
+            "canonical_id": "005.001",
+            "slug": "testing-system-modernization-for-the-foundry-website-repository-wr",
+            "spec_path": "Modules/PreCanonical/specs/005.001-testing-system-modernization-for-the-foundry-website-repository-wr.md",
+            "plan_path": "Modules/PreCanonical/plans/005.001-testing-system-modernization-for-the-foundry-website-repository-wr.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "5B - Testing System Modernization for the Foundry Website Repository (WR)",
+            "normalized_name": "5b - testing system modernization for the foundry website repository (wr)",
+            "legacy_id": "5B",
+            "canonical_id": "005.002",
+            "slug": "testing-system-modernization-for-the-foundry-website-repository-wr",
+            "spec_path": "Modules/PreCanonical/specs/005.002-testing-system-modernization-for-the-foundry-website-repository-wr.md",
+            "plan_path": "Modules/PreCanonical/plans/005.002-testing-system-modernization-for-the-foundry-website-repository-wr.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "6 - Add tag-triggered GitHub Actions deployment to Cloudways",
+            "normalized_name": "6 - add tag-triggered github actions deployment to cloudways",
+            "legacy_id": "6",
+            "canonical_id": "006",
+            "slug": "add-tag-triggered-github-actions-deployment-to-cloudways",
+            "spec_path": "Modules/PreCanonical/specs/006-add-tag-triggered-github-actions-deployment-to-cloudways.md",
+            "plan_path": "Modules/PreCanonical/plans/006-add-tag-triggered-github-actions-deployment-to-cloudways.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "7 - Stable Public API Definition",
+            "normalized_name": "7 - stable public api definition",
+            "legacy_id": "7",
+            "canonical_id": "007",
+            "slug": "stable-public-api-definition",
+            "spec_path": "Modules/PreCanonical/specs/007-stable-public-api-definition.md",
+            "plan_path": "Modules/PreCanonical/plans/007-stable-public-api-definition.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "8 \u2014 Extension System Stabilization",
+            "normalized_name": "8 - extension system stabilization",
+            "legacy_id": "8",
+            "canonical_id": "008",
+            "slug": "extension-system-stabilization",
+            "spec_path": "Modules/PreCanonical/specs/008-extension-system-stabilization.md",
+            "plan_path": "Modules/PreCanonical/plans/008-extension-system-stabilization.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "9 \u2014 Framework Doctor and Environment Diagnostics",
+            "normalized_name": "9 - framework doctor and environment diagnostics",
+            "legacy_id": "9",
+            "canonical_id": "009",
+            "slug": "framework-doctor-and-environment-diagnostics",
+            "spec_path": "Modules/PreCanonical/specs/009-framework-doctor-and-environment-diagnostics.md",
+            "plan_path": "Modules/PreCanonical/plans/009-framework-doctor-and-environment-diagnostics.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "10 \u2014 Project Scaffolding Generator",
+            "normalized_name": "10 - project scaffolding generator",
+            "legacy_id": "10",
+            "canonical_id": "010",
+            "slug": "project-scaffolding-generator",
+            "spec_path": "Modules/PreCanonical/specs/010-project-scaffolding-generator.md",
+            "plan_path": "Modules/PreCanonical/plans/010-project-scaffolding-generator.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "11 \u2014 Graph Visualization CLI and Export System",
+            "normalized_name": "11 - graph visualization cli and export system",
+            "legacy_id": "11",
+            "canonical_id": "011",
+            "slug": "graph-visualization-cli-and-export-system",
+            "spec_path": "Modules/PreCanonical/specs/011-graph-visualization-cli-and-export-system.md",
+            "plan_path": "Modules/PreCanonical/plans/011-graph-visualization-cli-and-export-system.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "12 \u2014 Configuration Schema Validation",
+            "normalized_name": "12 - configuration schema validation",
+            "legacy_id": "12",
+            "canonical_id": "012",
+            "slug": "configuration-schema-validation",
+            "spec_path": "Modules/PreCanonical/specs/012-configuration-schema-validation.md",
+            "plan_path": "Modules/PreCanonical/plans/012-configuration-schema-validation.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "13 \u2014 Upgrade Safety Tools",
+            "normalized_name": "13 - upgrade safety tools",
+            "legacy_id": "13",
+            "canonical_id": "013",
+            "slug": "upgrade-safety-tools",
+            "spec_path": "Modules/PreCanonical/specs/013-upgrade-safety-tools.md",
+            "plan_path": "Modules/PreCanonical/plans/013-upgrade-safety-tools.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "14 \u2014 Deterministic Compile Cache",
+            "normalized_name": "14 - deterministic compile cache",
+            "legacy_id": "14",
+            "canonical_id": "014",
+            "slug": "deterministic-compile-cache",
+            "spec_path": "Modules/PreCanonical/specs/014-deterministic-compile-cache.md",
+            "plan_path": "Modules/PreCanonical/plans/014-deterministic-compile-cache.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "15 \u2014 Official Example Applications",
+            "normalized_name": "15 - official example applications",
+            "legacy_id": "15",
+            "canonical_id": "015",
+            "slug": "official-example-applications",
+            "spec_path": "Modules/PreCanonical/specs/015-official-example-applications.md",
+            "plan_path": "Modules/PreCanonical/plans/015-official-example-applications.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "16 \u2014 Foundry Pro (CLI + Licensing Layer)",
+            "normalized_name": "16 - foundry pro (cli + licensing layer)",
+            "legacy_id": "16",
+            "canonical_id": "016",
+            "slug": "foundry-pro-cli-licensing-layer",
+            "spec_path": "Modules/PreCanonical/specs/016-foundry-pro-cli-licensing-layer.md",
+            "plan_path": "Modules/PreCanonical/plans/016-foundry-pro-cli-licensing-layer.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "17 \u2014 AI-Assisted Development Layer",
+            "normalized_name": "17 - ai-assisted development layer",
+            "legacy_id": "17",
+            "canonical_id": "017",
+            "slug": "ai-assisted-development-layer",
+            "spec_path": "Modules/PreCanonical/specs/017-ai-assisted-development-layer.md",
+            "plan_path": "Modules/PreCanonical/plans/017-ai-assisted-development-layer.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "18 \u2014 Documentation System (Site + Generation + Structure)",
+            "normalized_name": "18 - documentation system (site + generation + structure)",
+            "legacy_id": "18",
+            "canonical_id": "018",
+            "slug": "documentation-system-site-generation-structure",
+            "spec_path": "Modules/PreCanonical/specs/018-documentation-system-site-generation-structure.md",
+            "plan_path": "Modules/PreCanonical/plans/018-documentation-system-site-generation-structure.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19A - ARCHITECTURE FOR `foundry explain`",
+            "normalized_name": "19a - architecture for `foundry explain`",
+            "legacy_id": "19A",
+            "canonical_id": "019.001",
+            "slug": "architecture-for-foundry-explain",
+            "spec_path": "Modules/PreCanonical/specs/019.001-architecture-for-foundry-explain.md",
+            "plan_path": "Modules/PreCanonical/plans/019.001-architecture-for-foundry-explain.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19B - Implementation (how it works end-to-end)",
+            "normalized_name": "19b - implementation (how it works end-to-end)",
+            "legacy_id": "19B",
+            "canonical_id": "019.002",
+            "slug": "implementation-how-it-works-end-to-end",
+            "spec_path": "Modules/PreCanonical/specs/019.002-implementation-how-it-works-end-to-end.md",
+            "plan_path": "Modules/PreCanonical/plans/019.002-implementation-how-it-works-end-to-end.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19C - UX contract (what it feels like)",
+            "normalized_name": "19c - ux contract (what it feels like)",
+            "legacy_id": "19C",
+            "canonical_id": "019.003",
+            "slug": "ux-contract-what-it-feels-like",
+            "spec_path": "Modules/PreCanonical/specs/019.003-ux-contract-what-it-feels-like.md",
+            "plan_path": "Modules/PreCanonical/plans/019.003-ux-contract-what-it-feels-like.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19D - Foundation slice (safe starting point)",
+            "normalized_name": "19d - foundation slice (safe starting point)",
+            "legacy_id": "19D",
+            "canonical_id": "019.004",
+            "slug": "foundation-slice-safe-starting-point",
+            "spec_path": "Modules/PreCanonical/specs/019.004-foundation-slice-safe-starting-point.md",
+            "plan_path": "Modules/PreCanonical/plans/019.004-foundation-slice-safe-starting-point.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19E - Intelligence layer (collectors + analyzers)",
+            "normalized_name": "19e - intelligence layer (collectors + analyzers)",
+            "legacy_id": "19E",
+            "canonical_id": "019.005",
+            "slug": "intelligence-layer-collectors-analyzers",
+            "spec_path": "Modules/PreCanonical/specs/019.005-intelligence-layer-collectors-analyzers.md",
+            "plan_path": "Modules/PreCanonical/plans/019.005-intelligence-layer-collectors-analyzers.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19F - Final polish (rendering + contributors + docs)",
+            "normalized_name": "19f - final polish (rendering + contributors + docs)",
+            "legacy_id": "19F",
+            "canonical_id": "019.006",
+            "slug": "final-polish-rendering-contributors-docs",
+            "spec_path": "Modules/PreCanonical/specs/019.006-final-polish-rendering-contributors-docs.md",
+            "plan_path": "Modules/PreCanonical/plans/019.006-final-polish-rendering-contributors-docs.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19FB - Spec Freeze 1.0.0",
+            "normalized_name": "19fb - spec freeze 1.0.0",
+            "legacy_id": "19FB",
+            "canonical_id": "019.006.002",
+            "slug": "spec-freeze-1-0-0",
+            "spec_path": "Modules/PreCanonical/specs/019.006.002-spec-freeze-1-0-0.md",
+            "plan_path": "Modules/PreCanonical/plans/019.006.002-spec-freeze-1-0-0.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "19G - Thresholds v2",
+            "normalized_name": "19g - thresholds v2",
+            "legacy_id": "19G",
+            "canonical_id": "019.007",
+            "slug": "thresholds-v2",
+            "spec_path": "Modules/PreCanonical/specs/019.007-thresholds-v2.md",
+            "plan_path": "Modules/PreCanonical/plans/019.007-thresholds-v2.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19H \u2014 Local foundry Executable for Installed Apps",
+            "normalized_name": "19h - local foundry executable for installed apps",
+            "legacy_id": "19H",
+            "canonical_id": "019.008",
+            "slug": "local-foundry-executable-for-installed-apps",
+            "spec_path": "Modules/PreCanonical/specs/019.008-local-foundry-executable-for-installed-apps.md",
+            "plan_path": "Modules/PreCanonical/plans/019.008-local-foundry-executable-for-installed-apps.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19H2 \u2014 Normalize New-Project Bootstrap and App Layout",
+            "normalized_name": "19h2 - normalize new-project bootstrap and app layout",
+            "legacy_id": "19H2",
+            "canonical_id": "019.008.002",
+            "slug": "normalize-new-project-bootstrap-and-app-layout",
+            "spec_path": "Modules/PreCanonical/specs/019.008.002-normalize-new-project-bootstrap-and-app-layout.md",
+            "plan_path": "Modules/PreCanonical/plans/019.008.002-normalize-new-project-bootstrap-and-app-layout.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "19I \u2014 CLI Surface Integrity & Verification",
+            "normalized_name": "19i - cli surface integrity & verification",
+            "legacy_id": "19I",
+            "canonical_id": "019.009",
+            "slug": "cli-surface-integrity-verification",
+            "spec_path": "Modules/PreCanonical/specs/019.009-cli-surface-integrity-verification.md",
+            "plan_path": "Modules/PreCanonical/plans/019.009-cli-surface-integrity-verification.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19J \u2014 Tooling, Observability, and Enforcement Layer",
+            "normalized_name": "19j - tooling, observability, and enforcement layer",
+            "legacy_id": "19J",
+            "canonical_id": "019.010",
+            "slug": "tooling-observability-and-enforcement-layer",
+            "spec_path": "Modules/PreCanonical/specs/019.010-tooling-observability-and-enforcement-layer.md",
+            "plan_path": "Modules/PreCanonical/plans/019.010-tooling-observability-and-enforcement-layer.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19K \u2014 Canonical Graph Specification & Integrity Upgrade",
+            "normalized_name": "19k - canonical graph specification & integrity upgrade",
+            "legacy_id": "19K",
+            "canonical_id": "019.011",
+            "slug": "canonical-graph-specification-integrity-upgrade",
+            "spec_path": "Modules/PreCanonical/specs/019.011-canonical-graph-specification-integrity-upgrade.md",
+            "plan_path": "Modules/PreCanonical/plans/019.011-canonical-graph-specification-integrity-upgrade.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19L - Docs Sync, Source of Truth, and Layout Fix",
+            "normalized_name": "19l - docs sync, source of truth, and layout fix",
+            "legacy_id": "19L",
+            "canonical_id": "019.012",
+            "slug": "docs-sync-source-of-truth-and-layout-fix",
+            "spec_path": "Modules/PreCanonical/specs/019.012-docs-sync-source-of-truth-and-layout-fix.md",
+            "plan_path": "Modules/PreCanonical/plans/019.012-docs-sync-source-of-truth-and-layout-fix.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19M - Docs Usage Audit Script (Read-Only, No Build Changes Yet)",
+            "normalized_name": "19m - docs usage audit script (read-only, no build changes yet)",
+            "legacy_id": "19M",
+            "canonical_id": "019.013",
+            "slug": "docs-usage-audit-script-read-only-no-build-changes-yet",
+            "spec_path": "Modules/PreCanonical/specs/019.013-docs-usage-audit-script-read-only-no-build-changes-yet.md",
+            "plan_path": "Modules/PreCanonical/plans/019.013-docs-usage-audit-script-read-only-no-build-changes-yet.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19N WS - Docs Pipeline Cleanup and Formalization",
+            "normalized_name": "19n ws - docs pipeline cleanup and formalization",
+            "legacy_id": "19N",
+            "canonical_id": "019.014",
+            "slug": "ws-docs-pipeline-cleanup-and-formalization",
+            "spec_path": "Modules/PreCanonical/specs/019.014-ws-docs-pipeline-cleanup-and-formalization.md",
+            "plan_path": "Modules/PreCanonical/plans/019.014-ws-docs-pipeline-cleanup-and-formalization.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19O1 \u2014 Create Slug Ownership Map ONLY (WS)",
+            "normalized_name": "19o1 - create slug ownership map only (ws)",
+            "legacy_id": "19O1",
+            "canonical_id": "019.015.001",
+            "slug": "create-slug-ownership-map-only-ws",
+            "spec_path": "Modules/PreCanonical/specs/019.015.001-create-slug-ownership-map-only-ws.md",
+            "plan_path": "Modules/PreCanonical/plans/019.015.001-create-slug-ownership-map-only-ws.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "19O2 \u2014 Post-Move Docs Integration After Framework Ownership Changes (linker) (WS)",
+            "normalized_name": "19o2 - post-move docs integration after framework ownership changes (linker) (ws)",
+            "legacy_id": "19O2",
+            "canonical_id": "019.015.002",
+            "slug": "post-move-docs-integration-after-framework-ownership-changes-linker-ws",
+            "spec_path": "Modules/PreCanonical/specs/019.015.002-post-move-docs-integration-after-framework-ownership-changes-linker-ws.md",
+            "plan_path": "Modules/PreCanonical/plans/019.015.002-post-move-docs-integration-after-framework-ownership-changes-linker-ws.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "19P-B \u2014 Slug Resolution + Enforcement Pass (WS)",
+            "normalized_name": "19p-b - slug resolution + enforcement pass (ws)",
+            "legacy_id": "19P",
+            "canonical_id": "019.016",
+            "slug": "b-slug-resolution-enforcement-pass-ws",
+            "spec_path": "Modules/PreCanonical/specs/019.016-b-slug-resolution-enforcement-pass-ws.md",
+            "plan_path": "Modules/PreCanonical/plans/019.016-b-slug-resolution-enforcement-pass-ws.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "19Q \u2014 Framework Docs Pipeline Deprecation and Cleanup",
+            "normalized_name": "19q - framework docs pipeline deprecation and cleanup",
+            "legacy_id": "19Q",
+            "canonical_id": "019.017",
+            "slug": "framework-docs-pipeline-deprecation-and-cleanup",
+            "spec_path": "Modules/PreCanonical/specs/019.017-framework-docs-pipeline-deprecation-and-cleanup.md",
+            "plan_path": "Modules/PreCanonical/plans/019.017-framework-docs-pipeline-deprecation-and-cleanup.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "20 \u2014 Interactive Architecture Explorer",
+            "normalized_name": "20 - interactive architecture explorer",
+            "legacy_id": "20",
+            "canonical_id": "020",
+            "slug": "interactive-architecture-explorer",
+            "spec_path": "Modules/PreCanonical/specs/020-interactive-architecture-explorer.md",
+            "plan_path": "Modules/PreCanonical/plans/020-interactive-architecture-explorer.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "21 \u2014 Command Playground",
+            "normalized_name": "21 - command playground",
+            "legacy_id": "21",
+            "canonical_id": "021",
+            "slug": "command-playground",
+            "spec_path": "Modules/PreCanonical/specs/021-command-playground.md",
+            "plan_path": "Modules/PreCanonical/plans/021-command-playground.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "22 \u2014 Guided Learning Paths",
+            "normalized_name": "22 - guided learning paths",
+            "legacy_id": "22",
+            "canonical_id": "022",
+            "slug": "guided-learning-paths",
+            "spec_path": "Modules/PreCanonical/specs/022-guided-learning-paths.md",
+            "plan_path": "Modules/PreCanonical/plans/022-guided-learning-paths.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "23 \u2014 Interactive CLI Index",
+            "normalized_name": "23 - interactive cli index",
+            "legacy_id": "23",
+            "canonical_id": "023",
+            "slug": "interactive-cli-index",
+            "spec_path": "Modules/PreCanonical/specs/023-interactive-cli-index.md",
+            "plan_path": "Modules/PreCanonical/plans/023-interactive-cli-index.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "24 \u2014 Contributor Portal",
+            "normalized_name": "24 - contributor portal",
+            "legacy_id": "24",
+            "canonical_id": "024",
+            "slug": "contributor-portal",
+            "spec_path": "Modules/PreCanonical/specs/024-contributor-portal.md",
+            "plan_path": "Modules/PreCanonical/plans/024-contributor-portal.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "25A \u2014 Framework Examples Alignment",
+            "normalized_name": "25a - framework examples alignment",
+            "legacy_id": "25A",
+            "canonical_id": "025.001",
+            "slug": "framework-examples-alignment",
+            "spec_path": "Modules/PreCanonical/specs/025.001-framework-examples-alignment.md",
+            "plan_path": "Modules/PreCanonical/plans/025.001-framework-examples-alignment.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "25B \u2014 Thresholds Alignment",
+            "normalized_name": "25b - thresholds alignment",
+            "legacy_id": "25B",
+            "canonical_id": "025.002",
+            "slug": "thresholds-alignment",
+            "spec_path": "Modules/PreCanonical/specs/025.002-thresholds-alignment.md",
+            "plan_path": "Modules/PreCanonical/plans/025.002-thresholds-alignment.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "26 - Storage Surface Cleanup \u2014 Remove Unfinished Object Storage Support",
+            "normalized_name": "26 - storage surface cleanup - remove unfinished object storage support",
+            "legacy_id": "26",
+            "canonical_id": "026",
+            "slug": "storage-surface-cleanup-remove-unfinished-object-storage-support",
+            "spec_path": "Modules/PreCanonical/specs/026-storage-surface-cleanup-remove-unfinished-object-storage-support.md",
+            "plan_path": "Modules/PreCanonical/plans/026-storage-surface-cleanup-remove-unfinished-object-storage-support.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "27 - Examples Taxonomy Cleanup",
+            "normalized_name": "27 - examples taxonomy cleanup",
+            "legacy_id": "27",
+            "canonical_id": "027",
+            "slug": "examples-taxonomy-cleanup",
+            "spec_path": "Modules/PreCanonical/specs/027-examples-taxonomy-cleanup.md",
+            "plan_path": "Modules/PreCanonical/plans/027-examples-taxonomy-cleanup.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "28-WS - Framework Internals Reference from framework/src/",
+            "normalized_name": "28-ws - framework internals reference from framework/src/",
+            "legacy_id": "28",
+            "canonical_id": "028",
+            "slug": "ws-framework-internals-reference-from-framework-src",
+            "spec_path": "Modules/PreCanonical/specs/028-ws-framework-internals-reference-from-framework-src.md",
+            "plan_path": "Modules/PreCanonical/plans/028-ws-framework-internals-reference-from-framework-src.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "29 - Release Readiness Reconciliation Pass",
+            "normalized_name": "29 - release readiness reconciliation pass",
+            "legacy_id": "29",
+            "canonical_id": "029",
+            "slug": "release-readiness-reconciliation-pass",
+            "spec_path": "Modules/PreCanonical/specs/029-release-readiness-reconciliation-pass.md",
+            "plan_path": "Modules/PreCanonical/plans/029-release-readiness-reconciliation-pass.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "30 \u2014 Monetization System Integration",
+            "normalized_name": "30 - monetization system integration",
+            "legacy_id": "30",
+            "canonical_id": "030",
+            "slug": "monetization-system-integration",
+            "spec_path": "Modules/PreCanonical/specs/030-monetization-system-integration.md",
+            "plan_path": "Modules/PreCanonical/plans/030-monetization-system-integration.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "30B \u2014 Monetization Simplification & Terminology Standardization",
+            "normalized_name": "30b - monetization simplification & terminology standardization",
+            "legacy_id": "30B",
+            "canonical_id": "030.002",
+            "slug": "monetization-simplification-terminology-standardization",
+            "spec_path": "Modules/PreCanonical/specs/030.002-monetization-simplification-terminology-standardization.md",
+            "plan_path": "Modules/PreCanonical/plans/030.002-monetization-simplification-terminology-standardization.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "30C \u2014 Monetization UX & Product Layer (Framework)",
+            "normalized_name": "30c - monetization ux & product layer (framework)",
+            "legacy_id": "30C",
+            "canonical_id": "030.003",
+            "slug": "monetization-ux-product-layer-framework",
+            "spec_path": "Modules/PreCanonical/specs/030.003-monetization-ux-product-layer-framework.md",
+            "plan_path": "Modules/PreCanonical/plans/030.003-monetization-ux-product-layer-framework.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "30C2 \u2014 Monetization UX & Product Layer (Website, LLM-First Positioning) (WS)",
+            "normalized_name": "30c2 - monetization ux & product layer (website, llm-first positioning) (ws)",
+            "legacy_id": "30C2",
+            "canonical_id": "030.003.002",
+            "slug": "monetization-ux-product-layer-website-llm-first-positioning-ws",
+            "spec_path": "Modules/PreCanonical/specs/030.003.002-monetization-ux-product-layer-website-llm-first-positioning-ws.md",
+            "plan_path": "Modules/PreCanonical/plans/030.003.002-monetization-ux-product-layer-website-llm-first-positioning-ws.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "30C3 \u2014 Monetization Realignment (Framework)",
+            "normalized_name": "30c3 - monetization realignment (framework)",
+            "legacy_id": "30C3",
+            "canonical_id": "030.003.003",
+            "slug": "monetization-realignment-framework",
+            "spec_path": "Modules/PreCanonical/specs/030.003.003-monetization-realignment-framework.md",
+            "plan_path": "Modules/PreCanonical/plans/030.003.003-monetization-realignment-framework.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "30C3B \u2014 Website Realignment (WS)",
+            "normalized_name": "30c3b - website realignment (ws)",
+            "legacy_id": "30C3B",
+            "canonical_id": "030.003.003.002",
+            "slug": "website-realignment-ws",
+            "spec_path": "Modules/PreCanonical/specs/030.003.003.002-website-realignment-ws.md",
+            "plan_path": "Modules/PreCanonical/plans/030.003.003.002-website-realignment-ws.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "30D \u2014 First-Run Experience (Zero \u2192 Value in 60 Seconds)",
+            "normalized_name": "30d - first-run experience (zero \u2192 value in 60 seconds)",
+            "legacy_id": "30D",
+            "canonical_id": "030.004",
+            "slug": "first-run-experience-zero-value-in-60-seconds",
+            "spec_path": "Modules/PreCanonical/specs/030.004-first-run-experience-zero-value-in-60-seconds.md",
+            "plan_path": "Modules/PreCanonical/plans/030.004-first-run-experience-zero-value-in-60-seconds.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "30D-2 \u2014 First-Run Experience Cleanup and Truthfulness Pass",
+            "normalized_name": "30d-2 - first-run experience cleanup and truthfulness pass",
+            "legacy_id": "30D-2",
+            "canonical_id": "030.004.002",
+            "slug": "first-run-experience-cleanup-and-truthfulness-pass",
+            "spec_path": "Modules/PreCanonical/specs/030.004.002-first-run-experience-cleanup-and-truthfulness-pass.md",
+            "plan_path": "Modules/PreCanonical/plans/030.004.002-first-run-experience-cleanup-and-truthfulness-pass.md",
+            "result_blocks": 1,
+            "preamble_blocks": 0
+        },
+        {
+            "legacy_name": "30E \u2014 Explain \u21c4 Generate Feedback Loop (Tight Iteration UX)",
+            "normalized_name": "30e - explain \u21c4 generate feedback loop (tight iteration ux)",
+            "legacy_id": "30E",
+            "canonical_id": "030.005",
+            "slug": "explain-generate-feedback-loop-tight-iteration-ux",
+            "spec_path": "Modules/PreCanonical/specs/030.005-explain-generate-feedback-loop-tight-iteration-ux.md",
+            "plan_path": "Modules/PreCanonical/plans/030.005-explain-generate-feedback-loop-tight-iteration-ux.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "30F \u2014 Confidence Scoring for Explain, Generate, and Iteration",
+            "normalized_name": "30f - confidence scoring for explain, generate, and iteration",
+            "legacy_id": "30F",
+            "canonical_id": "030.006",
+            "slug": "confidence-scoring-for-explain-generate-and-iteration",
+            "spec_path": "Modules/PreCanonical/specs/030.006-confidence-scoring-for-explain-generate-and-iteration.md",
+            "plan_path": "Modules/PreCanonical/plans/030.006-confidence-scoring-for-explain-generate-and-iteration.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "30G \u2014 Git Integration for Explain, Generate, Plans, and Replay",
+            "normalized_name": "30g - git integration for explain, generate, plans, and replay",
+            "legacy_id": "30G",
+            "canonical_id": "030.007",
+            "slug": "git-integration-for-explain-generate-plans-and-replay",
+            "spec_path": "Modules/PreCanonical/specs/030.007-git-integration-for-explain-generate-plans-and-replay.md",
+            "plan_path": "Modules/PreCanonical/plans/030.007-git-integration-for-explain-generate-plans-and-replay.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "31 \u2014 Foundry Pack System Foundation",
+            "normalized_name": "31 - foundry pack system foundation",
+            "legacy_id": "31",
+            "canonical_id": "031",
+            "slug": "foundry-pack-system-foundation",
+            "spec_path": "Modules/PreCanonical/specs/031-foundry-pack-system-foundation.md",
+            "plan_path": "Modules/PreCanonical/plans/031-foundry-pack-system-foundation.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "32 \u2014 Hosted Pack Registry (aka read-only, public, no auth Marketplace)",
+            "normalized_name": "32 - hosted pack registry (aka read-only, public, no auth marketplace)",
+            "legacy_id": "32",
+            "canonical_id": "032",
+            "slug": "hosted-pack-registry-aka-read-only-public-no-auth-marketplace",
+            "spec_path": "Modules/PreCanonical/specs/032-hosted-pack-registry-aka-read-only-public-no-auth-marketplace.md",
+            "plan_path": "Modules/PreCanonical/plans/032-hosted-pack-registry-aka-read-only-public-no-auth-marketplace.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "33 \u2014 Explain System Hardening + Extension-Aware Architecture",
+            "normalized_name": "33 - explain system hardening + extension-aware architecture",
+            "legacy_id": "33",
+            "canonical_id": "033",
+            "slug": "explain-system-hardening-extension-aware-architecture",
+            "spec_path": "Modules/PreCanonical/specs/033-explain-system-hardening-extension-aware-architecture.md",
+            "plan_path": "Modules/PreCanonical/plans/033-explain-system-hardening-extension-aware-architecture.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "34 \u2014 Deterministic Pack System + Local/Remote Marketplace Integration",
+            "normalized_name": "34 - deterministic pack system + local/remote marketplace integration",
+            "legacy_id": "34",
+            "canonical_id": "034",
+            "slug": "deterministic-pack-system-local-remote-marketplace-integration",
+            "spec_path": "Modules/PreCanonical/specs/034-deterministic-pack-system-local-remote-marketplace-integration.md",
+            "plan_path": "Modules/PreCanonical/plans/034-deterministic-pack-system-local-remote-marketplace-integration.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        },
+        {
+            "legacy_name": "35 \u2014 Generate System (End-to-End, Explain-Driven, Pack-Aware)",
+            "normalized_name": "35 - generate system (end-to-end, explain-driven, pack-aware)",
+            "legacy_id": "35",
+            "canonical_id": "035",
+            "slug": "generate-system-end-to-end-explain-driven-pack-aware",
+            "spec_path": "Modules/PreCanonical/specs/035-generate-system-end-to-end-explain-driven-pack-aware.md",
+            "plan_path": "Modules/PreCanonical/plans/035-generate-system-end-to-end-explain-driven-pack-aware.md",
+            "result_blocks": 1,
+            "preamble_blocks": 1
+        }
+    ],
+    "artifacts": [
+        {
+            "path": "Modules/PreCanonical/specs/000.001-foundational-compiler-layer.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/000.001-foundational-compiler-layer.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/000.002-extensions-packs-spec-migrations-codemods-and-versioning-strategy.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/000.002-extensions-packs-spec-migrations-codemods-and-versioning-strategy.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/000.003-architecture-diagnostics-visualization-and-llm-assisted-code-generation.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/000.003-architecture-diagnostics-visualization-and-llm-assisted-code-generation.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/000.004-request-execution-pipeline-feature-guards-and-interceptors.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/000.004-request-execution-pipeline-feature-guards-and-interceptors.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/001-roadmap-phase-1-foundation.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/001-roadmap-phase-1-foundation.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/002-roadmap-phase-2-basic-features.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/002-roadmap-phase-2-basic-features.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/003-roadmap-phase-3-billing-workflows-orchestration-search-localization-roles-inspect.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/003-roadmap-phase-3-billing-workflows-orchestration-search-localization-roles-inspect.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004-roadmap-phase-4-documentation-system-and-website-integration-wr.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004-roadmap-phase-4-documentation-system-and-website-integration-wr.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.001-documentation-publishing-and-versioned-docs-normalization.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.001-documentation-publishing-and-versioned-docs-normalization.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.002-homepage-version-display-docs-version-switcher-and-auto-generated-sidebar-navigation.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.002-homepage-version-display-docs-version-switcher-and-auto-generated-sidebar-navigation.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.003-immutable-versioned-docs-llm-context-bundles.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.003-immutable-versioned-docs-llm-context-bundles.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.004-restore-premium-visual-design-across-the-generated-docs-site.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.004-restore-premium-visual-design-across-the-generated-docs-site.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.005-docs-search-and-llm-aware-docs-actions.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.005-docs-search-and-llm-aware-docs-actions.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.006-mobile-navigation-system.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.006-mobile-navigation-system.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.007-ask-the-docs-llm-integrated-documentation-assistance.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.007-ask-the-docs-llm-integrated-documentation-assistance.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.008-brand-and-visual-identity-restoration.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.008-brand-and-visual-identity-restoration.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.009-live-architecture-explorer.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.009-live-architecture-explorer.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.010.001-remove-public-facing-phase-spec-references-from-the-framework-repo-fr.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.010.001-remove-public-facing-phase-spec-references-from-the-framework-repo-fr.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.010.002-remove-public-facing-phase-spec-references-from-the-website-repo-wr.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.010.002-remove-public-facing-phase-spec-references-from-the-website-repo-wr.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.011.001-remove-all-phase-spec-references-from-the-framework-repository-fr.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.011.001-remove-all-phase-spec-references-from-the-framework-repository-fr.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.011.002-remove-all-phase-spec-references-from-the-website-repository-wr.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.011.002-remove-all-phase-spec-references-from-the-website-repository-wr.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.012-restore-approved-visual-design-from-recovered-reference-files.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.012-restore-approved-visual-design-from-recovered-reference-files.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/004.013-convert-flagship-narrative-pages-to-custom-html-and-remove-homepage-section-generation.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/004.013-convert-flagship-narrative-pages-to-custom-html-and-remove-homepage-section-generation.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/005.001-testing-system-modernization-for-the-foundry-website-repository-wr.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/005.001-testing-system-modernization-for-the-foundry-website-repository-wr.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/005.002-testing-system-modernization-for-the-foundry-website-repository-wr.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/005.002-testing-system-modernization-for-the-foundry-website-repository-wr.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/006-add-tag-triggered-github-actions-deployment-to-cloudways.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/006-add-tag-triggered-github-actions-deployment-to-cloudways.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/007-stable-public-api-definition.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/007-stable-public-api-definition.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/008-extension-system-stabilization.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/008-extension-system-stabilization.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/009-framework-doctor-and-environment-diagnostics.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/009-framework-doctor-and-environment-diagnostics.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/010-project-scaffolding-generator.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/010-project-scaffolding-generator.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/011-graph-visualization-cli-and-export-system.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/011-graph-visualization-cli-and-export-system.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/012-configuration-schema-validation.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/012-configuration-schema-validation.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/013-upgrade-safety-tools.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/013-upgrade-safety-tools.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/014-deterministic-compile-cache.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/014-deterministic-compile-cache.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/015-official-example-applications.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/015-official-example-applications.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/016-foundry-pro-cli-licensing-layer.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/016-foundry-pro-cli-licensing-layer.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/017-ai-assisted-development-layer.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/017-ai-assisted-development-layer.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/018-documentation-system-site-generation-structure.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/018-documentation-system-site-generation-structure.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.001-architecture-for-foundry-explain.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.001-architecture-for-foundry-explain.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.002-implementation-how-it-works-end-to-end.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.002-implementation-how-it-works-end-to-end.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.003-ux-contract-what-it-feels-like.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.003-ux-contract-what-it-feels-like.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.004-foundation-slice-safe-starting-point.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.004-foundation-slice-safe-starting-point.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.005-intelligence-layer-collectors-analyzers.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.005-intelligence-layer-collectors-analyzers.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.006-final-polish-rendering-contributors-docs.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.006-final-polish-rendering-contributors-docs.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.006.002-spec-freeze-1-0-0.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.006.002-spec-freeze-1-0-0.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.007-thresholds-v2.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.007-thresholds-v2.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.008-local-foundry-executable-for-installed-apps.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.008-local-foundry-executable-for-installed-apps.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.008.002-normalize-new-project-bootstrap-and-app-layout.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.008.002-normalize-new-project-bootstrap-and-app-layout.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.009-cli-surface-integrity-verification.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.009-cli-surface-integrity-verification.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.010-tooling-observability-and-enforcement-layer.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.010-tooling-observability-and-enforcement-layer.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.011-canonical-graph-specification-integrity-upgrade.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.011-canonical-graph-specification-integrity-upgrade.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.012-docs-sync-source-of-truth-and-layout-fix.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.012-docs-sync-source-of-truth-and-layout-fix.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.013-docs-usage-audit-script-read-only-no-build-changes-yet.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.013-docs-usage-audit-script-read-only-no-build-changes-yet.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.014-ws-docs-pipeline-cleanup-and-formalization.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.014-ws-docs-pipeline-cleanup-and-formalization.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.015.001-create-slug-ownership-map-only-ws.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.015.001-create-slug-ownership-map-only-ws.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.015.002-post-move-docs-integration-after-framework-ownership-changes-linker-ws.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.015.002-post-move-docs-integration-after-framework-ownership-changes-linker-ws.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.016-b-slug-resolution-enforcement-pass-ws.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.016-b-slug-resolution-enforcement-pass-ws.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/019.017-framework-docs-pipeline-deprecation-and-cleanup.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/019.017-framework-docs-pipeline-deprecation-and-cleanup.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/020-interactive-architecture-explorer.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/020-interactive-architecture-explorer.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/021-command-playground.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/021-command-playground.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/022-guided-learning-paths.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/022-guided-learning-paths.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/023-interactive-cli-index.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/023-interactive-cli-index.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/024-contributor-portal.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/024-contributor-portal.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/025.001-framework-examples-alignment.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/025.001-framework-examples-alignment.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/025.002-thresholds-alignment.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/025.002-thresholds-alignment.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/026-storage-surface-cleanup-remove-unfinished-object-storage-support.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/026-storage-surface-cleanup-remove-unfinished-object-storage-support.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/027-examples-taxonomy-cleanup.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/027-examples-taxonomy-cleanup.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/028-ws-framework-internals-reference-from-framework-src.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/028-ws-framework-internals-reference-from-framework-src.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/029-release-readiness-reconciliation-pass.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/029-release-readiness-reconciliation-pass.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/030-monetization-system-integration.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/030-monetization-system-integration.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/030.002-monetization-simplification-terminology-standardization.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/030.002-monetization-simplification-terminology-standardization.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/030.003-monetization-ux-product-layer-framework.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/030.003-monetization-ux-product-layer-framework.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/030.003.002-monetization-ux-product-layer-website-llm-first-positioning-ws.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/030.003.002-monetization-ux-product-layer-website-llm-first-positioning-ws.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/030.003.003-monetization-realignment-framework.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/030.003.003-monetization-realignment-framework.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/030.003.003.002-website-realignment-ws.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/030.003.003.002-website-realignment-ws.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/030.004-first-run-experience-zero-value-in-60-seconds.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/030.004-first-run-experience-zero-value-in-60-seconds.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/030.004.002-first-run-experience-cleanup-and-truthfulness-pass.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/030.004.002-first-run-experience-cleanup-and-truthfulness-pass.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/030.005-explain-generate-feedback-loop-tight-iteration-ux.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/030.005-explain-generate-feedback-loop-tight-iteration-ux.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/030.006-confidence-scoring-for-explain-generate-and-iteration.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/030.006-confidence-scoring-for-explain-generate-and-iteration.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/030.007-git-integration-for-explain-generate-plans-and-replay.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/030.007-git-integration-for-explain-generate-plans-and-replay.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/031-foundry-pack-system-foundation.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/031-foundry-pack-system-foundation.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/032-hosted-pack-registry-aka-read-only-public-no-auth-marketplace.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/032-hosted-pack-registry-aka-read-only-public-no-auth-marketplace.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/033-explain-system-hardening-extension-aware-architecture.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/033-explain-system-hardening-extension-aware-architecture.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/034-deterministic-pack-system-local-remote-marketplace-integration.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/034-deterministic-pack-system-local-remote-marketplace-integration.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/specs/035-generate-system-end-to-end-explain-driven-pack-aware.md",
+            "kind": "spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/plans/035-generate-system-end-to-end-explain-driven-pack-aware.md",
+            "kind": "plan",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/pre-canonical.spec.md",
+            "kind": "context_spec",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/pre-canonical.md",
+            "kind": "context_state",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/PreCanonical/pre-canonical.decisions.md",
+            "kind": "context_decisions",
+            "action": "already_current"
+        },
+        {
+            "path": "Modules/implementation.log",
+            "kind": "implementation_log",
+            "action": "already_current"
+        }
+    ]
+}

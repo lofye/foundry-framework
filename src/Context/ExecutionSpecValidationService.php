@@ -99,11 +99,13 @@ final class ExecutionSpecValidationService
 
             $seenIds[$placement['feature']][$parsedName['id']][] = $relativePath;
             $location = $placement['status'] === 'draft' ? 'drafts' : 'active';
-            $continuityCandidates[$placement['feature']][$location][] = [
-                'id' => $parsedName['id'],
-                'segments' => $parsedName['segments'],
-                'path' => $relativePath,
-            ];
+            if (!$this->isPreCanonicalFeature((string) $placement['feature'])) {
+                $continuityCandidates[$placement['feature']][$location][] = [
+                    'id' => $parsedName['id'],
+                    'segments' => $parsedName['segments'],
+                    'path' => $relativePath,
+                ];
+            }
 
             $contents = file_get_contents($this->paths->join($relativePath));
             if ($contents === false) {
@@ -133,7 +135,9 @@ final class ExecutionSpecValidationService
                 $fileHasViolations = true;
             }
 
-            $metadataViolations = $this->metadataViolations($relativePath, $contents);
+            $metadataViolations = $this->isPreCanonicalFeature((string) $placement['feature'])
+                ? []
+                : $this->metadataViolations($relativePath, $contents);
             foreach ($metadataViolations as $metadataViolation) {
                 $violations[] = $metadataViolation;
             }
@@ -278,6 +282,10 @@ final class ExecutionSpecValidationService
                     continue;
                 }
 
+                if ($this->isPreCanonicalFeature((string) $parsedReference['feature'])) {
+                    continue;
+                }
+
                 $loggedContinuity[(string) $parsedReference['feature']][] = [
                     'id' => $parsedName['id'],
                     'segments' => $parsedName['segments'],
@@ -361,7 +369,9 @@ final class ExecutionSpecValidationService
                 $fileHasViolations = true;
             }
 
-            $metadataViolations = $this->metadataViolations($relativePath, $contents, 'EXECUTION_SPEC_PLAN_FORBIDDEN_METADATA', 'Implementation plans must not define `%s` metadata inside the file.');
+            $metadataViolations = $this->isPreCanonicalFeature((string) $placement['feature'])
+                ? []
+                : $this->metadataViolations($relativePath, $contents, 'EXECUTION_SPEC_PLAN_FORBIDDEN_METADATA', 'Implementation plans must not define `%s` metadata inside the file.');
             foreach ($metadataViolations as $metadataViolation) {
                 $violations[] = $metadataViolation;
             }
@@ -878,6 +888,11 @@ final class ExecutionSpecValidationService
         }
 
         return $violations;
+    }
+
+    private function isPreCanonicalFeature(string $feature): bool
+    {
+        return $feature === 'pre-canonical';
     }
 
     /**

@@ -1,0 +1,102 @@
+{
+    "plan_id": "8cbb6f18-105b-46e2-a883-210bd3baa70f",
+    "timestamp": "2026-05-27T03:06:20Z",
+    "storage_path": ".foundry/plans/20260527T030620Z_8cbb6f18-105b-46e2-a883-210bd3baa70f.json",
+    "intent": "Create blog post notes",
+    "mode": "new",
+    "targets": [],
+    "generation_context_packet": null,
+    "plan_original": null,
+    "plan_final": null,
+    "interactive": null,
+    "user_decisions": [],
+    "actions_executed": [],
+    "affected_files": [],
+    "risk_level": null,
+    "policy": null,
+    "approval": null,
+    "verification_results": null,
+    "status": "failed",
+    "error": {
+        "code": "GENERATE_PACK_INSTALL_REQUIRED",
+        "category": "validation",
+        "message": "Required packs are not installed. Re-run with --allow-pack-install or install them first.",
+        "details": {
+            "missing_capabilities": [
+                "pack:foundry/blog"
+            ],
+            "suggested_packs": [
+                "foundry/blog"
+            ],
+            "pack_requirements": [
+                {
+                    "pack": "foundry/blog",
+                    "source": "marketplace",
+                    "distribution": "unknown",
+                    "entitlement": {
+                        "required": true,
+                        "status": "unknown",
+                        "tier": "unknown"
+                    },
+                    "executable": false,
+                    "code": "MARKETPLACE_PACK_NOT_AVAILABLE"
+                }
+            ],
+            "entitlements": {
+                "status": "incomplete",
+                "required": [
+                    "foundry/blog"
+                ],
+                "granted": [],
+                "missing": [],
+                "expired": [],
+                "unknown": [
+                    "foundry/blog"
+                ]
+            },
+            "execution_state": "invalid"
+        }
+    },
+    "undo": null,
+    "metadata": {
+        "framework_version": null,
+        "graph_version": null,
+        "source_hash": null,
+        "requested_intent": {
+            "raw": "Create blog post notes",
+            "mode": "new",
+            "target": null,
+            "workflow_path": null,
+            "template_id": null,
+            "template_parameters": [],
+            "multi_step": false,
+            "interactive": false,
+            "dry_run": true,
+            "policy_check": false,
+            "skip_verify": false,
+            "explain": false,
+            "allow_risky": false,
+            "allow_policy_violations": false,
+            "allow_dirty": false,
+            "allow_pack_install": false,
+            "git_commit": false,
+            "git_commit_message": null,
+            "packs": [
+                "foundry/blog"
+            ],
+            "require_approval": false,
+            "min_approvals": 1
+        },
+        "dry_run": true,
+        "policy_check": false,
+        "interactive_requested": false,
+        "plan_origin": null,
+        "generator_id": null,
+        "safety_routing": null,
+        "execution_state": "executable",
+        "entitlements": [],
+        "storage_version": 3,
+        "integrity_hash": "7548ddbfe8c64b53f915ee934838e7e5a9625c848ebe1833568d84b65a05ee79"
+    },
+    "storage_version": 3
+}

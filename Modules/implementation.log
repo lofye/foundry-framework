@@ -418,3 +418,343 @@
 - note: Added deterministic `precanonical:import` report/apply CLI support for explicitly marked single-file pre-canonical archives with `S`, `R`, and `P` blocks.
 - note: Added legacy alphanumeric ID mapping into padded canonical PreCanonical spec IDs, normalized result pairing, preamble preservation, conflict refusal, and force replacement for generated PreCanonical artifacts.
 - note: Added PreCanonical spec, reconstruction-note, context-file, and idempotent implementation-log generation with focused unit/integration coverage for parsing, pairing, ID mapping, conflicts, and CLI behavior.
+
+## PreCanonical historical import: 000.001-foundational-compiler-layer
+- spec: Modules/PreCanonical/specs/000.001-foundational-compiler-layer.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 000.002-extensions-packs-spec-migrations-codemods-and-versioning-strategy
+- spec: Modules/PreCanonical/specs/000.002-extensions-packs-spec-migrations-codemods-and-versioning-strategy.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 000.003-architecture-diagnostics-visualization-and-llm-assisted-code-generation
+- spec: Modules/PreCanonical/specs/000.003-architecture-diagnostics-visualization-and-llm-assisted-code-generation.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 000.004-request-execution-pipeline-feature-guards-and-interceptors
+- spec: Modules/PreCanonical/specs/000.004-request-execution-pipeline-feature-guards-and-interceptors.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 001-roadmap-phase-1-foundation
+- spec: Modules/PreCanonical/specs/001-roadmap-phase-1-foundation.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 002-roadmap-phase-2-basic-features
+- spec: Modules/PreCanonical/specs/002-roadmap-phase-2-basic-features.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 003-roadmap-phase-3-billing-workflows-orchestration-search-localization-roles-inspect
+- spec: Modules/PreCanonical/specs/003-roadmap-phase-3-billing-workflows-orchestration-search-localization-roles-inspect.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004-roadmap-phase-4-documentation-system-and-website-integration-wr
+- spec: Modules/PreCanonical/specs/004-roadmap-phase-4-documentation-system-and-website-integration-wr.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.001-documentation-publishing-and-versioned-docs-normalization
+- spec: Modules/PreCanonical/specs/004.001-documentation-publishing-and-versioned-docs-normalization.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.002-homepage-version-display-docs-version-switcher-and-auto-generated-sidebar-navigation
+- spec: Modules/PreCanonical/specs/004.002-homepage-version-display-docs-version-switcher-and-auto-generated-sidebar-navigation.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.003-immutable-versioned-docs-llm-context-bundles
+- spec: Modules/PreCanonical/specs/004.003-immutable-versioned-docs-llm-context-bundles.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.004-restore-premium-visual-design-across-the-generated-docs-site
+- spec: Modules/PreCanonical/specs/004.004-restore-premium-visual-design-across-the-generated-docs-site.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.005-docs-search-and-llm-aware-docs-actions
+- spec: Modules/PreCanonical/specs/004.005-docs-search-and-llm-aware-docs-actions.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.006-mobile-navigation-system
+- spec: Modules/PreCanonical/specs/004.006-mobile-navigation-system.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.007-ask-the-docs-llm-integrated-documentation-assistance
+- spec: Modules/PreCanonical/specs/004.007-ask-the-docs-llm-integrated-documentation-assistance.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.008-brand-and-visual-identity-restoration
+- spec: Modules/PreCanonical/specs/004.008-brand-and-visual-identity-restoration.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.009-live-architecture-explorer
+- spec: Modules/PreCanonical/specs/004.009-live-architecture-explorer.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.010.001-remove-public-facing-phase-spec-references-from-the-framework-repo-fr
+- spec: Modules/PreCanonical/specs/004.010.001-remove-public-facing-phase-spec-references-from-the-framework-repo-fr.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.010.002-remove-public-facing-phase-spec-references-from-the-website-repo-wr
+- spec: Modules/PreCanonical/specs/004.010.002-remove-public-facing-phase-spec-references-from-the-website-repo-wr.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.011.001-remove-all-phase-spec-references-from-the-framework-repository-fr
+- spec: Modules/PreCanonical/specs/004.011.001-remove-all-phase-spec-references-from-the-framework-repository-fr.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.011.002-remove-all-phase-spec-references-from-the-website-repository-wr
+- spec: Modules/PreCanonical/specs/004.011.002-remove-all-phase-spec-references-from-the-website-repository-wr.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.012-restore-approved-visual-design-from-recovered-reference-files
+- spec: Modules/PreCanonical/specs/004.012-restore-approved-visual-design-from-recovered-reference-files.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 004.013-convert-flagship-narrative-pages-to-custom-html-and-remove-homepage-section-generation
+- spec: Modules/PreCanonical/specs/004.013-convert-flagship-narrative-pages-to-custom-html-and-remove-homepage-section-generation.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 005.001-testing-system-modernization-for-the-foundry-website-repository-wr
+- spec: Modules/PreCanonical/specs/005.001-testing-system-modernization-for-the-foundry-website-repository-wr.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 005.002-testing-system-modernization-for-the-foundry-website-repository-wr
+- spec: Modules/PreCanonical/specs/005.002-testing-system-modernization-for-the-foundry-website-repository-wr.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 006-add-tag-triggered-github-actions-deployment-to-cloudways
+- spec: Modules/PreCanonical/specs/006-add-tag-triggered-github-actions-deployment-to-cloudways.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 007-stable-public-api-definition
+- spec: Modules/PreCanonical/specs/007-stable-public-api-definition.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 008-extension-system-stabilization
+- spec: Modules/PreCanonical/specs/008-extension-system-stabilization.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 009-framework-doctor-and-environment-diagnostics
+- spec: Modules/PreCanonical/specs/009-framework-doctor-and-environment-diagnostics.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 010-project-scaffolding-generator
+- spec: Modules/PreCanonical/specs/010-project-scaffolding-generator.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 011-graph-visualization-cli-and-export-system
+- spec: Modules/PreCanonical/specs/011-graph-visualization-cli-and-export-system.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 012-configuration-schema-validation
+- spec: Modules/PreCanonical/specs/012-configuration-schema-validation.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 013-upgrade-safety-tools
+- spec: Modules/PreCanonical/specs/013-upgrade-safety-tools.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 014-deterministic-compile-cache
+- spec: Modules/PreCanonical/specs/014-deterministic-compile-cache.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 015-official-example-applications
+- spec: Modules/PreCanonical/specs/015-official-example-applications.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 016-foundry-pro-cli-licensing-layer
+- spec: Modules/PreCanonical/specs/016-foundry-pro-cli-licensing-layer.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 017-ai-assisted-development-layer
+- spec: Modules/PreCanonical/specs/017-ai-assisted-development-layer.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 018-documentation-system-site-generation-structure
+- spec: Modules/PreCanonical/specs/018-documentation-system-site-generation-structure.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.001-architecture-for-foundry-explain
+- spec: Modules/PreCanonical/specs/019.001-architecture-for-foundry-explain.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.002-implementation-how-it-works-end-to-end
+- spec: Modules/PreCanonical/specs/019.002-implementation-how-it-works-end-to-end.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.003-ux-contract-what-it-feels-like
+- spec: Modules/PreCanonical/specs/019.003-ux-contract-what-it-feels-like.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.004-foundation-slice-safe-starting-point
+- spec: Modules/PreCanonical/specs/019.004-foundation-slice-safe-starting-point.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.005-intelligence-layer-collectors-analyzers
+- spec: Modules/PreCanonical/specs/019.005-intelligence-layer-collectors-analyzers.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.006-final-polish-rendering-contributors-docs
+- spec: Modules/PreCanonical/specs/019.006-final-polish-rendering-contributors-docs.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.006.002-spec-freeze-1-0-0
+- spec: Modules/PreCanonical/specs/019.006.002-spec-freeze-1-0-0.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.007-thresholds-v2
+- spec: Modules/PreCanonical/specs/019.007-thresholds-v2.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.008-local-foundry-executable-for-installed-apps
+- spec: Modules/PreCanonical/specs/019.008-local-foundry-executable-for-installed-apps.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.008.002-normalize-new-project-bootstrap-and-app-layout
+- spec: Modules/PreCanonical/specs/019.008.002-normalize-new-project-bootstrap-and-app-layout.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.009-cli-surface-integrity-verification
+- spec: Modules/PreCanonical/specs/019.009-cli-surface-integrity-verification.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.010-tooling-observability-and-enforcement-layer
+- spec: Modules/PreCanonical/specs/019.010-tooling-observability-and-enforcement-layer.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.011-canonical-graph-specification-integrity-upgrade
+- spec: Modules/PreCanonical/specs/019.011-canonical-graph-specification-integrity-upgrade.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.012-docs-sync-source-of-truth-and-layout-fix
+- spec: Modules/PreCanonical/specs/019.012-docs-sync-source-of-truth-and-layout-fix.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.013-docs-usage-audit-script-read-only-no-build-changes-yet
+- spec: Modules/PreCanonical/specs/019.013-docs-usage-audit-script-read-only-no-build-changes-yet.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.014-ws-docs-pipeline-cleanup-and-formalization
+- spec: Modules/PreCanonical/specs/019.014-ws-docs-pipeline-cleanup-and-formalization.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.015.001-create-slug-ownership-map-only-ws
+- spec: Modules/PreCanonical/specs/019.015.001-create-slug-ownership-map-only-ws.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.015.002-post-move-docs-integration-after-framework-ownership-changes-linker-ws
+- spec: Modules/PreCanonical/specs/019.015.002-post-move-docs-integration-after-framework-ownership-changes-linker-ws.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.016-b-slug-resolution-enforcement-pass-ws
+- spec: Modules/PreCanonical/specs/019.016-b-slug-resolution-enforcement-pass-ws.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 019.017-framework-docs-pipeline-deprecation-and-cleanup
+- spec: Modules/PreCanonical/specs/019.017-framework-docs-pipeline-deprecation-and-cleanup.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 020-interactive-architecture-explorer
+- spec: Modules/PreCanonical/specs/020-interactive-architecture-explorer.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 021-command-playground
+- spec: Modules/PreCanonical/specs/021-command-playground.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 022-guided-learning-paths
+- spec: Modules/PreCanonical/specs/022-guided-learning-paths.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 023-interactive-cli-index
+- spec: Modules/PreCanonical/specs/023-interactive-cli-index.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 024-contributor-portal
+- spec: Modules/PreCanonical/specs/024-contributor-portal.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 025.001-framework-examples-alignment
+- spec: Modules/PreCanonical/specs/025.001-framework-examples-alignment.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 025.002-thresholds-alignment
+- spec: Modules/PreCanonical/specs/025.002-thresholds-alignment.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 026-storage-surface-cleanup-remove-unfinished-object-storage-support
+- spec: Modules/PreCanonical/specs/026-storage-surface-cleanup-remove-unfinished-object-storage-support.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 027-examples-taxonomy-cleanup
+- spec: Modules/PreCanonical/specs/027-examples-taxonomy-cleanup.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 028-ws-framework-internals-reference-from-framework-src
+- spec: Modules/PreCanonical/specs/028-ws-framework-internals-reference-from-framework-src.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 029-release-readiness-reconciliation-pass
+- spec: Modules/PreCanonical/specs/029-release-readiness-reconciliation-pass.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 030-monetization-system-integration
+- spec: Modules/PreCanonical/specs/030-monetization-system-integration.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 030.002-monetization-simplification-terminology-standardization
+- spec: Modules/PreCanonical/specs/030.002-monetization-simplification-terminology-standardization.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 030.003-monetization-ux-product-layer-framework
+- spec: Modules/PreCanonical/specs/030.003-monetization-ux-product-layer-framework.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 030.003.002-monetization-ux-product-layer-website-llm-first-positioning-ws
+- spec: Modules/PreCanonical/specs/030.003.002-monetization-ux-product-layer-website-llm-first-positioning-ws.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 030.003.003-monetization-realignment-framework
+- spec: Modules/PreCanonical/specs/030.003.003-monetization-realignment-framework.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 030.003.003.002-website-realignment-ws
+- spec: Modules/PreCanonical/specs/030.003.003.002-website-realignment-ws.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 030.004-first-run-experience-zero-value-in-60-seconds
+- spec: Modules/PreCanonical/specs/030.004-first-run-experience-zero-value-in-60-seconds.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 030.004.002-first-run-experience-cleanup-and-truthfulness-pass
+- spec: Modules/PreCanonical/specs/030.004.002-first-run-experience-cleanup-and-truthfulness-pass.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 030.005-explain-generate-feedback-loop-tight-iteration-ux
+- spec: Modules/PreCanonical/specs/030.005-explain-generate-feedback-loop-tight-iteration-ux.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 030.006-confidence-scoring-for-explain-generate-and-iteration
+- spec: Modules/PreCanonical/specs/030.006-confidence-scoring-for-explain-generate-and-iteration.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 030.007-git-integration-for-explain-generate-plans-and-replay
+- spec: Modules/PreCanonical/specs/030.007-git-integration-for-explain-generate-plans-and-replay.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 031-foundry-pack-system-foundation
+- spec: Modules/PreCanonical/specs/031-foundry-pack-system-foundation.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 032-hosted-pack-registry-aka-read-only-public-no-auth-marketplace
+- spec: Modules/PreCanonical/specs/032-hosted-pack-registry-aka-read-only-public-no-auth-marketplace.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 033-explain-system-hardening-extension-aware-architecture
+- spec: Modules/PreCanonical/specs/033-explain-system-hardening-extension-aware-architecture.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 034-deterministic-pack-system-local-remote-marketplace-integration
+- spec: Modules/PreCanonical/specs/034-deterministic-pack-system-local-remote-marketplace-integration.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## PreCanonical historical import: 035-generate-system-end-to-end-explain-driven-pack-aware
+- spec: Modules/PreCanonical/specs/035-generate-system-end-to-end-explain-driven-pack-aware.md
+- note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
