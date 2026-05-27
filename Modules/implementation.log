@@ -758,3 +758,7 @@
 ## PreCanonical historical import: 035-generate-system-end-to-end-explain-driven-pack-aware
 - spec: Modules/PreCanonical/specs/035-generate-system-end-to-end-explain-driven-pack-aware.md
 - note: Imported from explicitly marked pre-canonical archive `_import/pre-canonical-specs.md`.
+
+## 2026-05-27 09:34:29 -0400
+- spec: Modules/McpServer/specs/002-mcp-plan-generation-and-validation.md
+- note: Added deterministic MCP `validate_plan` plus tightened `generate_plan` payload contracts with validation summary, record-path reference, normalized entitlement/pack requirement data, and stale/blocked/invalid state mapping.

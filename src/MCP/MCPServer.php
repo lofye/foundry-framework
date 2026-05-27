@@ -14,6 +14,7 @@ use Foundry\MCP\Handlers\GeneratePlanHandler;
 use Foundry\MCP\Handlers\InspectGraphHandler;
 use Foundry\MCP\Handlers\ListExamplesHandler;
 use Foundry\MCP\Handlers\ListPacksHandler;
+use Foundry\MCP\Handlers\ValidatePlanHandler;
 use Foundry\Support\FoundryError;
 
 final class MCPServer
@@ -35,6 +36,7 @@ final class MCPServer
         $registry->register('inspect_graph', new InspectGraphHandler($bridge));
         $registry->register('list_examples', new ListExamplesHandler($bridge));
         $registry->register('list_packs', new ListPacksHandler($bridge));
+        $registry->register('validate_plan', new ValidatePlanHandler($bridge));
 
         return new self($registry);
     }

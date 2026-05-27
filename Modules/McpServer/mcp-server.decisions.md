@@ -114,3 +114,47 @@ Timestamp: 2026-05-03T09:59:00-04:00
 - CLI Parity Rules
 - Safety Model
 - Acceptance Criteria
+
+### Decision: add deterministic MCP plan-generation and plan-validation contracts without introducing a parallel planning engine
+
+Timestamp: 2026-05-27T16:45:00-04:00
+
+**Context**
+
+- Active execution spec `002-mcp-plan-generation-and-validation` requires MCP plan generation and plan validation contracts, including deterministic status and entitlement visibility.
+- Existing MCP runtime already exposed `generate_plan`, but the payload contract was incomplete and no `validate_plan` tool existed.
+- Existing Generate and Marketplace runtime already provided plan persistence, replay dry-run validation, entitlement evaluation, and deterministic pack requirement resolution.
+
+**Decision**
+
+- Register MCP tool `validate_plan` and route persisted-plan validation through strict replay dry-run behavior.
+- Tighten MCP `generate_plan` output to include deterministic `plan_record_path`, `validation`, normalized entitlement summaries, and normalized pack-requirement ordering.
+- Keep planning/validation logic delegated to existing Generate and Marketplace runtime contracts rather than adding MCP-local planning or entitlement engines.
+
+**Reasoning**
+
+- Reusing existing runtime paths preserves behavior parity and avoids drift between MCP and CLI workflows.
+- Strict replay dry-run already models plan validity, drift detection, and entitlement revalidation without source mutation.
+- Normalized payload shape and ordering improve determinism and machine-consumable reliability for MCP clients.
+
+**Alternatives Considered**
+
+- Implement a new MCP-only validation engine.
+- Keep `generate_plan` minimal and omit validation summary fields.
+- Validate persisted plans by raw record parsing only instead of replay dry-run.
+
+**Impact**
+
+- MCP now exposes deterministic planning and validation tools for non-mutating plan workflows.
+- Persisted plan ids can be validated through MCP with explicit `valid|blocked|stale|invalid` status.
+- Inline plan payloads can be validated through existing `GenerationPlan` and `PlanValidator` contracts.
+- MCP tool manifests and integration tests now cover `generate_plan` and `validate_plan` as first-class planning surfaces.
+
+**Spec Reference**
+
+- Tool Surface
+- `generate_plan` Input Contract
+- `generate_plan` Output Contract
+- `validate_plan` Input Contract
+- `validate_plan` Output Contract
+- Determinism Requirements
