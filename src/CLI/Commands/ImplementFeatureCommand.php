@@ -11,6 +11,13 @@ use Foundry\Support\FoundryError;
 
 final class ImplementFeatureCommand extends Command
 {
+    /**
+     * @param null|\Closure(string,bool,bool,CommandContext):array<string,mixed> $executor
+     */
+    public function __construct(
+        private readonly ?\Closure $executor = null,
+    ) {}
+
     #[\Override]
     public function supportedSignatures(): array
     {
@@ -47,9 +54,7 @@ final class ImplementFeatureCommand extends Command
             );
         }
 
-        $payload = (new ContextExecutionService($context->paths()))
-            ->execute($featureName, repair: $repair, autoRepair: $autoRepair)
-            ->toArray();
+        $payload = $this->execute($featureName, $repair, $autoRepair, $context);
         $status = (string) ($payload['status'] ?? 'blocked');
 
         return [
@@ -57,6 +62,20 @@ final class ImplementFeatureCommand extends Command
             'message' => $context->expectsJson() ? null : $this->renderMessage($payload),
             'payload' => $context->expectsJson() ? $payload : null,
         ];
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    private function execute(string $featureName, bool $repair, bool $autoRepair, CommandContext $context): array
+    {
+        if ($this->executor instanceof \Closure) {
+            return ($this->executor)($featureName, $repair, $autoRepair, $context);
+        }
+
+        return (new ContextExecutionService($context->paths()))
+            ->execute($featureName, repair: $repair, autoRepair: $autoRepair)
+            ->toArray();
     }
 
     /**
