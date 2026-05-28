@@ -43,7 +43,11 @@ final class ExplainCommand extends Command
             return $this->explainPlan($args, $context);
         }
 
-        [$target, $targetKind, $options, $diff, $includeGit] = $this->parseExplainArgs($args);
+        [$target, $targetKind, $options, $diff, $includeGit, $full] = $this->parseExplainArgs($args);
+
+        if ($full) {
+            return $this->explainFullFeature($target, $targetKind, $options, $context);
+        }
 
         if ($diff) {
             $this->assertDiffModeOptions($target, $targetKind, $options, $includeGit);
@@ -153,7 +157,7 @@ final class ExplainCommand extends Command
 
     /**
      * @param array<int,string> $args
-     * @return array{0:string,1:?string,2:ExplainOptions,3:bool,4:bool}
+     * @return array{0:string,1:?string,2:ExplainOptions,3:bool,4:bool,5:bool}
      */
     private function parseExplainArgs(array $args): array
     {
@@ -166,6 +170,7 @@ final class ExplainCommand extends Command
         $includeExecutionFlow = true;
         $diff = false;
         $includeGit = false;
+        $full = false;
 
         for ($index = 1; $index < count($args); $index++) {
             $arg = (string) $args[$index];
@@ -187,6 +192,11 @@ final class ExplainCommand extends Command
 
             if ($arg === '--git') {
                 $includeGit = true;
+                continue;
+            }
+
+            if ($arg === '--full') {
+                $full = true;
                 continue;
             }
 
@@ -237,7 +247,100 @@ final class ExplainCommand extends Command
             ),
             $diff,
             $includeGit,
+            $full,
         ];
+    }
+
+    /**
+     * @return array{status:int,payload:array<string,mixed>|null,message:string|null}
+     */
+    private function explainFullFeature(string $target, ?string $targetKind, ExplainOptions $options, CommandContext $context): array
+    {
+        $feature = $this->featureFromTarget($target, $targetKind);
+        if ($feature === null || $feature === '') {
+            throw new FoundryError(
+                'EXPLAIN_FULL_FEATURE_REQUIRED',
+                'validation',
+                ['target' => $target, 'type' => $targetKind],
+                'Explain --full requires a feature target such as `explain feature blog --full`.',
+            );
+        }
+
+        $compiler = $context->graphCompiler();
+        $graph = $compiler->loadGraph() ?? $compiler->compile(new CompileOptions())->graph;
+        $baseResponse = (new ArchitectureExplainer(
+            paths: $context->paths(),
+            impactAnalyzer: $compiler->impactAnalyzer(),
+            apiSurfaceRegistry: $context->apiSurfaceRegistry(),
+            extensionRows: $context->extensionRegistry()->inspectRows(),
+        ))->explain($graph, ExplainTarget::parse('feature:' . $feature, 'feature'), $options);
+
+        $jsonContext = new CommandContext($context->paths()->root(), true);
+        $inspectFeature = (new InspectFeatureCommand())->run(['inspect', 'feature', $feature], $jsonContext);
+        $featureInspect = (new FeatureSystemCommand())->run(['feature:inspect', $feature], $jsonContext);
+        $featureMap = (new FeatureSystemCommand())->run(['feature:map'], $jsonContext);
+        $inspectGraph = (new InspectGraphCommand())->run(['inspect', 'graph', '--feature=' . $feature], $jsonContext);
+        $inspectDependencies = (new InspectGraphCommand())->run(['inspect', 'dependencies', 'feature:' . $feature], $jsonContext);
+        $inspectImpact = (new InspectGraphCommand())->run(['inspect', 'impact', 'feature:' . $feature], $jsonContext);
+        $inspectPipeline = (new InspectGraphCommand())->run(['inspect', 'pipeline'], $jsonContext);
+
+        $payload = [
+            'target' => 'feature:' . $feature,
+            'full' => true,
+            'explain' => $baseResponse->toArray(),
+            'feature' => [
+                'inspect' => $inspectFeature['payload'],
+                'workspace' => $featureInspect['payload'],
+                'map' => $featureMap['payload'],
+                'graph' => $inspectGraph['payload'],
+                'dependencies' => $inspectDependencies['payload'],
+                'impact' => $inspectImpact['payload'],
+                'pipeline' => $inspectPipeline['payload'],
+            ],
+        ];
+
+        return [
+            'status' => 0,
+            'message' => $context->expectsJson() ? null : $this->renderFullFeatureMessage($feature, $payload),
+            'payload' => $context->expectsJson() ? $payload : null,
+        ];
+    }
+
+    private function featureFromTarget(string $target, ?string $targetKind): ?string
+    {
+        $normalized = trim($target);
+        $kind = trim((string) $targetKind);
+
+        if ($kind === 'feature' || str_starts_with($normalized, 'feature:')) {
+            if ($kind === 'feature' && !str_starts_with($normalized, 'feature:')) {
+                return trim($normalized);
+            }
+
+            return trim(substr($normalized, strlen('feature:')));
+        }
+
+        if (str_starts_with($normalized, 'feature ')) {
+            return trim(substr($normalized, strlen('feature ')));
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array<string,mixed> $payload
+     */
+    private function renderFullFeatureMessage(string $feature, array $payload): string
+    {
+        $lines = [
+            'Explain full feature: ' . $feature,
+            'Sections: explain, inspect feature, feature:inspect, feature:map, inspect graph, inspect dependencies, inspect impact, inspect pipeline',
+        ];
+        $diagnostics = (array) (($payload['explain']['diagnostics'] ?? []));
+        if ($diagnostics !== []) {
+            $lines[] = 'Diagnostics entries: ' . count($diagnostics);
+        }
+
+        return implode(PHP_EOL, $lines);
     }
 
     private function assertDiffModeOptions(string $target, ?string $targetKind, ExplainOptions $options, bool $includeGit): void

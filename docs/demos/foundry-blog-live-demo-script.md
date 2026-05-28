@@ -86,13 +86,7 @@ foundry
 Run the first health checks:
 
 ```bash
-./foundry doctor --json
-./foundry compile graph --json
-./foundry inspect graph --json
-./foundry inspect pipeline --json
-./foundry verify graph --json
-./foundry verify pipeline --json
-./foundry verify contracts --json
+./foundry doctor --ready --json
 ```
 
 Artifacts to show:
@@ -172,9 +166,7 @@ Say this:
 Commands:
 
 ```bash
-./foundry context init blog --json
-./foundry inspect context blog --json
-./foundry verify context --feature=blog --json
+./foundry context bootstrap blog --json
 ```
 
 Show the created files:
@@ -283,8 +275,7 @@ Review checklist before promotion:
 Promote the draft:
 
 ```bash
-mkdir -p Features/Blog/specs
-cp Features/Blog/specs/drafts/001-posts-markdown-admin-and-rss.md Features/Blog/specs/001-posts-markdown-admin-and-rss.md
+./foundry spec:promote blog 001 --json
 ```
 
 Show the active spec:
@@ -296,9 +287,7 @@ sed -n '1,120p' Features/Blog/specs/001-posts-markdown-admin-and-rss.md
 Verify context again:
 
 ```bash
-./foundry verify context --feature=blog --json
-./foundry feature:inspect blog --json
-./foundry feature:map --feature=blog --json
+./foundry verify feature-work blog --json
 ```
 
 ## Phase 7: Ask Codex To Implement The Spec
@@ -464,15 +453,9 @@ http://127.0.0.1:8000/admin/blog/posts/new
 Commands:
 
 ```bash
-./foundry explain feature:blog --json
+./foundry explain feature blog --full --json
 ./foundry explain feature:blog --markdown
-./foundry inspect feature blog --json
-./foundry feature:inspect blog --json
-./foundry feature:map --feature=blog --json
-./foundry inspect graph --json
-./foundry inspect dependencies feature:blog --json
-./foundry inspect impact feature:blog --json
-./foundry inspect pipeline --json
+./foundry verify architecture --json
 ```
 
 Good things to point at:
@@ -495,8 +478,7 @@ Say this:
 Commands:
 
 ```bash
-./foundry generate docs --format=markdown --json
-./foundry generate inspect-ui --json
+./foundry generate docs --all --json
 ```
 
 Show artifacts:
@@ -516,43 +498,26 @@ Talking point:
 Feature-focused commands:
 
 ```bash
-./foundry context doctor --feature=blog --json
-./foundry context check-alignment --feature=blog --json
-./foundry verify context --feature=blog --json
-./foundry verify features --feature=blog --json
-./foundry feature:map --feature=blog --json
+./foundry verify feature-work blog --json
 ```
 
 Graph and contract commands:
 
 ```bash
-./foundry compile graph --json
-./foundry inspect graph --json
-./foundry inspect pipeline --json
-./foundry verify graph --json
-./foundry verify pipeline --json
-./foundry verify contracts --json
+./foundry verify architecture --json
 ```
 
 Test commands:
 
 ```bash
-php vendor/bin/phpunit Features/Blog/tests
-php vendor/bin/phpunit
+./foundry test feature blog --json
+./foundry test feature blog --full --json
 ```
 
 Coverage command, if a coverage driver is available:
 
 ```bash
-XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover build/coverage/clover.xml
-./foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
-```
-
-If the default PHP binary has no coverage driver, use a PHP binary that has Xdebug or PCOV:
-
-```bash
-XDEBUG_MODE=coverage /opt/homebrew/bin/php vendor/bin/phpunit --coverage-clover build/coverage/clover.xml
-./foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
+./foundry verify done --feature=blog --coverage-min=90 --json
 ```
 
 Say this:
@@ -641,41 +606,33 @@ These are based on current framework direction and open work, not public promise
 If context is missing:
 
 ```bash
-./foundry context init blog --json
-./foundry inspect context blog --json
-./foundry verify context --feature=blog --json
+./foundry context bootstrap blog --json
 ```
 
 If context verification fails:
 
 ```bash
-./foundry context doctor --feature=blog --json
-./foundry context check-alignment --feature=blog --json
-./foundry context repair --feature=blog --json
-./foundry verify context --feature=blog --json
+./foundry context recover blog --json
 ```
 
 If feature boundaries fail:
 
 ```bash
-./foundry verify features --feature=blog --json
-./foundry feature:map --feature=blog --json
+./foundry verify feature-work blog --json
 ```
 
 If graph compilation fails:
 
 ```bash
-./foundry compile graph --json
-./foundry inspect graph --json
+./foundry verify architecture --json
 ./foundry doctor --json
 ```
 
 If tests fail:
 
 ```bash
-php vendor/bin/phpunit Features/Blog/tests
-php vendor/bin/phpunit --filter Blog
-php vendor/bin/phpunit
+./foundry test feature blog --json
+./foundry test feature blog --full --json
 ```
 
 If you need to explain the failure to the room:
@@ -692,13 +649,9 @@ composer require lofye/foundry-framework
 cd blog-demo
 composer install
 
-./foundry doctor --json
-./foundry compile graph --json
-./foundry verify graph --json
+./foundry doctor --ready --json
 
-./foundry context init blog --json
-./foundry inspect context blog --json
-./foundry verify context --feature=blog --json
+./foundry context bootstrap blog --json
 
 # Live Codex prompt:
 # Please create a blog for this Foundry app. It should have many posts, an RSS feed,
@@ -708,25 +661,16 @@ composer install
 # feature spec and an execution spec.
 
 sed -n '1,220p' Features/Blog/specs/drafts/001-posts-markdown-admin-and-rss.md
-mkdir -p Features/Blog/specs
-cp Features/Blog/specs/drafts/001-posts-markdown-admin-and-rss.md Features/Blog/specs/001-posts-markdown-admin-and-rss.md
+./foundry spec:promote blog 001 --json
 
-./foundry verify context --feature=blog --json
-./foundry feature:inspect blog --json
-./foundry feature:map --feature=blog --json
+./foundry verify feature-work blog --json
 
 # Live Codex prompt:
 # Implement Features/Blog/specs/001-posts-markdown-admin-and-rss.md using the strict
 # Foundry feature workflow.
 
 find Features/Blog -maxdepth 5 -type f | sort
-./foundry explain feature:blog --json
-./foundry inspect graph --json
-./foundry inspect pipeline --json
-./foundry verify features --feature=blog --json
-
-php vendor/bin/phpunit Features/Blog/tests
-php vendor/bin/phpunit
-XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover build/coverage/clover.xml
-./foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
+./foundry explain feature blog --full --json
+./foundry verify architecture --json
+./foundry verify done --feature=blog --coverage-min=90 --json
 ```

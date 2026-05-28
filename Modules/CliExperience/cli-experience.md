@@ -5,29 +5,33 @@
 
 ## Decision Summary
 
-Refreshed Through Spec: `002-repair-cli-experience-context-alignment`
+Refreshed Through Spec: `003-common-workflow-batch-commands`
 
 - CLI ergonomics are treated as a first-class framework module while preserving stable command contracts.
 - Completion support is deterministic, registry-backed, and currently focused on bash, zsh, and active execution-spec workflows.
 - Draft execution specs remain excluded from default implementation completion so shell assistance does not blur promotion boundaries.
+- Common multi-step CLI execution loops are available as first-class deterministic batch workflows rather than ad hoc shell macros.
 
 ## Current State
 - Foundry provides a reliable command surface for human and agent workflows.
-- Canonical CLI commands remain stable and verifiable through the current command registry and CLI surface verification.
-- The stable `completion` command emits deterministic bash and zsh completion scripts.
-- Static completion derives from the registered CLI surface and covers top-level commands and known subcommands.
-- Dynamic `implement spec` completion lists feature names from `docs/features/` and active execution-spec ids from `docs/features/<feature>/specs/`, excluding drafts by default.
-- CLI help, registry metadata, and surface verification remain aligned for the current registered command surface, including `completion`.
+- Bash and zsh consume generated completion scripts for command discovery.
+- Static completion covers top-level commands and known subcommands from the registered CLI surface.
+- Dynamic completion exposes feature names and active execution-spec ids where appropriate, excluding drafts by default.
+- CLI help, registry metadata, and surface verification remain aligned.
+- CLI surface verification remains green after recent usability changes.
 - Unsupported or invalid completion requests fail clearly.
-- CLI surface verification is currently green.
-- The developer-facing docs explain how to generate and use bash and zsh completion and that active execution specs are completed by default.
+- Common grouped workflows are available through deterministic batch commands and options for readiness, context bootstrap/recovery, architecture verification, feature-work verification, completion verification, and feature-focused test orchestration.
+- Batch workflow outputs include structured aggregate status with per-step results and explicit failure location.
+- Batch workflow commands are discoverable, registry-backed, and covered by command-surface tests and verification probes.
+- Documentation explains how to generate and use bash and zsh completion and that active execution specs are completed by default.
 
 ## Open Questions
 - Should completion support remain shell-script based only, or should a more general completion abstraction exist later?
 - When should additional shells beyond bash and zsh be supported?
 - Which command families benefit most from dynamic completion beyond `implement spec`?
+- Which additional batch workflows should be promoted to stable versus kept experimental as command surface grows?
 
 ## Next Steps
+- Collect usage feedback on the new batch workflows and identify any missing high-frequency command groups.
 - Evaluate whether additional command families need dynamic completion beyond `implement spec`.
 - Decide when additional shells beyond bash and zsh should be supported.
-- Decide whether shell-script completion remains sufficient or a broader completion abstraction is warranted later.

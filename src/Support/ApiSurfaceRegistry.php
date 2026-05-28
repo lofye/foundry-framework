@@ -164,7 +164,7 @@ final class ApiSurfaceRegistry
         }
 
         return match ($first) {
-            'help', 'completion', 'new', 'serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail', 'affected-files', 'impacted-features', 'upgrade-check', 'explain', 'diff', 'trace', 'observe:trace', 'observe:profile', 'observe:compare', 'history', 'historical-specs:extract', 'historical-specs:evidence', 'precanonical:import', 'regressions', 'features', 'feature:list', 'feature:inspect', 'feature:map', 'examples:list', 'examples:load', 'spec:new', 'spec:plan', 'spec:log-entry', 'spec:validate', 'plan:list', 'plan:replay', 'plan:show', 'plan:undo', 'extension:install', 'extension:search', 'extension:list', 'mcp:serve', 'event:list', 'event:inspect', 'login', 'logout', 'whoami', 'entitlements' => $first,
+            'help', 'completion', 'new', 'serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail', 'affected-files', 'impacted-features', 'upgrade-check', 'explain', 'diff', 'trace', 'observe:trace', 'observe:profile', 'observe:compare', 'history', 'historical-specs:extract', 'historical-specs:evidence', 'precanonical:import', 'regressions', 'features', 'feature:list', 'feature:inspect', 'feature:map', 'examples:list', 'examples:load', 'spec:new', 'spec:plan', 'spec:log-entry', 'spec:validate', 'spec:promote', 'plan:list', 'plan:replay', 'plan:show', 'plan:undo', 'extension:install', 'extension:search', 'extension:list', 'mcp:serve', 'event:list', 'event:inspect', 'login', 'logout', 'whoami', 'entitlements' => $first,
             'license' => match ($second) {
                 'status' => 'license status',
                 'activate' => 'license activate',
@@ -196,7 +196,9 @@ final class ApiSurfaceRegistry
             },
             'context' => match ($second) {
                 'init' => 'context init',
+                'bootstrap' => 'context bootstrap',
                 'doctor' => 'context doctor',
+                'recover' => 'context recover',
                 'repair' => 'context repair',
                 'check-alignment' => 'context check-alignment',
                 default => null,
@@ -217,7 +219,7 @@ final class ApiSurfaceRegistry
             'migrate' => $second === 'definitions' ? 'migrate definitions' : null,
             'codemod' => $second === 'run' ? 'codemod run' : null,
             'doctor', 'prompt' => $first,
-            'inspect', 'verify' => $second !== '' ? $first . ' ' . $second : null,
+            'inspect', 'verify', 'test' => $second !== '' ? $first . ' ' . $second : null,
             'generate' => $second === '' || str_starts_with($second, '--')
                 ? ($this->containsGenerateMetaFlag($args) ? 'generate <intent>' : null)
                 : (in_array($second, $generateTargets, true) ? 'generate ' . $second : 'generate <intent>'),
@@ -386,7 +388,9 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('cache inspect', 'cache inspect', 'stable', 'Inspect deterministic compile cache state, keys, and invalidation reasons.'),
             $this->cliCommandEntry('cache clear', 'cache clear', 'stable', 'Clear deterministic compile cache artifacts and generated projections.'),
             $this->cliCommandEntry('context init', 'context init <feature>', 'stable', 'Create missing canonical feature context files without overwriting existing files.'),
+            $this->cliCommandEntry('context bootstrap', 'context bootstrap <feature>', 'stable', 'Initialize, inspect, and verify one feature context in a single deterministic batch workflow.'),
             $this->cliCommandEntry('context doctor', 'context doctor --feature=<feature>|--all', 'stable', 'Validate canonical feature context files and report deterministic repair guidance.'),
+            $this->cliCommandEntry('context recover', 'context recover <feature>', 'stable', 'Run doctor, alignment, repair, and verification for one feature context in deterministic order.'),
             $this->cliCommandEntry('context repair', 'context repair --feature=<feature>', 'stable', 'Apply explicit safe normalization-only repairs to canonical feature context and re-evaluate consumability.'),
             $this->cliCommandEntry('context check-alignment', 'context check-alignment --feature=<feature>', 'stable', 'Check deterministic spec-state alignment for one feature and report actionable mismatches.'),
             $this->cliCommandEntry('implement feature', 'implement feature <feature> [--repair|--auto-repair]', 'stable', 'Execute deterministic feature work from canonical context artifacts, with bounded repair when explicitly requested.'),
@@ -399,8 +403,9 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('spec:new', 'spec:new <feature> <slug>', 'stable', 'Create a new draft execution spec with deterministic ID allocation and canonical template content.'),
             $this->cliCommandEntry('spec:plan', 'spec:plan <feature> <id> [--force]', 'stable', 'Create a deterministic implementation plan file for one active execution spec.'),
             $this->cliCommandEntry('spec:log-entry', 'spec:log-entry <feature>/<id>-<slug>|<id>-<slug>|<feature> <id>', 'stable', 'Emit the exact canonical implementation-log entry content for one active execution spec.'),
+            $this->cliCommandEntry('spec:promote', 'spec:promote <feature>/<id>-<slug>|<id>-<slug>|<feature> <id>', 'stable', 'Promote one draft execution spec to the active specs directory and run context and feature map checks.'),
             $this->cliCommandEntry('spec:validate', 'spec:validate [--require-plans]', 'stable', 'Validate draft and active execution specs against canonical naming, placement, heading, metadata, implementation-plan, and required implementation-log coverage rules.'),
-            $this->cliCommandEntry('doctor', 'doctor [--feature=<feature>] [--graph] [--strict] [--cli] [--deep] [--static] [--style] [--quality] [--tests]', 'experimental', 'Diagnose environment, install, build, architecture, and optional quality-tool issues from current Foundry state. Use --graph to focus on canonical graph health.'),
+            $this->cliCommandEntry('doctor', 'doctor [--feature=<feature>] [--graph] [--strict] [--cli] [--deep] [--ready] [--static] [--style] [--quality] [--tests]', 'experimental', 'Diagnose environment, install, build, architecture, and optional quality-tool issues from current Foundry state. Use --graph to focus on canonical graph health or --ready for a deterministic readiness batch.'),
             $this->cliCommandEntry('upgrade-check', 'upgrade-check [--target=<version>]', 'stable', 'Assess whether the current app is ready for a target framework upgrade.'),
             $this->cliCommandEntry('observe:trace', 'observe:trace [<feature>] [--feature=<feature>] [--route=<METHOD PATH>]', 'experimental', 'Capture a graph-aware execution trace summary mapped to features, execution plans, guards, and interceptors.'),
             $this->cliCommandEntry('observe:profile', 'observe:profile [<feature>] [--feature=<feature>] [--route=<METHOD PATH>]', 'experimental', 'Capture graph-aware timing, memory, and hotspot summaries for current execution plans.'),
@@ -436,7 +441,8 @@ final class ApiSurfaceRegistry
             $this->cliCommandEntry('mcp:serve', 'mcp:serve [--tool=<tool>] [--input=<json>]', 'experimental', 'Run the read-only Foundry MCP server over stdio, or invoke one deterministic tool in one-shot mode for machine workflows.'),
             $this->cliCommandEntry('event:list', 'event:list', 'experimental', 'List registered events and listener counts in deterministic order.'),
             $this->cliCommandEntry('event:inspect', 'event:inspect <event>', 'experimental', 'Inspect one event and its listener metadata in deterministic order.'),
-            $this->cliCommandEntry('explain', 'explain [<target>] [--type=<kind>] [--markdown] [--deep] [--neighbors|--no-neighbors] [--no-diagnostics] [--no-flow] [--git] [--diff]', 'experimental', 'Explain a framework, application, or installed pack subject from the compiled graph, projections, diagnostics, docs metadata, and extension registry. When no target is given, Foundry explains the first feature or route deterministically. JSON output includes deterministic confidence data, optional Git context, and `foundry explain --diff` renders the last architectural generate diff.'),
+            $this->cliCommandEntry('explain', 'explain [<target>] [--type=<kind>] [--full] [--markdown] [--deep] [--neighbors|--no-neighbors] [--no-diagnostics] [--no-flow] [--git] [--diff]', 'experimental', 'Explain a framework, application, or installed pack subject from the compiled graph, projections, diagnostics, docs metadata, and extension registry. When no target is given, Foundry explains the first feature or route deterministically. JSON output includes deterministic confidence data, optional Git context, and `foundry explain --diff` renders the last architectural generate diff.'),
+            $this->cliCommandEntry('test feature', 'test feature <feature> [--filter=<pattern>] [--full] [--coverage] [--coverage-min=<percent>] [--phpunit=<binary>]', 'experimental', 'Run deterministic feature-scoped tests with optional full-suite and coverage verification steps.'),
             $this->cliCommandEntry('diff', 'diff', 'experimental', 'Compare the current graph against the last compiled baseline.'),
             $this->cliCommandEntry('trace', 'trace [<target>]', 'experimental', 'Analyze local trace output for a feature, route, or free-form filter.'),
             $this->cliCommandEntry('generate <intent>', 'generate <intent...> --mode=<new|modify|repair> [--target=<target>] [--dry-run] [--no-verify] [--explain] [--allow-risky] [--allow-dirty] [--allow-pack-install] [--packs=<vendor/pack,...>] [--git-commit] [--git-commit-message=<message>] | generate --workflow=<file> [--multi-step] [--dry-run] [--interactive] [--no-verify] [--allow-risky] [--allow-dirty] [--allow-pack-install] [--allow-policy-violations] [--policy-check] | generate --template=<template_id> [--param <name=value>] [--dry-run] [--interactive] [--no-verify] [--explain] [--allow-risky] [--allow-dirty] [--allow-pack-install] [--allow-policy-violations] [--policy-check] [--git-commit] [--git-commit-message=<message>]', 'experimental', 'Plan and execute explain-driven, pack-aware system changes through deterministic generators, repository-local templates and workflow files, Git-aware safety checks, architectural snapshots, explain diffs, verification loops, explicit plan/outcome confidence signals, and ordered multi-step workflow execution.'),
@@ -540,7 +546,7 @@ final class ApiSurfaceRegistry
             'uploads' => ['experimental', 'generate uploads <profile> [--force]', 'Generate upload profile scaffolding.'],
             'notification' => ['experimental', 'generate notification <name> [--force]', 'Generate notification scaffolding.'],
             'api-resource' => ['experimental', 'generate api-resource <name> --definition=<file> [--force]', 'Generate an API resource from a definition file.'],
-            'docs' => ['stable', 'generate docs [--format=markdown|html]', 'Generate graph-derived docs and CLI/API reference output.'],
+            'docs' => ['stable', 'generate docs [--format=markdown|html] [--all]', 'Generate graph-derived docs and CLI/API reference output.'],
             'indexes' => ['internal', 'generate indexes', 'Regenerate projection indexes directly for framework workflows.'],
             'migration' => ['internal', 'generate migration <definition.yaml>', 'Generate migration helper output for framework workflows.'],
             'billing' => ['experimental', 'generate billing <provider> [--force]', 'Generate billing provider scaffolding.'],
@@ -563,7 +569,10 @@ final class ApiSurfaceRegistry
             'extensions' => ['experimental', 'verify extensions', 'Verify extension registration and compatibility warnings.'],
             'compatibility' => ['experimental', 'verify compatibility', 'Verify extension and pack compatibility contracts.'],
             'feature' => ['stable', 'verify feature <feature>', 'Verify feature-local contract completeness.'],
+            'feature-work' => ['stable', 'verify feature-work <feature>', 'Run deterministic feature context, boundary, and mapping verification as one workflow.'],
             'features' => ['stable', 'verify features', 'Verify feature workspace boundary compliance and canonical/legacy duplication diagnostics.'],
+            'architecture' => ['stable', 'verify architecture', 'Run compile, inspect, and verify architecture checks in one deterministic workflow.'],
+            'done' => ['stable', 'verify done --feature=<feature> [--coverage-min=<percent>] [--skip-coverage] [--phpunit=<binary>]', 'Run the completion quality gate workflow for one feature, including verification, tests, and optional coverage checks.'],
             'context' => ['stable', 'verify context [--feature=<feature>]', 'Verify feature context health using doctor and alignment results.'],
             'state-store' => ['stable', 'verify state-store', 'Verify local SQLite state-store readiness and deterministic round-trip behavior.'],
             'marketplace' => ['stable', 'verify marketplace', 'Verify local marketplace metadata and artifact integrity deterministically.'],
@@ -759,10 +768,10 @@ final class ApiSurfaceRegistry
             in_array($signature, ['serve', 'queue:work', 'queue:inspect', 'schedule:run', 'trace:tail'], true) => 'Runtime',
             in_array($signature, ['license status', 'license activate', 'license deactivate', 'features'], true) => 'Monetization',
             in_array($signature, ['pack install', 'pack purchase', 'pack search', 'pack remove', 'pack list', 'pack info', 'login', 'logout', 'whoami', 'entitlements'], true) => 'Extensions',
-            in_array($signature, ['init', 'new', 'init app', 'examples:list', 'examples:load', 'preview notification', 'implement feature', 'implement spec', 'plan feature', 'spec:new', 'spec:plan', 'historical-specs:extract', 'historical-specs:evidence', 'precanonical:import'], true)
+            in_array($signature, ['init', 'new', 'init app', 'examples:list', 'examples:load', 'preview notification', 'implement feature', 'implement spec', 'plan feature', 'spec:new', 'spec:plan', 'spec:promote', 'historical-specs:extract', 'historical-specs:evidence', 'precanonical:import'], true)
                 || str_starts_with($signature, 'generate ')
                 => 'App Scaffolding',
-            in_array($signature, ['upgrade-check', 'spec:log-entry', 'spec:validate', 'verify graph', 'verify graph-integrity', 'verify pipeline', 'verify extensions', 'verify compatibility', 'verify feature', 'verify features', 'verify context', 'verify state-store', 'verify marketplace', 'verify coverage', 'verify resource', 'verify notifications', 'verify api', 'verify billing', 'verify workflows', 'verify orchestrations', 'verify search', 'verify streams', 'verify locales', 'verify policies', 'verify contracts', 'verify cli-surface', 'verify auth', 'verify cache', 'verify events', 'verify jobs', 'verify migrations'], true)
+            in_array($signature, ['upgrade-check', 'spec:log-entry', 'spec:validate', 'verify graph', 'verify graph-integrity', 'verify pipeline', 'verify architecture', 'verify feature', 'verify features', 'verify feature-work', 'verify context', 'verify done', 'verify state-store', 'verify marketplace', 'verify coverage', 'verify resource', 'verify notifications', 'verify api', 'verify billing', 'verify workflows', 'verify orchestrations', 'verify search', 'verify streams', 'verify locales', 'verify policies', 'verify contracts', 'verify cli-surface', 'verify auth', 'verify cache', 'verify events', 'verify jobs', 'verify migrations', 'verify extensions', 'verify compatibility', 'test feature'], true)
                 => 'Verification',
             in_array($signature, ['migrate definitions', 'codemod run', 'inspect extensions', 'inspect extension', 'inspect packs', 'inspect pack', 'inspect marketplace', 'inspect compatibility', 'inspect migrations', 'inspect definition-format', 'generate migration'], true)
                 => 'Extensions',

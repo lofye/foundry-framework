@@ -60,3 +60,79 @@ Timestamp: 2026-04-17T09:49:12-04:00
 - Constraints
 - Expected Behavior
 - Acceptance Criteria
+
+### Decision: add first-class batch workflow commands for common CLI execution loops
+Timestamp: 2026-05-28T16:46:56-04:00
+
+**Context**
+- The live workflow script and routine framework development loops repeatedly executed the same command groups, creating high typing overhead and avoidable drift between documented and practiced command sequences.
+- Existing commands already enforced the required checks, but multi-step workflows were fragmented across many manual invocations.
+
+**Decision**
+- Introduce CLI-owned batch workflow commands/options for common grouped flows:
+  - `doctor --ready`
+  - `context bootstrap <feature>`
+  - `context recover <feature>`
+  - `spec:promote`
+  - `verify architecture`
+  - `verify feature-work <feature>`
+  - `verify done --feature=<feature>`
+  - `test feature <feature>`
+  - `generate docs --all`
+  - `explain feature <feature> --full`
+- Back these flows with a shared batch runner that executes deterministic ordered steps and emits an aggregate workflow payload.
+
+**Reasoning**
+- First-class commands keep workflows explicit, testable, and discoverable in the framework command surface.
+- Shared orchestration logic avoids one-off command chaining implementations and keeps failure handling consistent.
+- Users get lower typing burden without weakening existing safety, context, boundary, and quality gates.
+
+**Alternatives Considered**
+- Recommend user-local shell aliases only.
+- Add an external shell script wrapper for demos.
+- Keep manual multi-command instructions and shorten docs only.
+
+**Impact**
+- Common developer workflows are now invokable through shorter, deterministic commands.
+- CLI surface metadata, verification probes, and command matching tests now include batch workflow surfaces.
+- Demo and onboarding workflows can be significantly shorter while preserving the same enforcement semantics.
+
+**Spec Reference**
+- Purpose
+- Scope
+- Constraints
+- Requested Changes
+
+### Decision: align cli-experience current state with implemented batch workflow command surface
+Timestamp: 2026-05-28T16:46:56-04:00
+
+**Context**
+- The module now ships deterministic batch workflow command surfaces and grouped command options for readiness, context bootstrap/recovery, promotion, architecture checks, feature-work checks, done-gate checks, feature-focused testing, full docs generation, and full feature explain dossiers.
+- The state document records these implemented CLI capabilities and updated demo usage.
+- Context verification requires current-state claims that extend prior spec language to be explicitly decision-backed.
+
+**Decision**
+- Treat the current-state claims for the implemented batch workflow command surfaces as canonical module reality after `003-common-workflow-batch-commands`.
+- Keep the CLI experience state focused on deterministic command-surface behavior, registry/surface verification alignment, and explicit failure reporting for grouped workflows.
+
+**Reasoning**
+- The shipped behavior is concrete, test-covered, and integrated into command registration and API surface verification.
+- Recording the state claims explicitly in the decision ledger preserves context resumability and prevents accidental drift classification.
+- This keeps the module context truthful while preserving stable deterministic CLI contracts.
+
+**Alternatives Considered**
+- Remove new state claims and keep only pre-batch command wording.
+- Keep the claims but rely only on execution spec text without a decision entry.
+- Delay state updates until a broader follow-up CLI spec.
+
+**Impact**
+- Doctor/alignment checks can treat the expanded current-state command-surface claims as intentional and decision-backed.
+- The module context now captures that grouped workflows are first-class command surfaces rather than shell-level shortcuts.
+- Future CLI ergonomics specs can build on an explicit baseline for batch workflow behavior.
+
+**Spec Reference**
+- Purpose
+- Goals
+- Constraints
+- Expected Behavior
+- Acceptance Criteria

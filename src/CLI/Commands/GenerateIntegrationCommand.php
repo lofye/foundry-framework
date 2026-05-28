@@ -6,6 +6,7 @@ namespace Foundry\CLI\Commands;
 
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
+use Foundry\CLI\Workflow\BatchWorkflowRunner;
 use Foundry\Compiler\CompileOptions;
 use Foundry\Support\FoundryError;
 
@@ -89,6 +90,10 @@ final class GenerateIntegrationCommand extends Command
      */
     private function generateDocs(array $args, CommandContext $context): array
     {
+        if (in_array('--all', $args, true)) {
+            return $this->generateDocsAndInspectUi($context);
+        }
+
         $format = strtolower((string) ($this->extractOption($args, '--format') ?? 'markdown'));
         if (!in_array($format, ['markdown', 'html'], true)) {
             throw new FoundryError('CLI_DOCS_FORMAT_INVALID', 'validation', ['format' => $format], 'Docs format must be markdown or html.');
@@ -109,6 +114,59 @@ final class GenerateIntegrationCommand extends Command
                 'docs' => $result,
             ],
         ];
+    }
+
+    private function generateDocsAndInspectUi(CommandContext $context): array
+    {
+        $jsonContext = new CommandContext($context->paths()->root(), true);
+        $batch = (new BatchWorkflowRunner())->run('generate docs all', [
+            [
+                'label' => 'generate_docs',
+                'command' => 'generate docs --format=markdown',
+                'run' => fn(): array => $this->generateDocs(['generate', 'docs', '--format=markdown'], $jsonContext),
+            ],
+            [
+                'label' => 'generate_inspect_ui',
+                'command' => 'generate inspect-ui',
+                'run' => static fn(): array => (new GeneratePlatformCommand())->run(['generate', 'inspect-ui'], $jsonContext),
+            ],
+        ]);
+
+        $docs = $this->stepPayload($batch, 'generate_docs');
+        $ui = $this->stepPayload($batch, 'generate_inspect_ui');
+
+        return [
+            'status' => (int) $batch['status'],
+            'message' => null,
+            'payload' => [
+                'ok' => $batch['ok'],
+                'workflow' => $batch['workflow'],
+                'status' => $batch['status'],
+                'summary' => $batch['summary'],
+                'failed_step' => $batch['failed_step'],
+                'next_actions' => $batch['next_actions'],
+                'steps' => $batch['steps'],
+                'docs' => $docs,
+                'inspect_ui' => $ui,
+            ],
+        ];
+    }
+
+    /**
+     * @param array<string,mixed> $batch
+     * @return array<string,mixed>|null
+     */
+    private function stepPayload(array $batch, string $label): ?array
+    {
+        foreach ((array) ($batch['steps'] ?? []) as $row) {
+            if (!is_array($row) || (string) ($row['label'] ?? '') !== $label) {
+                continue;
+            }
+
+            return is_array($row['payload'] ?? null) ? $row['payload'] : null;
+        }
+
+        return null;
     }
 
     /**

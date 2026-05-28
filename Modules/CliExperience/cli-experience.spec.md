@@ -10,6 +10,7 @@
 - Keep command invocation deterministic and unambiguous.
 - Expose CLI capabilities through stable verification and registry surfaces.
 - Make common workflows easier without weakening Foundry’s explicit contracts.
+- Provide first-class batch workflow commands for high-frequency command groups to reduce repetitive typing.
 
 ## Non-Goals
 - Do not redesign the full Foundry command model.
@@ -23,6 +24,7 @@
 - New usability features must not slow down ordinary command execution materially.
 - Automation-facing surfaces must remain stable and trustworthy.
 - CLI ergonomics must not weaken active/draft or canonical-identity rules.
+- Batch workflow commands must compose existing command contracts rather than bypassing validation semantics.
 
 ## Expected Behavior
 - Foundry provides a reliable command surface for human and agent workflows.
@@ -31,6 +33,8 @@
 - Dynamic completion can expose feature names and active execution-spec ids where appropriate, excluding drafts by default.
 - CLI help, registry metadata, and surface verification remain aligned.
 - Unsupported or invalid completion requests fail clearly.
+- Common grouped workflows are available through deterministic batch commands and options, including readiness, context bootstrap/recovery, architecture verification, feature-work verification, completion verification, and feature-focused test orchestration.
+- Batch workflow outputs provide structured aggregate status with per-step results and clear failure location.
 
 ## Acceptance Criteria
 - Canonical CLI commands remain stable and verifiable.
@@ -38,6 +42,7 @@
 - Dynamic completion reflects real feature/spec state deterministically, including active-only execution-spec id completion by default.
 - CLI surface verification remains green after usability changes.
 - Documentation explains how to generate and use bash and zsh completion and that active execution specs are completed by default.
+- Batch workflow commands are discoverable, registry-backed, and covered by command-surface tests and verification probes.
 
 ## Assumptions
 - CLI usability improvements will continue to grow as a dedicated concern rather than being scattered across unrelated features.

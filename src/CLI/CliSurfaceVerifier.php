@@ -263,6 +263,13 @@ final class CliSurfaceVerifier
             'implement feature' => ['implement', 'feature', 'example-feature'],
             'implement spec' => ['implement', 'spec', 'example-feature', '001'],
             'plan feature' => ['plan', 'feature', 'example-feature'],
+            'spec:promote' => ['spec:promote', 'example-feature', '001'],
+            'context bootstrap' => ['context', 'bootstrap', 'example-feature'],
+            'context recover' => ['context', 'recover', 'example-feature'],
+            'verify architecture' => ['verify', 'architecture'],
+            'verify feature-work' => ['verify', 'feature-work', 'example-feature'],
+            'verify done' => ['verify', 'done', '--feature=example-feature', '--skip-coverage'],
+            'test feature' => ['test', 'feature', 'example-feature'],
             default => array_values(array_filter(explode(' ', $signature), static fn(string $part): bool => $part !== '')),
         };
     }

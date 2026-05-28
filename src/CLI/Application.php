@@ -10,8 +10,10 @@ use Foundry\CLI\Commands\CodemodRunCommand;
 use Foundry\CLI\Commands\CompileGraphCommand;
 use Foundry\CLI\Commands\CompletionCommand;
 use Foundry\CLI\Commands\ContextCheckAlignmentCommand;
+use Foundry\CLI\Commands\ContextBootstrapCommand;
 use Foundry\CLI\Commands\ContextDoctorCommand;
 use Foundry\CLI\Commands\ContextInitCommand;
+use Foundry\CLI\Commands\ContextRecoverCommand;
 use Foundry\CLI\Commands\ContextRepairCommand;
 use Foundry\CLI\Commands\DiffCommand;
 use Foundry\CLI\Commands\DoctorCommand;
@@ -72,16 +74,21 @@ use Foundry\CLI\Commands\ServeCommand;
 use Foundry\CLI\Commands\SpecLogEntryCommand;
 use Foundry\CLI\Commands\SpecNewCommand;
 use Foundry\CLI\Commands\SpecPlanCommand;
+use Foundry\CLI\Commands\SpecPromoteCommand;
 use Foundry\CLI\Commands\SpecValidateCommand;
+use Foundry\CLI\Commands\TestFeatureCommand;
 use Foundry\CLI\Commands\TraceCommand;
 use Foundry\CLI\Commands\UpgradeCheckCommand;
 use Foundry\CLI\Commands\VerifyCompatibilityCommand;
 use Foundry\CLI\Commands\VerifyContextCommand;
 use Foundry\CLI\Commands\VerifyContractsCommand;
 use Foundry\CLI\Commands\VerifyCoverageCommand;
+use Foundry\CLI\Commands\VerifyDoneCommand;
+use Foundry\CLI\Commands\VerifyFeatureWorkCommand;
 use Foundry\CLI\Commands\VerifyFeatureCommand;
 use Foundry\CLI\Commands\VerifyFeaturesCommand;
 use Foundry\CLI\Commands\VerifyGraphCommand;
+use Foundry\CLI\Commands\VerifyArchitectureCommand;
 use Foundry\CLI\Commands\VerifyIntegrationCommand;
 use Foundry\CLI\Commands\VerifyPipelineCommand;
 use Foundry\CLI\Commands\VerifyPlatformCommand;
@@ -117,7 +124,9 @@ final class Application
             new CompileGraphCommand(),
             new CompletionCommand(),
             new ContextInitCommand(),
+            new ContextBootstrapCommand(),
             new ContextDoctorCommand(),
+            new ContextRecoverCommand(),
             new ContextRepairCommand(),
             new ContextCheckAlignmentCommand(),
             new ImplementFeatureCommand(),
@@ -129,6 +138,7 @@ final class Application
             new PlanUndoCommand(),
             new SpecNewCommand(),
             new SpecPlanCommand(),
+            new SpecPromoteCommand(),
             new SpecLogEntryCommand(),
             new SpecValidateCommand(),
             new CacheInspectCommand(),
@@ -154,6 +164,9 @@ final class Application
             new VerifyPipelineCommand(),
             new VerifyCompatibilityCommand(),
             new VerifyCoverageCommand(),
+            new VerifyArchitectureCommand(),
+            new VerifyFeatureWorkCommand(),
+            new VerifyDoneCommand(),
             new UpgradeCheckCommand(),
             new MigrateDefinitionsCommand(),
             new CodemodRunCommand(),
@@ -197,6 +210,7 @@ final class Application
             new QueueWorkCommand(),
             new ScheduleRunCommand(),
             new ImpactCommand(),
+            new TestFeatureCommand(),
         ];
     }
 

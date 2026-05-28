@@ -778,3 +778,8 @@
 ## 2026-05-28 00:51:00 -0400
 - spec: Modules/ExtensionSystem/specs/003-pack-root-layout-and-local-context.md
 - note: Moved new pack installs to canonical `Packs/{vendor}/{pack}` roots, preserved registry-only activation and legacy root loading, and surfaced canonical install/local-context paths through pack, inspect, explain, generate, and API classification outputs.
+
+## 2026-05-28 16:46:56 -0400
+- spec: Modules/CliExperience/specs/003-common-workflow-batch-commands.md
+- note: Added deterministic first-class batch workflow commands (`doctor --ready`, `context bootstrap/recover`, `spec:promote`, `verify architecture`, `verify feature-work`, `verify done`, and `test feature`) backed by a shared batch runner with stable aggregate step reporting.
+- note: Extended existing command surfaces with grouped modes (`generate docs --all`, `explain feature --full`), registered the new command signatures in CLI surface metadata/probes, and updated tests and demo workflow docs to use the shorter command paths.
