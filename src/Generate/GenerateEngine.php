@@ -85,8 +85,7 @@ final class GenerateEngine
         ?array $workflowLinkage = null,
         ?array $templateMetadata = null,
         ?\Closure $planRecordObserver = null,
-    ): array
-    {
+    ): array {
         $gitInspector = new GitRepositoryInspector($this->paths->root());
         $planStore = new PlanRecordStore($this->paths);
         $metricsStore = new GenerateMetricsStore($this->paths);
@@ -562,9 +561,9 @@ final class GenerateEngine
                 $packsInstalled,
             );
 
-                $payload = $this->buildPayload(
-                    intent: $intent,
-                    plan: $executionPlan,
+            $payload = $this->buildPayload(
+                intent: $intent,
+                plan: $executionPlan,
                 actionsTaken: $actionsTaken,
                 verificationResults: $verificationResults,
                 outcomeConfidence: $outcomeConfidence,
@@ -585,17 +584,17 @@ final class GenerateEngine
                 architectureDiff: $architectureDiff,
                 postExplain: $postExplain,
                 postExplainRendered: $postExplainRendered,
-                    interactive: $this->interactivePayload($plan, $interactiveReview),
-                    safetyRouting: $safetyRouting,
-                    policy: $policy,
-                    approval: $approval,
-                    workflowLinkage: $workflowLinkage,
-                    templateMetadata: $templateMetadata,
-                );
+                interactive: $this->interactivePayload($plan, $interactiveReview),
+                safetyRouting: $safetyRouting,
+                policy: $policy,
+                approval: $approval,
+                workflowLinkage: $workflowLinkage,
+                templateMetadata: $templateMetadata,
+            );
 
-                $record = $artifactStore->persistGenerateRecord($this->historyPayload($payload, $postCompile->graph->sourceHash()));
-                $planRecord = $planStore->persist($this->planRecordPayload(
-                    planId: $planId,
+            $record = $artifactStore->persistGenerateRecord($this->historyPayload($payload, $postCompile->graph->sourceHash()));
+            $planRecord = $planStore->persist($this->planRecordPayload(
+                planId: $planId,
                 status: 'success',
                 intent: $intent,
                 context: $context,
@@ -608,17 +607,17 @@ final class GenerateEngine
                 policy: $policy,
                 frameworkVersion: $frameworkVersion,
                 graphVersion: $graphVersion,
-                    sourceHash: $postCompile->graph->sourceHash(),
-                    error: null,
-                    undo: $this->persistedUndoPayload($fileSnapshots, $fileSnapshotsAfter),
-                    approval: $approval,
-                    workflowLinkage: $workflowLinkage,
-                    templateMetadata: $templateMetadata,
-                ));
-                $this->observePlanRecord($planRecordObserver, $planRecord);
-                $payload['record'] = $this->historyRecordReference($record);
-                $payload['plan_record'] = $this->planRecordReference($planRecord);
-                $this->recordSingleMetrics($metricsStore, $planId, 'completed', $payload, $workflowLinkage);
+                sourceHash: $postCompile->graph->sourceHash(),
+                error: null,
+                undo: $this->persistedUndoPayload($fileSnapshots, $fileSnapshotsAfter),
+                approval: $approval,
+                workflowLinkage: $workflowLinkage,
+                templateMetadata: $templateMetadata,
+            ));
+            $this->observePlanRecord($planRecordObserver, $planRecord);
+            $payload['record'] = $this->historyRecordReference($record);
+            $payload['plan_record'] = $this->planRecordReference($planRecord);
+            $this->recordSingleMetrics($metricsStore, $planId, 'completed', $payload, $workflowLinkage);
 
             return $payload;
         } catch (\Throwable $error) {
@@ -782,8 +781,7 @@ final class GenerateEngine
         Intent $intent,
         GenerateWorkflowDefinition $definition,
         ?array $templateMetadata = null,
-    ): array
-    {
+    ): array {
         $resolver = new GenerateWorkflowContextResolver();
         if ($intent->multiStep && count($definition->steps) < 2) {
             throw new FoundryError(

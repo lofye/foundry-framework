@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Foundry\Tests\Unit;
 
 use Foundry\Explain\ExplainModel;
-use Foundry\Generate\GeneratePolicyEngine;
 use Foundry\Generate\GeneratePlanPreviewBuilder;
+use Foundry\Generate\GeneratePolicyEngine;
 use Foundry\Generate\GenerationContextPacket;
 use Foundry\Generate\GenerationPlan;
 use Foundry\Generate\Intent;

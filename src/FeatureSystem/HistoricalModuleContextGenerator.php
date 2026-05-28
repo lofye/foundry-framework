@@ -460,7 +460,7 @@ MD,
 
     private function replaceManagedSection(string $contents, string $section, string $body): string
     {
-        $replacement = "## " . $section . "\n\n" . rtrim($body) . "\n";
+        $replacement = '## ' . $section . "\n\n" . rtrim($body) . "\n";
         $pattern = '/^## ' . preg_quote($section, '/') . '\s*$\R.*?(?=^## |\z)/ms';
         if (preg_match($pattern, $contents) === 1) {
             return preg_replace($pattern, $replacement . "\n", $contents, 1) ?? $contents;

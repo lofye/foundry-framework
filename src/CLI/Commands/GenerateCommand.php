@@ -8,8 +8,8 @@ use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
 use Foundry\Generate\ApprovalRecordStore;
 use Foundry\Generate\GenerateEngine;
-use Foundry\Generate\InteractiveGenerateReviewer;
 use Foundry\Generate\Intent;
+use Foundry\Generate\InteractiveGenerateReviewer;
 use Foundry\Generate\PlanRecordStore;
 use Foundry\Generate\TerminalInteractiveGenerateReviewer;
 use Foundry\Packs\PackManager;
@@ -688,9 +688,9 @@ final class GenerateCommand extends Command
 
                 echo $text;
             }
-            : static function (string $text): void {
-                echo $text;
-            };
+        : static function (string $text): void {
+            echo $text;
+        };
 
         return new TerminalInteractiveGenerateReviewer(
             outputWriter: $writer,

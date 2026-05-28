@@ -16,9 +16,15 @@ final class EventRegistryDispatcherTest extends TestCase
         $registry = new EventRegistry();
         $calls = [];
 
-        $registry->register('feature.created', function () use (&$calls): void { $calls[] = 'b'; }, priority: 0, source: 'feature:b');
-        $registry->register('feature.created', function () use (&$calls): void { $calls[] = 'a'; }, priority: 10, source: 'feature:a');
-        $registry->register('feature.created', function () use (&$calls): void { $calls[] = 'c'; }, priority: 0, source: 'feature:c');
+        $registry->register('feature.created', function () use (&$calls): void {
+            $calls[] = 'b';
+        }, priority: 0, source: 'feature:b');
+        $registry->register('feature.created', function () use (&$calls): void {
+            $calls[] = 'a';
+        }, priority: 10, source: 'feature:a');
+        $registry->register('feature.created', function () use (&$calls): void {
+            $calls[] = 'c';
+        }, priority: 0, source: 'feature:c');
 
         (new EventDispatcher($registry))->dispatch('feature.created', []);
 

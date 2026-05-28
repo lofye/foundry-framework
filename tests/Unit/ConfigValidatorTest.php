@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Foundry\Tests\Unit;
 
-use Foundry\Compiler\CompilationState;
-use Foundry\Compiler\Diagnostics\DiagnosticBag;
 use Foundry\Compiler\Extensions\AbstractCompilerExtension;
 use Foundry\Compiler\Extensions\ExtensionDescriptor;
 use Foundry\Compiler\Extensions\ExtensionRegistry;

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Foundry\Generate;
 
+use Foundry\Compiler\Extensions\PackRegistry;
 use Foundry\Marketplace\PackEntitlementResolver;
 use Foundry\Packs\HostedPackRegistry;
 use Foundry\Support\FoundryError;
-use Foundry\Compiler\Extensions\PackRegistry;
 
 final class PackRequirementResolver
 {

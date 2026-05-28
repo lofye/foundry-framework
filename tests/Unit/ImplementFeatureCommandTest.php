@@ -76,7 +76,7 @@ final class ImplementFeatureCommandTest extends TestCase
 
     public function test_blocked_status_exits_non_zero_and_renders_empty_sections(): void
     {
-        $command = new ImplementFeatureCommand(fn (): array => $this->payload(['status' => 'blocked']));
+        $command = new ImplementFeatureCommand(fn(): array => $this->payload(['status' => 'blocked']));
 
         $result = $command->run(['implement', 'feature', 'billing'], new CommandContext());
 
@@ -100,7 +100,7 @@ TEXT, $result['message']);
 
     public function test_human_output_renders_issues_actions_quality_gate_reason_and_required_action(): void
     {
-        $command = new ImplementFeatureCommand(fn (): array => $this->payload([
+        $command = new ImplementFeatureCommand(fn(): array => $this->payload([
             'status' => 'completed_with_issues',
             'can_proceed' => false,
             'requires_repair' => true,
@@ -147,7 +147,7 @@ TEXT, $result['message']);
 
     public function test_completed_status_exits_successfully(): void
     {
-        $command = new ImplementFeatureCommand(fn (): array => $this->payload(['status' => 'completed']));
+        $command = new ImplementFeatureCommand(fn(): array => $this->payload(['status' => 'completed']));
 
         $result = $command->run(['implement', 'feature', 'billing'], new CommandContext(jsonOutput: true));
 

@@ -21,7 +21,7 @@ parameters:
 		-
 			message: '#^Using nullsafe method call on non\-nullable type Foundry\\AI\\AIResultCache\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
-			count: 1
+			count: 2
 			path: src/AI/AIManager.php
 
 		-
@@ -29,24 +29,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/CLI/Application.php
-
-		-
-			message: '#^Offset ''handler'' on array\{handler\: string, class\: class\-string\<Foundry\\CLI\\Command\>&literal\-string, signatures\: list\<non\-empty\-string\>, orphan\: bool\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/CLI/CliSurfaceVerifier.php
-
-		-
-			message: '#^Offset ''handler'' on array\{handler\: string, class\: class\-string\<Foundry\\CLI\\Command\>&literal\-string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/CLI/CliSurfaceVerifier.php
-
-		-
-			message: '#^Offset ''handler'' on array\{handler\: string, class\: string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: src/CLI/CliSurfaceVerifier.php
 
 		-
 			message: '#^Offset 0 on array\{list\<string\>\} on left side of \?\? always exists and is not nullable\.$#'
@@ -65,6 +47,12 @@ parameters:
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/CLI/Commands/DoctorCommand.php
+
+		-
+			message: '#^Method Foundry\\CLI\\Commands\\GenerateCommand\:\:parse\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/CLI/Commands/GenerateCommand.php
 
 		-
 			message: '#^Method Foundry\\CLI\\Commands\\GenerateIntegrationCommand\:\:generateApiResource\(\) return type has no value type specified in iterable type array\.$#'
@@ -241,6 +229,12 @@ parameters:
 			path: src/CLI/Commands/InspectGraphCommand.php
 
 		-
+			message: '#^Method Foundry\\CLI\\Commands\\InspectGraphCommand\:\:inspectGraphIntegrity\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/CLI/Commands/InspectGraphCommand.php
+
+		-
 			message: '#^Method Foundry\\CLI\\Commands\\InspectGraphCommand\:\:inspectGraphOverview\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -289,63 +283,15 @@ parameters:
 			path: src/CLI/Commands/InspectGraphCommand.php
 
 		-
-			message: '#^Offset ''feature'' on array\{id\: string, feature\: string, type\: string, stage\: string, config\: array\<string, mixed\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
+			message: '#^Method Foundry\\CLI\\Commands\\InspectGraphCommand\:\:inspectSubgraph\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
 			path: src/CLI/Commands/InspectGraphCommand.php
 
 		-
-			message: '#^Offset ''from'' on array\{from\: string, to\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''name'' on array\{id\: mixed, name\: non\-empty\-string, order\: int, priority\: int, extension\: string, after_stage\: string\|null, before_stage\: string\|null\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
-			count: 2
-			path: src/CLI/Commands/InspectGraphCommand.php
-
-		-
-			message: '#^Offset ''id'' on array\{id\: string, feature\: string, type\: string, stage\: string, config\: array\<string, mixed\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/CLI/Commands/InspectGraphCommand.php
-
-		-
-			message: '#^Offset ''id'' on array\{id\: string, node_id\: string, stage\: string, priority\: int, dangerous\: bool\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/CLI/Commands/InspectGraphCommand.php
-
-		-
-			message: '#^Offset ''name'' on array\{id\: string, name\: non\-empty\-string, order\: int, priority\: int, extension\: string, after_stage\: string\|null, before_stage\: string\|null\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 3
-			path: src/CLI/Commands/InspectGraphCommand.php
-
-		-
-			message: '#^Offset ''order'' on array\{id\: string, name\: non\-empty\-string, order\: int, priority\: int, extension\: string, after_stage\: string\|null, before_stage\: string\|null\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/CLI/Commands/InspectGraphCommand.php
-
-		-
-			message: '#^Offset ''priority'' on array\{id\: string, node_id\: string, stage\: string, priority\: int, dangerous\: bool\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/CLI/Commands/InspectGraphCommand.php
-
-		-
-			message: '#^Offset ''stage'' on array\{id\: string, node_id\: string, stage\: string, priority\: int, dangerous\: bool\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/CLI/Commands/InspectGraphCommand.php
-
-		-
-			message: '#^Offset ''stage'' on non\-empty\-array\<string, mixed\> on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/CLI/Commands/InspectGraphCommand.php
-
-		-
-			message: '#^Offset ''to'' on array\{from\: string, to\: string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
+			count: 1
 			path: src/CLI/Commands/InspectGraphCommand.php
 
 		-
@@ -385,76 +331,76 @@ parameters:
 			path: src/CLI/Commands/InspectPlatformCommand.php
 
 		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/CLI/Commands/McpServeCommand.php
+
+		-
+			message: '#^Method Foundry\\CLI\\Commands\\McpServeCommand\:\:extractOption\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/CLI/Commands/McpServeCommand.php
+
+		-
+			message: '#^Match expression does not handle remaining value\: string$#'
+			identifier: match.unhandled
+			count: 1
+			path: src/CLI/CompletionService.php
+
+		-
+			message: '#^Offset mixed on array\{\} on left side of \?\?\= does not exist\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/CLI/CompletionService.php
+
+		-
 			message: '#^Strict comparison using \=\=\= between '''' and '''' will always evaluate to true\.$#'
 			identifier: identical.alwaysTrue
 			count: 1
 			path: src/Compiler/Analysis/AnalyzerContext.php
 
 		-
-			message: '#^Offset ''feature'' on array\{feature\: non\-empty\-string, missing_permissions\: non\-empty\-list\<non\-falsy\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Analysis/Analyzers/AuthAnalyzer.php
-
-		-
-			message: '#^Offset ''feature'' on array\{feature\: non\-empty\-string, namespace\: string, missing_keys\: non\-empty\-list\<non\-empty\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Analysis/Analyzers/CacheTopologyAnalyzer.php
-
-		-
-			message: '#^Offset ''namespace'' on array\{feature\: non\-empty\-string, namespace\: string, missing_keys\: non\-empty\-list\<non\-empty\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Analysis/Analyzers/CacheTopologyAnalyzer.php
-
-		-
-			message: '#^Offset ''message'' on array\{features\: list\<string\>, message\: string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Analysis/Analyzers/DependencyAnalyzer.php
-
-		-
-			message: '#^Offset ''id'' on array\{id\: string, stage\: string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Analysis/Analyzers/PipelineAnalyzer.php
-
-		-
-			message: '#^Offset ''stage'' on array\{id\: string, stage\: string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Analysis/Analyzers/PipelineAnalyzer.php
-
-		-
-			message: '#^Offset ''feature'' on array\{feature\: non\-empty\-string, field\: non\-falsy\-string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Analysis/Analyzers/SchemaIntegrityAnalyzer.php
-
-		-
-			message: '#^Offset ''field'' on array\{feature\: non\-empty\-string, field\: non\-falsy\-string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Analysis/Analyzers/SchemaIntegrityAnalyzer.php
-
-		-
-			message: '#^Offset ''feature'' on array\{feature\: non\-empty\-string, kind\: non\-falsy\-string, expected\: non\-falsy\-string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Analysis/Analyzers/TestCoverageAnalyzer.php
-
-		-
-			message: '#^Offset ''kind'' on array\{feature\: non\-empty\-string, kind\: non\-falsy\-string, expected\: non\-falsy\-string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Analysis/Analyzers/TestCoverageAnalyzer.php
-
-		-
-			message: '#^Instanceof between Foundry\\Compiler\\Analysis\\GraphAnalyzer and Foundry\\Compiler\\Analysis\\GraphAnalyzer will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
+			message: '#^Parameter \#1 \$array \(list\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
 			count: 1
-			path: src/Compiler/Analysis/ArchitectureDoctor.php
+			path: src/Compiler/ApplicationGraph.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>participatesInExecutionTopology" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/Compiler/ApplicationGraph.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>participatesInOwnershipTopology" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: src/Compiler/ApplicationGraph.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>profileable" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Compiler/ApplicationGraph.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>roles" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Compiler/ApplicationGraph.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>semanticCategory" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Compiler/ApplicationGraph.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>traceable" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Compiler/ApplicationGraph.php
 
 		-
 			message: '#^Method Foundry\\Compiler\\CompileCacheInspector\:\:requiresFullRecompile\(\) has parameter \$invalidatedInputs with no value type specified in iterable type array\.$#'
@@ -467,12 +413,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: src/Compiler/Extensions/CompatibilityChecker.php
-
-		-
-			message: '#^Dead catch \- Throwable is never thrown in the try block\.$#'
-			identifier: catch.neverThrown
-			count: 1
-			path: src/Compiler/Extensions/ExtensionRegistry.php
 
 		-
 			message: '#^Method Foundry\\Compiler\\Extensions\\ExtensionRegistry\:\:appendDiagnostic\(\) has parameter \$diagnostic with no value type specified in iterable type array\.$#'
@@ -511,49 +451,25 @@ parameters:
 			path: src/Compiler/Extensions/ExtensionRegistry.php
 
 		-
-			message: '#^Offset ''class'' on array\{class\: string, source_path\: string, extension\: Foundry\\Compiler\\Extensions\\CompilerExtension\|null, name\: string, version\: string, descriptor\: Foundry\\Compiler\\Extensions\\ExtensionDescriptor\|null, base_diagnostics\: array\<int, array\<string, mixed\>\>, diagnostics\: array\<int, array\<string, mixed\>\>, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Extensions/ExtensionRegistry.php
-
-		-
-			message: '#^Offset ''enabled'' on array\{class\: string, source_path\: string, extension\: Foundry\\Compiler\\Extensions\\CompilerExtension\|null, name\: string, version\: string, descriptor\: Foundry\\Compiler\\Extensions\\ExtensionDescriptor\|null, base_diagnostics\: array\<int, array\<string, mixed\>\>, diagnostics\: array\<int, array\<string, mixed\>\>, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: src/Compiler/Extensions/ExtensionRegistry.php
-
-		-
-			message: '#^Offset ''extension'' on array\{extension\: string, priority\: int, load_order\: int, pass\: Foundry\\Compiler\\CompilerPass\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Extensions/ExtensionRegistry.php
-
-		-
 			message: '#^Offset ''extension'' on array\{index\: mixed, extension\: string\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/Compiler/Extensions/ExtensionRegistry.php
 
 		-
-			message: '#^Offset ''load_order'' on array\{extension\: string, priority\: int, load_order\: int, pass\: Foundry\\Compiler\\CompilerPass\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''name'' on array\{class\: string, source_path\: string, extension\: Foundry\\Compiler\\Extensions\\CompilerExtension\|null, name\: string, version\: string, descriptor\: Foundry\\Compiler\\Extensions\\ExtensionDescriptor\|null, base_diagnostics\: list\<array\<string, mixed\>\>, diagnostics\: array\{\}, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 3
+			path: src/Compiler/Extensions/ExtensionRegistry.php
+
+		-
+			message: '#^Offset ''source_path'' on array\{class\: string, source_path\: string, extension\: Foundry\\Compiler\\Extensions\\CompilerExtension\|null, name\: string, version\: string, descriptor\: Foundry\\Compiler\\Extensions\\ExtensionDescriptor\|null, base_diagnostics\: list\<array\<string, mixed\>\>, diagnostics\: array\{\}, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 2
 			path: src/Compiler/Extensions/ExtensionRegistry.php
 
 		-
-			message: '#^Offset ''name'' on array\{class\: string, source_path\: string, extension\: Foundry\\Compiler\\Extensions\\CompilerExtension\|null, name\: string, version\: string, descriptor\: Foundry\\Compiler\\Extensions\\ExtensionDescriptor\|null, base_diagnostics\: array\<int, array\<string, mixed\>\>, diagnostics\: array\<int, array\<string, mixed\>\>, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Extensions/ExtensionRegistry.php
-
-		-
-			message: '#^Offset ''priority'' on array\{extension\: string, priority\: int, load_order\: int, pass\: Foundry\\Compiler\\CompilerPass\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Extensions/ExtensionRegistry.php
-
-		-
-			message: '#^Offset ''version'' on array\{class\: string, source_path\: string, extension\: Foundry\\Compiler\\Extensions\\CompilerExtension\|null, name\: string, version\: string, descriptor\: Foundry\\Compiler\\Extensions\\ExtensionDescriptor\|null, base_diagnostics\: array\<int, array\<string, mixed\>\>, diagnostics\: array\<int, array\<string, mixed\>\>, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''version'' on array\{class\: string, source_path\: string, extension\: Foundry\\Compiler\\Extensions\\CompilerExtension\|null, name\: string, version\: string, descriptor\: Foundry\\Compiler\\Extensions\\ExtensionDescriptor\|null, base_diagnostics\: list\<array\<string, mixed\>\>, diagnostics\: array\{\}, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 2
 			path: src/Compiler/Extensions/ExtensionRegistry.php
@@ -565,49 +481,7 @@ parameters:
 			path: src/Compiler/Extensions/VersionConstraint.php
 
 		-
-			message: '#^Offset ''extension'' on array\{extension\: string, stage\: string, load_index\: int\<0, max\>, priority\: int, pass\: Foundry\\Compiler\\CompilerPass\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/GraphCompiler.php
-
-		-
-			message: '#^Offset ''load_index'' on array\{extension\: string, stage\: string, load_index\: int\<0, max\>, priority\: int, pass\: Foundry\\Compiler\\CompilerPass\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/GraphCompiler.php
-
-		-
-			message: '#^Offset ''priority'' on array\{extension\: string, stage\: string, load_index\: int\<0, max\>, priority\: int, pass\: Foundry\\Compiler\\CompilerPass\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/GraphCompiler.php
-
-		-
-			message: '#^Call to function method_exists\(\) with Foundry\\Compiler\\Codemod\\Codemod and ''description'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Compiler/Passes/EmitPass.php
-
-		-
-			message: '#^Call to function method_exists\(\) with Foundry\\Compiler\\Codemod\\Codemod and ''id'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Compiler/Passes/EmitPass.php
-
-		-
-			message: '#^Call to function method_exists\(\) with Foundry\\Compiler\\Codemod\\Codemod and ''sourceType'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Compiler/Passes/EmitPass.php
-
-		-
-			message: '#^Call to function method_exists\(\) with Foundry\\Compiler\\Migration\\DefinitionFormat and ''toArray'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Compiler/Passes/EmitPass.php
-
-		-
-			message: '#^Offset ''file'' on array\{file\: string, legacy_file\: string\|null, payload\: array\<string, mixed\>\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''file'' on array\{file\: string, legacy_file\: string\|null, payload\: array\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/Compiler/Passes/EmitPass.php
@@ -619,25 +493,19 @@ parameters:
 			path: src/Compiler/Passes/FoundationDefinitionPass.php
 
 		-
-			message: '#^Offset ''name'' on array\{name\: string, type\: string, required\: bool, help\: string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Passes/FoundationDefinitionPass.php
-
-		-
-			message: '#^Offset ''declared_by'' on array\{name\: mixed, features\: array, declared_by\: list\<non\-empty\-string\>, referenced_by\: list\<non\-empty\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''declared_by'' on array\{name\: non\-empty\-string, features\: array, declared_by\: list\<non\-empty\-string\>, referenced_by\: list\<non\-empty\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/Compiler/Passes/LinkPass.php
 
 		-
-			message: '#^Offset ''emitters'' on array\{name\: mixed, emitters\: list\<non\-empty\-string\>, subscribers\: list\<non\-empty\-string\>, schemas\: array\<non\-empty\-string, array\<mixed\>\>\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''emitters'' on array\{name\: \(int\|non\-empty\-string\), emitters\: list\<non\-empty\-string\>, subscribers\: list\<non\-empty\-string\>, schemas\: array\<non\-empty\-string, array\<mixed\>\>\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 2
 			path: src/Compiler/Passes/LinkPass.php
 
 		-
-			message: '#^Offset ''features'' on array\{key\: mixed, features\: non\-empty\-list\<non\-empty\-string\>, entries\: array\<non\-empty\-string, array\<mixed\>\>, invalidated_by\: list\<non\-empty\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''features'' on array\{key\: \(int\|non\-empty\-string\), features\: non\-empty\-list\<non\-empty\-string\>, entries\: array\<non\-empty\-string, array\<mixed, mixed\>\>, invalidated_by\: list\<non\-empty\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/Compiler/Passes/LinkPass.php
@@ -649,52 +517,46 @@ parameters:
 			path: src/Compiler/Passes/LinkPass.php
 
 		-
-			message: '#^Offset ''features'' on array\{name\: mixed, features\: non\-empty\-list\<non\-empty\-string\>, declared_by\: list\<non\-empty\-string\>, referenced_by\: list\<non\-empty\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''features'' on array\{name\: \(int\|non\-empty\-string\), features\: non\-empty\-list\<non\-empty\-string\>, definitions\: array\<non\-empty\-string, array\<mixed, mixed\>\>\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/Compiler/Passes/LinkPass.php
 
 		-
-			message: '#^Offset ''features'' on array\{name\: mixed, features\: non\-empty\-list\<non\-empty\-string\>, definitions\: array\<non\-empty\-string, array\<mixed, mixed\>\>\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''features'' on array\{name\: non\-empty\-string, features\: non\-empty\-list\<non\-empty\-string\>, declared_by\: list\<non\-empty\-string\>, referenced_by\: list\<non\-empty\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/Compiler/Passes/LinkPass.php
 
 		-
-			message: '#^Offset ''invalidated_by'' on array\{key\: mixed, features\: array, entries\: array\<non\-empty\-string, array\<mixed\>\>, invalidated_by\: list\<non\-empty\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''invalidated_by'' on array\{key\: \(int\|non\-empty\-string\), features\: array, entries\: array\<non\-empty\-string, array\<mixed, mixed\>\>, invalidated_by\: list\<non\-empty\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/Compiler/Passes/LinkPass.php
 
 		-
-			message: '#^Offset ''referenced_by'' on array\{name\: mixed, features\: array, declared_by\: array, referenced_by\: list\<non\-empty\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''name'' on array\{name\: \(int\|non\-empty\-string\), emitters\: list\<non\-empty\-string\>, subscribers\: list\<non\-empty\-string\>, schemas\: array\<non\-empty\-string, array\<mixed\>\>\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/Compiler/Passes/LinkPass.php
 
 		-
-			message: '#^Offset ''subscribers'' on array\{name\: mixed, emitters\: array, subscribers\: list\<non\-empty\-string\>, schemas\: array\<non\-empty\-string, array\<mixed\>\>\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''referenced_by'' on array\{name\: non\-empty\-string, features\: array\<int, string\>, declared_by\: array, referenced_by\: list\<non\-empty\-string\>\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/Compiler/Passes/LinkPass.php
 
 		-
-			message: '#^Offset ''subscribers'' on array\{name\: mixed, emitters\: list\<non\-empty\-string\>, subscribers\: list\<non\-empty\-string\>, schemas\: array\<non\-empty\-string, array\<mixed\>\>\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''subscribers'' on array\{name\: \(int\|non\-empty\-string\), emitters\: array, subscribers\: list\<non\-empty\-string\>, schemas\: array\<non\-empty\-string, array\<mixed\>\>\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/Compiler/Passes/LinkPass.php
 
 		-
-			message: '#^Offset ''id'' on array\{id\: non\-falsy\-string, stage\: ''auth'', source_path\: string, payload\: array\{feature\: string, type\: ''authentication'', required\: bool, public\: bool, strategies\: list\<string\>\}\|array\{feature\: string, type\: ''permission'', permission\: non\-empty\-string\}\}\|array\{id\: non\-falsy\-string, stage\: ''before_action'', source_path\: string, payload\: array\{feature\: string, type\: ''transaction'', mode\: ''required''\}\}\|array\{id\: non\-falsy\-string, stage\: ''before_auth'', source_path\: string, payload\: array\{feature\: string, type\: ''rate_limit'', strategy\: string, bucket\: string, cost\: int\}\}\|array\{id\: non\-falsy\-string, stage\: ''before_validation'', source_path\: string, payload\: array\{feature\: string, type\: ''csrf'', required\: true\}\}\|array\{id\: non\-falsy\-string, stage\: ''validation'', source_path\: string, payload\: array\{feature\: string, type\: ''request_validation'', schema\: non\-empty\-string\}\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Passes/PipelinePass.php
-
-		-
-			message: '#^Offset ''id'' on array\{id\: string, stage\: string, source_path\: string, payload\: array\<string, mixed\>\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''subscribers'' on array\{name\: \(int\|non\-empty\-string\), emitters\: list\<non\-empty\-string\>, subscribers\: list\<non\-empty\-string\>, schemas\: array\<non\-empty\-string, array\<mixed\>\>\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
-			path: src/Compiler/Passes/PipelinePass.php
+			path: src/Compiler/Passes/LinkPass.php
 
 		-
 			message: '#^Offset ''depends_on'' on array\{name\: non\-empty\-string, job\: string, depends_on\: array, retry\: array\<mixed\>\} on left side of \?\? always exists and is not nullable\.$#'
@@ -727,48 +589,6 @@ parameters:
 			path: src/Compiler/Projection/CoreProjectionEmitters.php
 
 		-
-			message: '#^Offset ''extension'' on array\{order\: int, priority\: int, extension\: string, after_stage\: string\|null, before_stage\: string\|null\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Projection/CoreProjectionEmitters.php
-
-		-
-			message: '#^Offset ''from'' on array\{from\: string, to\: string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Projection/CoreProjectionEmitters.php
-
-		-
-			message: '#^Offset ''id'' on array\{id\: string, stage\: string, priority\: int, dangerous\: bool\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Projection/CoreProjectionEmitters.php
-
-		-
-			message: '#^Offset ''order'' on array\{order\: int, priority\: int, extension\: string, after_stage\: string\|null, before_stage\: string\|null\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Projection/CoreProjectionEmitters.php
-
-		-
-			message: '#^Offset ''priority'' on array\{id\: string, stage\: string, priority\: int, dangerous\: bool\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Projection/CoreProjectionEmitters.php
-
-		-
-			message: '#^Offset ''stage'' on array\{id\: string, stage\: string, priority\: int, dangerous\: bool\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Projection/CoreProjectionEmitters.php
-
-		-
-			message: '#^Offset ''to'' on array\{from\: string, to\: string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Projection/CoreProjectionEmitters.php
-
-		-
 			message: '#^Method Foundry\\Compiler\\Prompt\\GraphPromptBuilder\:\:composePrompt\(\) has parameter \$selectedFeatures with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -777,19 +597,7 @@ parameters:
 		-
 			message: '#^Offset ''feature'' on array\{feature\: non\-empty\-string, score\: int\<1, max\>\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
-			count: 3
-			path: src/Compiler/Prompt/GraphPromptBuilder.php
-
-		-
-			message: '#^Offset ''feature'' on array\{feature\: string, route_signature\: string, stages\: list\<string\>, guards\: list\<string\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Compiler/Prompt/GraphPromptBuilder.php
-
-		-
-			message: '#^Offset ''score'' on array\{feature\: non\-empty\-string, score\: int\<1, max\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
+			count: 1
 			path: src/Compiler/Prompt/GraphPromptBuilder.php
 
 		-
@@ -829,6 +637,66 @@ parameters:
 			path: src/Compiler/Visualization/GraphVisualizer.php
 
 		-
+			message: '#^Parameter \#1 \$array \(list\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: src/Context/ContextDiagnosticOutputCoalescer.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$diagnosticResults$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Context/ContextDoctorService.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<mixed\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: src/Context/ContextDoctorService.php
+
+		-
+			message: '#^Method Foundry\\Context\\ContextExecutionService\:\:isNegativeRequirement\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: src/Context/ContextExecutionService.php
+
+		-
+			message: '#^Method Foundry\\Context\\ContextExecutionService\:\:nonConsumableBlockedResult\(\) has parameter \$actionsTaken with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Context/ContextExecutionService.php
+
+		-
+			message: '#^Offset 1 on array\{non\-falsy\-string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Context/ContextExecutionService.php
+
+		-
+			message: '#^Offset ''ordinal'' on array\{id\: non\-empty\-string, ordinal\: int\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Context/ExecutionSpecIdContinuity.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between non\-empty\-string and '''' will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Context/ExecutionSpecIdContinuity.php
+
+		-
+			message: '#^Offset ''body'' on array\{0\: non\-falsy\-string, body\: string, 1\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Context/ExecutionSpecValidationService.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Core/RuntimeFactory.php
+
+		-
 			message: '#^Call to function is_array\(\) with array\<int\|string, array\<mixed\>\|string\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -838,12 +706,6 @@ parameters:
 			message: '#^Call to function is_array\(\) with array\<mixed\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 3
-			path: src/Core/RuntimeFactory.php
-
-		-
-			message: '#^Call to function method_exists\(\) with Foundry\\Config\\ConfigValidationIssue and ''toArray'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
 			path: src/Core/RuntimeFactory.php
 
 		-
@@ -871,12 +733,6 @@ parameters:
 			path: src/Doctor/Checks/DirectoryHealthCheck.php
 
 		-
-			message: '#^Instanceof between Foundry\\Doctor\\DoctorCheck and Foundry\\Doctor\\DoctorCheck will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: src/Doctor/FrameworkDoctor.php
-
-		-
 			message: '#^Method Foundry\\Documentation\\DocsSiteBuilder\:\:rewriteMarkdownLinks\(\) has parameter \$linkMap with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -887,24 +743,6 @@ parameters:
 			identifier: arrayValues.list
 			count: 1
 			path: src/Documentation/DocsSiteBuilder.php
-
-		-
-			message: '#^Property Foundry\\Documentation\\DocsSiteBuilder\:\:\$apiSurfaceRegistry is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Documentation/DocsSiteBuilder.php
-
-		-
-			message: '#^Offset ''feature'' on array\{feature\: non\-empty\-string, strategies\: string, permissions\: string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Documentation/GraphDocsGenerator.php
-
-		-
-			message: '#^Offset ''id'' on array\{id\: string, label\: string, source\: string\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Documentation/InspectUiGenerator.php
 
 		-
 			message: '#^Negated boolean expression is always true\.$#'
@@ -931,10 +769,22 @@ parameters:
 			path: src/Documentation/MarkdownPageRenderer.php
 
 		-
+			message: '#^Call to function is_callable\(\) with callable\(\)\: mixed will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Event/EventRegistry.php
+
+		-
 			message: '#^Parameter \#3 \$items of static method Foundry\\Explain\\ExplainSupport\:\:section\(\) expects array\<string, mixed\>, list\<string\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Explain/Analyzers/ExtensionSubjectAnalyzer.php
+
+		-
+			message: '#^Parameter \#3 \$items of static method Foundry\\Explain\\ExplainSupport\:\:section\(\) expects array\<string, mixed\>, list\<string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Explain/Analyzers/PackSubjectAnalyzer.php
 
 		-
 			message: '#^Parameter \#1 \$array \(list\<array\<mixed\>\>\) of array_values is already a list, call has no effect\.$#'
@@ -943,16 +793,46 @@ parameters:
 			path: src/Explain/DiagnosticsContextData.php
 
 		-
+			message: '#^Parameter \#1 \$array \(list\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: src/Explain/Diff/ExplainDiffService.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<array\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: src/Explain/ExplainModel.php
+
+		-
+			message: '#^Offset ''origin'' on non\-empty\-array on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Explain/ExplainOrigin.php
+
+		-
+			message: '#^Offset 1 on array\{non\-falsy\-string, non\-empty\-string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 2
+			path: src/Explain/ExplainOrigin.php
+
+		-
+			message: '#^Offset 2 on array\{non\-falsy\-string, non\-empty\-string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 2
+			path: src/Explain/ExplainOrigin.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: src/Explain/ExplainOrigin.php
+
+		-
 			message: '#^Strict comparison using \!\=\= between non\-empty\-array and array\{\} will always evaluate to true\.$#'
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Explain/ExplainSection.php
-
-		-
-			message: '#^Parameter \#1 \$array \(list\<array\<mixed\>\>\) of array_values is already a list, call has no effect\.$#'
-			identifier: arrayValues.list
-			count: 1
-			path: src/Explain/ExplainSupport.php
 
 		-
 			message: '#^Offset 1 on array\{non\-falsy\-string, non\-empty\-string, string\} on left side of \?\? always exists and is not nullable\.$#'
@@ -979,21 +859,9 @@ parameters:
 			path: src/Explain/ExplanationPlan.php
 
 		-
-			message: '#^Call to function is_array\(\) with array\<string, mixed\> will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Explain/ExplanationPlan.php
-
-		-
 			message: '#^Method Foundry\\Explain\\ExplanationPlanAssembler\:\:sectionOrder\(\) has parameter \$responsibilities with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Explain/ExplanationPlanAssembler.php
-
-		-
-			message: '#^Offset ''render_index'' on array\{section\: Foundry\\Explain\\ExplainSection, render_index\: int\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
 			path: src/Explain/ExplanationPlanAssembler.php
 
 		-
@@ -1001,6 +869,30 @@ parameters:
 			identifier: arrayValues.list
 			count: 1
 			path: src/Explain/ExplanationPlanAssembler.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 2
+			path: src/Explain/PlanExplanationService.php
+
+		-
+			message: '#^Property Foundry\\Support\\FoundryError\:\:\$details \(array\<string, mixed\>\) on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.property
+			count: 2
+			path: src/Explain/PlanExplanationService.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: src/Explain/Snapshot/ExplainSnapshotService.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<array\{id\: non\-empty\-string\|null, name\: non\-empty\-string\|null, version\: string, type\: ''extension''\|''pack'', label\: non\-empty\-string\|null, provides\: array, affects\: array, entry_points\: array, \.\.\.\}\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: src/Explain/Snapshot/ExplainSnapshotService.php
 
 		-
 			message: '#^Method Foundry\\Export\\OpenApiExporter\:\:render\(\) has parameter \$document with no value type specified in iterable type array\.$#'
@@ -1013,6 +905,420 @@ parameters:
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Feature/FeatureExecutor.php
+
+		-
+			message: '#^Method Foundry\\FeatureSystem\\FeatureWorkspaceService\:\:scan\(\) should return array\{features\: list\<array\<string, mixed\>\>, duplicates\: list\<array\<string, mixed\>\>, misplaced_framework_modules\: list\<array\<string, string\>\>\} but returns array\{features\: list\<array\<string, mixed\>\>, duplicates\: list\<array\{code\: ''FEATURE_DUPLICATE…'', feature\: mixed, canonical_path\: mixed, legacy_path\: mixed\}\>, misplaced_framework_modules\: list\<array\{feature\: string, path\: string, expected_path\: string, duplicate\: bool\}\>\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/FeatureSystem/FeatureWorkspaceService.php
+
+		-
+			message: '#^Method Foundry\\FeatureSystem\\HistoricalSpecArchiveExtractor\:\:buildCandidate\(\) has parameter \$rejectedRootSignals with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/FeatureSystem/HistoricalSpecArchiveExtractor.php
+
+		-
+			message: '#^Method Foundry\\FeatureSystem\\HistoricalSpecArchiveExtractor\:\:fallbackCandidate\(\) has parameter \$rejectedRootSignals with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/FeatureSystem/HistoricalSpecArchiveExtractor.php
+
+		-
+			message: '#^Call to function is_int\(\) with string will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: src/FeatureSystem/HistoricalSpecEvidenceMapper.php
+
+		-
+			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
+			identifier: greater.alwaysTrue
+			count: 1
+			path: src/FeatureSystem/HistoricalSpecEvidenceMapper.php
+
+		-
+			message: '#^Offset ''high''\|''low''\|''medium'' on array\{high\: 3, medium\: 2, low\: 1\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/FeatureSystem/HistoricalSpecEvidenceMapper.php
+
+		-
+			message: '#^Offset ''path'' on array\{type\: ''add_test''\|''create_file'', path\: non\-falsy\-string, summary\: non\-falsy\-string, explain_node_id\: string, origin\: ''core'', extension\: null\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Generate/Core/CoreRepairFeatureGenerator.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:absolutePaths\(\) has parameter \$paths with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$actionsTaken with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$approval with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$architectureDiff with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$errors with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$git with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$interactive with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$outcomeConfidence with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$packsInstalled with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$policy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$postExplain with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$safetyRouting with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$snapshots with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$templateMetadata with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$verificationResults with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:buildPayload\(\) has parameter \$workflowLinkage with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:interactivePayload\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:planRecordPayload\(\) has parameter \$actionsTaken with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:planRecordPayload\(\) has parameter \$approval with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:planRecordPayload\(\) has parameter \$error with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:planRecordPayload\(\) has parameter \$policy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:planRecordPayload\(\) has parameter \$safetyRouting with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:planRecordPayload\(\) has parameter \$templateMetadata with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:planRecordPayload\(\) has parameter \$undo with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:planRecordPayload\(\) has parameter \$verificationResults with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:planRecordPayload\(\) has parameter \$workflowLinkage with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:planRecordReference\(\) has parameter \$record with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:planRiskLevel\(\) has parameter \$safetyRouting with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:runSingle\(\) has parameter \$templateMetadata with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:runSingle\(\) has parameter \$workflowLinkage with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:runWorkflowDefinition\(\) has parameter \$templateMetadata with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:workflowCompletedStepSummary\(\) has parameter \$payload with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:workflowPayload\(\) has parameter \$rollbackGuidance with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:workflowPlanRecordPayload\(\) has parameter \$actionsTaken with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:workflowPlanRecordPayload\(\) has parameter \$affectedFiles with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:workflowPlanRecordPayload\(\) has parameter \$approval with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:workflowPlanRecordPayload\(\) has parameter \$error with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:workflowPlanRecordPayload\(\) has parameter \$packsUsed with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:workflowPlanRecordPayload\(\) has parameter \$templateMetadata with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:workflowPlanRecordPayload\(\) has parameter \$verificationResults with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateEngine\:\:workflowPlanRecordPayload\(\) has parameter \$workflow with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Offset ''message'' on array\{code\: ''existing_file…'', path\: non\-empty\-string, message\: ''Replay expected to…'', details\: array\{action_type\: ''add_test''\|''create_file''\}\}\|array\{code\: ''file_content_differs'', path\: non\-empty\-string, message\: ''Current file…'', details\: array\{action_type\: string\}\}\|array\{code\: ''missing_delete…'', path\: non\-empty\-string, message\: ''Replay expected to…'', details\: array\{action_type\: ''delete_file''\}\}\|array\{code\: ''missing_target_file'', path\: non\-empty\-string, message\: ''Replay expected to…'', details\: array\{action_type\: ''update_docs''\|''update_file''\}\}\|array\{code\: ''repository_state…'', path\: mixed, message\: ''Affected path has…'', details\: mixed\}\|array\{code\: ''source_hash_changed'', path\: null, message\: ''Stored graph source…'', details\: array\{stored_source_hash\: non\-empty\-string, current_source_hash\: non\-empty\-string\}\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Offset ''path'' on array\{action_index\: \(int\|string\), type\: ''add_test''\|''create_file'', path\: non\-empty\-string, rollback_mode\: ''snapshot'', strategy\: ''delete_created_file'', recorded_status\: non\-empty\-string\}\|array\{action_index\: \(int\|string\), type\: ''delete_file''\|''update_docs''\|''update_file'', path\: non\-empty\-string, rollback_mode\: ''patch''\|''snapshot'', strategy\: ''restore_deleted_file''\|''restore_previous…'', recorded_status\: non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Offset ''skipped'' on array\{step_id\: string, ok\: bool, skipped\: bool\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^PHPDoc tag @return with type array\<int, array\<string, mixed\>\> is incompatible with native type Foundry\\Generate\\PackRequirementResolver\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>affectedFiles" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>entitlements" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>executionState" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>targets" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>userDecisions" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Generate/GenerateEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GeneratePolicyEngine\:\:actionRiskLevel\(\) has parameter \$action with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GeneratePolicyEngine.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateTemplateResolver\:\:lookup\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateTemplateResolver.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateTemplateResolver\:\:parseStructuredValue\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateTemplateResolver.php
+
+		-
+			message: '#^Method Foundry\\Generate\\GenerateTemplateResolver\:\:resolveValue\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/GenerateTemplateResolver.php
+
+		-
+			message: '#^Offset 1 on array\<int\|string, string\> on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Generate/GenerateTemplateResolver.php
+
+		-
+			message: '#^Offset 1 on array\{non\-falsy\-string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Generate/GenerateTemplateResolver.php
+
+		-
+			message: '#^Offset ''score'' on array\{generator\: mixed, score\: int\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 2
+			path: src/Generate/GenerationPlanner.php
+
+		-
+			message: '#^Method Foundry\\Generate\\InteractiveGenerateReviewRequest\:\:__construct\(\) has parameter \$policy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/InteractiveGenerateReviewRequest.php
+
+		-
+			message: '#^Method Foundry\\Generate\\TerminalInteractiveGenerateReviewer\:\:actionDependencies\(\) has parameter \$action with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/TerminalInteractiveGenerateReviewer.php
+
+		-
+			message: '#^Method Foundry\\Generate\\TerminalInteractiveGenerateReviewer\:\:actionRelatedNodes\(\) has parameter \$action with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/TerminalInteractiveGenerateReviewer.php
+
+		-
+			message: '#^Method Foundry\\Generate\\TerminalInteractiveGenerateReviewer\:\:renderPlan\(\) has parameter \$policy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Generate/TerminalInteractiveGenerateReviewer.php
 
 		-
 			message: '#^PHPDoc tag @param references unknown parameter\: \$payload$#'
@@ -1045,52 +1351,298 @@ parameters:
 			path: src/Generation/SchemaGenerator.php
 
 		-
-			message: '#^Offset ''execution_plan'' on array\{feature\: string, execution_plan\: string, route_signature\: non\-empty\-string\|null, route_node\: string\|null, pipeline_stages\: list\<string\>, guards\: array\<int, array\<string, mixed\>\>, interceptors\: array\<int, array\<string, mixed\>\>, graph_mapping\: array\{feature\: non\-falsy\-string\|null, execution_plan\: string, guard_ids\: list\<string\>, interceptor_ids\: list\<string\>\}\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Observability/GraphExecutionMap.php
+			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Git/GitRepositoryInspector.php
 
 		-
-			message: '#^Offset ''id'' on array\{id\: string, feature\: string, type\: string, stage\: string, payload\: array\<string, mixed\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Observability/GraphExecutionMap.php
+			message: '#^Method Foundry\\Git\\GitRepositoryInspector\:\:safetyRelevantPaths\(\) has parameter \$paths with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Git/GitRepositoryInspector.php
 
 		-
-			message: '#^Offset ''id'' on array\{id\: string, stage\: string, priority\: int, dangerous\: bool, payload\: array\<string, mixed\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Observability/GraphExecutionMap.php
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/MCP/Handlers/GenerateApplyHandler.php
 
 		-
-			message: '#^Offset ''hotspot_score'' on array\{feature\: mixed, execution_plan\: mixed, route_signature\: mixed, stage_count\: int\<0, max\>, guard_count\: int\<0, max\>, interceptor_count\: int\<0, max\>, hotspot_score\: int\<0, max\>, graph_mapping\: mixed, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Observability/ProfileObserver.php
+			message: '#^Method Foundry\\MCP\\Handlers\\GenerateApplyHandler\:\:boolInput\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/MCP/Handlers/GenerateApplyHandler.php
 
 		-
-			message: '#^Offset ''code'' on array\{code\: ''FDY9115_PIPELINE…'', severity\: ''error'', category\: ''pipeline'', message\: non\-falsy\-string, suggested_fix\: ''Register the…'', why_it_matters\: ''Foundry routes and…'', details\: array\{stage\: string\}\}\|array\{code\: ''FDY9116_PIPELINE…'', severity\: ''error'', category\: ''pipeline'', message\: ''Pipeline stage…'', suggested_fix\: ''Rebuild the…'', why_it_matters\: ''Without stage…'', details\: array\{stage_count\: int\<2, max\>\}\}\|array\{code\: ''FDY9117_EXECUTION…'', severity\: ''error'', category\: ''pipeline'', message\: non\-falsy\-string, suggested_fix\: ''Recompile the graph…'', why_it_matters\: ''Execution plans…'', details\: array\{feature_filter\: string\|null\}\}\|array\{code\: ''FDY9118_ROUTE…'', severity\: ''error'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Recompile the graph…'', why_it_matters\: ''A route without an…'', \.\.\.\}\|array\{code\: ''FDY9119_FEATURE…'', severity\: ''error'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Recompile the graph…'', why_it_matters\: ''Every compiled…'', \.\.\.\}\|array\{code\: ''FDY9120_EXECUTION…'', severity\: ''error'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Ensure the feature…'', why_it_matters\: ''The action stage is…'', \.\.\.\}\|array\{code\: ''FDY9121_EXECUTION…'', severity\: ''warning'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Emit request…'', why_it_matters\: ''Validation stages…'', \.\.\.\}\|array\{code\: ''FDY9122_EXECUTION…'', severity\: ''warning'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Rebuild the…'', why_it_matters\: ''Action target…'', \.\.\.\}\|array\{code\: ''FDY9123_GUARD_STAGE…'', severity\: ''warning'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Attach the guard to…'', why_it_matters\: ''Unattached guards…'', \.\.\.\}\|array\{code\: ''FDY9124_INTERCEPTOR…'', severity\: ''error'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Point the…'', why_it_matters\: ''Interceptors bound…'', \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Pipeline/PipelineIntegrityInspector.php
+			message: '#^Method Foundry\\MCP\\Handlers\\GenerateApplyHandler\:\:failurePayload\(\) has parameter \$preflightEntitlements with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/MCP/Handlers/GenerateApplyHandler.php
 
 		-
-			message: '#^Offset ''message'' on array\{code\: ''FDY9115_PIPELINE…'', severity\: ''error'', category\: ''pipeline'', message\: non\-falsy\-string, suggested_fix\: ''Register the…'', why_it_matters\: ''Foundry routes and…'', details\: array\{stage\: string\}\}\|array\{code\: ''FDY9116_PIPELINE…'', severity\: ''error'', category\: ''pipeline'', message\: ''Pipeline stage…'', suggested_fix\: ''Rebuild the…'', why_it_matters\: ''Without stage…'', details\: array\{stage_count\: int\<2, max\>\}\}\|array\{code\: ''FDY9117_EXECUTION…'', severity\: ''error'', category\: ''pipeline'', message\: non\-falsy\-string, suggested_fix\: ''Recompile the graph…'', why_it_matters\: ''Execution plans…'', details\: array\{feature_filter\: string\|null\}\}\|array\{code\: ''FDY9118_ROUTE…'', severity\: ''error'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Recompile the graph…'', why_it_matters\: ''A route without an…'', \.\.\.\}\|array\{code\: ''FDY9119_FEATURE…'', severity\: ''error'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Recompile the graph…'', why_it_matters\: ''Every compiled…'', \.\.\.\}\|array\{code\: ''FDY9120_EXECUTION…'', severity\: ''error'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Ensure the feature…'', why_it_matters\: ''The action stage is…'', \.\.\.\}\|array\{code\: ''FDY9121_EXECUTION…'', severity\: ''warning'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Emit request…'', why_it_matters\: ''Validation stages…'', \.\.\.\}\|array\{code\: ''FDY9122_EXECUTION…'', severity\: ''warning'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Rebuild the…'', why_it_matters\: ''Action target…'', \.\.\.\}\|array\{code\: ''FDY9123_GUARD_STAGE…'', severity\: ''warning'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Attach the guard to…'', why_it_matters\: ''Unattached guards…'', \.\.\.\}\|array\{code\: ''FDY9124_INTERCEPTOR…'', severity\: ''error'', category\: ''pipeline'', message\: non\-falsy\-string, node_id\: string, source_path\: string, suggested_fix\: ''Point the…'', why_it_matters\: ''Interceptors bound…'', \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Pipeline/PipelineIntegrityInspector.php
+			message: '#^Property Foundry\\Support\\FoundryError\:\:\$details \(array\<string, mixed\>\) on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.property
+			count: 1
+			path: src/MCP/Handlers/GenerateApplyHandler.php
 
 		-
-			message: '#^Offset ''connections'' on array\{node_id\: string, type\: string, label\: string, feature\: string\|null, dependencies\: int\<0, max\>, dependents\: int\<0, max\>, connections\: int\<0, max\>\} on left side of \?\? always exists and is not nullable\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: src/Pro/DeepDiagnosticsBuilder.php
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/MCP/Handlers/GeneratePlanHandler.php
 
 		-
-			message: '#^Offset ''node_id'' on array\{node_id\: string, type\: string, label\: string, feature\: string\|null, dependencies\: int\<0, max\>, dependents\: int\<0, max\>, connections\: int\<0, max\>\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Method Foundry\\MCP\\Handlers\\GeneratePlanHandler\:\:booleanInput\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/MCP/Handlers/GeneratePlanHandler.php
+
+		-
+			message: '#^Property Foundry\\Support\\FoundryError\:\:\$details \(array\<string, mixed\>\) on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.property
+			count: 1
+			path: src/MCP/Handlers/GeneratePlanHandler.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 2
+			path: src/MCP/Handlers/ValidatePlanHandler.php
+
+		-
+			message: '#^Property Foundry\\Support\\FoundryError\:\:\$details \(array\<string, mixed\>\) on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.property
+			count: 2
+			path: src/MCP/Handlers/ValidatePlanHandler.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<\(int\|string\)\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: src/MCP/ToolRegistry.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between mixed and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 2
+			path: src/Marketplace/MarketplaceIdentityStore.php
+
+		-
+			message: '#^Offset ''monetization'' on array\{name\: ''diff\.graph'', summary\: ''Graph diff analysis'', type\: ''capability'', monetization\: ''none'', visible\: true\}\|array\{name\: ''doctor\.deep'', summary\: ''Deep diagnostics'', type\: ''capability'', monetization\: ''none'', visible\: true\}\|array\{name\: ''explain\.advanced'', summary\: ''Advanced explain…'', type\: ''capability'', monetization\: ''none'', visible\: true\}\|array\{name\: ''generate\.full'', summary\: ''Prompt\-based…'', type\: ''capability'', monetization\: ''none'', visible\: true\}\|array\{name\: ''marketplace\.access'', summary\: ''Marketplace…'', type\: ''service'', monetization\: ''licensed'', visible\: true\}\|array\{name\: ''trace\.analysis'', summary\: ''Trace analysis'', type\: ''capability'', monetization\: ''none'', visible\: true\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 2
-			path: src/Pro/DeepDiagnosticsBuilder.php
+			path: src/Monetization/FeatureFlags.php
+
+		-
+			message: '#^Offset ''type'' on array\{name\: ''diff\.graph'', summary\: ''Graph diff analysis'', type\: ''capability'', monetization\: ''none'', visible\: true\}\|array\{name\: ''doctor\.deep'', summary\: ''Deep diagnostics'', type\: ''capability'', monetization\: ''none'', visible\: true\}\|array\{name\: ''explain\.advanced'', summary\: ''Advanced explain…'', type\: ''capability'', monetization\: ''none'', visible\: true\}\|array\{name\: ''generate\.full'', summary\: ''Prompt\-based…'', type\: ''capability'', monetization\: ''none'', visible\: true\}\|array\{name\: ''marketplace\.access'', summary\: ''Marketplace…'', type\: ''service'', monetization\: ''licensed'', visible\: true\}\|array\{name\: ''trace\.analysis'', summary\: ''Trace analysis'', type\: ''capability'', monetization\: ''none'', visible\: true\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Monetization/FeatureFlags.php
+
+		-
+			message: '#^Offset ''visible'' on array\{name\: ''diff\.graph'', summary\: ''Graph diff analysis'', type\: ''capability'', monetization\: ''none'', visible\: true\}\|array\{name\: ''doctor\.deep'', summary\: ''Deep diagnostics'', type\: ''capability'', monetization\: ''none'', visible\: true\}\|array\{name\: ''explain\.advanced'', summary\: ''Advanced explain…'', type\: ''capability'', monetization\: ''none'', visible\: true\}\|array\{name\: ''generate\.full'', summary\: ''Prompt\-based…'', type\: ''capability'', monetization\: ''none'', visible\: true\}\|array\{name\: ''marketplace\.access'', summary\: ''Marketplace…'', type\: ''service'', monetization\: ''licensed'', visible\: true\}\|array\{name\: ''trace\.analysis'', summary\: ''Trace analysis'', type\: ''capability'', monetization\: ''none'', visible\: true\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Monetization/FeatureFlags.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between true and true will always evaluate to true\.$#'
+			identifier: identical.alwaysTrue
+			count: 1
+			path: src/Monetization/FeatureFlags.php
+
+		-
+			message: '#^Method Foundry\\Monetization\\LicenseStore\:\:enable\(\) has parameter \$metadata with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Monetization/LicenseStore.php
+
+		-
+			message: '#^Method Foundry\\Monetization\\MonetizationService\:\:featureEnabledForStatus\(\) has parameter \$status with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Monetization/MonetizationService.php
+
+		-
+			message: '#^Method Foundry\\Monetization\\MonetizationService\:\:resolveTier\(\) has parameter \$status with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Monetization/MonetizationService.php
+
+		-
+			message: '#^Offset 1 on array\{non\-falsy\-string, non\-falsy\-string&numeric\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Packs/HostedPackRegistry.php
+
+		-
+			message: '#^PHPDoc tag @var with type array\<int, string\>\|null is not subtype of native type list\<string\>\|null\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: src/Packs/HostedPackRegistry.php
+
+		-
+			message: '#^Method Foundry\\Packs\\InstalledPackExtension\:\:__construct\(\) has parameter \$localContextPaths with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Method Foundry\\Packs\\InstalledPackExtension\:\:__construct\(\) has parameter \$source with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>conflictsWithExtensions" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>frameworkVersionConstraint" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>graphVersionConstraint" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>introducedDefinitionFormats" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>optionalExtensions" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>providedCapabilities" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>providedCodemods" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>providedInspectSurfaces" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>providedMigrationRules" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>providedNodeTypes" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>providedProjectionOutputs" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>providedVerifiers" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>requiredExtensions" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Packs/InstalledPackExtension.php
+
+		-
+			message: '#^Method Foundry\\Packs\\InstalledPackRegistry\:\:normalizeRegistry\(\) has parameter \$payload with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Packs/InstalledPackRegistry.php
+
+		-
+			message: '#^Call to function is_array\(\) with null will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: src/Packs/LocalPackLoader.php
+
+		-
+			message: '#^Method Foundry\\Packs\\LocalPackLoader\:\:activatePack\(\) has parameter \$localContextPaths with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Packs/LocalPackLoader.php
+
+		-
+			message: '#^Method Foundry\\Packs\\LocalPackLoader\:\:stableHash\(\) has parameter \$value with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Packs/LocalPackLoader.php
+
+		-
+			message: '#^Offset ''name'' on array\{name\: \(int\|string\), version\: non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Packs/LocalPackLoader.php
+
+		-
+			message: '#^Offset ''sources'' does not exist on array\{name\: string, version\: non\-empty\-string\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Packs/LocalPackLoader.php
+
+		-
+			message: '#^Offset ''sources'' on array\{name\: \(int\|string\), version\: non\-empty\-string\} on left side of \?\? does not exist\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Packs/LocalPackLoader.php
+
+		-
+			message: '#^Offset ''version'' on array\{name\: \(int\|string\), version\: non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Packs/LocalPackLoader.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Packs/PackChecksum.php
+
+		-
+			message: '#^Offset 1 on array\{non\-falsy\-string, non\-empty\-string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Packs/PackManager.php
+
+		-
+			message: '#^Offset 2 on array\{non\-falsy\-string, non\-empty\-string, non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Packs/PackManager.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between non\-falsy\-string and '''' will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Packs/PackManager.php
 
 		-
 			message: '#^Method Foundry\\Pro\\Generation\\PromptFeaturePlanner\:\:inputFields\(\) has parameter \$route with no value type specified in iterable type array\.$#'
@@ -1111,6 +1663,24 @@ parameters:
 			path: src/Pro/Generation/PromptFeaturePlanner.php
 
 		-
+			message: '#^Method Foundry\\Quality\\ImplementationQualityGateService\:\:failedResult\(\) has parameter \$coverage with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Quality/ImplementationQualityGateService.php
+
+		-
+			message: '#^Method Foundry\\Quality\\ImplementationQualityGateService\:\:failedResult\(\) has parameter \$fullSuite with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Quality/ImplementationQualityGateService.php
+
+		-
+			message: '#^Method Foundry\\Quality\\ImplementationQualityGateService\:\:notRunCoverage\(\) has parameter \$command with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Quality/ImplementationQualityGateService.php
+
+		-
 			message: '#^Method Foundry\\Quality\\QualityToolRunner\:\:extractStyleFiles\(\) has parameter \$decoded with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1123,13 +1693,13 @@ parameters:
 			path: src/Quality/QualityToolRunner.php
 
 		-
-			message: '#^Offset ''message'' on array\{path\: string\|null, line\: int\|null, message\: string, identifier\: string, tip\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''message'' on array\{path\: mixed, message\: non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/Quality/QualityToolRunner.php
 
 		-
-			message: '#^Offset ''message'' on array\{path\: string\|null, message\: non\-empty\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			message: '#^Offset ''message'' on array\{path\: string\|null, line\: int\|null, message\: string, identifier\: string, tip\: string\} on left side of \?\? always exists and is not nullable\.$#'
 			identifier: nullCoalesce.offset
 			count: 1
 			path: src/Quality/QualityToolRunner.php
@@ -1141,8 +1711,8 @@ parameters:
 			path: src/Quality/QualityToolRunner.php
 
 		-
-			message: '#^Strict comparison using \=\=\= between array\|Redis\|string\|true and null will always evaluate to false\.$#'
-			identifier: identical.alwaysFalse
+			message: '#^Call to an undefined method Redis\:\:connect\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: src/Queue/RedisQueueDriver.php
 
@@ -1189,10 +1759,46 @@ parameters:
 			path: src/Upgrade/VersionComparator.php
 
 		-
+			message: '#^Property Vendor\\Blog\\FoundryBlogExtension\:\:\$installPath is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: tests/Fixtures/Packs/foundry-blog/src/FoundryBlogExtension.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Integration\\CLIGenerateMetricsCommandTest\:\:runCommand\(\) has parameter \$argv with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Integration/CLIGenerateMetricsCommandTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Integration\\CLIPackCommandsTest\:\:fixtureArchive\(\) has parameter \$manifestOverrides with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Integration/CLIPackCommandsTest.php
+
+		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 2
 			path: tests/Integration/PostgresDatabaseIntegrationTest.php
+
+		-
+			message: '#^Call to an undefined method Redis\:\:connect\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/Integration/RedisQueueDriverIntegrationTest.php
+
+		-
+			message: '#^Call to an undefined method Redis\:\:del\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: tests/Integration/RedisQueueDriverIntegrationTest.php
+
+		-
+			message: '#^Call to an undefined method Redis\:\:ping\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/Integration/RedisQueueDriverIntegrationTest.php
 
 		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
@@ -1207,6 +1813,18 @@ parameters:
 			path: tests/Phrasing/ForbiddenInternalTerminologyTest.php
 
 		-
+			message: '#^Method Foundry\\Context\\ContextDoctorDiagnosticRule@anonymous/tests/Unit/ContextDoctorDiagnosticRulesTest\.php\:381\:\:evaluate\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: tests/Unit/ContextDoctorDiagnosticRulesTest.php
+
+		-
+			message: '#^Method Foundry\\Context\\ContextDoctorDiagnosticRule@anonymous/tests/Unit/ContextInspectionServiceTest\.php\:213\:\:evaluate\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: tests/Unit/ContextInspectionServiceTest.php
+
+		-
 			message: '#^Method Foundry\\Tests\\Unit\\CoverageBoostCoreTest\:\:writePhpArray\(\) has parameter \$payload with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -1219,10 +1837,118 @@ parameters:
 			path: tests/Unit/CoverageBoostCoverageHarnessTest.php
 
 		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/Unit/ExecutionSpecCatalogTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\ExecutionSpecCatalogTest\:\:entry\(\) has parameter \$segments with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExecutionSpecCatalogTest.php
+
+		-
 			message: '#^Using nullsafe property access on non\-nullable type Foundry\\Explain\\ExplainSubject\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 2
 			path: tests/Unit/ExplainFoundationTest.php
+
+		-
+			message: '#^Method Foundry\\Compiler\\Extensions\\AbstractCompilerExtension@anonymous/tests/Unit/ExtensionRegistryTest\.php\:722\:\:__construct\(\) has parameter \$analyzersValue with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Compiler\\Extensions\\AbstractCompilerExtension@anonymous/tests/Unit/ExtensionRegistryTest\.php\:722\:\:__construct\(\) has parameter \$checksValue with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Compiler\\Extensions\\AbstractCompilerExtension@anonymous/tests/Unit/ExtensionRegistryTest\.php\:722\:\:__construct\(\) has parameter \$descriptorOverrides with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Compiler\\Extensions\\AbstractCompilerExtension@anonymous/tests/Unit/ExtensionRegistryTest\.php\:722\:\:__construct\(\) has parameter \$discoveryPassesValue with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Compiler\\Extensions\\AbstractCompilerExtension@anonymous/tests/Unit/ExtensionRegistryTest\.php\:722\:\:__construct\(\) has parameter \$emitPassesValue with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Compiler\\Extensions\\AbstractCompilerExtension@anonymous/tests/Unit/ExtensionRegistryTest\.php\:722\:\:__construct\(\) has parameter \$interceptorsValue with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Compiler\\Extensions\\AbstractCompilerExtension@anonymous/tests/Unit/ExtensionRegistryTest\.php\:722\:\:__construct\(\) has parameter \$packsValue with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Compiler\\Extensions\\AbstractCompilerExtension@anonymous/tests/Unit/ExtensionRegistryTest\.php\:722\:\:__construct\(\) has parameter \$stagesValue with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\ExtensionRegistryTest\:\:makeExtension\(\) has parameter \$analyzers with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\ExtensionRegistryTest\:\:makeExtension\(\) has parameter \$checks with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\ExtensionRegistryTest\:\:makeExtension\(\) has parameter \$descriptor with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\ExtensionRegistryTest\:\:makeExtension\(\) has parameter \$discoveryPasses with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\ExtensionRegistryTest\:\:makeExtension\(\) has parameter \$emitPasses with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\ExtensionRegistryTest\:\:makeExtension\(\) has parameter \$interceptors with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\ExtensionRegistryTest\:\:makeExtension\(\) has parameter \$packs with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\ExtensionRegistryTest\:\:makeExtension\(\) has parameter \$stages with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/ExtensionRegistryTest.php
 
 		-
 			message: '#^Method Foundry\\Tests\\Unit\\FeatureExecutorEdgeCasesTest\:\:makeExecutor\(\) has parameter \$permissions with no value type specified in iterable type array\.$#'
@@ -1237,10 +1963,64 @@ parameters:
 			path: tests/Unit/FeatureLoaderEdgeCasesTest.php
 
 		-
+			message: '#^Method Foundry\\Tests\\Unit\\GenerateEngineUndoTest\:\:record\(\) has parameter \$undo with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/GenerateEngineUndoTest.php
+
+		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Foundry\\Compiler\\ApplicationGraph will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
 			count: 1
 			path: tests/Unit/GraphCompilerExtensionFailuresTest.php
+
+		-
+			message: '#^Anonymous function has an unused use \$routeId\.$#'
+			identifier: closure.unusedUse
+			count: 1
+			path: tests/Unit/GraphIntegrityVerifierTest.php
+
+		-
+			message: '#^Offset ''emission_reason'' does not exist on array\{candidate_id\: string, original_file\: string, source_segment\: int, source_segments_total\: int, detected_spec_label\: ''Spec 30C\-2'', detected_title\: string, suggested_slug\: string, suggested_module\: string, \.\.\.\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: tests/Unit/HistoricalSpecArchiveExtractorTest.php
+
+		-
+			message: '#^Offset ''emission_reason'' does not exist on array\{candidate_id\: string, original_file\: string, source_segment\: int, source_segments_total\: int, detected_spec_label\: string, detected_title\: string, suggested_slug\: string, suggested_module\: string, \.\.\.\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: tests/Unit/HistoricalSpecArchiveExtractorTest.php
+
+		-
+			message: '#^Offset ''rejected_root_signals'' does not exist on array\{candidate_id\: string, original_file\: string, source_segment\: int, source_segments_total\: int, detected_spec_label\: ''Spec 19A'', detected_title\: string, suggested_slug\: string, suggested_module\: string, \.\.\.\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: tests/Unit/HistoricalSpecArchiveExtractorTest.php
+
+		-
+			message: '#^Parameter \#1 \$entries of method Foundry\\Tests\\Unit\\HostedPackRegistryTest\:\:registry\(\) expects array\<int, array\<string, string\>\>, array\<int, array\<string, bool\|string\|null\>\> given\.$#'
+			identifier: argument.type
+			count: 3
+			path: tests/Unit/HostedPackRegistryTest.php
+
+		-
+			message: '#^Parameter \#1 \$entries of method Foundry\\Tests\\Unit\\HostedPackRegistryTest\:\:registry\(\) expects array\<int, array\<string, string\>\>, array\<int, array\<string, string\|true\|null\>\> given\.$#'
+			identifier: argument.type
+			count: 4
+			path: tests/Unit/HostedPackRegistryTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\MarketplacePurchaseServiceTest\:\:serviceWithRegistry\(\) has parameter \$rows with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/MarketplacePurchaseServiceTest.php
+
+		-
+			message: '#^Parameter \#1 \$resolver of method Foundry\\Tests\\Unit\\McpPlanHandlersTest\:\:bridge\(\) expects Closure\(array\<int, string\>\)\: array\{status\: int, payload\: array\<string, mixed\>\|null, message\: string\|null\}, Closure\(array\)\: array\{\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/McpPlanHandlersTest.php
 
 		-
 			message: '#^Parameter \#2 \$variables of method Foundry\\Notifications\\NotificationTemplateRenderer\:\:render\(\) expects array\<string, mixed\>, array\<int\|string, array\<string, array\|string\>\|string\|true\|null\> given\.$#'
@@ -1253,3 +2033,39 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: tests/Unit/PipelineRuntimeExecutorTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\PlanCommandsTest\:\:record\(\) has parameter \$interactive with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/PlanCommandsTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\PlanCommandsTest\:\:record\(\) has parameter \$metadataOverrides with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/PlanCommandsTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\PlanCommandsTest\:\:record\(\) has parameter \$planFinal with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/PlanCommandsTest.php
+
+		-
+			message: '#^Method Foundry\\Tests\\Unit\\PlanCommandsTest\:\:record\(\) has parameter \$planOriginal with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/PlanCommandsTest.php
+
+		-
+			message: '#^Method Redis\:\:lRange\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/Unit/RedisQueueDriverTest.php
+
+		-
+			message: '#^Parameter \#2 \$pdoFactory of class Foundry\\State\\SqliteStateStore constructor expects \(callable\(string\)\: PDO\)\|null, Closure\(string\)\: stdClass given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Unit/SqliteStateStoreTest.php

@@ -501,7 +501,7 @@ final class PreCanonicalArchiveImporter
             . "## Historical Stabilization Notes\n\n"
             . $this->stabilizationText($spec['results']) . "\n\n"
             . "## Current Repository Alignment\n\n"
-            . "The imported artifact is intentionally retained under `Modules/" . $model['module'] . "` as archive-lineage context. Modern module ownership remains deferred until a separate explicit alignment spec maps the pre-canonical intent into current modules.\n\n"
+            . 'The imported artifact is intentionally retained under `Modules/' . $model['module'] . "` as archive-lineage context. Modern module ownership remains deferred until a separate explicit alignment spec maps the pre-canonical intent into current modules.\n\n"
             . "## Uncertainty And Reconstruction Notes\n\n"
             . "No modern module inference was performed. The generated note preserves only the marked archive relationships available through `S`, `R`, and `P` blocks.\n";
     }
@@ -512,7 +512,7 @@ final class PreCanonicalArchiveImporter
     private function renderPreambles(array $preambles): string
     {
         if ($preambles === []) {
-            return "No marked preamble block was associated with this spec.";
+            return 'No marked preamble block was associated with this spec.';
         }
 
         $lines = [];
@@ -534,7 +534,7 @@ final class PreCanonicalArchiveImporter
     private function renderResults(array $results): string
     {
         if ($results === []) {
-            return "No matching marked result block was present in the pre-canonical archive.";
+            return 'No matching marked result block was present in the pre-canonical archive.';
         }
 
         $lines = [];
@@ -581,15 +581,15 @@ final class PreCanonicalArchiveImporter
     {
         return "# Feature Spec: pre-canonical\n\n"
             . "## Purpose\n\n"
-            . "`Modules/" . $model['module'] . "` preserves explicitly marked pre-canonical archive material that predates the current module system. It is an archive-lineage module, not a cohesive modern runtime module.\n\n"
+            . '`Modules/' . $model['module'] . "` preserves explicitly marked pre-canonical archive material that predates the current module system. It is an archive-lineage module, not a cohesive modern runtime module.\n\n"
             . "## Goals\n\n"
-            . "- Preserve explicitly marked pre-canonical archive specs, results, and preamble context under `Modules/" . $model['module'] . "`.\n"
+            . '- Preserve explicitly marked pre-canonical archive specs, results, and preamble context under `Modules/' . $model['module'] . "`.\n"
             . "- Keep historical lineage inspectable without inferring modern framework or website ownership.\n"
             . "- Maintain deterministic canonical import paths for all archive artifacts.\n\n"
             . "## Non-Goals\n\n"
             . "- Do not treat imported records as modern module ownership decisions.\n"
             . "- Do not renumber historical IDs to satisfy modern contiguous execution-spec sequencing.\n"
-            . "- Do not create runtime source or test directories for `Modules/" . $model['module'] . "`.\n\n"
+            . '- Do not create runtime source or test directories for `Modules/' . $model['module'] . "`.\n\n"
             . "## Constraints\n\n"
             . "- Imported specs preserve original pre-canonical bodies, including historical terminology and examples.\n"
             . "- WR/WS records remain valid archive lineage here until later explicit mapping decides website or framework ownership.\n"
@@ -601,7 +601,7 @@ final class PreCanonicalArchiveImporter
             . "- State records the concrete imported source, spec count, first imported spec, and last imported spec after apply.\n\n"
             . "## Acceptance Criteria\n\n"
             . "- The imported archive remains reproducible from the same marked source file.\n"
-            . "- Imported specs and plans remain under `Modules/" . $model['module'] . "`.\n"
+            . '- Imported specs and plans remain under `Modules/' . $model['module'] . "`.\n"
             . "- Context validation can proceed without requiring modern ownership decisions.\n\n"
             . "## Assumptions\n\n"
             . "- The source archive was explicitly marked by a human before import.\n"
@@ -626,23 +626,23 @@ final class PreCanonicalArchiveImporter
 
         return "# Feature: pre-canonical\n\n"
             . "## Purpose\n\n"
-            . "- Preserve imported pre-canonical archive lineage under `Modules/" . $model['module'] . "` without assigning modern module ownership.\n\n"
+            . '- Preserve imported pre-canonical archive lineage under `Modules/' . $model['module'] . "` without assigning modern module ownership.\n\n"
             . "## Current State\n\n"
             . "- Dry-run import reports deterministic artifacts without writing files.\n"
             . "- Apply import writes specs, reconstruction notes, context files, and idempotent implementation-log entries.\n"
             . "- Validators treat this module as archive lineage rather than a normal contiguous implementation queue.\n"
             . "- State records the concrete imported source, spec count, first imported spec, and last imported spec after apply.\n"
             . "- The imported archive remains reproducible from the same marked source file.\n"
-            . "- Imported specs and plans remain under `Modules/" . $model['module'] . "`.\n"
+            . '- Imported specs and plans remain under `Modules/' . $model['module'] . "`.\n"
             . "- Context validation can proceed without requiring modern ownership decisions.\n\n"
             . "## Decision Summary\n\n"
-            . "- Pre-canonical archive records are preserved under `Modules/" . $model['module'] . "` instead of inferred into modern modules.\n"
+            . '- Pre-canonical archive records are preserved under `Modules/' . $model['module'] . "` instead of inferred into modern modules.\n"
             . "- `S`, `R`, and `P` markers remain the durable archive boundary for imported material.\n"
-            . "- Refreshed Through Spec: `" . $last . "`\n\n"
+            . '- Refreshed Through Spec: `' . $last . "`\n\n"
             . "## Imported Range\n\n"
-            . "- First imported spec: `" . $first . "`\n"
-            . "- Last imported spec: `" . $last . "`\n"
-            . "- Imported spec count: `" . count($model['specs']) . "`\n\n"
+            . '- First imported spec: `' . $first . "`\n"
+            . '- Last imported spec: `' . $last . "`\n"
+            . '- Imported spec count: `' . count($model['specs']) . "`\n\n"
             . "## Global Preamble Context\n\n"
             . $global . "\n\n"
             . "## Open Questions\n\n"
@@ -682,7 +682,7 @@ final class PreCanonicalArchiveImporter
             . "**Context**\n"
             . "- The imported source archive uses explicit `S`, `R`, and `P` markers to distinguish specifications, result evidence, and preamble context.\n\n"
             . "**Decision**\n"
-            . "- Preserve the marked archive under `Modules/" . $model['module'] . "` and use marker type plus normalized `NAME:` text as the only pairing authority.\n\n"
+            . '- Preserve the marked archive under `Modules/' . $model['module'] . "` and use marker type plus normalized `NAME:` text as the only pairing authority.\n\n"
             . "**Reasoning**\n"
             . "- The pre-canonical archive predates modern module ownership, so preserving lineage is safer than inferring current module placement.\n\n"
             . "**Alternatives Considered**\n"
@@ -711,9 +711,9 @@ final class PreCanonicalArchiveImporter
             . "### Decision: Record Concrete Imported Range In State\n\n"
             . "Timestamp: 2026-05-08T11:45:00-04:00\n\n"
             . "**Context**\n"
-            . "- The generated state file records the concrete imported pre-canonical archive range from `" . $model['source_path'] . "` after apply.\n\n"
+            . '- The generated state file records the concrete imported pre-canonical archive range from `' . $model['source_path'] . "` after apply.\n\n"
             . "**Decision**\n"
-            . "- Record that `Modules/" . $model['module'] . "` contains imported pre-canonical archive specs from `" . $model['source_path'] . "` and covers " . count($model['specs']) . " spec artifacts from `" . $first . "` through `" . $last . "`.\n\n"
+            . '- Record that `Modules/' . $model['module'] . '` contains imported pre-canonical archive specs from `' . $model['source_path'] . '` and covers ' . count($model['specs']) . ' spec artifacts from `' . $first . '` through `' . $last . "`.\n\n"
             . "**Reasoning**\n"
             . "- The broad module spec defines the archive contract, while state should describe the actual imported archive contents without making modern ownership claims.\n\n"
             . "**Alternatives Considered**\n"

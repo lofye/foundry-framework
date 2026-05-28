@@ -853,8 +853,7 @@ final class ExecutionSpecValidationService
         string $contents,
         string $code = 'EXECUTION_SPEC_FORBIDDEN_METADATA',
         string $messageTemplate = 'Execution specs must not define `%s` metadata inside the file.',
-    ): array
-    {
+    ): array {
         $violations = [];
         $insideFence = false;
 

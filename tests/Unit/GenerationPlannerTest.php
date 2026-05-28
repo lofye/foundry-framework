@@ -61,7 +61,7 @@ final class GenerationPlannerTest extends TestCase
 
     private function generator(string $id, string $origin = 'core', ?string $extension = null): Generator
     {
-        return new class($id, $origin, $extension) implements Generator {
+        return new class ($id, $origin, $extension) implements Generator {
             public function __construct(
                 private readonly string $id,
                 private readonly string $origin,

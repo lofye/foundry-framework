@@ -14,8 +14,8 @@ final class TerminalInteractiveGenerateReviewer implements InteractiveGenerateRe
     private readonly PlanValidator $validator;
 
     public function __construct(
-        private readonly \Closure|null $inputReader = null,
-        private readonly \Closure|null $outputWriter = null,
+        private readonly ?\Closure $inputReader = null,
+        private readonly ?\Closure $outputWriter = null,
         private readonly ?bool $interactive = null,
         ?GeneratePlanPreviewBuilder $previewBuilder = null,
         ?GeneratePlanRiskAnalyzer $riskAnalyzer = null,

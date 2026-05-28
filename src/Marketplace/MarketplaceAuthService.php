@@ -23,8 +23,7 @@ final class MarketplaceAuthService
         ?string $email = null,
         ?string $name = null,
         ?string $expiresAt = null,
-    ): array
-    {
+    ): array {
         $userId = trim($userId);
         $token = trim($token);
         $email = trim((string) $email);

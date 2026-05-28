@@ -92,8 +92,7 @@ final class PackContext
         ?Generator $generator = null,
         array $capabilities = [],
         int $priority = 50,
-    ): void
-    {
+    ): void {
         $this->registerContribution('generators', $name);
 
         if ($generator === null) {

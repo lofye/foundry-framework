@@ -140,4 +140,3 @@ final class MarketplaceAuthServiceTest extends TestCase
         return new MarketplaceAuthService($store, $clock);
     }
 }
-

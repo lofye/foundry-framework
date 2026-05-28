@@ -4,20 +4,11 @@ declare(strict_types=1);
 
 namespace Foundry\Packs;
 
-use Foundry\Compiler\Analysis\GraphAnalyzer;
-use Foundry\Compiler\Codemod\Codemod;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\Extensions\AbstractCompilerExtension;
 use Foundry\Compiler\Extensions\CompilerExtension;
 use Foundry\Compiler\Extensions\ExtensionDescriptor;
 use Foundry\Compiler\Extensions\PackDefinition;
-use Foundry\Compiler\Migration\DefinitionFormat;
-use Foundry\Compiler\Migration\MigrationRule;
-use Foundry\Compiler\Projection\ProjectionEmitter;
-use Foundry\Doctor\DoctorCheck;
-use Foundry\Packs\PackGeneratorDefinition;
-use Foundry\Pipeline\PipelineStageDefinition;
-use Foundry\Pipeline\StageInterceptor;
 
 final class InstalledPackExtension extends AbstractCompilerExtension
 {

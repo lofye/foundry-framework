@@ -587,7 +587,7 @@ final class McpPlanHandlersTest extends TestCase
     private function bridge(\Closure $resolver): CliReadBridge
     {
         return new CliReadBridge(new Application([
-            new class($resolver) extends Command {
+            new class ($resolver) extends Command {
                 /**
                  * @param \Closure(array<int,string>):array{status:int,payload:array<string,mixed>|null,message:string|null} $resolver
                  */

@@ -8,8 +8,8 @@ use Foundry\Compiler\ApplicationGraph;
 use Foundry\Compiler\IR\GraphNode;
 use Foundry\Explain\ExplainArtifactCatalog;
 use Foundry\Explain\ExplainContext;
-use Foundry\Explain\ExplainOrigin;
 use Foundry\Explain\ExplainOptions;
+use Foundry\Explain\ExplainOrigin;
 use Foundry\Explain\ExplainSubject;
 use Foundry\Explain\ExplainSupport;
 

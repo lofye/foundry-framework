@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Foundry\Monetization;
 
-use Foundry\Monetization\FeatureFlags;
 use Foundry\Support\FoundryError;
 
 final class LicenseValidator

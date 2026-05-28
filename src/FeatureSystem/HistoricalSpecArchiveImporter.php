@@ -354,8 +354,8 @@ final class HistoricalSpecArchiveImporter
 
         return $heading . "\n\n"
             . "## Historical Import Note\n\n"
-            . "This spec was imported from archived pre-repository implementation records. "
-            . "It reflects the original archived spec as closely as possible. "
+            . 'This spec was imported from archived pre-repository implementation records. '
+            . 'It reflects the original archived spec as closely as possible. '
             . "Known uncertainty remains documented in the import report and follow-up reconstruction records.\n\n"
             . rtrim($body, "\n") . "\n";
     }

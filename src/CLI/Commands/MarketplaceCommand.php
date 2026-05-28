@@ -57,4 +57,3 @@ final class MarketplaceCommand extends Command
         ];
     }
 }
-

@@ -617,8 +617,7 @@ final class GeneratePolicyEngine
         string $ruleId,
         string $field,
         string $criteriaField,
-    ): array
-    {
+    ): array {
         if (is_string($value)) {
             $value = [$value];
         }

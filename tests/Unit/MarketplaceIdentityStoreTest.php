@@ -151,4 +151,3 @@ final class MarketplaceIdentityStoreTest extends TestCase
         ];
     }
 }
-

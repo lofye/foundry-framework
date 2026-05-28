@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Foundry\Tests\Unit;
 
 use Foundry\Compiler\ApplicationGraph;
-use Foundry\Compiler\BuildLayout;
 use Foundry\Compiler\CompileOptions;
 use Foundry\Compiler\Diagnostics\DiagnosticBag;
 use Foundry\Compiler\GraphCompiler;

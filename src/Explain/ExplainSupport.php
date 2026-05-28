@@ -6,8 +6,8 @@ namespace Foundry\Explain;
 
 use Foundry\Compiler\ApplicationGraph;
 use Foundry\Compiler\IR\GraphNode;
-use Foundry\Support\FoundryError;
 use Foundry\Support\CliCommandPrefix;
+use Foundry\Support\FoundryError;
 use Foundry\Support\Paths;
 
 final class ExplainSupport
