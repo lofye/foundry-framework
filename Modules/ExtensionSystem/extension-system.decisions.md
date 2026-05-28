@@ -200,3 +200,46 @@ Timestamp: 2026-04-29T14:31:00-04:00
 - Constraints
 - Expected Behavior
 - Assumptions
+
+### Decision: make repository-visible Packs roots canonical while preserving registry-driven activation
+
+Timestamp: 2026-05-28T00:51:00-04:00
+
+**Context**
+
+- Spec `003-pack-root-layout-and-local-context` required installed packs to become first-class repository artifacts under `Packs/{vendor}/{pack}/`.
+- The existing implementation stored active files under versioned `.foundry/packs/{vendor}/{pack}/{version}/` roots while using `.foundry/packs/installed.json` as the activation registry.
+
+**Decision**
+
+- Keep `.foundry/packs/installed.json` as the only active-version registry.
+- Copy all new local and hosted pack installs into `Packs/{vendor}/{pack}/`.
+- Resolve active pack files from the canonical `Packs/` root first, and fall back to legacy `.foundry/packs/{vendor}/{pack}/{version}/` roots only when no canonical root exists.
+
+**Reasoning**
+
+- A repository-visible `Packs/` root makes installed packs inspectable by humans, agents, explain surfaces, and generate snapshots without hidden marketplace context.
+- Keeping the existing registry avoids introducing a second activation source and preserves deterministic deactivation semantics.
+- Canonical-first fallback lets existing applications continue loading old installs during a compatibility window while making all new installs use the new layout.
+
+**Alternatives Considered**
+
+- Move activation state into each pack root.
+- Continue storing installed files exclusively under `.foundry/packs`.
+- Delete or migrate legacy roots eagerly during install or remove.
+
+**Consequences**
+
+- Pack install conflicts are now target-root conflicts at `Packs/{vendor}/{pack}/`.
+- `pack remove` remains deactivate-only and does not delete canonical pack files.
+- Inspect, explain, source scanning, generate snapshots, and API surface classification now recognize canonical pack paths.
+- Installed pack rows expose present local context directories such as `docs/`, `specs/`, `specs/drafts/`, `plans/`, `tests/`, `resources/`, and `public/` so local pack context remains discoverable without marketplace access.
+
+**Impact**
+
+- Foundry-authored, third-party, private, local-development, and marketplace packs share one visible filesystem contract.
+- Legacy roots remain deterministic compatibility inputs rather than the normal install target.
+
+**Spec Reference**
+
+- Modules/ExtensionSystem/specs/003-pack-root-layout-and-local-context.md

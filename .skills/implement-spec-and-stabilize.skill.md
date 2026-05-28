@@ -20,7 +20,7 @@ This skill helps produce:
 
 Do not use this skill for:
 - release-final zero-tolerance stabilization
-- cases where unresolved issues must block completion; use implement-spec-and-stabilize-strict instead
+- cases where unresolved issues must block completion; use implement-spec instead
 
 # Inputs
 

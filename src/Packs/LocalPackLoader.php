@@ -72,16 +72,44 @@ final class LocalPackLoader
         foreach ($active as $row) {
             $name = (string) ($row['name'] ?? '');
             $version = (string) ($row['version'] ?? '');
-            $manifestPath = $registry->manifestPath($name, $version);
-            $installPath = $registry->installPath($name, $version);
+            $installPath = $registry->resolveInstallPath($name, $version);
+            $manifestPath = $installPath . '/foundry.json';
+            $canonicalInstallPath = $registry->installPath($name, $version);
+            $isCanonicalInstall = $installPath === $canonicalInstallPath;
 
             if (!is_dir($installPath)) {
                 $diagnostics[] = $this->diagnostic(
                     code: 'PACK_SOURCE_MISSING',
                     message: 'Installed pack files are missing.',
-                    sourcePath: $this->relativePath($installPath),
+                    sourcePath: $this->relativePath($canonicalInstallPath),
                     pack: $name,
-                    details: ['path' => $installPath, 'version' => $version],
+                    details: [
+                        'path' => $canonicalInstallPath,
+                        'legacy_path' => $registry->legacyInstallPath($name, $version),
+                        'version' => $version,
+                    ],
+                );
+                continue;
+            }
+
+            if ($isCanonicalInstall && !is_file($manifestPath)) {
+                $diagnostics[] = $this->diagnostic(
+                    code: 'PACK_MANIFEST_MISSING',
+                    message: 'Installed pack manifest not found.',
+                    sourcePath: $this->relativePath($manifestPath),
+                    pack: $name,
+                    details: ['path' => $manifestPath, 'version' => $version],
+                );
+                continue;
+            }
+
+            if ($isCanonicalInstall && !is_dir($installPath . '/src')) {
+                $diagnostics[] = $this->diagnostic(
+                    code: 'PACK_SOURCE_INVALID',
+                    message: 'Installed pack source directory is missing src/.',
+                    sourcePath: $this->relativePath($installPath . '/src'),
+                    pack: $name,
+                    details: ['path' => $installPath . '/src', 'version' => $version],
                 );
                 continue;
             }
@@ -100,6 +128,9 @@ final class LocalPackLoader
             }
 
             $sourcePaths[] = $this->relativePath($manifestPath);
+            foreach ($this->localContextPaths($installPath) as $contextPath) {
+                $sourcePaths[] = $contextPath;
+            }
 
             if ($manifest->name !== $name || $manifest->version !== $version) {
                 $diagnostics[] = $this->diagnostic(
@@ -110,6 +141,7 @@ final class LocalPackLoader
                     details: [
                         'registry_name' => $name,
                         'registry_version' => $version,
+                        'install_path' => $installPath,
                         'manifest' => $manifest->toArray(),
                     ],
                 );
@@ -147,7 +179,13 @@ final class LocalPackLoader
             $source = is_array(($row['sources'][$version] ?? null)) ? $row['sources'][$version] : ['type' => 'local'];
 
             try {
-                [$extension, $context] = $this->activatePack($manifest, $installPath, $source);
+                [$extension, $context] = $this->activatePack(
+                    $manifest,
+                    $installPath,
+                    $source,
+                    $this->relativePath($installPath),
+                    $this->localContextPaths($installPath),
+                );
             } catch (FoundryError $error) {
                 $diagnostics[] = $this->diagnostic(
                     code: $error->errorCode,
@@ -198,6 +236,7 @@ final class LocalPackLoader
                 'name' => $manifest->name,
                 'version' => $manifest->version,
                 'install_path' => $this->relativePath($installPath),
+                'local_context_paths' => $this->localContextPaths($installPath),
                 'source' => $source,
                 'manifest' => $manifest->toArray(),
                 'declared_contributions' => $context->contributions(),
@@ -224,8 +263,13 @@ final class LocalPackLoader
      * @param array<string,mixed> $source
      * @return array{0:CompilerExtension,1:PackContext}
      */
-    private function activatePack(PackManifest $manifest, string $installPath, array $source): array
-    {
+    private function activatePack(
+        PackManifest $manifest,
+        string $installPath,
+        array $source,
+        string $relativeInstallPath,
+        array $localContextPaths,
+    ): array {
         if (!class_exists($manifest->entry)) {
             $this->loadPhpFiles($installPath);
         }
@@ -313,7 +357,7 @@ final class LocalPackLoader
             $extension = $provider;
         }
 
-        return [new InstalledPackExtension($manifest, $context, $extension, $source), $context];
+        return [new InstalledPackExtension($manifest, $context, $extension, $source, $relativeInstallPath, $localContextPaths), $context];
     }
 
     /**
@@ -375,6 +419,24 @@ final class LocalPackLoader
         foreach ($files as $file) {
             require_once $file;
         }
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function localContextPaths(string $installPath): array
+    {
+        $paths = [];
+        foreach (['docs', 'specs', 'specs/drafts', 'plans', 'tests', 'resources', 'public'] as $relative) {
+            $path = $installPath . '/' . $relative;
+            if (is_dir($path)) {
+                $paths[] = $this->relativePath($path);
+            }
+        }
+
+        sort($paths);
+
+        return $paths;
     }
 
     /**

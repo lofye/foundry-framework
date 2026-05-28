@@ -165,6 +165,12 @@ final class ExplainOrigin
             return PackManifest::isValidName($name) ? $name : null;
         }
 
+        if (preg_match('#(?:^|/)Packs/([^/]+)/([^/]+)(?:/|$)#', $normalized, $matches) === 1) {
+            $name = trim((string) ($matches[1] ?? '')) . '/' . trim((string) ($matches[2] ?? ''));
+
+            return PackManifest::isValidName($name) ? $name : null;
+        }
+
         return null;
     }
 

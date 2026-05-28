@@ -54,7 +54,7 @@ Use for harder implementation and stabilization work where multiple subsystems i
 Typical cases:
 - implementing a spec that touches several files or subsystems
 - running `implement-spec-and-stabilize`
-- running `implement-spec-and-stabilize-strict`
+- running `implement-spec`
 - integrating new CLI surfaces with validators, docs, and tests
 - fixing non-trivial regressions
 - debugging a failure with several plausible causes
@@ -100,11 +100,11 @@ Recommended reasoning:
 Recommended reasoning:
 - **High**
 
-### `implement-spec-and-stabilize-strict`
+### `implement-spec`
 Recommended reasoning:
 - **High**
 
-### `implement-spec-and-stabilize-strict` in dry-run mode
+### `implement-spec` in dry-run mode
 Recommended reasoning:
 - **Medium**
 
@@ -208,7 +208,7 @@ Use these defaults unless there is a clear reason to override them:
 - **High**:
   - normal spec implementation
   - implement-spec-and-stabilize
-  - implement-spec-and-stabilize-strict
+  - implement-spec
   - multi-file workflow changes
   - non-trivial debugging
 

@@ -125,4 +125,4 @@ Foundry can also load deterministic packs for extension work, either from disk o
 - install and inspect local packs with `foundry pack list --json` and `foundry inspect packs --json`
 - active pack versions are tracked in `.foundry/packs/installed.json`
 - hosted registry lookups are cached at `.foundry/cache/registry.json`
-- installed pack files live under `.foundry/packs/*/*/*` and should be replaced from source rather than hand-edited
+- installed pack files live under `Packs/*/*` and should be replaced from source rather than hand-edited

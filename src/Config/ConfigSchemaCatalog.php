@@ -343,6 +343,8 @@ final class ConfigSchemaCatalog
                     'verifiers' => $this->stringListSchema(),
                     'docs_emitters' => $this->stringListSchema(),
                     'examples' => $this->stringListSchema(),
+                    'install_path' => ['type' => ['string', 'null']],
+                    'local_context_paths' => $this->stringListSchema(),
                 ],
             ],
             'pipeline.stage_definition' => [

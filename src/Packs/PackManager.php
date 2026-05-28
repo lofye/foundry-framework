@@ -125,16 +125,15 @@ final class PackManager
         $this->assertChecksumMatches($resolved, $manifest);
         $target = $this->registry->installPath($manifest->name, $manifest->version);
 
-        if (is_dir($target)) {
+        if (file_exists($target)) {
             throw new FoundryError(
                 'PACK_VERSION_ALREADY_INSTALLED',
                 'conflict',
                 [
                     'pack' => $manifest->name,
-                    'version' => $manifest->version,
                     'path' => $target,
                 ],
-                'That pack version is already installed.',
+                'That pack target is already installed.',
             );
         }
 
@@ -220,14 +219,18 @@ final class PackManager
     {
         $rows = [];
         foreach ($this->registry->read() as $name => $entry) {
+            $selectedVersion = $entry['active_version'] ?? $this->latestInstalledVersion($entry['installed_versions']);
             $rows[] = [
                 'name' => $name,
                 'active_version' => $entry['active_version'],
                 'installed_versions' => $entry['installed_versions'],
                 'active' => $entry['active_version'] !== null,
+                'install_path' => $selectedVersion !== null
+                    ? $this->relativePath($this->registry->resolveInstallPath($name, $selectedVersion))
+                    : $this->relativePath($this->registry->installPath($name)),
                 'source_kind' => $this->sourceKind(
                     is_array($entry['sources'] ?? null) ? $entry['sources'] : [],
-                    $entry['active_version'] ?? $this->latestInstalledVersion($entry['installed_versions']),
+                    $selectedVersion,
                 ),
             ];
         }
@@ -265,7 +268,8 @@ final class PackManager
             );
         }
 
-        $manifest = PackManifest::fromFile($this->registry->manifestPath($name, $selectedVersion));
+        $installPath = $this->registry->resolveInstallPath($name, $selectedVersion);
+        $manifest = PackManifest::fromFile($this->registry->resolveManifestPath($name, $selectedVersion));
         $source = is_array($entry['sources'][$selectedVersion] ?? null) ? $entry['sources'][$selectedVersion] : null;
 
         $payload = [
@@ -274,7 +278,7 @@ final class PackManager
             'active' => $entry['active_version'] === $selectedVersion,
             'active_version' => $entry['active_version'],
             'installed_versions' => $entry['installed_versions'],
-            'install_path' => $this->relativePath($this->registry->installPath($name, $selectedVersion)),
+            'install_path' => $this->relativePath($installPath),
             'manifest' => $manifest->toArray(),
             'capabilities' => $manifest->capabilities,
             'source' => $source,
@@ -487,7 +491,7 @@ final class PackManager
 
     private function copyDirectory(string $source, string $target): void
     {
-        if (is_dir($target)) {
+        if (file_exists($target)) {
             throw new FoundryError(
                 'PACK_TARGET_EXISTS',
                 'conflict',

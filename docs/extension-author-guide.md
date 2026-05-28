@@ -60,7 +60,7 @@ Required manifest rules:
 - `entry` must be a valid class name implementing `Foundry\Packs\PackServiceProvider`
 - `capabilities` must be an array of strings
 
-Installed pack files are copied into `.foundry/packs/{vendor}/{pack}/{version}/`, and active versions are recorded in `.foundry/packs/installed.json`.
+Installed pack files are copied into `Packs/{vendor}/{pack}/`, and active versions are recorded in `.foundry/packs/installed.json`.
 
 If a pack needs framework constraints, graph constraints, passes, projection emitters, or other extension behavior, expose those through the compiler extension registered by the pack provider, not through extra manifest keys.
 
@@ -144,6 +144,7 @@ Foundry resolves each extension through these stages:
 - built-in extensions load first
 - explicit registrations from `foundry.extensions.php` and `config/foundry/extensions.php` load next
 - active local packs are then loaded from `.foundry/packs/installed.json`
+- canonical active pack files are read from `Packs/{vendor}/{pack}/`, with legacy `.foundry/packs/{vendor}/{pack}/{version}/` roots supported during the compatibility window
 - local pack discovery never uses filesystem order; active packs are sorted by pack name and active version
 - graph boot uses only active pack versions
 - declared command and schema contributions must remain unique across active packs

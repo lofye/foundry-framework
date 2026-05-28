@@ -101,6 +101,9 @@ final class InstalledPackRegistryTest extends TestCase
     {
         $registry = new InstalledPackRegistry(Paths::fromCwd($this->project->root));
 
+        $this->assertSame($this->project->root . '/Packs/foundry/blog', $registry->installPath('foundry/blog', '1.0.0'));
+        $this->assertSame($this->project->root . '/.foundry/packs/foundry/blog/1.0.0', $registry->legacyInstallPath('foundry/blog', '1.0.0'));
+
         try {
             $registry->deactivate('foundry/missing');
             self::fail('Expected missing pack failure.');

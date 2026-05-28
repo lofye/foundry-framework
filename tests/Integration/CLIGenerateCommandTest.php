@@ -250,7 +250,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame('registry', $generate['payload']['packs_installed'][0]['source']['type']);
         $this->assertArrayHasKey('plan_confidence', $generate['payload']);
         $this->assertArrayHasKey('outcome_confidence', $generate['payload']);
-        $this->assertFileExists($this->project->root . '/.foundry/packs/foundry/blog/1.0.0/foundry.json');
+        $this->assertFileExists($this->project->root . '/Packs/foundry/blog/foundry.json');
         $this->assertFileExists($this->project->root . '/app/features/blog_post_notes/feature.yaml');
     }
 

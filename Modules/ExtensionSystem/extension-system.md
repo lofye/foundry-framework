@@ -6,10 +6,12 @@
 
 ## Decision Summary
 
-Refreshed Through Spec: `002-extension-marketplace-integration`
+Refreshed Through Spec: `003-pack-root-layout-and-local-context`
 
 - Extension state is assembled through `ExtensionRegistry::forPaths()` with deterministic built-in extension seeding and explicit app/pack registration files.
 - Pack activation validates manifests, installed paths, checksums, dependencies, conflicts, and compatibility before runtime enablement.
+- Installed pack files now use the repository-visible canonical root `Packs/{vendor}/{pack}/`, while `.foundry/packs/installed.json` remains the active-version registry.
+- Legacy `.foundry/packs/{vendor}/{pack}/{version}/` install roots remain readable during the compatibility window, and canonical `Packs/` roots win when both exist.
 - Pack provider contributions are surfaced through inspect/explain metadata, while only implemented registries become executable runtime behavior.
 - Hosted registry and local pack workflows are deterministic; publishing, range solving, cryptographic signature verification, and uninstall semantics remain future decisions.
 
@@ -26,9 +28,13 @@ Refreshed Through Spec: `002-extension-marketplace-integration`
   - `config/foundry/extensions.php`
 - Both registration files are loaded through `ExtensionRegistrationLoader`, and each must return an array of extension class names.
 - Installed pack activation is implemented through `LocalPackLoader` and `.foundry/packs/installed.json`.
-- Active pack versions are loaded from `.foundry/packs/{vendor}/{pack}/{version}/foundry.json`.
+- Active canonical pack versions are loaded from `Packs/{vendor}/{pack}/foundry.json`.
+- Legacy active pack versions may still be loaded from `.foundry/packs/{vendor}/{pack}/{version}/foundry.json` when no canonical root exists for the same registry entry.
 - Pack manifests are validated for pack name format, semantic version format, non-empty descriptions, valid entry class names, SHA-256 checksum presence and format, signature presence and format, and sorted unique capability strings.
 - Pack activation verifies that the installed directory exists, the manifest matches the active registry entry, and the manifest checksum matches the installed files.
+- Canonical pack activation also requires `Packs/{vendor}/{pack}/src/`.
+- Pack install, list, info, inspect, explain, and generate snapshot surfaces report canonical install paths as `Packs/{vendor}/{pack}` for new installs.
+- Installed pack rows expose present local context directories such as `docs/`, `specs/`, `specs/drafts/`, `plans/`, `tests/`, `resources/`, and `public/`.
 - Pack providers must implement `Foundry\Packs\PackServiceProvider`.
 - `PackContext` currently supports registration of:
   - one compiler extension

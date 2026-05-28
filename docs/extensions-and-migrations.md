@@ -67,10 +67,10 @@ Each local pack source must include `foundry.json`:
 
 Rules:
 
-- install sources are copied into `.foundry/packs/{vendor}/{pack}/{version}/`
+- install sources are copied into `Packs/{vendor}/{pack}/`
 - installed files stay immutable once copied
 - active versions are tracked in `.foundry/packs/installed.json`
-- graph boot reads only active pack versions
+- graph boot reads only active pack versions from `Packs/{vendor}/{pack}/`, with legacy `.foundry/packs/{vendor}/{pack}/{version}/` roots still readable during the compatibility window
 - pack manifests must declare `checksum` and `signature`, and installs fail when the package checksum does not match
 - pack entry classes must implement `Foundry\Packs\PackServiceProvider`
 - pack providers register graph-visible behavior explicitly through `Foundry\Packs\PackContext`

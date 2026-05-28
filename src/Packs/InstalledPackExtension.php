@@ -26,6 +26,8 @@ final class InstalledPackExtension extends AbstractCompilerExtension
         private readonly PackContext $context,
         private readonly ?CompilerExtension $inner = null,
         private readonly array $source = [],
+        private readonly ?string $installPath = null,
+        private readonly array $localContextPaths = [],
     ) {}
 
     public function name(): string
@@ -137,6 +139,8 @@ final class InstalledPackExtension extends AbstractCompilerExtension
                 generators: $this->context->contributions()['generators'] ?? [],
                 frameworkVersionConstraint: $this->inner?->descriptor()->frameworkVersionConstraint ?? '*',
                 graphVersionConstraint: $this->inner?->descriptor()->graphVersionConstraint ?? '*',
+                installPath: $this->installPath ?? $this->context->installPath(),
+                localContextPaths: $this->localContextPaths,
             ),
         ];
     }
@@ -191,6 +195,8 @@ final class InstalledPackExtension extends AbstractCompilerExtension
         $description['pack_manifest'] = $this->manifest->toArray();
         $description['declared_contributions'] = $this->context->contributions();
         $description['pack_source'] = $this->source;
+        $description['install_path'] = $this->installPath ?? $this->context->installPath();
+        $description['local_context_paths'] = $this->localContextPaths;
 
         return $description;
     }

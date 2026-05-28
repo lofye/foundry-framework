@@ -411,6 +411,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $manifest = $registry->classifyConfigurationArtifact('app/features/list_posts/feature.yaml');
         $platformConfig = $registry->classifyConfigurationArtifact('config/cache.php');
         $packRegistry = $registry->classifyConfigurationArtifact('.foundry/packs/installed.json');
+        $packManifest = $registry->classifyConfigurationArtifact('Packs/foundry/blog/foundry.json');
         $generated = $registry->classifyGeneratedMetadata('app/generated/routes.php');
         $registryCache = $registry->classifyGeneratedMetadata('.foundry/cache/registry.json');
         $cacheMetadata = $registry->classifyGeneratedMetadata('app/.foundry/build/manifests/compile_cache.json');
@@ -421,6 +422,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertNotNull($manifest);
         $this->assertNotNull($platformConfig);
         $this->assertNotNull($packRegistry);
+        $this->assertNotNull($packManifest);
         $this->assertNotNull($generated);
         $this->assertNotNull($registryCache);
         $this->assertNotNull($cacheMetadata);
@@ -430,6 +432,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('public_api', $manifest['classification']);
         $this->assertSame('experimental_api', $platformConfig['classification']);
         $this->assertSame('extension_api', $packRegistry['classification']);
+        $this->assertSame('extension_api', $packManifest['classification']);
         $this->assertSame('internal_api', $generated['classification']);
         $this->assertSame('internal_api', $registryCache['classification']);
         $this->assertSame('internal_api', $cacheMetadata['classification']);

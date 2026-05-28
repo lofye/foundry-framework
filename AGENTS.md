@@ -480,7 +480,7 @@ Violation of any rule above is considered an incorrect implementation.
 Use repository-local skills from `.skills/` before falling back to installed skills.
 
 Example:
-- `.skills/implement-spec-and-stabilize-strict.skill.md`
+- `.skills/implement-spec.skill.md`
 
 ---
 

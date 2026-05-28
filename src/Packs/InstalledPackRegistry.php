@@ -19,19 +19,51 @@ final class InstalledPackRegistry
 
     public function storageRoot(): string
     {
+        return $this->paths->join('Packs');
+    }
+
+    public function legacyStorageRoot(): string
+    {
         return $this->paths->join('.foundry/packs');
     }
 
-    public function installPath(string $name, string $version): string
+    public function installPath(string $name, ?string $version = null): string
     {
         [$vendor, $pack] = $this->splitName($name);
 
-        return $this->storageRoot() . '/' . $vendor . '/' . $pack . '/' . $version;
+        return $this->storageRoot() . '/' . $vendor . '/' . $pack;
+    }
+
+    public function legacyInstallPath(string $name, string $version): string
+    {
+        [$vendor, $pack] = $this->splitName($name);
+
+        return $this->legacyStorageRoot() . '/' . $vendor . '/' . $pack . '/' . $version;
     }
 
     public function manifestPath(string $name, string $version): string
     {
         return $this->installPath($name, $version) . '/foundry.json';
+    }
+
+    public function legacyManifestPath(string $name, string $version): string
+    {
+        return $this->legacyInstallPath($name, $version) . '/foundry.json';
+    }
+
+    public function resolveInstallPath(string $name, string $version): string
+    {
+        $canonical = $this->installPath($name, $version);
+        if (is_dir($canonical) || is_file($canonical . '/foundry.json')) {
+            return $canonical;
+        }
+
+        return $this->legacyInstallPath($name, $version);
+    }
+
+    public function resolveManifestPath(string $name, string $version): string
+    {
+        return $this->resolveInstallPath($name, $version) . '/foundry.json';
     }
 
     /**
@@ -281,6 +313,10 @@ final class InstalledPackRegistry
                 if ($value !== '') {
                     $normalized[$field] = $value;
                 }
+            }
+
+            if (array_key_exists('verified', $source)) {
+                $normalized['verified'] = (bool) $source['verified'];
             }
 
             $sources[$version] = $normalized;

@@ -377,7 +377,7 @@ final class ExplainArchitectureCoverageTest extends TestCase
                 ],
             ],
         ]));
-        $graph->addNode(new WorkflowNode('workflow:blog.editorial', '.foundry/packs/vendor/blog-pack/1.2.0/src/blog.workflow.php', [
+        $graph->addNode(new WorkflowNode('workflow:blog.editorial', 'Packs/vendor/blog-pack/src/blog.workflow.php', [
             'resource' => 'blog.editorial',
             'feature' => 'blog',
         ]));
@@ -436,7 +436,7 @@ final class ExplainArchitectureCoverageTest extends TestCase
                 'name' => 'pack.vendor.blog-pack',
                 'version' => '1.2.0',
                 'description' => 'Fixture blog pack.',
-                'source_path' => '.foundry/packs/vendor/blog-pack/1.2.0/foundry.json',
+                'source_path' => 'Packs/vendor/blog-pack/foundry.json',
                 'enabled' => true,
                 'diagnostics' => [],
                 'pack_manifest' => [

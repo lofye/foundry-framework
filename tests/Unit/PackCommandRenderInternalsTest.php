@@ -67,7 +67,7 @@ final class PackCommandRenderInternalsTest extends TestCase
         $output = $this->invoke($command, 'renderInstall', [[
             'pack' => 'vendor/premium-pack',
             'version' => '1.0.0',
-            'install_path' => '.foundry/packs/vendor/premium-pack/1.0.0',
+            'install_path' => 'Packs/vendor/premium-pack',
             'source' => [
                 'type' => 'registry',
                 'download_url' => 'https://downloads.example/vendor-premium-pack-1.0.0.zip',

@@ -57,6 +57,18 @@ final class LocalPackLoaderTest extends TestCase
         );
         $registry->activate($missingManifest, ['type' => 'local', 'path' => '/packs/missing']);
 
+        $missingCanonicalManifestDir = $registry->installPath('foundry/no-manifest-pack', '1.0.0');
+        mkdir($missingCanonicalManifestDir . '/src', 0777, true);
+        $registry->activate(new PackManifest(
+            name: 'foundry/no-manifest-pack',
+            version: '1.0.0',
+            description: 'Missing canonical manifest',
+            entry: 'Vendor\\NoManifest\\Provider',
+            capabilities: ['no-manifest.capability'],
+            checksum: str_repeat('b', 64),
+            signature: null,
+        ));
+
         $mismatchDir = $registry->installPath('foundry/mismatch-pack', '1.0.0');
         mkdir($mismatchDir, 0777, true);
         $this->writeManifest($mismatchDir, [
@@ -98,6 +110,29 @@ final class LocalPackLoaderTest extends TestCase
             signature: null,
         ));
 
+        $missingSrcDir = $registry->installPath('foundry/no-src-pack', '1.0.0');
+        mkdir($missingSrcDir, 0777, true);
+        $missingSrcManifest = [
+            'name' => 'foundry/no-src-pack',
+            'version' => '1.0.0',
+            'description' => 'Missing src',
+            'entry' => 'Vendor\\NoSrc\\Provider',
+            'capabilities' => ['no-src.capability'],
+            'signature' => null,
+        ];
+        file_put_contents($missingSrcDir . '/foundry.json', json_encode($missingSrcManifest + ['checksum' => ''], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
+        $missingSrcChecksum = PackChecksum::forDirectory($missingSrcDir);
+        file_put_contents($missingSrcDir . '/foundry.json', json_encode($missingSrcManifest + ['checksum' => $missingSrcChecksum], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
+        $registry->activate(new PackManifest(
+            name: 'foundry/no-src-pack',
+            version: '1.0.0',
+            description: 'Missing src',
+            entry: 'Vendor\\NoSrc\\Provider',
+            capabilities: ['no-src.capability'],
+            checksum: $missingSrcChecksum,
+            signature: null,
+        ));
+
         $result = (new LocalPackLoader($paths))->load();
         $codes = array_values(array_map(
             static fn(array $row): string => (string) ($row['code'] ?? ''),
@@ -105,9 +140,47 @@ final class LocalPackLoaderTest extends TestCase
         ));
 
         $this->assertContains('PACK_SOURCE_MISSING', $codes);
+        $this->assertContains('PACK_MANIFEST_MISSING', $codes);
         $this->assertContains('PACK_MANIFEST_MISMATCH', $codes);
+        $this->assertContains('PACK_SOURCE_INVALID', $codes);
         $this->assertContains('PACK_ENTRY_CLASS_NOT_FOUND', $codes);
         $this->assertSame([], $result['entries']);
+    }
+
+    public function test_loader_uses_canonical_pack_root_before_legacy_root(): void
+    {
+        $paths = Paths::fromCwd($this->project->root);
+        $registry = new InstalledPackRegistry($paths);
+
+        $this->copyDirectory(dirname(__DIR__) . '/Fixtures/Packs/foundry-blog', $registry->installPath('foundry/blog', '1.0.0'));
+        $legacyDir = $registry->legacyInstallPath('foundry/blog', '1.0.0');
+        mkdir($legacyDir, 0777, true);
+        file_put_contents($legacyDir . '/foundry.json', '{');
+
+        $manifest = PackManifest::fromFile($registry->manifestPath('foundry/blog', '1.0.0'));
+        $registry->activate($manifest);
+
+        $result = (new LocalPackLoader($paths))->load();
+
+        $this->assertSame([], $result['diagnostics']);
+        $this->assertSame('Packs/foundry/blog', $result['active_packs'][0]['install_path']);
+        $this->assertSame('Packs/foundry/blog/foundry.json', $result['entries'][0]['source_path']);
+    }
+
+    public function test_loader_supports_legacy_pack_roots_during_compatibility_window(): void
+    {
+        $paths = Paths::fromCwd($this->project->root);
+        $registry = new InstalledPackRegistry($paths);
+
+        $this->copyDirectory(dirname(__DIR__) . '/Fixtures/Packs/foundry-blog', $registry->legacyInstallPath('foundry/blog', '1.0.0'));
+        $manifest = PackManifest::fromFile($registry->legacyManifestPath('foundry/blog', '1.0.0'));
+        $registry->activate($manifest);
+
+        $result = (new LocalPackLoader($paths))->load();
+
+        $this->assertSame([], $result['diagnostics']);
+        $this->assertSame('.foundry/packs/foundry/blog/1.0.0', $result['active_packs'][0]['install_path']);
+        $this->assertSame('.foundry/packs/foundry/blog/1.0.0/foundry.json', $result['entries'][0]['source_path']);
     }
 
     public function test_loader_activates_valid_packs_and_reports_command_and_schema_conflicts(): void
@@ -493,11 +566,46 @@ PHP);
      */
     private function writeManifest(string $directory, array $manifest): string
     {
+        if (!is_dir($directory . '/src')) {
+            mkdir($directory . '/src', 0777, true);
+        }
+
         unset($manifest['checksum']);
         file_put_contents($directory . '/foundry.json', json_encode($manifest + ['checksum' => ''], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
         $checksum = PackChecksum::forDirectory($directory);
         file_put_contents($directory . '/foundry.json', json_encode($manifest + ['checksum' => $checksum], JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
 
         return PackChecksum::forDirectory($directory);
+    }
+
+    private function copyDirectory(string $source, string $target): void
+    {
+        mkdir($target, 0777, true);
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($source, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST,
+        );
+
+        foreach ($iterator as $fileInfo) {
+            if (!$fileInfo instanceof \SplFileInfo) {
+                continue;
+            }
+
+            $relative = substr($fileInfo->getPathname(), strlen(rtrim($source, '/') . '/'));
+            $destination = $target . '/' . $relative;
+
+            if ($fileInfo->isDir()) {
+                mkdir($destination, 0777, true);
+                continue;
+            }
+
+            $directory = dirname($destination);
+            if (!is_dir($directory)) {
+                mkdir($directory, 0777, true);
+            }
+
+            copy($fileInfo->getPathname(), $destination);
+        }
     }
 }

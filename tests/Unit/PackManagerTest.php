@@ -38,13 +38,45 @@ final class PackManagerTest extends TestCase
 
         $this->assertSame('foundry/blog', $installed['pack']);
         $this->assertSame('local', $installed['source']['type']);
+        $this->assertSame('Packs/foundry/blog', $installed['install_path']);
+        $this->assertFileExists($this->project->root . '/Packs/foundry/blog/foundry.json');
         $this->assertSame('foundry/blog', $listed[0]['name']);
+        $this->assertSame('Packs/foundry/blog', $listed[0]['install_path']);
         $this->assertSame('local', $listed[0]['source_kind']);
         $this->assertTrue($info['active']);
+        $this->assertSame('Packs/foundry/blog', $info['install_path']);
         $this->assertSame('local', $info['source_kind']);
         $this->assertFalse($removed['active']);
         $this->assertNull($removed['active_version']);
+        $this->assertFileExists($this->project->root . '/Packs/foundry/blog/foundry.json');
         $this->assertFalse($inactive['active']);
+    }
+
+    public function test_install_preserves_pack_local_context_directories(): void
+    {
+        $source = $this->project->root . '/source-with-context';
+        $this->copyDirectory($this->fixturePath('foundry-blog'), $source);
+        $this->ensureDirectory($source . '/docs');
+        $this->ensureDirectory($source . '/specs/drafts');
+        $this->ensureDirectory($source . '/plans');
+        $this->ensureDirectory($source . '/tests');
+        $this->ensureDirectory($source . '/resources');
+        $this->ensureDirectory($source . '/public');
+        file_put_contents($source . '/docs/usage.md', "# Usage\n");
+        file_put_contents($source . '/specs/001-context.md', "# Execution Spec: 001-context\n");
+        file_put_contents($source . '/specs/drafts/002-draft.md', "# Execution Spec: 002-draft\n");
+        file_put_contents($source . '/plans/001-context.md', "# 001-context\n");
+        file_put_contents($source . '/tests/fixture.txt', "fixture\n");
+        file_put_contents($source . '/resources/config.json', "{}\n");
+        file_put_contents($source . '/public/logo.txt', "logo\n");
+        $this->writeManifestWithChecksum($source, $this->fixtureManifest('foundry-blog'));
+
+        $installed = $this->manager()->install($source);
+
+        $this->assertSame('Packs/foundry/blog', $installed['install_path']);
+        foreach (['docs/usage.md', 'specs/001-context.md', 'specs/drafts/002-draft.md', 'plans/001-context.md', 'tests/fixture.txt', 'resources/config.json', 'public/logo.txt'] as $relative) {
+            $this->assertFileExists($this->project->root . '/Packs/foundry/blog/' . $relative);
+        }
     }
 
     public function test_install_rejects_empty_missing_manifestless_duplicate_and_checksum_mismatch_sources(): void
@@ -123,6 +155,8 @@ final class PackManagerTest extends TestCase
         $this->assertSame('foundry/blog', $search['packs'][0]['name']);
         $this->assertSame('registry', $installed['source']['type']);
         $this->assertSame($downloadUrl, $installed['source']['download_url']);
+        $this->assertSame('Packs/foundry/blog', $installed['install_path']);
+        $this->assertFileExists($this->project->root . '/Packs/foundry/blog/foundry.json');
         $this->assertSame('remote', $info['source_kind']);
     }
 
@@ -329,6 +363,18 @@ final class PackManagerTest extends TestCase
         } finally {
             $this->deleteDirectory($temporary);
         }
+    }
+
+    /**
+     * @param array<string,mixed> $manifest
+     */
+    private function writeManifestWithChecksum(string $directory, array $manifest): void
+    {
+        unset($manifest['checksum'], $manifest['signature']);
+        file_put_contents($directory . '/foundry.json', json_encode($manifest, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
+        $manifest['checksum'] = PackChecksum::forDirectory($directory);
+        $manifest['signature'] = null;
+        file_put_contents($directory . '/foundry.json', json_encode($manifest, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
     }
 
     private function copyDirectory(string $source, string $target): void

@@ -54,7 +54,7 @@ Execution rules:
 - Treat `app/.foundry/build/*` as canonical compiled output
 - Treat `.foundry/packs/installed.json` as explicit local pack activation state when packs are in use
 - Treat `.foundry/cache/registry.json` as cached hosted-registry metadata when remote pack discovery is used
-- Treat `.foundry/packs/*/*/*/foundry.json` as installed pack metadata, not editable app source
+- Treat `Packs/*/*/foundry.json` as installed pack metadata, not editable app source
 - Treat `app/generated/*` as generated compatibility projections
 - Treat `docs/generated/*` and `docs/inspect-ui/*` as generated documentation output
 - Treat `docs/policies/*` as repository execution and reasoning policy inputs
@@ -71,7 +71,7 @@ Execution rules:
 - Execution spec IDs are ordered contracts and must stay contiguous within each feature at every hierarchy level; skipping numbers is forbidden.
 - Stop instead of planning, implementing, promoting, or logging execution specs when a numeric gap exists.
 - Do not hand-edit `app/generated/*`; regenerate instead
-- Do not hand-edit installed pack files under `.foundry/packs/*`; reinstall or replace them from source instead
+- Do not hand-edit installed pack files under `Packs/*/*`; reinstall or replace them from source instead
 
 ---
 

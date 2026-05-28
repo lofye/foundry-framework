@@ -98,7 +98,7 @@ final readonly class SourceScanner
                     continue;
                 }
 
-                $installPath = $packRegistry->installPath($name, $activeVersion);
+                $installPath = $packRegistry->resolveInstallPath($name, $activeVersion);
                 if (!is_dir($installPath)) {
                     continue;
                 }

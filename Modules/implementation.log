@@ -774,3 +774,7 @@
 ## 2026-05-27 15:48:53 -0400
 - spec: Modules/McpServer/specs/005-mcp-plan-explainability-and-dev-ux.md
 - note: Added deterministic persisted-plan explanation through CLI `explain plan` and MCP `explain_plan`, including readiness, pack reasoning, entitlement blockers, sorted changes, validation, next actions, and secret-safe structured failures.
+
+## 2026-05-28 00:51:00 -0400
+- spec: Modules/ExtensionSystem/specs/003-pack-root-layout-and-local-context.md
+- note: Moved new pack installs to canonical `Packs/{vendor}/{pack}` roots, preserved registry-only activation and legacy root loading, and surfaced canonical install/local-context paths through pack, inspect, explain, generate, and API classification outputs.

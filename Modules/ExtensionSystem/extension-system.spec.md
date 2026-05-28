@@ -76,7 +76,7 @@
 - Explicit extension registration arrays from:
   - `foundry.extensions.php`
   - `config/foundry/extensions.php`
-- Active installed packs recorded in `.foundry/packs/installed.json` and stored under `.foundry/packs/{vendor}/{pack}/{version}/`.
+- Active installed packs recorded in `.foundry/packs/installed.json` and stored under `Packs/{vendor}/{pack}/`.
 
 ### Internal Boundaries
 
@@ -189,6 +189,8 @@
 - Installed packs are loaded in deterministic pack-name and version order, not filesystem order.
 - Every active installed pack is wrapped as an installed pack extension named `pack.<vendor>.<pack>`.
 - Installed pack manifests must match the active registry entry name and version exactly.
+- Installed pack manifests must live at `Packs/{vendor}/{pack}/foundry.json` for canonical installs, with legacy `.foundry/packs/{vendor}/{pack}/{version}/foundry.json` roots readable during the compatibility window.
+- Installed pack rows expose present local context directories such as `docs/`, `specs/`, `specs/drafts/`, `plans/`, `tests/`, `resources/`, and `public/`.
 - Installed pack manifests must reject empty descriptions, invalid checksum fields, invalid signature fields, and duplicate or empty capability values.
 - `PackContext` supports registration of commands, schemas, workflows, events, guards, generators, and docs metadata.
 - If a pack provider implements `CompilerExtension` and does not call `registerExtension()`, the provider itself becomes the pack extension entrypoint.

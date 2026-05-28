@@ -21,6 +21,7 @@ final class PackDefinition
      * @param array<int,string> $verifiers
      * @param array<int,string> $docsEmitters
      * @param array<int,string> $examples
+     * @param array<int,string> $localContextPaths
      */
     public function __construct(
         public readonly string $name,
@@ -41,6 +42,8 @@ final class PackDefinition
         public readonly array $verifiers = [],
         public readonly array $docsEmitters = [],
         public readonly array $examples = [],
+        public readonly ?string $installPath = null,
+        public readonly array $localContextPaths = [],
     ) {}
 
     /**
@@ -68,6 +71,8 @@ final class PackDefinition
             'verifiers' => $this->sortedUnique($this->verifiers),
             'docs_emitters' => $this->sortedUnique($this->docsEmitters),
             'examples' => $this->sortedUnique($this->examples),
+            'install_path' => $this->installPath,
+            'local_context_paths' => $this->sortedUnique($this->localContextPaths),
         ];
     }
 
