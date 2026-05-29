@@ -509,7 +509,7 @@ Both historical commands must exit `0`.
 Create:
 
 ```text
-Modules/FeatureSystem/plans/012-extraction-boundary-and-root-detection-hardening.md
+Modules/FeatureSystem/outcomes/012-extraction-boundary-and-root-detection-hardening.md
 ```
 
 ---

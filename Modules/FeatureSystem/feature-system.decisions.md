@@ -238,7 +238,7 @@ Timestamp: 2026-05-07T13:55:00-04:00
 
 **Context**
 
-- Execution spec `006-require-implementation-reconstruction-notes` requires durable post-implementation reconstruction notes under `Modules/<Module>/plans/`.
+- Execution spec `006-require-implementation-reconstruction-notes` requires durable post-implementation reconstruction notes under `Modules/<Module>/outcomes/`.
 - The repository already contained many module plan files with legacy `# Implementation Plan:` headings and non-reconstruction sections.
 - Immediate strict revalidation of all legacy plan files would invalidate the repository without migration support.
 
@@ -547,7 +547,7 @@ Timestamp: 2026-05-07T21:40:43-04:00
 
 - Add `historical-specs:reconstruct` as a report/apply command backed by a FeatureSystem historical reconstruction generator.
 - Target only completed imported historical specs under active `Modules/<Module>/specs/*.md`; draft imports remain excluded.
-- Generate missing `Modules/<Module>/plans/<id-and-slug>.md` notes with historical provenance, evidence summaries, verification/stabilization sections, repository alignment, and uncertainty notes.
+- Generate missing `Modules/<Module>/outcomes/<id-and-slug>.md` notes with historical provenance, evidence summaries, verification/stabilization sections, repository alignment, and uncertainty notes.
 - Preserve existing reconstruction notes instead of overwriting them silently.
 - Append missing canonical `Modules/implementation.log` entries exactly once in deterministic spec-path order.
 - Classify website-owned historical specs such as `*WS.md` as supporting/ignored evidence and skip them during framework import.
@@ -681,7 +681,7 @@ Timestamp: 2026-05-08T11:45:00-04:00
 **Decision**
 
 - Add `precanonical:import` as a report-first CLI command with explicit `--apply`, optional `--force`, and default `--target-module=PreCanonical`.
-- Import marked `S` blocks as valid execution specs under `Modules/PreCanonical/specs/` and generate paired reconstruction notes under `Modules/PreCanonical/plans/`.
+- Import marked `S` blocks as valid execution specs under `Modules/PreCanonical/specs/` and generate paired reconstruction notes under `Modules/PreCanonical/outcomes/`.
 - Pair marked `R` blocks to specs only by normalized `NAME:` text and preserve marked `P` blocks as associated or global preamble context.
 - Map legacy alphanumeric IDs into padded dot-separated canonical IDs without renumbering imported records into modern modules.
 

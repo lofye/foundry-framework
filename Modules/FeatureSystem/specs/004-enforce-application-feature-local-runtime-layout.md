@@ -24,7 +24,7 @@ Application feature-owned specs and plans must be localized under:
 
 ```text
 Features/<Feature>/specs/
-Features/<Feature>/plans/
+Features/<Feature>/outcomes/
 ```
 
 Application feature-owned extra documentation must be localized under:
@@ -102,7 +102,7 @@ Application feature validation must enforce:
 - feature-owned tests are under `Features/<Feature>/tests/`
 - canonical context files live directly under `Features/<Feature>/`
 - feature specs live under `Features/<Feature>/specs/`
-- feature plans live under `Features/<Feature>/plans/`
+- feature plans live under `Features/<Feature>/outcomes/`
 - extra feature docs live under `Features/<Feature>/docs/`
 
 The verifier must reject application feature-owned source files located in legacy/global app feature paths when they are attributable to a feature.

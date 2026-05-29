@@ -64,7 +64,7 @@ Execution rules:
 - Treat code and tests as the source of truth for actual implementation and runtime behavior
 - Treat `Features/<Feature>/specs/*.md` as execution specs: planning artifacts that are non-authoritative after implementation
 - Treat `Features/<Feature>/specs/drafts/*.md` as draft execution specs: non-executable planning artifacts
-- Treat `Features/<Feature>/plans/*.md` as implementation reconstruction notes: post-implementation artifacts describing what actually changed
+- Treat `Features/<Feature>/outcomes/*.md` as implementation reconstruction notes: post-implementation artifacts describing what actually changed
 - Treat `Features/implementation.log` as the completed execution-spec ledger
 - For completed active execution specs, create or update the matching reconstruction note before reporting completion.
 - Reconstruction notes are not speculative plans; they document actual implementation shape and verification evidence.
@@ -149,7 +149,7 @@ Every completed application feature spec SHOULD have a matching reconstruction n
 Example:
 
 - Spec: `Features/Blog/specs/001-blog-posting.md`
-- Reconstruction note: `Features/Blog/plans/001-blog-posting.md`
+- Reconstruction note: `Features/Blog/outcomes/001-blog-posting.md`
 
 For executable application features, reconstruction notes preserve implementation memory: files added, runtime contracts, tests, deterministic outputs, and follow-up dependencies.
 
@@ -199,7 +199,7 @@ Completion quality gate:
 
 ```bash
 php vendor/bin/phpunit
-XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover build/coverage/clover.xml
+bin/phpunit-coverage --coverage-clover build/coverage/clover.xml
 php bin/foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
 ```
 
@@ -225,7 +225,7 @@ Use `foundry context repair --feature=<feature> --json` when context verificatio
 
 ```bash
 php vendor/bin/phpunit
-XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover build/coverage/clover.xml
+bin/phpunit-coverage --coverage-clover build/coverage/clover.xml
 php bin/foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
 ```
 

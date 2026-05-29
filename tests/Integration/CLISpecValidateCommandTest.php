@@ -140,7 +140,7 @@ TEXT . "\n", $raw['output']);
         $this->writeImplementationLogEntry('execution-spec-system/001-active-without-plan.md');
 
         $default = $this->runCommand(['foundry', 'spec:validate', '--json']);
-        $strict = $this->runCommand(['foundry', 'spec:validate', '--require-plans', '--json']);
+        $strict = $this->runCommand(['foundry', 'spec:validate', '--require-outcomes', '--json']);
 
         $this->assertSame(0, $default['status']);
         $this->assertTrue($default['payload']['ok']);
@@ -149,7 +149,7 @@ TEXT . "\n", $raw['output']);
         $this->assertFalse($strict['payload']['ok']);
         $this->assertSame('EXECUTION_SPEC_PLAN_REQUIRED_MISSING', $strict['payload']['violations'][0]['code']);
         $this->assertSame(
-            'docs/features/execution-spec-system/plans/001-active-without-plan.md',
+            'docs/features/execution-spec-system/outcomes/001-active-without-plan.md',
             $strict['payload']['violations'][0]['details']['plan_path'],
         );
     }
@@ -201,7 +201,7 @@ TEXT . "\n", $raw['output']);
         $this->assertFalse($json['payload']['ok']);
         $this->assertSame('EXECUTION_SPEC_RECONSTRUCTION_NOTE_MISSING', $json['payload']['violations'][0]['code']);
         $this->assertSame(
-            'Modules/FeatureSystem/plans/001-reconstruction-required.md',
+            'Modules/FeatureSystem/outcomes/001-reconstruction-required.md',
             $json['payload']['violations'][0]['details']['expected_path'],
         );
     }
@@ -213,7 +213,7 @@ TEXT . "\n", $raw['output']);
             "# Execution Spec: 001-normalized-log\n",
         );
         $this->writeRawFile(
-            'Modules/FeatureSystem/plans/001-normalized-log.md',
+            'Modules/FeatureSystem/outcomes/001-normalized-log.md',
             "# Implementation Plan: 001-normalized-log\n",
         );
         $this->writeRawFile(
@@ -237,7 +237,7 @@ TEXT . "\n", $raw['output']);
             "# Execution Spec: 001-decision-summary\n",
         );
         $this->writeRawFile(
-            'Modules/FeatureSystem/plans/001-decision-summary.md',
+            'Modules/FeatureSystem/outcomes/001-decision-summary.md',
             "# Implementation Plan: 001-decision-summary\n",
         );
         $this->writeRawFile(

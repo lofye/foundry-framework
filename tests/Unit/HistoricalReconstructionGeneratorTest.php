@@ -35,7 +35,7 @@ MD);
 
         $payload = $this->generator()->generate(null, true, false);
 
-        $notePath = $this->project->root . '/Modules/LegacyModule/plans/001-recovered-runtime.md';
+        $notePath = $this->project->root . '/Modules/LegacyModule/outcomes/001-recovered-runtime.md';
         $log = (string) file_get_contents($this->project->root . '/Modules/implementation.log');
         $note = (string) file_get_contents($notePath);
 
@@ -52,11 +52,11 @@ MD);
     public function test_existing_reconstruction_note_is_not_overwritten_silently(): void
     {
         $this->writeImportedSpec('LegacyModule', '001-recovered-runtime', "RESULT\nImplemented src/Legacy/Runtime.php.\n");
-        $this->writeRawFile('Modules/LegacyModule/plans/001-recovered-runtime.md', "# Implementation Plan: 001-recovered-runtime\n\nExisting historical note.\n");
+        $this->writeRawFile('Modules/LegacyModule/outcomes/001-recovered-runtime.md', "# Implementation Plan: 001-recovered-runtime\n\nExisting historical note.\n");
 
         $payload = $this->generator()->generate(null, true, false);
 
-        $note = (string) file_get_contents($this->project->root . '/Modules/LegacyModule/plans/001-recovered-runtime.md');
+        $note = (string) file_get_contents($this->project->root . '/Modules/LegacyModule/outcomes/001-recovered-runtime.md');
 
         $this->assertSame(0, $payload['summary']['notes_created']);
         $this->assertSame(1, $payload['summary']['notes_existing']);
@@ -70,7 +70,7 @@ MD);
 
         $this->generator()->generate(null, true, false);
 
-        $note = (string) file_get_contents($this->project->root . '/Modules/LegacyModule/plans/001-recovered-runtime.md');
+        $note = (string) file_get_contents($this->project->root . '/Modules/LegacyModule/outcomes/001-recovered-runtime.md');
 
         $this->assertStringContainsString('No confirmed historical evidence available.', $note);
         $this->assertStringContainsString('unknown: original full terminal transcript is not reproduced', $note);

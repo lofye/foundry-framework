@@ -21,6 +21,7 @@ final class TempProject
         mkdir($this->root . '/storage/files', 0777, true);
         mkdir($this->root . '/storage/logs', 0777, true);
         mkdir($this->root . '/storage/tmp', 0777, true);
+        mkdir($this->root . '/bin', 0777, true);
         mkdir($this->root . '/vendor/bin', 0777, true);
 
         file_put_contents($this->root . '/composer.json', <<<'JSON'
@@ -36,6 +37,14 @@ final class TempProject
 JSON);
         file_put_contents($this->root . '/vendor/autoload.php', "<?php\n");
         file_put_contents($this->root . '/vendor/bin/foundry', "#!/usr/bin/env php\n<?php\n");
+        file_put_contents($this->root . '/bin/phpunit-coverage', <<<'BASH'
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+exec php "${ROOT_DIR}/vendor/bin/phpunit" "$@"
+BASH);
+        @chmod($this->root . '/bin/phpunit-coverage', 0755);
         file_put_contents($this->root . '/vendor/bin/phpunit', <<<'PHP'
 #!/usr/bin/env php
 <?php

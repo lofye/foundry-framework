@@ -6,12 +6,13 @@
 
 ## Decision Summary
 
-Refreshed Through Spec: `010-enforce-feature-scoped-gapless-spec-ids`
+Refreshed Through Spec: `011-rename-reconstruction-plans-to-outcomes`
 
 - Execution-spec identity is filename-based: active specs and drafts use canonical padded IDs, filename-mirrored headings, and no separate metadata IDs.
 - Draft specs are non-executable planning artifacts; active spec resolution, logging, and implementation workflows reject draft-only targets.
 - Active specs require exact implementation-log coverage, and completed framework specs require matching reconstruction notes.
-- Validation enforces placement, heading, duplicate ID, forbidden metadata, implementation-log, plan-coverage, and ID-continuity rules deterministically.
+- Reconstruction notes now live under `outcomes/` as post-implementation artifacts, with `plans/` retained only as deprecated compatibility vocabulary where explicitly noted.
+- Validation enforces placement, heading, duplicate ID, forbidden metadata, implementation-log, outcome-coverage, and ID-continuity rules deterministically.
 - Framework-internal specs are blocked from the generic app scaffolding implementation path until a dedicated framework execution path exists.
 
 ## Current State
@@ -59,15 +60,15 @@ Refreshed Through Spec: `010-enforce-feature-scoped-gapless-spec-ids`
 - Framework-repository execution specs do not create `app/features/<feature>/` scaffolds for framework-internal features such as `execution-spec-system`.
 - `implement spec` returns a deterministic explicit block instead of silently generating misplaced app-feature output in the framework repository.
 - Agent-facing framework and app instruction files now consistently describe canonical feature context as `docs/features/<feature>/<feature>.*`.
-- Agent-facing instruction surfaces now include canonical draft-spec, plan, and implementation-log paths: `docs/features/<feature>/specs/drafts/*.md`, `docs/features/<feature>/plans/*.md`, and `docs/features/implementation-log.md`.
+- Agent-facing instruction surfaces now include canonical draft-spec, reconstruction-outcome, and implementation-log paths: `docs/features/<feature>/specs/drafts/*.md`, `docs/features/<feature>/outcomes/*.md`, and `docs/features/implementation-log.md`.
 - Repository-local implementation skills now reference canonical spec and implementation-log paths under `docs/features/*` instead of legacy `docs/specs/*`.
 - Agent-facing framework, app, and skill instruction surfaces reflect only the canonical feature-doc path contract, and stale-path references are retained only in explicitly historical or migration contexts.
-- Human-facing README surfaces and `docs/features/README.md` now use the canonical feature-context stem (`<feature>`) and explicitly distinguish active specs, draft specs, implementation plans, and the global `docs/features/implementation-log.md` ledger.
+- Human-facing README surfaces and `docs/features/README.md` now use the canonical feature-context stem (`<feature>`) and explicitly distinguish active specs, draft specs, reconstruction outcomes, and the global `docs/features/implementation-log.md` ledger.
 - Planning-oriented tests and fixtures now use draft execution-spec expectations under `docs/features/<feature>/specs/drafts/<id>-<slug>.md` instead of active-spec paths.
 - Test fixtures and contract expectations now enforce canonical active-path behavior while confining stale-path usage to explicit invalid-path coverage.
 - Human-facing and scaffolded documentation contracts now treat `docs/specs/*`, `docs/<feature>/*`, and `<id>-<slug>` feature-context stems as invalid active canonical feature-context paths.
-- `spec:plan <feature> <id>` now creates deterministic implementation plan files under `docs/features/<feature>/plans/<id>-<slug>.md` and preserves exact execution-spec filename stems.
-- `spec:validate` now validates implementation plan files, and `spec:validate --require-plans` enforces plan coverage for active execution specs while excluding draft specs from that requirement.
+- `spec:plan <feature> <id>` now creates deterministic reconstruction outcome files under `docs/features/<feature>/outcomes/<id>-<slug>.md` and preserves exact execution-spec filename stems.
+- `spec:validate` now validates reconstruction outcome files, and `spec:validate --require-outcomes` enforces outcome coverage for active execution specs while excluding draft specs from that requirement.
 - `spec:validate` now enforces sequential execution-spec ID continuity per feature and sibling group, with active and draft sequences validated independently, including top-level gaps, child-segment gaps, and missing-parent detection.
 - `spec:validate` now reports deterministic continuity details (`feature`, `location`, `parent_id`, `missing_id`, `next_observed_id`, and triggering path) and rejects implementation-log sequences that skip execution-spec IDs.
 - ID-allocation and execution-spec command workflows (`spec:new`, `spec:plan`, `spec:log-entry`) now refuse to proceed when feature continuity has numeric gaps.

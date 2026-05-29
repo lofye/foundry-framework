@@ -39,22 +39,22 @@ final class CLISpecPlanCommandTest extends TestCase
             $result['payload']['spec'],
         );
         $this->assertSame(
-            'docs/features/execution-spec-system/plans/001-implementation-plan-files.md',
+            'docs/features/execution-spec-system/outcomes/001-implementation-plan-files.md',
             $result['payload']['plan'],
         );
 
-        $planPath = $this->project->root . '/docs/features/execution-spec-system/plans/001-implementation-plan-files.md';
+        $planPath = $this->project->root . '/docs/features/execution-spec-system/outcomes/001-implementation-plan-files.md';
         $this->assertFileExists($planPath);
         $contents = (string) file_get_contents($planPath);
         $this->assertStringStartsWith('# Implementation Plan: 001-implementation-plan-files', $contents);
         $this->assertStringContainsString('## Implementation Steps', $contents);
-        $this->assertStringContainsString('php bin/foundry spec:validate --require-plans --json', $contents);
+        $this->assertStringContainsString('php bin/foundry spec:validate --require-outcomes --json', $contents);
     }
 
     public function test_spec_plan_refuses_overwrite_without_force(): void
     {
         $this->writeActiveSpec('execution-spec-system', '001-implementation-plan-files');
-        $path = $this->project->root . '/docs/features/execution-spec-system/plans/001-implementation-plan-files.md';
+        $path = $this->project->root . '/docs/features/execution-spec-system/outcomes/001-implementation-plan-files.md';
         mkdir(dirname($path), 0777, true);
         file_put_contents($path, "# Implementation Plan: 001-implementation-plan-files\n");
 
@@ -63,7 +63,7 @@ final class CLISpecPlanCommandTest extends TestCase
         $this->assertSame(1, $result['status']);
         $this->assertSame('error', $result['payload']['status']);
         $this->assertSame('plan_already_exists', $result['payload']['error']);
-        $this->assertSame('docs/features/execution-spec-system/plans/001-implementation-plan-files.md', $result['payload']['plan']);
+        $this->assertSame('docs/features/execution-spec-system/outcomes/001-implementation-plan-files.md', $result['payload']['plan']);
     }
 
     public function test_spec_plan_failures_are_deterministic_for_missing_feature_and_spec(): void
@@ -110,7 +110,7 @@ final class CLISpecPlanCommandTest extends TestCase
     public function test_spec_plan_force_overwrites_when_target_exists_as_directory_and_returns_write_failed(): void
     {
         $this->writeActiveSpec('execution-spec-system', '001-first');
-        $planPath = $this->project->root . '/docs/features/execution-spec-system/plans/001-first.md';
+        $planPath = $this->project->root . '/docs/features/execution-spec-system/outcomes/001-first.md';
         mkdir(dirname($planPath), 0777, true);
         mkdir($planPath, 0777, true);
 
@@ -120,10 +120,10 @@ final class CLISpecPlanCommandTest extends TestCase
         $this->assertSame('plan_write_failed', $result['payload']['error']);
     }
 
-    public function test_spec_plan_reports_directory_create_failure_when_plans_path_is_blocked(): void
+    public function test_spec_plan_reports_directory_create_failure_when_outcomes_path_is_blocked(): void
     {
         $this->writeActiveSpec('execution-spec-system', '001-first');
-        $blocked = $this->project->root . '/docs/features/execution-spec-system/plans';
+        $blocked = $this->project->root . '/docs/features/execution-spec-system/outcomes';
         if (!is_dir(dirname($blocked))) {
             mkdir(dirname($blocked), 0777, true);
         }

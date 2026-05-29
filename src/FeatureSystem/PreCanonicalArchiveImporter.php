@@ -266,7 +266,8 @@ final class PreCanonicalArchiveImporter
                 'slug' => $metadata['slug'],
                 'id_and_slug' => $metadata['canonical_id'] . '-' . $metadata['slug'],
                 'spec_path' => 'Modules/' . $module . '/specs/' . $metadata['canonical_id'] . '-' . $metadata['slug'] . '.md',
-                'plan_path' => 'Modules/' . $module . '/plans/' . $metadata['canonical_id'] . '-' . $metadata['slug'] . '.md',
+                'outcome_path' => 'Modules/' . $module . '/outcomes/' . $metadata['canonical_id'] . '-' . $metadata['slug'] . '.md',
+                'plan_path' => 'Modules/' . $module . '/outcomes/' . $metadata['canonical_id'] . '-' . $metadata['slug'] . '.md',
                 'preambles' => $pendingPreambles,
                 'results' => [],
             ];

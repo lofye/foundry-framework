@@ -41,7 +41,7 @@ Canonical feature context remains separate from execution specs:
 - `docs/features/<feature>/<feature>.decisions.md` → append-only decision history
 - `docs/features/<feature>/specs/*.md` → execution specs (planning artifacts, non-authoritative after implementation)
 - `docs/features/<feature>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
-- `docs/features/<feature>/plans/*.md` → implementation plans (planning artifacts)
+- `docs/features/<feature>/outcomes/*.md` → implementation plans (planning artifacts)
 - `docs/features/implementation-log.md` → completed execution-spec ledger
 
 For new active execution specs, create the corresponding implementation plan file before implementation begins. Chat-only plans are not sufficient, and plans must not expand or alter execution-spec scope.

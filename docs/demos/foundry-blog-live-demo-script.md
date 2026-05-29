@@ -46,7 +46,7 @@ What to point out:
 - `Features/<Feature>/<feature>.md` is current state.
 - `Features/<Feature>/<feature>.decisions.md` is append-only decision history.
 - `Features/<Feature>/specs/*.md` are executable implementation specs.
-- `Features/<Feature>/plans/*.md` are reconstruction notes after implementation.
+- `Features/<Feature>/outcomes/*.md` are reconstruction notes after implementation.
 
 ## Phase 1: Install Foundry With Composer
 
@@ -336,7 +336,7 @@ Features/Blog/blog.md
 Features/Blog/blog.decisions.md
 Features/Blog/specs/001-posts-markdown-admin-and-rss.md
 Features/Blog/specs/drafts/001-posts-markdown-admin-and-rss.md
-Features/Blog/plans/001-posts-markdown-admin-and-rss.md
+Features/Blog/outcomes/001-posts-markdown-admin-and-rss.md
 Features/Blog/docs/
 Features/Blog/src/
 Features/Blog/tests/
@@ -345,7 +345,7 @@ Features/Blog/tests/
 Show the reconstruction note:
 
 ```bash
-sed -n '1,220p' Features/Blog/plans/001-posts-markdown-admin-and-rss.md
+sed -n '1,220p' Features/Blog/outcomes/001-posts-markdown-admin-and-rss.md
 ```
 
 Show the decision ledger:
@@ -526,7 +526,7 @@ Show the durable artifacts:
 
 ```bash
 find Features/Blog -maxdepth 5 -type f | sort
-sed -n '1,220p' Features/Blog/plans/001-posts-markdown-admin-and-rss.md
+sed -n '1,220p' Features/Blog/outcomes/001-posts-markdown-admin-and-rss.md
 sed -n '1,160p' Features/implementation.log
 ```
 

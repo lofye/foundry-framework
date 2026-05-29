@@ -120,7 +120,7 @@ The root `app/*` tree is a framework-owned demo and smoke app.
 - Modules/<Module>/<module>.decisions.md → append-only framework-module decision history
 - Modules/<Module>/specs/*.md → execution specs (planning artifacts, non-authoritative after implementation)
 - Modules/<Module>/specs/drafts/*.md → draft execution specs (non-executable planning artifacts)
-- Modules/<Module>/plans/*.md → implementation reconstruction notes (post-implementation artifacts)
+- Modules/<Module>/outcomes/*.md → implementation reconstruction notes (post-implementation artifacts)
 - Modules/implementation.log → completed framework execution-spec ledger
 - Framework implementation-log `- spec:` lines MUST reference canonical module spec paths: `Modules/<Module>/specs/<id>-<slug>.md`
 - Features/<Feature>/<feature>.spec.md, Features/<Feature>/<feature>.md, Features/<Feature>/<feature>.decisions.md → canonical downstream application feature context
@@ -237,7 +237,7 @@ Every completed framework execution spec MUST have a matching reconstruction not
 Example:
 
 - Spec: `Modules/Marketplace/specs/003-marketplace-entitlements-and-license-activation.md`
-- Reconstruction note: `Modules/Marketplace/plans/003-marketplace-entitlements-and-license-activation.md`
+- Reconstruction note: `Modules/Marketplace/outcomes/003-marketplace-entitlements-and-license-activation.md`
 
 Reconstruction notes are written after implementation. They are not speculative project plans. They record what actually changed so a future agent or developer can understand, audit, or rebuild the module without chat history.
 
@@ -317,7 +317,7 @@ Completion quality gate:
 
 ```bash
 php vendor/bin/phpunit
-XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover build/coverage/clover.xml
+bin/phpunit-coverage --coverage-clover build/coverage/clover.xml
 php bin/foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
 ```
 
@@ -377,7 +377,7 @@ Stable outputs must not depend on timestamps, randomness, or unstable ordering.
 
 ```bash
 php vendor/bin/phpunit
-XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover build/coverage/clover.xml
+bin/phpunit-coverage --coverage-clover build/coverage/clover.xml
 php bin/foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
 ```
 - Implementation is not complete unless the quality gate passes

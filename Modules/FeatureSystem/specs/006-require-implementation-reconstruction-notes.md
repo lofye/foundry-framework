@@ -79,7 +79,7 @@ This weakens Foundry’s context-persistence goal.
 
 1. Require a reconstruction note for every completed framework execution spec.
 2. Store reconstruction notes in the owning module’s `plans/` directory.
-3. Support equivalent app feature notes under `Features/<Feature>/plans/`.
+3. Support equivalent app feature notes under `Features/<Feature>/outcomes/`.
 4. Make reconstruction notes post-implementation artifacts, not pre-implementation guesses.
 5. Validate that promoted/completed framework specs have matching reconstruction notes.
 6. Update implementation workflow docs and skills.
@@ -141,8 +141,8 @@ for framework module specs, or the relevant application feature implementation l
 A deterministic markdown file stored under:
 
 ```text
-Modules/<Module>/plans/<spec-id-and-slug>.md
-Features/<Feature>/plans/<spec-id-and-slug>.md
+Modules/<Module>/outcomes/<spec-id-and-slug>.md
+Features/<Feature>/outcomes/<spec-id-and-slug>.md
 ```
 
 that summarizes how the spec was actually implemented.
@@ -162,7 +162,7 @@ Modules/Marketplace/specs/003-marketplace-entitlements-and-license-activation.md
 the matching reconstruction note must be:
 
 ```text
-Modules/Marketplace/plans/003-marketplace-entitlements-and-license-activation.md
+Modules/Marketplace/outcomes/003-marketplace-entitlements-and-license-activation.md
 ```
 
 For:
@@ -174,7 +174,7 @@ Modules/Marketplace/specs/002.001-marketplace-auth-runtime-contracts.md
 the matching note must be:
 
 ```text
-Modules/Marketplace/plans/002.001-marketplace-auth-runtime-contracts.md
+Modules/Marketplace/outcomes/002.001-marketplace-auth-runtime-contracts.md
 ```
 
 ### Application Features
@@ -188,7 +188,7 @@ Features/Blog/specs/001-blog-posting.md
 the matching reconstruction note should be:
 
 ```text
-Features/Blog/plans/001-blog-posting.md
+Features/Blog/outcomes/001-blog-posting.md
 ```
 
 This spec must enforce module notes immediately. App feature enforcement may be SHOULD unless the implementation also supports app validation cleanly.
@@ -204,7 +204,7 @@ The first heading must match the filename without extension.
 Example file:
 
 ```text
-Modules/Marketplace/plans/003-marketplace-entitlements-and-license-activation.md
+Modules/Marketplace/outcomes/003-marketplace-entitlements-and-license-activation.md
 ```
 
 Required heading:
@@ -378,7 +378,7 @@ Example:
 {
   "code": "EXECUTION_SPEC_RECONSTRUCTION_NOTE_MISSING",
   "path": "Modules/Marketplace/specs/003-marketplace-entitlements-and-license-activation.md",
-  "expected_path": "Modules/Marketplace/plans/003-marketplace-entitlements-and-license-activation.md"
+  "expected_path": "Modules/Marketplace/outcomes/003-marketplace-entitlements-and-license-activation.md"
 }
 ```
 
@@ -494,7 +494,7 @@ Every completed framework execution spec MUST have a matching reconstruction not
 Example:
 
 - Spec: `Modules/Marketplace/specs/003-marketplace-entitlements-and-license-activation.md`
-- Reconstruction note: `Modules/Marketplace/plans/003-marketplace-entitlements-and-license-activation.md`
+- Reconstruction note: `Modules/Marketplace/outcomes/003-marketplace-entitlements-and-license-activation.md`
 
 Reconstruction notes are written after implementation. They are not speculative project plans. They record what actually changed so a future agent or developer can understand, audit, or rebuild the module without chat history.
 
@@ -531,7 +531,7 @@ Every completed application feature spec SHOULD have a matching reconstruction n
 Example:
 
 - Spec: `Features/Blog/specs/001-blog-posting.md`
-- Reconstruction note: `Features/Blog/plans/001-blog-posting.md`
+- Reconstruction note: `Features/Blog/outcomes/001-blog-posting.md`
 
 For executable application features, reconstruction notes preserve implementation memory: files added, runtime contracts, tests, deterministic outputs, and follow-up dependencies.
 
@@ -559,7 +559,7 @@ Example:
 
 ```text
 Modules/Marketplace/specs/003-marketplace-entitlements-and-license-activation.md
-Modules/Marketplace/plans/003-marketplace-entitlements-and-license-activation.md
+Modules/Marketplace/outcomes/003-marketplace-entitlements-and-license-activation.md
 ```
 
 For framework modules, completed specs are expected to have matching reconstruction notes.
@@ -577,7 +577,7 @@ Add to the feature structure/context section:
 Application features may include reconstruction notes under:
 
 ```text
-Features/<Feature>/plans/
+Features/<Feature>/outcomes/
 ```
 
 A reconstruction note records how a completed feature spec was implemented: files changed, runtime contracts, tests, deterministic outputs, and follow-up dependencies.
@@ -654,9 +654,9 @@ Validation must work generically for:
 
 ```text
 Modules/<Module>/specs/*.md
-Modules/<Module>/plans/*.md
+Modules/<Module>/outcomes/*.md
 Features/<Feature>/specs/*.md
-Features/<Feature>/plans/*.md
+Features/<Feature>/outcomes/*.md
 ```
 
 where applicable.
@@ -695,7 +695,7 @@ Add or extend tests for:
 ## Acceptance Criteria
 
 - completed framework module specs require matching reconstruction notes.
-- reconstruction notes live under `Modules/<Module>/plans/`.
+- reconstruction notes live under `Modules/<Module>/outcomes/`.
 - required note format is validated.
 - draft specs do not require notes.
 - docs and skills explain the rule.

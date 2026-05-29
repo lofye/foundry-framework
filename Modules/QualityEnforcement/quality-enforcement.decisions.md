@@ -89,6 +89,36 @@ Timestamp: 2026-04-21T11:05:00-04:00
 **Spec Reference**
 - Constraints
 - Expected Behavior
+
+### Decision: prefer Valet/Homebrew PHP before PATH PHP for coverage
+Timestamp: 2026-05-29T00:00:00-04:00
+
+**Context**
+- The local shell PATH still resolves `php` to a Herd binary even though this development site has been migrated to Valet.
+- Herd's CLI PHP does not load Xdebug in this environment, while `/opt/homebrew/bin/php` does.
+- The coverage wrapper previously checked the PATH PHP first, which meant Foundry still tried Herd before the working Valet/Homebrew PHP binary.
+
+**Decision**
+- Update `bin/phpunit-coverage` to try an explicitly supplied `PHP_BIN` first, then `/opt/homebrew/bin/php`, then `/usr/local/bin/php`, and only then the PATH `php`.
+- Apply the same candidate order to scaffolded app coverage wrappers.
+
+**Reasoning**
+- A developer-supplied `PHP_BIN` should remain an explicit override.
+- Without an override, the repository should prefer the Valet/Homebrew binary known to have Xdebug instead of inheriting stale Herd PATH precedence.
+- Keeping PATH as a fallback preserves portability for systems without Homebrew PHP.
+
+**Alternatives Considered**
+- Modify the user's global shell PATH or Herd configuration.
+- Keep PATH first and rely on the wrapper to fall through after probing Herd.
+- Hard-code only `/opt/homebrew/bin/php` and fail elsewhere.
+
+**Impact**
+- Foundry no longer tries Herd first for coverage generation in this repository.
+- Newly scaffolded apps inherit the same Valet/Homebrew-first coverage behavior.
+- Developers can still override the PHP binary with `PHP_BIN=/path/to/php bin/phpunit-coverage ...`.
+
+**Spec Reference**
+- Expected Behavior
 - Acceptance Criteria
 
 ### Decision: enforce changed-surface coverage through workflow-touched files plus Clover attribution
@@ -164,3 +194,36 @@ Timestamp: 2026-04-22T23:35:00-04:00
 - Constraints
 - Requested Changes
 - Completion Signals
+
+### Decision: make the coverage wrapper the canonical coverage command
+Timestamp: 2026-05-29T00:00:00-04:00
+
+**Context**
+- The documented direct coverage command used `XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover build/coverage/clover.xml`.
+- In this development environment, `php` resolves to the Herd CLI binary, which does not load Xdebug by default even though another local PHP binary does.
+- PHPUnit 13 exits non-zero without useful output when coverage is requested and no coverage driver is loaded, which makes the raw direct command a brittle quality-gate surface.
+- The repository already has `bin/phpunit-coverage`, which locates a PHP executable with Xdebug before running PHPUnit coverage.
+
+**Decision**
+- Treat `bin/phpunit-coverage --coverage-clover build/coverage/clover.xml` as the canonical coverage-generation command for framework completion.
+- Make the shared implementation quality gate and `verify done` prefer the wrapper when it exists.
+- Scaffold the wrapper and a `test:coverage` Composer script into new Foundry apps so app-facing completion guidance uses the same resilient path.
+
+**Reasoning**
+- The quality gate should not depend on whichever `php` binary happens to be first on PATH when the repository can deterministically find a coverage-capable PHP executable.
+- Keeping coverage generation behind one repository-owned wrapper preserves the hard coverage requirement while making failures diagnostic instead of silent.
+- Scaffolding the wrapper keeps framework and app onboarding guidance aligned.
+
+**Alternatives Considered**
+- Require every developer to globally enable Xdebug for the default `php` binary before running the quality gate.
+- Keep documenting the raw command and ask agents to remember environment-specific PATH overrides.
+- Weaken or skip coverage when the default `php` binary has no coverage driver.
+
+**Impact**
+- Canonical completion guidance now uses a command that exits successfully in this environment.
+- Raw `XDEBUG_MODE=coverage php vendor/bin/phpunit ...` remains environment-dependent and is no longer the documented quality-gate path.
+- New apps get the same coverage command surface as the framework repository.
+
+**Spec Reference**
+- Constraints
+- Expected Behavior

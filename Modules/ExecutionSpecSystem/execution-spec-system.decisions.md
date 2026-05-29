@@ -272,6 +272,39 @@ Timestamp: 2026-04-15T14:05:00-04:00
 - Constraints
 - Expected Behavior
 
+### Decision: rename reconstruction-note directories from `plans/` to `outcomes/` with compatibility aliasing
+Timestamp: 2026-05-28T22:36:03-04:00
+
+**Context**
+- The repository used `plans/` for post-implementation reconstruction notes, which repeatedly caused confusion because those files describe what already happened, not what is being planned.
+- The same word `plan` is also used for generate-plan records (`.foundry/plans/`) and runtime execution-plan concepts, so preserving ambiguity made docs and onboarding harder.
+
+**Decision**
+- Make `outcomes/` the canonical directory name for reconstruction notes under module, feature, and legacy docs-feature workspaces.
+- Keep `--require-plans` as a deprecated compatibility alias to `--require-outcomes` during transition.
+- Keep `.foundry/plans/` and other non-reconstruction plan concepts unchanged.
+
+**Reasoning**
+- `specs/` and `outcomes/` forms a clear before/after mental model for users and agents.
+- Compatibility aliasing reduces migration risk for existing scripts and tests while allowing immediate canonical-language updates.
+- Isolating this rename to reconstruction-note contracts avoids accidental churn in unrelated planning subsystems.
+
+**Alternatives Considered**
+- Keep `plans/` and rely on documentation clarification only.
+- Rename all `plan` concepts globally, including `.foundry/plans/`.
+- Enforce strict immediate removal of `--require-plans` without a compatibility window.
+
+**Impact**
+- Reconstruction-note paths, guidance, and validation expectations now point to `outcomes/`.
+- Framework and app documentation can describe post-implementation artifacts without overloaded planning vocabulary.
+- Existing automation can continue using `--require-plans` temporarily while surfacing canonical `--require-outcomes`.
+
+**Spec Reference**
+- Purpose
+- Scope
+- Constraints
+- Requested Changes
+
 ### Decision: context-driven execution for execution-spec-system
 
 Timestamp: <ISO-8601>
@@ -466,7 +499,7 @@ Timestamp: 2026-05-02T14:10:00-04:00
 **Decision**
 - Align human-facing README/policy surfaces with canonical feature context stems (`docs/features/<feature>/<feature>.*`).
 - Keep execution-spec examples under `docs/features/<feature>/specs/` and draft-spec examples under `docs/features/<feature>/specs/drafts/`.
-- Ensure docs explicitly distinguish feature-local plans (`docs/features/<feature>/plans/*.md`) from the global implementation ledger (`docs/features/implementation-log.md`).
+- Ensure docs explicitly distinguish feature-local plans (`docs/features/<feature>/outcomes/*.md`) from the global implementation ledger (`docs/features/implementation-log.md`).
 
 **Reasoning**
 - Human-facing docs are frequently copied into new app and contributor workflows, so stale examples can propagate invalid path contracts.
@@ -526,9 +559,9 @@ Timestamp: 2026-05-02T15:05:00-04:00
 - Prior CLI surfaces supported draft spec creation, log-entry suggestion, and spec validation, but did not provide a deterministic command for creating plan files or strict active-plan enforcement in validation.
 
 **Decision**
-- Add `spec:plan <feature> <id>` to create `docs/features/<feature>/plans/<id>-<slug>.md` from active execution specs using a canonical implementation-plan stub.
+- Add `spec:plan <feature> <id>` to create `docs/features/<feature>/outcomes/<id>-<slug>.md` from active execution specs using a canonical implementation-plan stub.
 - Extend `spec:validate` to validate plan placement, heading, filename/spec correspondence, duplicate plan IDs, and forbidden metadata fields.
-- Add `spec:validate --require-plans` to require plans for active execution specs only, while excluding draft execution specs from required plan coverage.
+- Add `spec:validate --require-outcomes` to require plans for active execution specs only, while excluding draft execution specs from required plan coverage.
 
 **Reasoning**
 - Persisted plan files make implementation strategy inspectable and resumable without making plans authoritative over execution specs.

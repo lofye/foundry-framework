@@ -51,7 +51,7 @@ final class ExecutionSpecValidationService
      *     warnings:list<array<string,mixed>>
      * }
      */
-    public function validate(bool $requirePlans = false): array
+    public function validate(bool $requireOutcomes = false): array
     {
         $violations = [];
         $warnings = [];
@@ -321,7 +321,7 @@ final class ExecutionSpecValidationService
                 $violations[] = $this->violation(
                     'EXECUTION_SPEC_PLAN_INVALID_DIRECTORY',
                     $relativePath,
-                    'Implementation plans must live at Modules/<Module>/plans/<id>-<slug>.md, Features/<Feature>/plans/<id>-<slug>.md, or docs/features/<feature>/plans/<id>-<slug>.md.',
+                    'Reconstruction outcome notes must live at Modules/<Module>/outcomes/<id>-<slug>.md, Features/<Feature>/outcomes/<id>-<slug>.md, or docs/features/<feature>/outcomes/<id>-<slug>.md.',
                 );
                 continue;
             }
@@ -333,7 +333,7 @@ final class ExecutionSpecValidationService
                 $violations[] = $this->violation(
                     'EXECUTION_SPEC_PLAN_INVALID_FILENAME',
                     $relativePath,
-                    'Implementation plan filenames must use <id>-<slug>.md with one or more dot-separated 3-digit ID segments.',
+                    'Reconstruction outcome filenames must use <id>-<slug>.md with one or more dot-separated 3-digit ID segments.',
                 );
                 continue;
             }
@@ -346,7 +346,7 @@ final class ExecutionSpecValidationService
                 $violations[] = $this->violation(
                     'EXECUTION_SPEC_PLAN_FILE_UNREADABLE',
                     $relativePath,
-                    'Implementation plan file could not be read.',
+                    'Reconstruction outcome file could not be read.',
                 );
                 continue;
             }
@@ -359,7 +359,7 @@ final class ExecutionSpecValidationService
                 $violations[] = $this->violation(
                     'EXECUTION_SPEC_PLAN_INVALID_HEADING',
                     $relativePath,
-                    'Implementation plans must use either the legacy plan heading or the reconstruction-note filename heading.',
+                    'Reconstruction outcomes must use either the legacy plan heading or the reconstruction-note filename heading.',
                     [
                         'expected_heading' => $expectedHeading,
                         'expected_reconstruction_heading' => $reconstructionHeading,
@@ -371,7 +371,7 @@ final class ExecutionSpecValidationService
 
             $metadataViolations = $this->isPreCanonicalFeature((string) $placement['feature'])
                 ? []
-                : $this->metadataViolations($relativePath, $contents, 'EXECUTION_SPEC_PLAN_FORBIDDEN_METADATA', 'Implementation plans must not define `%s` metadata inside the file.');
+                : $this->metadataViolations($relativePath, $contents, 'EXECUTION_SPEC_PLAN_FORBIDDEN_METADATA', 'Reconstruction outcomes must not define `%s` metadata inside the file.');
             foreach ($metadataViolations as $metadataViolation) {
                 $violations[] = $metadataViolation;
             }
@@ -383,7 +383,7 @@ final class ExecutionSpecValidationService
                 $violations[] = $this->violation(
                     'EXECUTION_SPEC_PLAN_ORPHAN',
                     $relativePath,
-                    'Implementation plan filename must match an active execution spec filename in the same feature.',
+                    'Reconstruction outcome filename must match an active execution spec filename in the same feature.',
                     [
                         'feature' => $placement['feature'],
                         'id' => $parsedName['id'],
@@ -402,7 +402,7 @@ final class ExecutionSpecValidationService
                 $violations[] = $this->violation(
                     'EXECUTION_SPEC_PLAN_DUPLICATE_ID',
                     $paths[0],
-                    'Implementation plan IDs must be unique within a feature.',
+                    'Reconstruction outcome IDs must be unique within a feature.',
                     [
                         'feature' => $feature,
                         'id' => $id,
@@ -412,7 +412,7 @@ final class ExecutionSpecValidationService
             }
         }
 
-        if ($requirePlans) {
+        if ($requireOutcomes) {
             foreach ($activeSpecNames as $feature => $names) {
                 foreach (array_keys($names) as $name) {
                     if (isset($planNamesByFeature[$feature][$name])) {
@@ -423,7 +423,7 @@ final class ExecutionSpecValidationService
                     $violations[] = $this->violation(
                         'EXECUTION_SPEC_PLAN_REQUIRED_MISSING',
                         $specPath,
-                        'Active execution specs must have a matching implementation plan when --require-plans is enabled.',
+                        'Active execution specs must have a matching reconstruction outcome note when --require-outcomes is enabled.',
                         [
                             'feature' => $feature,
                             'id' => (string) (ExecutionSpecFilename::parseName($name)['id'] ?? ''),
@@ -441,7 +441,7 @@ final class ExecutionSpecValidationService
                 $violations[] = $this->violation(
                     'EXECUTION_SPEC_RECONSTRUCTION_NOTE_MISSING',
                     (string) $moduleSpec['spec_path'],
-                    'Active module execution specs must have a matching reconstruction note in plans/.',
+                    'Active module execution specs must have a matching reconstruction note in outcomes/.',
                     [
                         'spec_path' => (string) $moduleSpec['spec_path'],
                         'expected_path' => $notePath,
@@ -456,7 +456,7 @@ final class ExecutionSpecValidationService
                 $violations[] = $this->violation(
                     'EXECUTION_SPEC_RECONSTRUCTION_NOTE_MISSING',
                     (string) $moduleSpec['spec_path'],
-                    'Active module execution specs must have a readable reconstruction note in plans/.',
+                    'Active module execution specs must have a readable reconstruction note in outcomes/.',
                     [
                         'spec_path' => (string) $moduleSpec['spec_path'],
                         'expected_path' => $notePath,
@@ -620,6 +620,15 @@ final class ExecutionSpecValidationService
         $files = [];
 
         foreach ([
+            'Modules/*/outcomes/*.md',
+            'Modules/*/outcomes/*/*.md',
+            'Features/*/outcomes/*.md',
+            'Features/*/outcomes/*/*.md',
+            'docs/features/*/outcomes/*.md',
+            'docs/features/*/outcomes/*/*.md',
+            'docs/specs/outcomes/*.md',
+            'docs/specs/*/outcomes/*.md',
+            'docs/*/outcomes/*.md',
             'Modules/*/plans/*.md',
             'Modules/*/plans/*/*.md',
             'Features/*/plans/*.md',
@@ -787,21 +796,21 @@ final class ExecutionSpecValidationService
      */
     private function classifyPlanPlacement(string $relativePath): ?array
     {
-        if (preg_match('#^Modules/(?<feature_dir>[A-Z][A-Za-z0-9]*)/plans/(?<name>[^/]+)\.md$#', $relativePath, $matches) === 1) {
+        if (preg_match('#^Modules/(?<feature_dir>[A-Z][A-Za-z0-9]*)/(?:outcomes|plans)/(?<name>[^/]+)\.md$#', $relativePath, $matches) === 1) {
             return [
                 'feature' => $this->slugFromPascal((string) $matches['feature_dir']),
                 'name' => (string) $matches['name'],
             ];
         }
 
-        if (preg_match('#^Features/(?<feature_dir>[A-Z][A-Za-z0-9]*)/plans/(?<name>[^/]+)\.md$#', $relativePath, $matches) === 1) {
+        if (preg_match('#^Features/(?<feature_dir>[A-Z][A-Za-z0-9]*)/(?:outcomes|plans)/(?<name>[^/]+)\.md$#', $relativePath, $matches) === 1) {
             return [
                 'feature' => $this->slugFromPascal((string) $matches['feature_dir']),
                 'name' => (string) $matches['name'],
             ];
         }
 
-        if (preg_match('#^docs/features/(?<feature>[a-z0-9]+(?:-[a-z0-9]+)*)/plans/(?<name>[^/]+)\.md$#', $relativePath, $matches) !== 1) {
+        if (preg_match('#^docs/features/(?<feature>[a-z0-9]+(?:-[a-z0-9]+)*)/(?:outcomes|plans)/(?<name>[^/]+)\.md$#', $relativePath, $matches) !== 1) {
             return null;
         }
 
@@ -1088,22 +1097,22 @@ final class ExecutionSpecValidationService
 
     private function canonicalPlanPath(string $feature, string $name): string
     {
-        $modulesCanonical = 'Modules/' . $this->pascalFromSlug($feature) . '/plans/' . $name . '.md';
+        $modulesCanonical = 'Modules/' . $this->pascalFromSlug($feature) . '/outcomes/' . $name . '.md';
         if (is_file($this->paths->join($modulesCanonical)) || is_dir($this->paths->join('Modules/' . $this->pascalFromSlug($feature)))) {
             return $modulesCanonical;
         }
 
-        $canonical = 'Features/' . $this->pascalFromSlug($feature) . '/plans/' . $name . '.md';
+        $canonical = 'Features/' . $this->pascalFromSlug($feature) . '/outcomes/' . $name . '.md';
         if (is_file($this->paths->join($canonical)) || is_dir($this->paths->join('Features/' . $this->pascalFromSlug($feature)))) {
             return $canonical;
         }
 
-        return 'docs/features/' . $feature . '/plans/' . $name . '.md';
+        return 'docs/features/' . $feature . '/outcomes/' . $name . '.md';
     }
 
     private function moduleReconstructionNotePath(string $moduleName, string $name): string
     {
-        return 'Modules/' . $moduleName . '/plans/' . $name . '.md';
+        return 'Modules/' . $moduleName . '/outcomes/' . $name . '.md';
     }
 
     /**

@@ -36,7 +36,7 @@ docs/features/<feature>/specs/drafts/<id>-<slug>.md
 Implementation plans:
 
 ```text
-docs/features/<feature>/plans/<id>-<slug>.md
+docs/features/<feature>/outcomes/<id>-<slug>.md
 ```
 
 The plan filename stem must match the corresponding active execution spec filename stem exactly.
@@ -45,7 +45,7 @@ Example:
 
 ```text
 docs/features/execution-spec-system/specs/008-implementation-plan-files.md
-docs/features/execution-spec-system/plans/008-implementation-plan-files.md
+docs/features/execution-spec-system/outcomes/008-implementation-plan-files.md
 ```
 
 ## Goals
@@ -71,7 +71,7 @@ docs/features/execution-spec-system/plans/008-implementation-plan-files.md
 
 A plan file must:
 
-- live at `docs/features/<feature>/plans/<id>-<slug>.md`
+- live at `docs/features/<feature>/outcomes/<id>-<slug>.md`
 - use the same `<id>-<slug>` filename stem as the corresponding active execution spec
 - have the heading `# Implementation Plan: <id>-<slug>`
 - be deterministic and reviewable
@@ -114,7 +114,7 @@ Create a stub/template for new plan files with this structure:
 
 ```bash
 php bin/foundry spec:validate --json
-php bin/foundry spec:validate --require-plans --json
+php bin/foundry spec:validate --require-outcomes --json
 php bin/foundry verify context --json
 php bin/foundry verify contracts --json
 php bin/foundry verify graph --json
@@ -145,7 +145,7 @@ docs/features/<feature>/specs/<id>-<slug>.md
 2. Create the corresponding plan at:
 
 ```text
-docs/features/<feature>/plans/<id>-<slug>.md
+docs/features/<feature>/outcomes/<id>-<slug>.md
 ```
 
 3. Use the required plan template.
@@ -166,7 +166,7 @@ Successful creation must include at least:
   "status": "created",
   "feature": "<feature>",
   "spec": "docs/features/<feature>/specs/<id>-<slug>.md",
-  "plan": "docs/features/<feature>/plans/<id>-<slug>.md"
+  "plan": "docs/features/<feature>/outcomes/<id>-<slug>.md"
 }
 ```
 
@@ -177,7 +177,7 @@ If the plan already exists and `--force` is not used, return a deterministic non
   "status": "error",
   "error": "plan_already_exists",
   "feature": "<feature>",
-  "plan": "docs/features/<feature>/plans/<id>-<slug>.md"
+  "plan": "docs/features/<feature>/outcomes/<id>-<slug>.md"
 }
 ```
 
@@ -189,7 +189,7 @@ It must detect and report:
 
 - plan filename does not match any active execution spec filename in the same feature
 - plan heading does not match `# Implementation Plan: <id>-<slug>`
-- plan exists outside `docs/features/<feature>/plans/`
+- plan exists outside `docs/features/<feature>/outcomes/`
 - duplicate plan IDs within a feature
 - forbidden internal metadata fields
 - active execution spec missing a required plan when strict plan enforcement is enabled
@@ -200,12 +200,12 @@ It must detect and report:
 Add a deterministic strict mode:
 
 ```bash
-php bin/foundry spec:validate --require-plans --json
+php bin/foundry spec:validate --require-outcomes --json
 ```
 
 Default validation must validate existing plan files but must not require every active spec to have a plan. This avoids forcing immediate backfill for completed historical specs.
 
-`--require-plans` must require plans only for active execution specs. It must not require plans for draft execution specs.
+`--require-outcomes` must require plans only for active execution specs. It must not require plans for draft execution specs.
 
 ## Agent Guidance Updates
 
@@ -217,13 +217,13 @@ Update `AGENTS.md`, `APP-AGENTS.md`, `README.md`, `APP-README.md`, `docs/feature
 - chat-only plans are not sufficient
 - plans must not expand or alter execution-spec scope
 - after implementation, agents must update `docs/features/implementation-log.md` as usual
-- plan files live at `docs/features/<feature>/plans/<id>-<slug>.md`
+- plan files live at `docs/features/<feature>/outcomes/<id>-<slug>.md`
 
 ## Tests
 
 Add or update tests proving:
 
-1. `spec:plan <feature> <id>` creates `docs/features/<feature>/plans/<id>-<slug>.md`.
+1. `spec:plan <feature> <id>` creates `docs/features/<feature>/outcomes/<id>-<slug>.md`.
 2. The generated plan heading is `# Implementation Plan: <id>-<slug>`.
 3. The generated plan uses the required sections.
 4. The command creates the `plans/` directory when missing.
@@ -235,19 +235,19 @@ Add or update tests proving:
 10. `spec:validate` rejects orphan plans.
 11. `spec:validate` rejects plans with mismatched headings.
 12. `spec:validate` rejects plans in old or invalid locations.
-13. `spec:validate --require-plans --json` fails when an active execution spec lacks a plan.
-14. `spec:validate --require-plans --json` does not require plans for draft specs.
-15. Default validation without `--require-plans` remains deterministic and does not require historical backfill.
+13. `spec:validate --require-outcomes --json` fails when an active execution spec lacks a plan.
+14. `spec:validate --require-outcomes --json` does not require plans for draft specs.
+15. Default validation without `--require-outcomes` remains deterministic and does not require historical backfill.
 
 ## Acceptance Criteria
 
-- Plans are stored at `docs/features/<feature>/plans/<id>-<slug>.md`.
+- Plans are stored at `docs/features/<feature>/outcomes/<id>-<slug>.md`.
 - Plan filenames match active execution spec filenames exactly.
 - Plan headings follow `# Implementation Plan: <id>-<slug>`.
 - `spec:plan` creates plans deterministically.
 - `spec:plan --json` emits deterministic JSON.
 - `spec:validate` validates existing plan files.
-- `spec:validate --require-plans` enforces missing-plan failures for active specs.
+- `spec:validate --require-outcomes` enforces missing-plan failures for active specs.
 - Agent and human docs describe the plan-before-implementation rule.
 - No docs or tests describe plans under old or intermediate paths.
 - Tests cover command behavior, validation behavior, and deterministic output.
@@ -259,7 +259,7 @@ Run and pass:
 
 ```bash
 php bin/foundry spec:validate --json
-php bin/foundry spec:validate --require-plans --json
+php bin/foundry spec:validate --require-outcomes --json
 php bin/foundry verify context --json
 php bin/foundry verify contracts --json
 php bin/foundry verify graph --json

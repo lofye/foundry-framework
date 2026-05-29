@@ -231,6 +231,7 @@ final class InitAppCommand extends Command
                 'foundry:verify' => '@php foundry verify graph --json && @php foundry verify pipeline --json && @php foundry verify contracts --json',
                 'serve' => 'php -S 127.0.0.1:8000 public/index.php',
                 'test' => 'php vendor/bin/phpunit -c phpunit.xml.dist',
+                'test:coverage' => 'bin/phpunit-coverage --coverage-clover build/coverage/clover.xml',
             ],
             'minimum-stability' => 'dev',
             'prefer-stable' => true,
@@ -279,6 +280,73 @@ if (!is_file($binary)) {
 
 require $binary;
 PHP
+            ,
+            'bin/phpunit-coverage' => <<<'BASH'
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+coverage_mode() {
+    if [[ -z "${XDEBUG_MODE:-}" ]]; then
+        printf 'coverage'
+        return
+    fi
+
+    case ",${XDEBUG_MODE}," in
+        *,coverage,*)
+            printf '%s' "${XDEBUG_MODE}"
+            ;;
+        *)
+            printf '%s,coverage' "${XDEBUG_MODE}"
+            ;;
+    esac
+}
+
+has_xdebug() {
+    XDEBUG_MODE="$(coverage_mode)" "$1" -m 2>/dev/null | awk 'tolower($0) == "xdebug" { found = 1 } END { exit found ? 0 : 1 }'
+}
+
+run_phpunit() {
+    local candidate="$1"
+    shift
+    export XDEBUG_MODE="$(coverage_mode)"
+    exec "${candidate}" "${ROOT_DIR}/vendor/bin/phpunit" "$@"
+}
+
+declare -a candidates=()
+if [[ -n "${PHP_BIN:-}" ]]; then
+    candidates+=("${PHP_BIN}")
+fi
+
+candidates+=(
+    "/opt/homebrew/bin/php"
+    "/usr/local/bin/php"
+    "$(command -v php || true)"
+)
+
+declare -a checked=()
+for candidate in "${candidates[@]}"; do
+    if [[ -z "${candidate}" || ! -x "${candidate}" ]]; then
+        continue
+    fi
+
+    for previous in "${checked[@]+"${checked[@]}"}"; do
+        if [[ "${previous}" == "${candidate}" ]]; then
+            continue 2
+        fi
+    done
+    checked+=("${candidate}")
+
+    if has_xdebug "${candidate}"; then
+        run_phpunit "${candidate}" "$@"
+    fi
+done
+
+echo "Unable to locate a PHP executable with Xdebug enabled." >&2
+echo "Set PHP_BIN to a PHP executable with Xdebug enabled, then rerun this wrapper." >&2
+exit 1
+BASH
             ,
             'foundry.bat' => <<<'BAT'
 @ECHO OFF
@@ -488,7 +556,7 @@ YAML
             }
 
             file_put_contents($absolute, $content);
-            if ($relativePath === 'foundry') {
+            if (in_array($relativePath, ['foundry', 'bin/phpunit-coverage'], true)) {
                 @chmod($absolute, 0755);
             }
             $written[] = $absolute;
@@ -1001,6 +1069,7 @@ PHP,
             'foundry verify pipeline --json',
             'foundry verify contracts --json',
             'php vendor/bin/phpunit -c phpunit.xml.dist',
+            'bin/phpunit-coverage --coverage-clover build/coverage/clover.xml',
             'php -S 127.0.0.1:8000 public/index.php',
         ]);
     }

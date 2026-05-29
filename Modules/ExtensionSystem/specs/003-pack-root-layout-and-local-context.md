@@ -263,7 +263,7 @@ Update the extension-system implementation so that:
 7. API surface classification and command documentation describe `Packs/{vendor}/{package}/foundry.json` as the installed pack manifest path.
 8. Pack CLI JSON fixtures and expected outputs use canonical `Packs/` paths for new installs.
 9. The module spec, state file, and decision ledger are updated to describe the new canonical layout and compatibility behavior.
-10. The matching reconstruction note is created under `Modules/ExtensionSystem/plans/003-pack-root-layout-and-local-context.md` after implementation.
+10. The matching reconstruction note is created under `Modules/ExtensionSystem/outcomes/003-pack-root-layout-and-local-context.md` after implementation.
 11. `Modules/implementation.log` receives the completed spec entry only after implementation and validation pass.
 
 ---

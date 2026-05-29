@@ -27,14 +27,7 @@ final class ImplementationQualityGateService
     {
         $threshold = self::GLOBAL_LINE_THRESHOLD;
         $fullSuiteCommand = ['php', 'vendor/bin/phpunit'];
-        $coverageCommand = [
-            'php',
-            '-d',
-            'xdebug.mode=coverage',
-            'vendor/bin/phpunit',
-            '--coverage-clover',
-            self::COVERAGE_CLOVER_PATH,
-        ];
+        $coverageCommand = $this->coverageCommand();
         $cloverPath = $this->paths->join(self::COVERAGE_CLOVER_PATH);
 
         $this->prepareCloverPath($cloverPath);
@@ -109,7 +102,7 @@ final class ImplementationQualityGateService
                     'exit_code' => (int) $coverageResult['exit_code'],
                 ],
                 requiredActions: [
-                    'Run `XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover build/coverage/clover.xml` successfully before treating implementation as complete.',
+                    'Run `bin/phpunit-coverage --coverage-clover build/coverage/clover.xml` successfully before treating implementation as complete.',
                 ],
             );
         }
@@ -134,7 +127,7 @@ final class ImplementationQualityGateService
                     'exit_code' => (int) $coverageResult['exit_code'],
                 ],
                 requiredActions: [
-                    'Ensure `XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover build/coverage/clover.xml` emits a readable Clover report with deterministic statement metrics before treating implementation as complete.',
+                    'Ensure `bin/phpunit-coverage --coverage-clover build/coverage/clover.xml` emits a readable Clover report with deterministic statement metrics before treating implementation as complete.',
                 ],
             );
         }
@@ -657,5 +650,25 @@ final class ImplementationQualityGateService
     private function coverageVerifier(): CloverCoverageVerifier
     {
         return $this->coverageVerifier ?? new CloverCoverageVerifier($this->paths);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function coverageCommand(): array
+    {
+        $wrapper = $this->paths->join('bin/phpunit-coverage');
+        if (is_file($wrapper) && is_executable($wrapper)) {
+            return ['bin/phpunit-coverage', '--coverage-clover', self::COVERAGE_CLOVER_PATH];
+        }
+
+        return [
+            'env',
+            'XDEBUG_MODE=coverage',
+            'php',
+            'vendor/bin/phpunit',
+            '--coverage-clover',
+            self::COVERAGE_CLOVER_PATH,
+        ];
     }
 }

@@ -40,7 +40,7 @@ Features/EventSystem/event-system.md
 Features/EventSystem/event-system.decisions.md
 Features/EventSystem/event-system.spec.md
 Features/EventSystem/specs/001-registry-synchronous-deterministic-dispatch.md
-Features/EventSystem/plans/001-registry-synchronous-deterministic-dispatch.md
+Features/EventSystem/outcomes/001-registry-synchronous-deterministic-dispatch.md
 Features/EventSystem/src/EventRegistry.php
 Features/EventSystem/tests/EventRegistryTest.php
 
@@ -216,7 +216,7 @@ NNN.NNN.NNN-slug.md
 Implementation plans must live under:
 
 ```text
-Features/<FeaturePascalName>/plans/
+Features/<FeaturePascalName>/outcomes/
 ```
 
 ### Feature Docs
@@ -581,7 +581,7 @@ docs/features/<feature>/<feature>.md
 docs/features/<feature>/<feature>.decisions.md
 docs/features/<feature>/<feature>.spec.md
 docs/features/<feature>/specs/
-docs/features/<feature>/plans/
+docs/features/<feature>/outcomes/
 ```
 
 to:
@@ -592,7 +592,7 @@ Features/<FeaturePascalName>/<feature>.md
 Features/<FeaturePascalName>/<feature>.decisions.md
 Features/<FeaturePascalName>/<feature>.spec.md
 Features/<FeaturePascalName>/specs/
-Features/<FeaturePascalName>/plans/
+Features/<FeaturePascalName>/outcomes/
 ```
 
 Do not delete legacy files unless the test suite and repository conventions are updated to the canonical layout.
@@ -680,7 +680,7 @@ php bin/foundry verify features --json
 - `Features/implementation.log` is recognized as the canonical implementation ledger.
 - Feature context files are recognized under `Features/<FeaturePascalName>/`.
 - Execution specs and drafts validate under `Features/<FeaturePascalName>/specs/`.
-- Feature plans are stored under `Features/<FeaturePascalName>/plans/`.
+- Feature plans are stored under `Features/<FeaturePascalName>/outcomes/`.
 - Feature source and tests have canonical localized directories.
 - Boundary enforcement is enabled by default.
 - Boundary enforcement can be explicitly disabled only with visible warnings.

@@ -74,7 +74,7 @@ final class PreCanonicalArchiveImporterTest extends TestCase
         $second = $this->importer()->import('archive.md', 'PreCanonical', true, false);
 
         $specPath = $this->project->root . '/Modules/PreCanonical/specs/019.006.002-spec-freeze-1-0-0.md';
-        $planPath = $this->project->root . '/Modules/PreCanonical/plans/019.006.002-spec-freeze-1-0-0.md';
+        $planPath = $this->project->root . '/Modules/PreCanonical/outcomes/019.006.002-spec-freeze-1-0-0.md';
         $log = (string) file_get_contents($this->project->root . '/Modules/implementation.log');
 
         $this->assertSame(6, $first['summary']['written']);
@@ -122,7 +122,7 @@ final class PreCanonicalArchiveImporterTest extends TestCase
 
         $this->importer()->import('archive.md', 'PreCanonical', true, false);
 
-        $plan = (string) file_get_contents($this->project->root . '/Modules/PreCanonical/plans/035.004.002-contexting-follow-up.md');
+        $plan = (string) file_get_contents($this->project->root . '/Modules/PreCanonical/outcomes/035.004.002-contexting-follow-up.md');
         $this->assertStringContainsString("### Result Block 1\n\n- Name: `35D-2 — Contexting Follow-up`\n\nFirst result.", $plan);
         $this->assertStringContainsString("### Result Block 2\n\n- Name: `35D-2 — Contexting Follow-up`\n\nSecond result.", $plan);
     }
@@ -142,7 +142,7 @@ final class PreCanonicalArchiveImporterTest extends TestCase
         $this->importer()->import('archive.md', 'PreCanonical', true, false);
 
         $state = (string) file_get_contents($this->project->root . '/Modules/PreCanonical/pre-canonical.md');
-        $plan = (string) file_get_contents($this->project->root . '/Modules/PreCanonical/plans/001-first-spec.md');
+        $plan = (string) file_get_contents($this->project->root . '/Modules/PreCanonical/outcomes/001-first-spec.md');
         $log = (string) file_get_contents($this->project->root . '/Modules/implementation.log');
         $this->assertStringContainsString('- Global preamble 1: `Unassigned roadmap`', $state);
         $this->assertStringContainsString('No marked preamble block was associated with this spec.', $plan);

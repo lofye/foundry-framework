@@ -67,7 +67,7 @@ final class CLIPreCanonicalImportCommandTest extends TestCase
         $this->assertFalse($apply['payload']['dry_run']);
         $this->assertSame(1, $apply['payload']['summary']['spec_blocks']);
         $this->assertFileExists($this->project->root . '/Modules/PreCanonical/specs/000.002-second-foundation.md');
-        $this->assertFileExists($this->project->root . '/Modules/PreCanonical/plans/000.002-second-foundation.md');
+        $this->assertFileExists($this->project->root . '/Modules/PreCanonical/outcomes/000.002-second-foundation.md');
         $this->assertFileExists($this->project->root . '/Modules/PreCanonical/pre-canonical.md');
     }
 

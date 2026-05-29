@@ -42,7 +42,7 @@ These paths mean:
 - Keep module decision ledgers append-only; do not compact historical entries. Summarize accumulated decisions in a `## Decision Summary` section inside `Modules/<Module>/<module>.md`.
 - `Modules/<Module>/specs/*.md` → execution specs (planning artifacts, non-authoritative after implementation)
 - `Modules/<Module>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
-- `Modules/<Module>/plans/*.md` → implementation reconstruction notes (post-implementation artifacts)
+- `Modules/<Module>/outcomes/*.md` → implementation reconstruction notes (post-implementation artifacts)
 - `Modules/implementation.log` → completed framework execution-spec ledger
 - Framework implementation-log `- spec:` entries must use canonical module spec paths (`Modules/<Module>/specs/<id>-<slug>.md`), not slug aliases.
 
@@ -76,7 +76,7 @@ Example:
 
 ```text
 Modules/Marketplace/specs/003-marketplace-entitlements-and-license-activation.md
-Modules/Marketplace/plans/003-marketplace-entitlements-and-license-activation.md
+Modules/Marketplace/outcomes/003-marketplace-entitlements-and-license-activation.md
 ```
 
 For framework modules, completed specs are expected to have matching reconstruction notes.
@@ -163,7 +163,7 @@ When claiming implementation completion, use this canonical machine gate:
 
 ```bash
 php vendor/bin/phpunit
-XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover build/coverage/clover.xml
+bin/phpunit-coverage --coverage-clover build/coverage/clover.xml
 php bin/foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
 ```
 

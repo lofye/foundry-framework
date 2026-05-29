@@ -51,6 +51,7 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertContains('foundry compile graph --json', $result['payload']['next_steps']);
         $this->assertContains('foundry doctor --json', $result['payload']['next_steps']);
         $this->assertContains('php vendor/bin/phpunit -c phpunit.xml.dist', $result['payload']['next_steps']);
+        $this->assertContains('bin/phpunit-coverage --coverage-clover build/coverage/clover.xml', $result['payload']['next_steps']);
 
         $this->assertFileExists($target . '/AGENTS.md');
         $this->assertFileExists($target . '/README.md');
@@ -58,6 +59,7 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertFileDoesNotExist($target . '/APP-README.md');
         $this->assertFileExists($target . '/composer.json');
         $this->assertFileExists($target . '/foundry');
+        $this->assertFileExists($target . '/bin/phpunit-coverage');
         $this->assertFileExists($target . '/foundry.bat');
         $this->assertFileExists($target . '/phpunit.xml.dist');
         $this->assertFileExists($target . '/tests/Smoke/AppBootTest.php');
@@ -115,6 +117,16 @@ final class CLIInitAppCommandTest extends TestCase
             $agents,
         );
 
+        $coverageWrapper = file_get_contents($target . '/bin/phpunit-coverage');
+        $this->assertIsString($coverageWrapper);
+        $this->assertStringContainsString('candidates+=(', $coverageWrapper);
+        $this->assertStringContainsString('"/opt/homebrew/bin/php"', $coverageWrapper);
+        $this->assertStringContainsString('"$(command -v php || true)"', $coverageWrapper);
+        $this->assertLessThan(
+            strpos($coverageWrapper, '"$(command -v php || true)"'),
+            strpos($coverageWrapper, '"/opt/homebrew/bin/php"'),
+        );
+
         $docsReadme = file_get_contents($target . '/docs/README.md');
         $this->assertIsString($docsReadme);
         $this->assertStringContainsString('foundry generate docs --format=markdown --json', $docsReadme);
@@ -129,11 +141,15 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertSame('@php foundry compile graph --json', $composer['scripts']['foundry:compile']);
         $this->assertSame('@php foundry doctor --json', $composer['scripts']['foundry:doctor']);
         $this->assertSame('php -S 127.0.0.1:8000 public/index.php', $composer['scripts']['serve']);
+        $this->assertSame('bin/phpunit-coverage --coverage-clover build/coverage/clover.xml', $composer['scripts']['test:coverage']);
 
         if (DIRECTORY_SEPARATOR !== '\\') {
             $permissions = fileperms($target . '/foundry');
             $this->assertNotFalse($permissions);
             $this->assertNotSame(0, $permissions & 0111);
+            $coveragePermissions = fileperms($target . '/bin/phpunit-coverage');
+            $this->assertNotFalse($coveragePermissions);
+            $this->assertNotSame(0, $coveragePermissions & 0111);
         }
 
         $this->seedInstalledApp($target);

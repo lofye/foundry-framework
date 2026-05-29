@@ -9,7 +9,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Provide deterministic `feature:list`, `feature:inspect`, `feature:map`, and `verify features` CLI surfaces.
 - Treat `Modules/implementation.log` as the canonical implementation ledger path.
 - Support canonical `Modules/*/specs/` and `Modules/*/plans/` in spec validation.
-- Require reconstruction notes for completed framework module specs under `Modules/<Module>/plans/<id>-<slug>.md`.
+- Require reconstruction notes for completed framework module specs under `Modules/<Module>/outcomes/<id>-<slug>.md`.
 - Require canonical module implementation-log references in the form `Modules/<Module>/specs/<id>-<slug>.md`.
 - Keep migration-compatible behavior for legacy `docs/features/*` inputs.
 - Provide deterministic prep-only historical-spec archive extraction tooling before full module import migration.
@@ -99,7 +99,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Historical import apply mode does not overwrite existing canonical specs silently and routes uncertain implementation status to drafts.
 - Historical context generation creates or repairs canonical `Modules/<Module>/<module>.md`, `Modules/<Module>/<module>.spec.md`, and `Modules/<Module>/<module>.decisions.md` files for modules with imported historical specs.
 - Historical context generation preserves existing context content and decision history while appending bounded historical-import sections and entries.
-- Historical reconstruction generation creates `Modules/<Module>/plans/<id-and-slug>.md` notes for completed imported specs and appends missing canonical `Modules/implementation.log` entries without duplication.
+- Historical reconstruction generation creates `Modules/<Module>/outcomes/<id-and-slug>.md` notes for completed imported specs and appends missing canonical `Modules/implementation.log` entries without duplication.
 - Historical reconstruction notes include explicit provenance, evidence levels, embedded RESULT/OUTPUT summaries, repository-alignment notes, and uncertainty sections.
 - Explicitly marked pre-canonical archives can be imported into `Modules/PreCanonical` with deterministic canonical IDs, paired result evidence, preserved preamble context, generated context files, and idempotent implementation-log entries.
 - Website-owned historical specs (`*WS.md`) are excluded from framework import and downstream context/reconstruction/log generation.

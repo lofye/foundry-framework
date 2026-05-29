@@ -143,6 +143,188 @@ XML);
         $this->assertSame('build/coverage/clover.xml', $result['payload']['clover_path']);
     }
 
+    public function test_test_feature_uses_coverage_wrapper_when_available(): void
+    {
+        mkdir($this->project->root . '/Features/Blog/tests', 0777, true);
+        mkdir($this->project->root . '/src', 0777, true);
+        file_put_contents($this->project->root . '/Features/Blog/tests/BlogTest.php', "<?php\n");
+        file_put_contents($this->project->root . '/src/Foo.php', "<?php\n");
+
+        $result = $this->runCommand(new Application(), [
+            'foundry',
+            'test',
+            'feature',
+            'blog',
+            '--full',
+            '--coverage',
+            '--coverage-min=90',
+            '--json',
+        ]);
+
+        $this->assertSame(0, $result['status']);
+        $this->assertTrue($result['payload']['ok']);
+        $this->assertSame(4, $result['payload']['summary']['total']);
+        $this->assertSame(
+            ['bin/phpunit-coverage', '--coverage-clover', 'build/coverage/clover.xml'],
+            $result['payload']['steps'][2]['command'],
+        );
+        $this->assertSame('verify_coverage', $result['payload']['steps'][3]['label']);
+        $this->assertEquals(100.0, $result['payload']['steps'][3]['payload']['line_coverage_percent']);
+    }
+
+    public function test_test_feature_reports_missing_inputs_before_running_phpunit(): void
+    {
+        $missingFeature = $this->runCommand(new Application(), ['foundry', 'test', 'feature', '--json']);
+
+        $this->assertSame(1, $missingFeature['status']);
+        $this->assertSame('CLI_TEST_FEATURE_REQUIRED', $missingFeature['payload']['error']['code']);
+
+        $missingTests = $this->runCommand(new Application(), ['foundry', 'test', 'feature', 'blog', '--json']);
+
+        $this->assertSame(1, $missingTests['status']);
+        $this->assertSame('CLI_TEST_FEATURE_MISSING_TESTS', $missingTests['payload']['error']['code']);
+    }
+
+    public function test_generate_command_reports_validation_errors_for_invalid_workflow_options(): void
+    {
+        $app = new Application();
+
+        $missingMode = $this->runCommand($app, ['foundry', 'generate', 'build-blog', '--json']);
+        $this->assertSame(1, $missingMode['status']);
+        $this->assertSame('GENERATE_MODE_REQUIRED', $missingMode['payload']['error']['code']);
+
+        $invalidMode = $this->runCommand($app, ['foundry', 'generate', 'build-blog', '--mode=invalid', '--json']);
+        $this->assertSame(1, $invalidMode['status']);
+        $this->assertSame('GENERATE_MODE_INVALID', $invalidMode['payload']['error']['code']);
+
+        $missingTarget = $this->runCommand($app, ['foundry', 'generate', 'build-blog', '--mode=modify', '--json']);
+        $this->assertSame(1, $missingTarget['status']);
+        $this->assertSame('GENERATE_TARGET_REQUIRED', $missingTarget['payload']['error']['code']);
+
+        $invalidApprovalMinimum = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            'build-blog',
+            '--mode=new',
+            '--min-approvals',
+            '0',
+            '--json',
+        ]);
+        $this->assertSame(1, $invalidApprovalMinimum['status']);
+        $this->assertSame('GENERATE_APPROVAL_MIN_INVALID', $invalidApprovalMinimum['payload']['error']['code']);
+
+        $templateConflict = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            '--template',
+            'blog-basic',
+            '--multi-step',
+            '--json',
+        ]);
+        $this->assertSame(1, $templateConflict['status']);
+        $this->assertSame('GENERATE_TEMPLATE_MULTI_STEP_CONFLICT', $templateConflict['payload']['error']['code']);
+
+        $invalidTemplateParam = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            '--template=blog-basic',
+            '--param',
+            'missing-equals',
+            '--json',
+        ]);
+        $this->assertSame(1, $invalidTemplateParam['status']);
+        $this->assertSame('GENERATE_TEMPLATE_PARAM_INVALID', $invalidTemplateParam['payload']['error']['code']);
+
+        $duplicateTemplateParam = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            '--template=blog-basic',
+            '--param=title=One',
+            '--param=title=Two',
+            '--json',
+        ]);
+        $this->assertSame(1, $duplicateTemplateParam['status']);
+        $this->assertSame('GENERATE_TEMPLATE_PARAM_DUPLICATE', $duplicateTemplateParam['payload']['error']['code']);
+
+        $dryRunGitConflict = $this->runCommand($app, [
+            'foundry',
+            'generate',
+            '--template=blog-basic',
+            '--dry-run',
+            '--git-commit',
+            '--json',
+        ]);
+        $this->assertSame(1, $dryRunGitConflict['status']);
+        $this->assertSame('GENERATE_GIT_COMMIT_DRY_RUN_INVALID', $dryRunGitConflict['payload']['error']['code']);
+    }
+
+    public function test_generate_approval_actions_require_user_and_plan_id(): void
+    {
+        $app = new Application();
+
+        $missingPlan = $this->runCommand($app, ['foundry', 'generate', '--approve', '--user=agent', '--json']);
+        $this->assertSame(1, $missingPlan['status']);
+        $this->assertSame('GENERATE_APPROVAL_PLAN_ID_REQUIRED', $missingPlan['payload']['error']['code']);
+
+        $missingUser = $this->runCommand($app, ['foundry', 'generate', '--approve', '--plan-id=plan-1', '--json']);
+        $this->assertSame(1, $missingUser['status']);
+        $this->assertSame('GENERATE_APPROVAL_USER_REQUIRED', $missingUser['payload']['error']['code']);
+    }
+
+    public function test_verify_done_uses_coverage_wrapper_for_completion_batch(): void
+    {
+        $definition = $this->project->root . '/blog.yaml';
+        file_put_contents($definition, <<<'YAML'
+version: 1
+feature: blog
+kind: http
+description: Publish blog posts
+route:
+  method: POST
+  path: /blog
+input:
+  fields:
+    title:
+      type: string
+      required: true
+output:
+  fields:
+    id:
+      type: string
+      required: true
+auth:
+  required: false
+database:
+  reads: []
+  writes: []
+  queries: []
+cache:
+  invalidate: []
+events:
+  emit: []
+jobs:
+  dispatch: []
+tests:
+  required: [feature]
+YAML);
+
+        $app = new Application();
+
+        $this->assertSame(0, $this->runCommand($app, ['foundry', 'generate', 'feature', $definition, '--json'])['status']);
+        $this->assertSame(0, $this->runCommand($app, ['foundry', 'context', 'init', 'blog', '--json'])['status']);
+
+        $result = $this->runCommand($app, ['foundry', 'verify', 'done', '--feature=blog', '--json']);
+
+        $this->assertSame(0, $result['status']);
+        $this->assertTrue($result['payload']['ok']);
+        $this->assertSame('phpunit_coverage', $result['payload']['steps'][3]['label']);
+        $this->assertSame(
+            ['bin/phpunit-coverage', '--coverage-clover', 'build/coverage/clover.xml'],
+            $result['payload']['steps'][3]['payload']['command'],
+        );
+        $this->assertSame('verify_coverage', $result['payload']['steps'][4]['label']);
+    }
+
     public function test_verify_coverage_rejects_non_numeric_minimum(): void
     {
         $app = new Application();
@@ -359,7 +541,7 @@ XML);
         $this->assertSame('spec:validate', $specValidateHelp['payload']['command']['signature']);
         $this->assertSame('stable', $specValidateHelp['payload']['command']['stability']);
         $this->assertSame('Verification', $specValidateHelp['payload']['command']['category']);
-        $this->assertSame('spec:validate [--require-plans]', $specValidateHelp['payload']['command']['usage']);
+        $this->assertSame('spec:validate [--require-outcomes] [--require-plans]', $specValidateHelp['payload']['command']['usage']);
 
         $implementSpecHelp = $this->runCommand($app, ['foundry', 'help', 'implement', 'spec', '--json']);
         $this->assertSame(0, $implementSpecHelp['status']);

@@ -25,8 +25,17 @@ final class SpecValidateCommand extends Command
     #[\Override]
     public function run(array $args, CommandContext $context): array
     {
-        $requirePlans = in_array('--require-plans', $args, true);
-        $payload = (new ExecutionSpecValidationService($context->paths()))->validate($requirePlans);
+        $requireOutcomes = in_array('--require-outcomes', $args, true) || in_array('--require-plans', $args, true);
+        $payload = (new ExecutionSpecValidationService($context->paths()))->validate($requireOutcomes);
+        if (in_array('--require-plans', $args, true)) {
+            $payload['metadata'] = array_merge(
+                is_array($payload['metadata'] ?? null) ? $payload['metadata'] : [],
+                [
+                    'deprecated_flags' => ['--require-plans'],
+                    'canonical_flag' => '--require-outcomes',
+                ],
+            );
+        }
 
         return [
             'status' => $payload['ok'] ? 0 : 1,

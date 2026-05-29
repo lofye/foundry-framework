@@ -2,32 +2,63 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PHP_BIN="${PHP_BIN:-$(command -v php)}"
 
-if [[ -z "${PHP_BIN}" ]]; then
-    echo "Unable to locate a PHP binary." >&2
-    exit 1
-fi
+coverage_mode() {
+    if [[ -z "${XDEBUG_MODE:-}" ]]; then
+        printf 'coverage'
+        return
+    fi
 
-has_xdebug() {
-    "$1" -m 2>/dev/null | awk 'tolower($0) == "xdebug" { found = 1 } END { exit found ? 0 : 1 }'
+    case ",${XDEBUG_MODE}," in
+        *,coverage,*)
+            printf '%s' "${XDEBUG_MODE}"
+            ;;
+        *)
+            printf '%s,coverage' "${XDEBUG_MODE}"
+            ;;
+    esac
 }
 
-if has_xdebug "${PHP_BIN}"; then
-    export XDEBUG_MODE="${XDEBUG_MODE:-coverage}"
-    exec "${PHP_BIN}" "${ROOT_DIR}/vendor/bin/phpunit" "$@"
+has_xdebug() {
+    XDEBUG_MODE="$(coverage_mode)" "$1" -m 2>/dev/null | awk 'tolower($0) == "xdebug" { found = 1 } END { exit found ? 0 : 1 }'
+}
+
+run_phpunit() {
+    local candidate="$1"
+    shift
+    export XDEBUG_MODE="$(coverage_mode)"
+    exec "${candidate}" "${ROOT_DIR}/vendor/bin/phpunit" "$@"
+}
+
+declare -a candidates=()
+if [[ -n "${PHP_BIN:-}" ]]; then
+    candidates+=("${PHP_BIN}")
 fi
 
-for candidate in \
-    "/opt/homebrew/bin/php" \
-    "/usr/local/bin/php" \
-    "$(command -v php || true)"; do
-    if [[ -n "${candidate}" && -x "${candidate}" && "${candidate}" != "${PHP_BIN}" ]] && has_xdebug "${candidate}"; then
-        export XDEBUG_MODE="${XDEBUG_MODE:-coverage}"
-        exec "${candidate}" "${ROOT_DIR}/vendor/bin/phpunit" "$@"
+candidates+=(
+    "/opt/homebrew/bin/php"
+    "/usr/local/bin/php"
+    "$(command -v php || true)"
+)
+
+declare -a checked=()
+for candidate in "${candidates[@]}"; do
+    if [[ -z "${candidate}" || ! -x "${candidate}" ]]; then
+        continue
+    fi
+
+    for previous in "${checked[@]+"${checked[@]}"}"; do
+        if [[ "${previous}" == "${candidate}" ]]; then
+            continue 2
+        fi
+    done
+    checked+=("${candidate}")
+
+    if has_xdebug "${candidate}"; then
+        run_phpunit "${candidate}" "$@"
     fi
 done
 
 echo "Unable to locate a PHP executable with Xdebug enabled." >&2
-echo "Set PHP_BIN to the Valet PHP executable where PIE has enabled Xdebug." >&2
+echo "Set PHP_BIN to a PHP executable with Xdebug enabled, then rerun this wrapper." >&2
 exit 1

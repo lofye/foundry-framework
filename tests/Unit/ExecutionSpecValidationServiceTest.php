@@ -327,7 +327,7 @@ MD,
     public function test_validate_supports_canonical_modules_workspace_specs_and_log(): void
     {
         $this->writeRawFile('Modules/ExecutionSpecSystem/specs/001-canonical.md', '# Execution Spec: 001-canonical');
-        $this->writeRawFile('Modules/ExecutionSpecSystem/plans/001-canonical.md', '# Implementation Plan: 001-canonical');
+        $this->writeRawFile('Modules/ExecutionSpecSystem/outcomes/001-canonical.md', '# Implementation Plan: 001-canonical');
         $this->writeRawFile(
             'Modules/implementation.log',
             "## 2026-05-03 12:00:00 -0400\n- spec: Modules/ExecutionSpecSystem/specs/001-canonical.md\n",
@@ -342,7 +342,7 @@ MD,
     public function test_validate_rejects_legacy_slug_references_for_module_implementation_log_entries(): void
     {
         $this->writeRawFile('Modules/ExecutionSpecSystem/specs/001-canonical.md', '# Execution Spec: 001-canonical');
-        $this->writeRawFile('Modules/ExecutionSpecSystem/plans/001-canonical.md', '# Implementation Plan: 001-canonical');
+        $this->writeRawFile('Modules/ExecutionSpecSystem/outcomes/001-canonical.md', '# Implementation Plan: 001-canonical');
         $this->writeRawFile(
             'Modules/implementation.log',
             "## 2026-05-03 12:00:00 -0400\n- spec: execution-spec-system/001-canonical.md\n",
@@ -428,7 +428,7 @@ MD,
             "# Implementation Plan: not-a-spec\n",
         );
         $this->writeRawFile(
-            'docs/features/execution-spec-system/plans/not-a-spec.md',
+            'docs/features/execution-spec-system/outcomes/not-a-spec.md',
             "# Implementation Plan: not-a-spec\n",
         );
 
@@ -443,11 +443,11 @@ MD,
         $this->writeSpec('execution-spec-system', '001-first', '# Execution Spec: 001-first');
         $this->writeImplementationLogEntry('execution-spec-system/001-first.md');
         $this->writeRawFile(
-            'docs/features/execution-spec-system/plans/001-first.md',
+            'docs/features/execution-spec-system/outcomes/001-first.md',
             "# Implementation Plan: 001-first\n\nstatus: draft\n",
         );
         $this->writeRawFile(
-            'docs/features/execution-spec-system/plans/archive/001-first.md',
+            'docs/features/execution-spec-system/outcomes/archive/001-first.md',
             "# Implementation Plan: 001-first\n",
         );
 
@@ -462,11 +462,11 @@ MD,
         $this->writeSpec('execution-spec-system', '001-first', '# Execution Spec: 001-first');
         $this->writeImplementationLogEntry('execution-spec-system/001-first.md');
         $this->writeRawFile(
-            'docs/features/execution-spec-system/plans/001-first.md',
+            'docs/features/execution-spec-system/outcomes/001-first.md',
             "# Implementation Plan: 001-first\n",
         );
         $this->writeRawFile(
-            'docs/features/execution-spec-system/plans/001-second.md',
+            'docs/features/execution-spec-system/outcomes/001-second.md',
             "# Implementation Plan: 001-second\n",
         );
 
@@ -482,8 +482,8 @@ MD,
                 'feature' => 'execution-spec-system',
                 'id' => '001',
                 'paths' => [
-                    'docs/features/execution-spec-system/plans/001-first.md',
-                    'docs/features/execution-spec-system/plans/001-second.md',
+                    'docs/features/execution-spec-system/outcomes/001-first.md',
+                    'docs/features/execution-spec-system/outcomes/001-second.md',
                 ],
             ],
             $duplicate['details'],
@@ -513,7 +513,7 @@ MD,
         $this->writeSpec('execution-spec-system', '001-implementation-plan-files', '# Execution Spec: 001-implementation-plan-files');
         $this->writeImplementationLogEntry('execution-spec-system/001-implementation-plan-files.md');
         $this->writeRawFile(
-            'docs/features/execution-spec-system/plans/001-implementation-plan-files.md',
+            'docs/features/execution-spec-system/outcomes/001-implementation-plan-files.md',
             "# Implementation Plan: 001-implementation-plan-files\n",
         );
 
@@ -528,7 +528,7 @@ MD,
         $this->writeSpec('execution-spec-system', '001-first', '# Execution Spec: 001-first');
         $this->writeImplementationLogEntry('execution-spec-system/001-first.md');
         mkdir($this->project->root . '/docs/features/execution-spec-system/specs/002-directory.md', 0777, true);
-        mkdir($this->project->root . '/docs/features/execution-spec-system/plans/001-plan-directory.md', 0777, true);
+        mkdir($this->project->root . '/docs/features/execution-spec-system/outcomes/001-plan-directory.md', 0777, true);
 
         $result = $this->service()->validate();
 
@@ -542,7 +542,7 @@ MD,
     public function test_validate_warns_when_module_decision_summary_is_missing(): void
     {
         $this->writeRawFile('Modules/FeatureSystem/specs/001-summary-warning.md', '# Execution Spec: 001-summary-warning');
-        $this->writeRawFile('Modules/FeatureSystem/plans/001-summary-warning.md', '# Implementation Plan: 001-summary-warning');
+        $this->writeRawFile('Modules/FeatureSystem/outcomes/001-summary-warning.md', '# Implementation Plan: 001-summary-warning');
         $this->writeRawFile(
             'Modules/FeatureSystem/feature-system.md',
             "# Feature: feature-system\n\n## Current State\n\n- baseline\n",
@@ -563,9 +563,9 @@ MD,
     public function test_validate_warns_when_module_decision_summary_is_possibly_stale(): void
     {
         $this->writeRawFile('Modules/FeatureSystem/specs/001-summary.md', '# Execution Spec: 001-summary');
-        $this->writeRawFile('Modules/FeatureSystem/plans/001-summary.md', '# Implementation Plan: 001-summary');
+        $this->writeRawFile('Modules/FeatureSystem/outcomes/001-summary.md', '# Implementation Plan: 001-summary');
         $this->writeRawFile('Modules/FeatureSystem/specs/002-summary.md', '# Execution Spec: 002-summary');
-        $this->writeRawFile('Modules/FeatureSystem/plans/002-summary.md', '# Implementation Plan: 002-summary');
+        $this->writeRawFile('Modules/FeatureSystem/outcomes/002-summary.md', '# Implementation Plan: 002-summary');
         $this->writeRawFile(
             'Modules/FeatureSystem/feature-system.md',
             "# Feature: feature-system\n\n## Decision Summary\n\nRefreshed Through Spec: `001-summary`\n",
@@ -588,11 +588,11 @@ MD,
         $this->writeSpec('execution-spec-system', '001-implementation-plan-files', '# Execution Spec: 001-implementation-plan-files');
         $this->writeImplementationLogEntry('execution-spec-system/001-implementation-plan-files.md');
         $this->writeRawFile(
-            'docs/features/execution-spec-system/plans/002-orphan.md',
+            'docs/features/execution-spec-system/outcomes/002-orphan.md',
             "# Implementation Plan: 002-orphan\n",
         );
         $this->writeRawFile(
-            'docs/features/execution-spec-system/plans/001-implementation-plan-files.md',
+            'docs/features/execution-spec-system/outcomes/001-implementation-plan-files.md',
             "# Implementation Plan: execution-spec-system/001-implementation-plan-files\n",
         );
 
@@ -617,7 +617,7 @@ MD,
         $this->assertFalse($strict['ok']);
         $this->assertSame('EXECUTION_SPEC_PLAN_REQUIRED_MISSING', $strict['violations'][0]['code']);
         $this->assertSame(
-            'docs/features/execution-spec-system/plans/001-active-missing-plan.md',
+            'docs/features/execution-spec-system/outcomes/001-active-missing-plan.md',
             $strict['violations'][0]['details']['plan_path'],
         );
     }
@@ -629,7 +629,7 @@ MD,
         $this->writeImplementationLogEntry('execution-spec-system/001-has-plan.md');
         $this->writeImplementationLogEntry('execution-spec-system/002-missing-plan.md');
         $this->writeRawFile(
-            'docs/features/execution-spec-system/plans/001-has-plan.md',
+            'docs/features/execution-spec-system/outcomes/001-has-plan.md',
             "# Implementation Plan: 001-has-plan\n",
         );
 
@@ -639,7 +639,7 @@ MD,
         $this->assertSame(1, $result['summary']['violations']);
         $this->assertSame('EXECUTION_SPEC_PLAN_REQUIRED_MISSING', $result['violations'][0]['code']);
         $this->assertSame(
-            'docs/features/execution-spec-system/plans/002-missing-plan.md',
+            'docs/features/execution-spec-system/outcomes/002-missing-plan.md',
             $result['violations'][0]['details']['plan_path'],
         );
     }
@@ -677,13 +677,13 @@ MD,
             static fn(array $entry): bool => $entry['code'] === 'EXECUTION_SPEC_RECONSTRUCTION_NOTE_MISSING',
         ))[0];
         $this->assertSame('Modules/FeatureSystem/specs/001-reconstruction-required.md', $violation['file_path']);
-        $this->assertSame('Modules/FeatureSystem/plans/001-reconstruction-required.md', $violation['details']['expected_path']);
+        $this->assertSame('Modules/FeatureSystem/outcomes/001-reconstruction-required.md', $violation['details']['expected_path']);
     }
 
     public function test_validate_accepts_legacy_module_plan_heading_as_grandfathered_reconstruction_note(): void
     {
         $this->writeRawFile('Modules/FeatureSystem/specs/001-grandfathered.md', '# Execution Spec: 001-grandfathered');
-        $this->writeRawFile('Modules/FeatureSystem/plans/001-grandfathered.md', '# Implementation Plan: 001-grandfathered');
+        $this->writeRawFile('Modules/FeatureSystem/outcomes/001-grandfathered.md', '# Implementation Plan: 001-grandfathered');
         $this->writeRawFile(
             'Modules/implementation.log',
             "## 2026-05-07 10:00:00 -0400\n- spec: Modules/FeatureSystem/specs/001-grandfathered.md\n",
@@ -698,7 +698,7 @@ MD,
     public function test_validate_reports_invalid_reconstruction_note_heading_for_active_module_specs(): void
     {
         $this->writeRawFile('Modules/FeatureSystem/specs/001-heading.md', '# Execution Spec: 001-heading');
-        $this->writeRawFile('Modules/FeatureSystem/plans/001-heading.md', '# Wrong Heading');
+        $this->writeRawFile('Modules/FeatureSystem/outcomes/001-heading.md', '# Wrong Heading');
         $this->writeRawFile(
             'Modules/implementation.log',
             "## 2026-05-07 10:00:00 -0400\n- spec: Modules/FeatureSystem/specs/001-heading.md\n",
@@ -715,7 +715,7 @@ MD,
     {
         $this->writeRawFile('Modules/FeatureSystem/specs/001-sections.md', '# Execution Spec: 001-sections');
         $this->writeRawFile(
-            'Modules/FeatureSystem/plans/001-sections.md',
+            'Modules/FeatureSystem/outcomes/001-sections.md',
             "# 001-sections\n\n## Spec Implemented\n\n`Modules/FeatureSystem/specs/001-sections.md`\n",
         );
         $this->writeRawFile(
@@ -738,7 +738,7 @@ MD,
     {
         $this->writeRawFile('Modules/FeatureSystem/specs/001-order.md', '# Execution Spec: 001-order');
         $this->writeRawFile(
-            'Modules/FeatureSystem/plans/001-order.md',
+            'Modules/FeatureSystem/outcomes/001-order.md',
             $this->validReconstructionNote(
                 '001-order',
                 [
@@ -784,12 +784,12 @@ MD,
     {
         $this->writeRawFile('Modules/Marketplace/specs/002-parent.md', '# Execution Spec: 002-parent');
         $this->writeRawFile(
-            'Modules/Marketplace/plans/002-parent.md',
+            'Modules/Marketplace/outcomes/002-parent.md',
             $this->validReconstructionNote('002-parent'),
         );
         $this->writeRawFile('Modules/Marketplace/specs/002.001-runtime.md', '# Execution Spec: 002.001-runtime');
         $this->writeRawFile(
-            'Modules/Marketplace/plans/002.001-runtime.md',
+            'Modules/Marketplace/outcomes/002.001-runtime.md',
             $this->validReconstructionNote('002.001-runtime'),
         );
         $this->writeRawFile(
@@ -810,7 +810,7 @@ MD,
             "# Execution Spec: 001-first\n\nstatus: historical\n",
         );
         $this->writeRawFile(
-            'Modules/PreCanonical/plans/001-first.md',
+            'Modules/PreCanonical/outcomes/001-first.md',
             "# Implementation Plan: 001-first\n\nstatus: historical\n",
         );
         $this->writeRawFile(
@@ -818,7 +818,7 @@ MD,
             "# Execution Spec: 003-third\n\nstatus: historical\n",
         );
         $this->writeRawFile(
-            'Modules/PreCanonical/plans/003-third.md',
+            'Modules/PreCanonical/outcomes/003-third.md',
             "# Implementation Plan: 003-third\n\nstatus: historical\n",
         );
         $this->writeRawFile(

@@ -54,7 +54,7 @@ docs/features/<feature>/specs/drafts/*.md
 Validate plans under:
 
 ```text
-docs/features/<feature>/plans/*.md
+docs/features/<feature>/outcomes/*.md
 ```
 
 The implementation log remains:

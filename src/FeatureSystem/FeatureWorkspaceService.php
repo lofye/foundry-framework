@@ -320,7 +320,7 @@ final class FeatureWorkspaceService
 
         $directories = [
             'specs' => $relativePath . '/specs',
-            'plans' => $relativePath . '/plans',
+            'outcomes' => $relativePath . '/outcomes',
             'docs' => $relativePath . '/docs',
             'src' => $relativePath . '/src',
             'tests' => $relativePath . '/tests',
@@ -558,7 +558,7 @@ final class FeatureWorkspaceService
                 ];
             }
 
-            foreach (['specs', 'plans', 'docs'] as $kind) {
+            foreach (['specs', 'outcomes', 'docs'] as $kind) {
                 $directoryPath = (string) ($directories[$kind] ?? '');
                 if ($directoryPath === '') {
                     continue;

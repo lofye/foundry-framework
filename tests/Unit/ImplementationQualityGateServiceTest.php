@@ -33,6 +33,10 @@ final class ImplementationQualityGateServiceTest extends TestCase
         $this->assertTrue($result['full_suite']['passed']);
         $this->assertTrue($result['coverage']['ran']);
         $this->assertTrue($result['coverage']['passed']);
+        $this->assertSame(
+            ['bin/phpunit-coverage', '--coverage-clover', 'build/coverage/clover.xml'],
+            $result['coverage']['command'],
+        );
         $this->assertSame(95.0, $result['coverage']['global_line_coverage']);
         $this->assertTrue($result['changed_surface']['supported']);
         $this->assertSame('no_enforced_files', $result['changed_surface']['status']);
@@ -63,6 +67,10 @@ final class ImplementationQualityGateServiceTest extends TestCase
         $this->assertTrue($result['full_suite']['passed']);
         $this->assertTrue($result['coverage']['ran']);
         $this->assertFalse($result['coverage']['passed']);
+        $this->assertSame(
+            ['bin/phpunit-coverage', '--coverage-clover', 'build/coverage/clover.xml'],
+            $result['coverage']['command'],
+        );
         $this->assertFileDoesNotExist($this->project->root . '/build/coverage/clover.xml');
     }
 

@@ -49,7 +49,7 @@ final class CLIHistoricalSpecsReconstructCommandTest extends TestCase
         $this->assertSame(0, $preview['status']);
         $this->assertTrue($preview['payload']['dry_run']);
         $this->assertSame(1, $preview['payload']['summary']['imported_specs']);
-        $this->assertFileDoesNotExist($this->project->root . '/Modules/LegacyModule/plans/001-recovered-runtime.md');
+        $this->assertFileDoesNotExist($this->project->root . '/Modules/LegacyModule/outcomes/001-recovered-runtime.md');
 
         $apply = $this->runCommand([
             'foundry',
@@ -62,7 +62,7 @@ final class CLIHistoricalSpecsReconstructCommandTest extends TestCase
         $this->assertSame(0, $apply['status']);
         $this->assertSame(1, $apply['payload']['summary']['notes_created']);
         $this->assertSame(1, $apply['payload']['summary']['log_entries_appended']);
-        $this->assertFileExists($this->project->root . '/Modules/LegacyModule/plans/001-recovered-runtime.md');
+        $this->assertFileExists($this->project->root . '/Modules/LegacyModule/outcomes/001-recovered-runtime.md');
 
         $validate = $this->runCommand(['foundry', 'spec:validate', '--json']);
         $this->assertSame(0, $validate['status']);

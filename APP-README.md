@@ -21,7 +21,7 @@ These paths mean:
 - `Features/<Feature>/<feature>.decisions.md` → append-only decision history
 - `Features/<Feature>/specs/*.md` → execution specs (planning artifacts, non-authoritative after implementation)
 - `Features/<Feature>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
-- `Features/<Feature>/plans/*.md` → implementation reconstruction notes (post-implementation artifacts)
+- `Features/<Feature>/outcomes/*.md` → implementation reconstruction notes (post-implementation artifacts)
 - `Features/implementation.log` → completed execution-spec ledger
 
 For completed active execution specs, create or update the matching reconstruction note before reporting completion. Reconstruction notes should describe what actually changed, not speculative implementation plans.
@@ -66,7 +66,7 @@ Legacy `app/features/*`, `docs/features/*`, and generated compatibility paths ma
 Application features may include reconstruction notes under:
 
 ```text
-Features/<Feature>/plans/
+Features/<Feature>/outcomes/
 ```
 
 A reconstruction note records how a completed feature spec was implemented: files changed, runtime contracts, tests, deterministic outputs, and follow-up dependencies.
@@ -97,7 +97,7 @@ foundry verify graph --json
 foundry verify pipeline --json
 foundry verify contracts --json
 php vendor/bin/phpunit -c phpunit.xml.dist
-XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-clover build/coverage/clover.xml
+bin/phpunit-coverage --coverage-clover build/coverage/clover.xml
 foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
 php -S 127.0.0.1:8000 public/index.php
 ```

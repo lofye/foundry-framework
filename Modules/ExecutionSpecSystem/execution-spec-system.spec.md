@@ -15,10 +15,10 @@
 - Provide deterministic automatic implementation-log appends for successful active execution-spec completion.
 - Block only real execution-spec contradictions against canonical non-goals and negative constraints.
 - Prevent framework-repository execution specs from routing into the generic `app/features/*` scaffold pipeline.
-- Keep agent-facing framework, app, and skill instructions aligned to canonical feature-doc paths, including feature context stems, execution-spec paths, plan paths, and implementation-log path.
+- Keep agent-facing framework, app, and skill instructions aligned to canonical feature-doc paths, including feature context stems, execution-spec paths, reconstruction-outcome paths, and implementation-log path.
 - Keep human-facing READMEs, feature-doc policy docs, examples, and scaffold-facing documentation aligned to canonical feature-doc paths and feature-context filename stems.
 - Keep tests, fixtures, snapshots, and contract expectations aligned to canonical feature-doc path contracts, including deterministic invalid-path coverage boundaries.
-- Add first-class implementation plan files for active execution specs with deterministic creation, validation, and strict enforcement support.
+- Add first-class reconstruction outcome files for active execution specs with deterministic creation, validation, and strict enforcement support.
 - Enforce contiguous execution-spec ID sequences per feature and sibling group, with active and draft sequences validated independently at every hierarchy level.
 
 ## Non-Goals
@@ -64,12 +64,12 @@
 - If the implementation log cannot be updated, `implement spec` must surface that failure clearly and deterministically. It must not report a clean successful completion, and it may return a partial-success status such as `completed_with_issues` when the implementation itself succeeded but required logging could not be completed.
 - Canonical conflict detection evaluates positive execution-spec instructions against forbidden clauses extracted from canonical non-goals and negative constraints, and aligned instructions that merely share topic nouns do not trigger `EXECUTION_SPEC_CONFLICTS_WITH_CANONICAL_SPEC`.
 - In the framework repository, `implement spec` blocks framework-internal execution specs before the generic `app/features/*` scaffold path and fails explicitly until a dedicated framework-internal implementation path exists.
-- Agent-facing instructions use `docs/features/<feature>/<feature>.*` for canonical feature context, `docs/features/<feature>/specs/*.md` and `docs/features/<feature>/specs/drafts/*.md` for execution specs, `docs/features/<feature>/plans/*.md` for plans, and `docs/features/implementation-log.md` for implementation history.
+- Agent-facing instructions use `docs/features/<feature>/<feature>.*` for canonical feature context, `docs/features/<feature>/specs/*.md` and `docs/features/<feature>/specs/drafts/*.md` for execution specs, `docs/features/<feature>/outcomes/*.md` for reconstruction outcomes, and `docs/features/implementation-log.md` for implementation history.
 - Agent-facing instructions do not describe `docs/specs/*`, `docs/<feature>/*`, or `<id>-<slug>` feature-context stems as active canonical locations.
 - Human-facing docs and scaffolded documentation do not describe `docs/specs/*`, `docs/<feature>/*`, or `<id>-<slug>` feature-context stems as active canonical feature-context locations.
 - Tests and fixture helpers treat old doc-path patterns as invalid active paths except in explicitly invalid-path coverage cases.
-- `spec:plan <feature> <id>` creates deterministic implementation plan files at `docs/features/<feature>/plans/<id>-<slug>.md` with canonical heading `# Implementation Plan: <id>-<slug>`.
-- `spec:validate` validates implementation plan placement, heading, filename correspondence, duplicates, and forbidden metadata, and `spec:validate --require-plans` enforces active-spec plan coverage without requiring draft-spec plans.
+- `spec:plan <feature> <id>` creates deterministic reconstruction outcome files at `docs/features/<feature>/outcomes/<id>-<slug>.md` with canonical heading `# Implementation Plan: <id>-<slug>`.
+- `spec:validate` validates reconstruction outcome placement, heading, filename correspondence, duplicates, and forbidden metadata, and `spec:validate --require-outcomes` enforces active-spec outcome coverage without requiring draft-spec outcomes.
 - `spec:validate` detects missing parent IDs and skipped IDs across active and draft specs, reports deterministic gap details, and rejects implementation-log entries that skip IDs.
 - `spec:validate` reports continuity details that include feature, location (`active` or `drafts`), parent group (`top-level` or parent ID), expected missing ID, next observed ID, and offending path.
 - Commands that allocate, plan, log, or otherwise operate on execution specs refuse to proceed when feature ID continuity is broken.
@@ -101,7 +101,7 @@
 - Agent-facing framework, app, and skill instruction surfaces reflect only the canonical feature-doc path contract and preserve historical stale-path references only in explicitly historical or migration contexts.
 - Human-facing README and feature-doc policy surfaces reflect only the canonical feature-doc path contract for active guidance, while stale-path references remain only in explicit historical or invalid-path contexts.
 - Test fixtures and contract expectations reflect canonical feature-doc paths for active behavior and keep stale-path usage limited to explicit invalid-path coverage.
-- `spec:plan` command behavior and `spec:validate --require-plans` enforcement are covered by deterministic CLI and unit tests.
+- `spec:plan` command behavior and `spec:validate --require-outcomes` enforcement are covered by deterministic CLI and unit tests.
 - Sequential ID continuity enforcement is covered for top-level gaps, child gaps, missing parents, mixed active/draft sequences, and deterministic error output details.
 
 ## Assumptions

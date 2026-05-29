@@ -74,13 +74,11 @@ final class TestFeatureCommand extends Command
         }
 
         if ($coverage) {
-            $coverageRun = $runner->run(
-                ['env', 'XDEBUG_MODE=coverage', $phpBinary, $phpunit, '--coverage-clover', 'build/coverage/clover.xml'],
-                $context->paths()->root(),
-            );
+            $coverageCommand = $this->coverageCommand($context, $phpBinary, $phpunit);
+            $coverageRun = $runner->run($coverageCommand, $context->paths()->root());
             $steps[] = [
                 'label' => 'phpunit_coverage',
-                'command' => ['env', 'XDEBUG_MODE=coverage', $phpBinary, $phpunit, '--coverage-clover', 'build/coverage/clover.xml'],
+                'command' => $coverageCommand,
                 'result' => $coverageRun,
             ];
 
@@ -157,6 +155,19 @@ final class TestFeatureCommand extends Command
         }
 
         return null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function coverageCommand(CommandContext $context, string $phpBinary, string $phpunit): array
+    {
+        $wrapper = $context->paths()->join('bin/phpunit-coverage');
+        if (is_file($wrapper) && is_executable($wrapper)) {
+            return ['bin/phpunit-coverage', '--coverage-clover', 'build/coverage/clover.xml'];
+        }
+
+        return ['env', 'XDEBUG_MODE=coverage', $phpBinary, $phpunit, '--coverage-clover', 'build/coverage/clover.xml'];
     }
 
     private function canonicalFeature(string $value): string

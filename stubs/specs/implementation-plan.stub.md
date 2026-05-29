@@ -28,11 +28,11 @@
 
 ```bash
 php bin/foundry spec:validate --json
-php bin/foundry spec:validate --require-plans --json
+php bin/foundry spec:validate --require-outcomes --json
 php bin/foundry verify context --json
 php bin/foundry verify contracts --json
 php bin/foundry verify graph --json
 php bin/foundry verify pipeline --json
 php vendor/bin/phpunit
-php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-text
+bin/phpunit-coverage --coverage-clover build/coverage/clover.xml
 ```

@@ -67,10 +67,11 @@ final class VerifyDoneCommand extends Command
         ];
 
         if (!$skipCoverage) {
+            $coverageCommand = $this->coverageCommand($context, $phpBinary, $phpunit);
             $steps[] = [
                 'label' => 'phpunit_coverage',
-                'command' => 'env XDEBUG_MODE=coverage ' . $phpBinary . ' ' . $phpunit . ' --coverage-clover build/coverage/clover.xml',
-                'run' => fn(): array => $this->runProcessStep($processRunner, ['env', 'XDEBUG_MODE=coverage', $phpBinary, $phpunit, '--coverage-clover', 'build/coverage/clover.xml'], $context),
+                'command' => implode(' ', $coverageCommand),
+                'run' => fn(): array => $this->runProcessStep($processRunner, $coverageCommand, $context),
             ];
             $steps[] = [
                 'label' => 'verify_coverage',
@@ -140,6 +141,19 @@ final class VerifyDoneCommand extends Command
         return null;
     }
 
+    /**
+     * @return list<string>
+     */
+    private function coverageCommand(CommandContext $context, string $phpBinary, string $phpunit): array
+    {
+        $wrapper = $context->paths()->join('bin/phpunit-coverage');
+        if (is_file($wrapper) && is_executable($wrapper)) {
+            return ['bin/phpunit-coverage', '--coverage-clover', 'build/coverage/clover.xml'];
+        }
+
+        return ['env', 'XDEBUG_MODE=coverage', $phpBinary, $phpunit, '--coverage-clover', 'build/coverage/clover.xml'];
+    }
+
     private function canonicalFeature(string $value): string
     {
         $normalized = strtolower(trim($value));
@@ -202,4 +216,3 @@ final class VerifyDoneCommand extends Command
         return implode(PHP_EOL, $lines);
     }
 }
-

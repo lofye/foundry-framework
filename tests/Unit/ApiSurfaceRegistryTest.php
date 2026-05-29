@@ -297,7 +297,7 @@ final class ApiSurfaceRegistryTest extends TestCase
         $this->assertSame('stable', $specValidate['stability']);
         $this->assertSame('Verification', $specValidate['category']);
         $this->assertSame('spec:validate', $specValidate['command_type']);
-        $this->assertSame('spec:validate [--require-plans]', $specValidate['usage']);
+        $this->assertSame('spec:validate [--require-outcomes] [--require-plans]', $specValidate['usage']);
         $this->assertSame('stable', $verifyContext['stability']);
         $this->assertSame('Verification', $verifyContext['category']);
         $this->assertSame('verify', $verifyContext['command_type']);

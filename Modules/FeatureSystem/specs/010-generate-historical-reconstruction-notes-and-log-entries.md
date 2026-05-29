@@ -15,7 +15,7 @@ This spec builds on:
 It closes the context-persistence loop for historical specs by ensuring they have:
 
 ```text
-Modules/<Module>/plans/<spec-id-and-slug>.md
+Modules/<Module>/outcomes/<spec-id-and-slug>.md
 Modules/implementation.log
 ```
 
@@ -64,7 +64,7 @@ Modules/<Module>/specs/<spec-id-and-slug>.md
 create:
 
 ```text
-Modules/<Module>/plans/<spec-id-and-slug>.md
+Modules/<Module>/outcomes/<spec-id-and-slug>.md
 ```
 
 Use the required reconstruction note format from spec 006.

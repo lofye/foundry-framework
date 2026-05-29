@@ -70,7 +70,7 @@ All sources are known to be ChatGPT conversation exports or ChatGPT-derived text
 5. Pair `R` blocks to `S` blocks by normalized `NAME`.
 6. Preserve `P` blocks as contextual evidence without merging them into spec bodies or result bodies.
 7. Import all spec blocks into `Modules/PreCanonical/specs/`.
-8. Generate reconstruction notes in `Modules/PreCanonical/plans/`.
+8. Generate reconstruction notes in `Modules/PreCanonical/outcomes/`.
 9. Include paired result evidence in reconstruction notes.
 10. Include relevant preamble evidence as supporting context.
 11. Create or update `Modules/PreCanonical/pre-canonical.md`.
@@ -391,7 +391,7 @@ The original spec body should be preserved as much as possible.
 For each imported spec, create:
 
 ```text
-Modules/PreCanonical/plans/<same-id-and-slug>.md
+Modules/PreCanonical/outcomes/<same-id-and-slug>.md
 ```
 
 The reconstruction note must follow the required reconstruction note structure established by spec 006.
@@ -762,7 +762,7 @@ All applicable commands must exit `0`.
 Create:
 
 ```text
-Modules/FeatureSystem/plans/013-import-explicitly-marked-precanonical-archive.md
+Modules/FeatureSystem/outcomes/013-import-explicitly-marked-precanonical-archive.md
 ```
 
 ---

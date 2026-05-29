@@ -333,7 +333,7 @@ final class HistoricalReconstructionGenerator
      */
     private function notePath(array $spec): string
     {
-        return 'Modules/' . $spec['module'] . '/plans/' . $spec['name'] . '.md';
+        return 'Modules/' . $spec['module'] . '/outcomes/' . $spec['name'] . '.md';
     }
 
     /**

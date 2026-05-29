@@ -107,7 +107,7 @@ Explain the application feature layout and source-of-truth rule:
 Features/<Feature>/src/
 Features/<Feature>/tests/
 Features/<Feature>/specs/
-Features/<Feature>/plans/
+Features/<Feature>/outcomes/
 Features/<Feature>/docs/
 ```
 

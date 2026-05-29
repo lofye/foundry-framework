@@ -359,7 +359,7 @@
 ## 2026-05-07 14:32:00 -0400
 - spec: Modules/FeatureSystem/specs/006-require-implementation-reconstruction-notes.md
 - note: Added deterministic module reconstruction-note validation in `spec:validate` with explicit missing/heading/section/order violation codes and migration-safe legacy `# Implementation Plan:` grandfathering for historical module notes.
-- note: Added strict-format reconstruction notes for active FeatureSystem, Marketplace, and StateStore specs that previously lacked matching `Modules/<Module>/plans/<id>-<slug>.md` files.
+- note: Added strict-format reconstruction notes for active FeatureSystem, Marketplace, and StateStore specs that previously lacked matching `Modules/<Module>/outcomes/<id>-<slug>.md` files.
 - note: Updated framework/app docs, philosophy, and strict/non-strict implementation skills to treat `plans/` as post-implementation reconstruction memory and require reconstruction-note completion before claiming spec completion.
 
 ## 2026-05-07 15:12:00 -0400
@@ -783,3 +783,8 @@
 - spec: Modules/CliExperience/specs/003-common-workflow-batch-commands.md
 - note: Added deterministic first-class batch workflow commands (`doctor --ready`, `context bootstrap/recover`, `spec:promote`, `verify architecture`, `verify feature-work`, `verify done`, and `test feature`) backed by a shared batch runner with stable aggregate step reporting.
 - note: Extended existing command surfaces with grouped modes (`generate docs --all`, `explain feature --full`), registered the new command signatures in CLI surface metadata/probes, and updated tests and demo workflow docs to use the shorter command paths.
+
+## 2026-05-28 22:36:03 -0400
+- spec: Modules/ExecutionSpecSystem/specs/011-rename-reconstruction-plans-to-outcomes.md
+- note: Renamed reconstruction-note directory contracts from `plans/` to `outcomes/` across module/feature workspaces, migrated repository reconstruction directories, and updated canonical docs/spec references to the new vocabulary.
+- note: Updated spec validation and CLI metadata to support canonical `--require-outcomes` with deprecated `--require-plans` compatibility aliasing, while leaving `.foundry/plans/` and unrelated plan concepts unchanged.

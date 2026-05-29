@@ -1,6 +1,7 @@
 # Feature: quality-enforcement
 
 ## Purpose
+
 - Make implementation completion stricter and more trustworthy.
 
 ## Decision Summary
@@ -13,11 +14,12 @@ Refreshed Through Spec: `001.002-eliminate-phpunit-warning-and-risky-state-block
 - Changed-surface coverage ignores docs, generated internals, vendor content, storage artifacts, stubs, and tests so enforcement stays focused on owned source.
 
 ## Current State
+
 - Existing contributor guidance about keeping affected areas at or above 90% coverage remains part of the workflow, but final completion enforcement moves into Foundry-owned implementation workflows.
 - A shared repository-owned quality gate exists for Foundry-owned implementation completion.
 - Foundry-owned implementation workflows run one shared quality gate before returning final success.
 - The shared quality gate runs `php vendor/bin/phpunit` as the full-suite requirement.
-- The shared quality gate runs `php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-text --coverage-clover storage/tmp/foundry-quality-gate-clover.xml` as the canonical coverage requirement.
+- The shared quality gate runs `bin/phpunit-coverage --coverage-clover build/coverage/clover.xml` as the canonical coverage requirement.
 - `implement feature` and `implement spec` now downgrade completion when the full PHPUnit suite fails, the coverage run fails, coverage cannot be parsed deterministically, global line coverage is below 90%, changed files cannot be determined deterministically, or any enforced changed PHP source file is below 90% line coverage.
 - `implement feature` and `implement spec` no longer report final success unless the quality gate passes.
 - Full-suite failure blocks final completion.
@@ -25,7 +27,8 @@ Refreshed Through Spec: `001.002-eliminate-phpunit-warning-and-risky-state-block
 - The repository strict PHPUnit baseline is now clean under the existing configuration: the stale init-app scaffold assertion, risky human-mode first-run tests, and warning-producing cleanup/stub-loading paths were fixed at the source without weakening PHPUnit strictness.
 - Strict PHPUnit warning and risky enforcement remain enabled, and pre-existing blockers are fixed at their real source instead of being hidden by relaxed PHPUnit rules.
 - `php vendor/bin/phpunit` now exits `0` under the repository's strict warning and risky settings.
-- `php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-text` still exits successfully after the strict-baseline cleanup.
+- `bin/phpunit-coverage --coverage-clover build/coverage/clover.xml` exits successfully in the framework repository by selecting a PHP executable with Xdebug coverage support.
+- `bin/phpunit-coverage` now prefers `/opt/homebrew/bin/php` before falling back to `command -v php`, so a Herd-owned PATH entry no longer wins ahead of the Valet/Homebrew PHP binary.
 - Implementation-completion payloads now expose machine-readable `quality_gate` reporting with full-suite status, coverage status, global line coverage, threshold, changed files examined, per-file changed-surface coverage, under-covered changed files, and changed-surface pass/fail status.
 - The quality-gate result is deterministic and machine-readable.
 - Global line coverage is now enforced at or above 90% for Foundry-owned implementation completion.
@@ -35,10 +38,13 @@ Refreshed Through Spec: `001.002-eliminate-phpunit-warning-and-risky-state-block
 - Changed-surface enforcement now ignores docs-only changes, generated internals, vendor content, storage artifacts, stubs, and nested test paths.
 - Changed-surface attribution failure now blocks final completion instead of degrading to an unsupported status.
 - PHPUnit coverage proves the shared gate behavior and both CLI implementation entry points.
+- New app scaffolds include the same `bin/phpunit-coverage` wrapper and `test:coverage` Composer script so app-facing quality guidance does not depend on the default `php` binary already loading Xdebug.
 
 ## Open Questions
+
 - Should future quality enforcement broaden beyond changed PHP source files under enforcement to additional deterministic source surfaces such as templates or non-PHP runtime artifacts?
 
 ## Next Steps
+
 - Keep contributor docs and workflow guidance aligned with the hard completion gate contract.
 - Decide whether additional deterministic source-surface categories should participate in changed-surface enforcement beyond the current PHP scope.

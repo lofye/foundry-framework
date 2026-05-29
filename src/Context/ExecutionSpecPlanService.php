@@ -75,36 +75,36 @@ final class ExecutionSpecPlanService
         }
 
         $relativeSpecPath = $executionSpec->path;
-        $relativePlanPath = 'docs/features/' . $feature . '/plans/' . $parsedPath['name'] . '.md';
-        $absolutePlanPath = $this->paths->join($relativePlanPath);
+        $relativeOutcomePath = 'docs/features/' . $feature . '/outcomes/' . $parsedPath['name'] . '.md';
+        $absoluteOutcomePath = $this->paths->join($relativeOutcomePath);
 
-        if (file_exists($absolutePlanPath) && !$force) {
-            return $this->error($feature, $relativeSpecPath, $relativePlanPath, 'plan_already_exists');
+        if (file_exists($absoluteOutcomePath) && !$force) {
+            return $this->error($feature, $relativeSpecPath, $relativeOutcomePath, 'plan_already_exists');
         }
 
-        $planDirectory = dirname($absolutePlanPath);
-        if (file_exists($planDirectory) && !is_dir($planDirectory)) {
-            return $this->error($feature, $relativeSpecPath, $relativePlanPath, 'plan_directory_create_failed');
+        $outcomeDirectory = dirname($absoluteOutcomePath);
+        if (file_exists($outcomeDirectory) && !is_dir($outcomeDirectory)) {
+            return $this->error($feature, $relativeSpecPath, $relativeOutcomePath, 'plan_directory_create_failed');
         }
 
-        if (!is_dir($planDirectory) && !mkdir($planDirectory, 0777, true) && !is_dir($planDirectory)) {
-            return $this->error($feature, $relativeSpecPath, $relativePlanPath, 'plan_directory_create_failed');
+        if (!is_dir($outcomeDirectory) && !mkdir($outcomeDirectory, 0777, true) && !is_dir($outcomeDirectory)) {
+            return $this->error($feature, $relativeSpecPath, $relativeOutcomePath, 'plan_directory_create_failed');
         }
 
         $contents = $this->renderPlan($parsedPath['name']);
-        if (is_dir($absolutePlanPath)) {
-            return $this->error($feature, $relativeSpecPath, $relativePlanPath, 'plan_write_failed');
+        if (is_dir($absoluteOutcomePath)) {
+            return $this->error($feature, $relativeSpecPath, $relativeOutcomePath, 'plan_write_failed');
         }
 
-        if (file_put_contents($absolutePlanPath, $contents) === false) {
-            return $this->error($feature, $relativeSpecPath, $relativePlanPath, 'plan_write_failed');
+        if (file_put_contents($absoluteOutcomePath, $contents) === false) {
+            return $this->error($feature, $relativeSpecPath, $relativeOutcomePath, 'plan_write_failed');
         }
 
         return [
             'status' => 'created',
             'feature' => $feature,
             'spec' => $relativeSpecPath,
-            'plan' => $relativePlanPath,
+            'plan' => $relativeOutcomePath,
         ];
     }
 
