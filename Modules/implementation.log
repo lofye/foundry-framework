@@ -788,3 +788,8 @@
 - spec: Modules/ExecutionSpecSystem/specs/011-rename-reconstruction-plans-to-outcomes.md
 - note: Renamed reconstruction-note directory contracts from `plans/` to `outcomes/` across module/feature workspaces, migrated repository reconstruction directories, and updated canonical docs/spec references to the new vocabulary.
 - note: Updated spec validation and CLI metadata to support canonical `--require-outcomes` with deprecated `--require-plans` compatibility aliasing, while leaving `.foundry/plans/` and unrelated plan concepts unchanged.
+
+## 2026-05-29 00:00:00 -0400
+- spec: Modules/CliExperience/specs/004-framework-root-foundry-launcher.md
+- note: Added a framework-root `./foundry` launcher that delegates to `bin/foundry`, preserves argument forwarding, fails clearly when unreadable, and resolves PHP via deterministic candidate order (`PHP_BIN`, `/opt/homebrew/bin/php`, `/usr/local/bin/php`, PATH `php`).
+- note: Updated framework command-prefix output and framework-facing docs/demo guidance to prefer `./foundry ...` while preserving generated-app `foundry ...` guidance.

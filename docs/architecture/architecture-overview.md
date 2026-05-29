@@ -65,22 +65,22 @@ The CLI surface is intentionally classified:
 Use these discovery entry points first:
 
 ```bash
-php bin/foundry help
-php bin/foundry help inspect
-php bin/foundry help verify
-php bin/foundry help generate
-php bin/foundry inspect cli-surface --json
-php bin/foundry verify cli-surface --json
+./foundry help
+./foundry help inspect
+./foundry help verify
+./foundry help generate
+./foundry inspect cli-surface --json
+./foundry verify cli-surface --json
 ```
 
 The release-critical core loop remains:
 
 ```bash
-php bin/foundry compile graph --json
-php bin/foundry inspect graph --json
-php bin/foundry verify graph --json
-php bin/foundry verify pipeline --json
-php bin/foundry verify contracts --json
+./foundry compile graph --json
+./foundry inspect graph --json
+./foundry verify graph --json
+./foundry verify pipeline --json
+./foundry verify contracts --json
 ```
 
 ## Determinism And Safety Rules

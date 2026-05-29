@@ -7,11 +7,11 @@ If you are brand new to Foundry, scaffold an app, run `help inspect` and `help v
 When working inside this framework repository, use:
 
 ```bash
-php bin/foundry compile graph --json
-php bin/foundry inspect graph --json
-php bin/foundry doctor --json
-php bin/foundry verify graph --json
-php bin/foundry verify pipeline --json
+./foundry compile graph --json
+./foundry inspect graph --json
+./foundry doctor --json
+./foundry verify graph --json
+./foundry verify pipeline --json
 ```
 
 When you import an example into a generated Foundry app, switch to:

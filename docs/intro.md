@@ -2,7 +2,7 @@
 
 Foundry’s documentation is split between curated architecture writing and generated reference pages built from the framework’s own graph, schema, and CLI metadata. Canonical source docs live in this repo under `docs/`; the website repo imports, renders, and publishes the public docs experience.
 
-In this repository use `php bin/foundry ...`. In generated Foundry apps use `foundry ...`.
+In this repository use `./foundry ...`. In generated Foundry apps use `foundry ...`.
 
 Choose an entry point based on what you need:
 
@@ -21,7 +21,7 @@ These are the main orientation pages:
 Refresh generated reference source files in the framework repo with:
 
 ```bash
-php bin/foundry generate docs --format=markdown --json
+./foundry generate docs --format=markdown --json
 ```
 
 Legacy local preview only:

@@ -36,6 +36,7 @@ If you are demoing from the framework repo first, confirm the app scaffold docs 
 
 ```bash
 cd /Users/lo_fye/code/foundry-framework
+./foundry doctor --ready --json
 sed -n '1,120p' APP-README.md
 sed -n '120,220p' APP-AGENTS.md
 ```
@@ -136,7 +137,7 @@ Conversation script:
 
 ```text
 User:
-Please create a blog feature. It should be able to have many posts, and have an RSS feed, and the ability for one admin to log in and compose or edit a post in Markdown, then publish it when ready. Include a default stylesheet and draft and published states. Ask me any clarifying questions you need, then turn the result into a Foundry feature spec and an execution spec.
+Please create a blog feature for this Foundry app. It should be able to have many posts, and have an RSS feed, and the ability for one admin to log in and compose or edit a post in Markdown, then publish it when ready. Include a default stylesheet and draft and published states. Ask me any clarifying questions you need.
 
 Codex:
 I need a few details before writing the spec:
@@ -642,11 +643,10 @@ composer install
 ./foundry context bootstrap blog --json
 
 # Live Codex prompt:
-# Please create a blog for this Foundry app. It should have many posts, an RSS feed,
+# Please create a blog feature for this Foundry app. It should have many posts, an RSS feed,
 # and the ability for one admin to log in and compose or edit a post in Markdown,
 # then publish it when ready. Include a default stylesheet and draft and published states.
-# Ask me any clarifying questions you need, then turn the result into a Foundry
-# feature spec and an execution spec.
+# Ask me any clarifying questions you need.
 
 sed -n '1,220p' Features/Blog/specs/drafts/001-posts-markdown-admin-and-rss.md
 ./foundry spec:promote blog 001 --json

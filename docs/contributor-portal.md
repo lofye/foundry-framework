@@ -2,7 +2,7 @@
 
 This is the framework-repo entry point for contributors who want to understand, extend, or safely change Foundry itself.
 
-In this repository use `php bin/foundry ...`. In generated Foundry apps use `foundry ...`.
+In this repository use `./foundry ...`. In generated Foundry apps use `foundry ...`.
 
 ## Start Here
 
@@ -28,11 +28,11 @@ Foundry keeps contributor boundaries explicit: `collect -> analyze -> assemble -
 - Core framework loop in this repo:
 
 ```bash
-php bin/foundry compile graph --json
-php bin/foundry inspect graph --json
-php bin/foundry verify graph --json
-php bin/foundry verify pipeline --json
-php bin/foundry verify contracts --json
+./foundry compile graph --json
+./foundry inspect graph --json
+./foundry verify graph --json
+./foundry verify pipeline --json
+./foundry verify contracts --json
 ```
 
 ### Explain System
@@ -50,9 +50,9 @@ php bin/foundry verify contracts --json
 - Verify CLI contract alignment with:
 
 ```bash
-php bin/foundry help --json
-php bin/foundry inspect cli-surface --json
-php bin/foundry verify cli-surface --json
+./foundry help --json
+./foundry inspect cli-surface --json
+./foundry verify cli-surface --json
 ```
 
 ### Code Map
@@ -83,11 +83,11 @@ php bin/foundry verify cli-surface --json
 ### Inspect And Verify Extension State
 
 ```bash
-php bin/foundry inspect extensions --json
-php bin/foundry inspect extension <name> --json
-php bin/foundry inspect compatibility --json
-php bin/foundry verify extensions --json
-php bin/foundry doctor --json
+./foundry inspect extensions --json
+./foundry inspect extension <name> --json
+./foundry inspect compatibility --json
+./foundry verify extensions --json
+./foundry doctor --json
 ```
 
 ## Contribution Guidelines
@@ -114,21 +114,21 @@ Use the safe edit loop from `AGENTS.md`:
 Recommended command loop in this repository:
 
 ```bash
-php bin/foundry compile graph --json
-php bin/foundry inspect graph --json
-php bin/foundry verify graph --json
-php bin/foundry verify pipeline --json
-php bin/foundry verify contracts --json
+./foundry compile graph --json
+./foundry inspect graph --json
+./foundry verify graph --json
+./foundry verify pipeline --json
+./foundry verify contracts --json
 vendor/bin/phpunit
 ```
 
 When the task is smaller, prefer targeted inspection:
 
 ```bash
-php bin/foundry inspect feature <feature> --json
-php bin/foundry inspect context <feature> --json
-php bin/foundry inspect impact --file=<path> --json
-php bin/foundry doctor --feature=<feature> --json
+./foundry inspect feature <feature> --json
+./foundry inspect context <feature> --json
+./foundry inspect impact --file=<path> --json
+./foundry doctor --feature=<feature> --json
 ```
 
 ## Roadmap Visibility

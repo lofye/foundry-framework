@@ -136,3 +136,35 @@ Timestamp: 2026-05-28T16:46:56-04:00
 - Constraints
 - Expected Behavior
 - Acceptance Criteria
+
+### Decision: standardize framework-root command usage on ./foundry launcher
+Timestamp: 2026-05-29T00:00:00-04:00
+
+**Context**
+- Framework contributors were repeatedly typing `php bin/foundry ...`, while generated apps already had shorter project-local launchers.
+- The framework repository had migrated toward Valet/Homebrew PHP usage, but launcher entrypoints still risked drifting toward Herd-first resolution in local environments.
+
+**Decision**
+- Add a framework-root `foundry` launcher and standardize framework docs and guidance on `./foundry ...`.
+- Keep generated-app guidance as `foundry ...` and preserve explicit framework fallback behavior through `php bin/foundry` only when the root launcher is unavailable.
+- Update framework command-prefix detection to prefer `./foundry` for framework-root output once the launcher exists.
+
+**Reasoning**
+- `./foundry` is explicit, local, and avoids accidental global binary resolution while reducing typing overhead.
+- Aligning launcher PHP candidate ordering with existing coverage-wrapper conventions keeps local CLI behavior consistent in Valet/Homebrew environments.
+- Keeping app docs on `foundry ...` preserves existing generated-app ergonomics.
+
+**Alternatives Considered**
+- Keep `php bin/foundry ...` as the primary framework guidance.
+- Use bare `foundry ...` in the framework repository and rely on PATH setup.
+- Add only documentation aliases without creating a repository-root launcher.
+
+**Impact**
+- Framework-root workflows are shorter and explicit with a local launcher.
+- Command-prefix hints and doctor output now reflect `./foundry` for framework repository usage.
+- Framework docs and demo setup snippets are aligned with the new launcher convention without changing generated-app command semantics.
+
+**Spec Reference**
+- Purpose
+- Requested Changes
+- Acceptance Criteria

@@ -25,7 +25,7 @@ Curated companion pages:
 Refresh generated reference source files with:
 
 ```bash
-php bin/foundry generate docs --format=markdown --json
+./foundry generate docs --format=markdown --json
 ```
 
 The website repo renders and publishes the public docs site. Legacy local preview only:

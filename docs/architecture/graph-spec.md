@@ -297,14 +297,14 @@ Artifacts that cannot be migrated safely must fail with explicit errors.
 14. Inspection Surfaces
 
 Foundry exposes machine-readable inspection surfaces for the graph contract:
-- `php bin/foundry inspect graph-spec --json`
-- `php bin/foundry inspect node-types --json`
-- `php bin/foundry inspect edge-types --json`
-- `php bin/foundry inspect subgraph <feature> --json`
-- `php bin/foundry inspect graph-integrity --json`
-- `php bin/foundry verify graph --json`
-- `php bin/foundry verify graph-integrity --json`
-- `php bin/foundry doctor --graph --json`
+- `./foundry inspect graph-spec --json`
+- `./foundry inspect node-types --json`
+- `./foundry inspect edge-types --json`
+- `./foundry inspect subgraph <feature> --json`
+- `./foundry inspect graph-integrity --json`
+- `./foundry verify graph --json`
+- `./foundry verify graph-integrity --json`
+- `./foundry doctor --graph --json`
 
 These surfaces are the supported way to inspect the live canonical contract in a compiled app.
 

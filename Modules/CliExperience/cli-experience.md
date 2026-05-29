@@ -5,7 +5,7 @@
 
 ## Decision Summary
 
-Refreshed Through Spec: `003-common-workflow-batch-commands`
+Refreshed Through Spec: `004-framework-root-foundry-launcher`
 
 - CLI ergonomics are treated as a first-class framework module while preserving stable command contracts.
 - Completion support is deterministic, registry-backed, and currently focused on bash, zsh, and active execution-spec workflows.
@@ -24,6 +24,8 @@ Refreshed Through Spec: `003-common-workflow-batch-commands`
 - Batch workflow outputs include structured aggregate status with per-step results and explicit failure location.
 - Batch workflow commands are discoverable, registry-backed, and covered by command-surface tests and verification probes.
 - Documentation explains how to generate and use bash and zsh completion and that active execution specs are completed by default.
+- Framework-repository command guidance now standardizes on a project-local `./foundry ...` launcher, while generated apps continue to use `foundry ...`.
+- Framework command-prefix output surfaces `./foundry` when a repository-root launcher exists and preserves deterministic fallback behavior when it does not.
 
 ## Open Questions
 - Should completion support remain shell-script based only, or should a more general completion abstraction exist later?

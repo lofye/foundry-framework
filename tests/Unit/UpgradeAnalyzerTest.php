@@ -172,7 +172,7 @@ JSON);
         $report = $analyzer->analyze();
 
         $this->assertSame('1.2.0', $analyzer->defaultTargetVersion());
-        $this->assertSame('php bin/foundry', $report->commandPrefix);
+        $this->assertSame('./foundry', $report->commandPrefix);
     }
 
     private function seedFeatureManifestV1(): void

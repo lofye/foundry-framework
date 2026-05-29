@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENTRYPOINT="${ROOT_DIR}/bin/foundry"
+
+if [[ ! -r "${ENTRYPOINT}" ]]; then
+    echo "Missing or unreadable entrypoint: ${ENTRYPOINT}" >&2
+    exit 1
+fi
+
+declare -a candidates=()
+if [[ -n "${PHP_BIN:-}" ]]; then
+    candidates+=("${PHP_BIN}")
+fi
+
+candidates+=(
+    "/opt/homebrew/bin/php"
+    "/usr/local/bin/php"
+    "$(command -v php || true)"
+)
+
+for candidate in "${candidates[@]}"; do
+    if [[ -n "${candidate}" && -x "${candidate}" ]]; then
+        exec "${candidate}" "${ENTRYPOINT}" "$@"
+    fi
+done
+
+echo "Unable to locate a usable PHP executable." >&2
+echo "Set PHP_BIN to a PHP executable, then rerun this launcher." >&2
+exit 1

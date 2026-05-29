@@ -105,7 +105,7 @@ The root `app/*` tree is a framework-owned demo and smoke app.
 
 ## Command Rule
 
-- In this repository, use: `php bin/foundry ...`
+- In this repository, use: `./foundry ...`
 - In generated apps, use: `foundry ...`
 - Prefer `--json` when output is consumed by agents
 
@@ -197,15 +197,15 @@ Boundary enforcement is ON by default.
 Agents MUST run the feature-boundary verification command when available before claiming meaningful feature work complete:
 
 ```bash
-php bin/foundry verify features --json
+./foundry verify features --json
 ```
 
 If a feature-scoped command exists, prefer it while iterating:
 
 ```bash
-php bin/foundry verify features --feature=<feature-name> --json
-php bin/foundry feature:map --feature=<feature-name> --json
-php bin/foundry feature:inspect <feature-name> --json
+./foundry verify features --feature=<feature-name> --json
+./foundry feature:map --feature=<feature-name> --json
+./foundry feature:inspect <feature-name> --json
 ```
 
 Completion rules:
@@ -265,7 +265,7 @@ Do not report a spec complete until its reconstruction note, decision ledger upd
 
 For the full contributor workflow, follow the checklist in `README.md`.
 `feature-alignment-pass` refers to the skill/workflow file at `.skills/feature-alignment-pass.skill.md`; it is not a Foundry CLI command.
-The canonical CLI command for context/alignment validation is `php bin/foundry verify context --json`.
+The canonical CLI command for context/alignment validation is `./foundry verify context --json`.
 
 Do not skip:
 
@@ -293,24 +293,24 @@ Do not block implementation progress by asking for permission to run safe reposi
 Common command loop:
 
 ```bash
-php bin/foundry compile graph --json
-php bin/foundry inspect graph --json
-php bin/foundry inspect pipeline --json
-php bin/foundry verify graph --json
-php bin/foundry verify pipeline --json
-php bin/foundry verify contracts --json
+./foundry compile graph --json
+./foundry inspect graph --json
+./foundry inspect pipeline --json
+./foundry verify graph --json
+./foundry verify pipeline --json
+./foundry verify contracts --json
 php vendor/bin/phpunit
 ```
 
 Feature-focused loop:
 
 ```bash
-php bin/foundry context doctor --feature=<feature-name> --json
-php bin/foundry context check-alignment --feature=<feature-name> --json
-php bin/foundry inspect context <feature-name> --json
-php bin/foundry verify context --feature=<feature-name> --json
-php bin/foundry inspect feature <feature-name> --json
-php bin/foundry inspect impact --file=<path> --json
+./foundry context doctor --feature=<feature-name> --json
+./foundry context check-alignment --feature=<feature-name> --json
+./foundry inspect context <feature-name> --json
+./foundry verify context --feature=<feature-name> --json
+./foundry inspect feature <feature-name> --json
+./foundry inspect impact --file=<path> --json
 ```
 
 Completion quality gate:
@@ -318,7 +318,7 @@ Completion quality gate:
 ```bash
 php vendor/bin/phpunit
 bin/phpunit-coverage --coverage-clover build/coverage/clover.xml
-php bin/foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
+./foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
 ```
 
 ---
@@ -378,7 +378,7 @@ Stable outputs must not depend on timestamps, randomness, or unstable ordering.
 ```bash
 php vendor/bin/phpunit
 bin/phpunit-coverage --coverage-clover build/coverage/clover.xml
-php bin/foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
+./foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
 ```
 - Implementation is not complete unless the quality gate passes
 - Global line coverage must be ≥ 90%
@@ -536,7 +536,7 @@ Do not rely on:
 ## Execution Gate (CRITICAL)
 
 ```bash
-php bin/foundry verify context --feature=<feature-name> --json
+./foundry verify context --feature=<feature-name> --json
 ```
 
 Rules:
@@ -571,8 +571,8 @@ Stop immediately if:
 
 Only:
 
-- run `php bin/foundry context init <feature> --json`
-- run `php bin/foundry context repair --feature=<feature> --json`
+- run `./foundry context init <feature> --json`
+- run `./foundry context repair --feature=<feature> --json`
 - fix or normalize context files
 - update state
 - log decisions

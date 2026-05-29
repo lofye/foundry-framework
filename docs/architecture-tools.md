@@ -308,11 +308,11 @@ Graph Relationships
   inbound: feature:publish_post
 
 Related Commands
-  php bin/foundry inspect execution-plan POST /posts --json
-  php bin/foundry inspect graph --command=POST /posts --json
-  php bin/foundry inspect node route:POST:/posts --json
-  php bin/foundry inspect pipeline --json
-  php bin/foundry inspect route POST /posts --json
+  ./foundry inspect execution-plan POST /posts --json
+  ./foundry inspect graph --command=POST /posts --json
+  ./foundry inspect node route:POST:/posts --json
+  ./foundry inspect pipeline --json
+  ./foundry inspect route POST /posts --json
   foundry verify feature publish_post --json
   foundry verify graph --json
   foundry verify pipeline --json
@@ -396,11 +396,11 @@ Graph Relationships (Expanded)
   inbound: feature:publish_post
 
 Related Commands
-  php bin/foundry inspect execution-plan POST /posts --json
-  php bin/foundry inspect graph --command=POST /posts --json
-  php bin/foundry inspect node route:POST:/posts --json
-  php bin/foundry inspect pipeline --json
-  php bin/foundry inspect route POST /posts --json
+  ./foundry inspect execution-plan POST /posts --json
+  ./foundry inspect graph --command=POST /posts --json
+  ./foundry inspect node route:POST:/posts --json
+  ./foundry inspect pipeline --json
+  ./foundry inspect route POST /posts --json
   foundry verify feature publish_post --json
   foundry verify graph --json
   foundry verify pipeline --json
@@ -564,11 +564,11 @@ Representative `--json` output:
     "subject": null
   },
   "relatedCommands": [
-    "php bin/foundry inspect execution-plan POST /posts --json",
-    "php bin/foundry inspect graph --command=POST /posts --json",
-    "php bin/foundry inspect node route:POST:/posts --json",
-    "php bin/foundry inspect pipeline --json",
-    "php bin/foundry inspect route POST /posts --json",
+    "./foundry inspect execution-plan POST /posts --json",
+    "./foundry inspect graph --command=POST /posts --json",
+    "./foundry inspect node route:POST:/posts --json",
+    "./foundry inspect pipeline --json",
+    "./foundry inspect route POST /posts --json",
     "foundry verify feature publish_post --json",
     "foundry verify graph --json",
     "foundry verify pipeline --json",
@@ -657,7 +657,7 @@ Representative `--json` output:
       "framework_version": "dev-main",
       "source_hash": "deterministic-source-hash"
     },
-    "command_prefix": "php bin/foundry",
+    "command_prefix": "./foundry",
     "impact": {
       "node_id": "route:POST:/posts",
       "node_type": "route",
@@ -717,11 +717,11 @@ POST /posts handles requests through the compiled application graph. It dispatch
 - inbound: feature:publish_post
 
 ### Related Commands
-- `php bin/foundry inspect execution-plan POST /posts --json`
-- `php bin/foundry inspect graph --command=POST /posts --json`
-- `php bin/foundry inspect node route:POST:/posts --json`
-- `php bin/foundry inspect pipeline --json`
-- `php bin/foundry inspect route POST /posts --json`
+- `./foundry inspect execution-plan POST /posts --json`
+- `./foundry inspect graph --command=POST /posts --json`
+- `./foundry inspect node route:POST:/posts --json`
+- `./foundry inspect pipeline --json`
+- `./foundry inspect route POST /posts --json`
 - `foundry verify feature publish_post --json`
 - `foundry verify graph --json`
 - `foundry verify pipeline --json`

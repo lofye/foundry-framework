@@ -157,14 +157,14 @@ php -S 127.0.0.1:8000 public/index.php
 5. Re-run verification and tests.
 
 Clarification: `feature-alignment-pass` is a skill/workflow name, not a Foundry CLI command.
-Use `php bin/foundry verify context --json` as the canonical CLI command for context/alignment validation.
+Use `./foundry verify context --json` as the canonical CLI command for context/alignment validation.
 
 When claiming implementation completion, use this canonical machine gate:
 
 ```bash
 php vendor/bin/phpunit
 bin/phpunit-coverage --coverage-clover build/coverage/clover.xml
-php bin/foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
+./foundry verify coverage --min=90 --clover=build/coverage/clover.xml --json
 ```
 
 ## Reference Pointers

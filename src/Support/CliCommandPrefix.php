@@ -9,7 +9,9 @@ final class CliCommandPrefix
     public static function foundry(Paths $paths): string
     {
         if ($paths->root() === $paths->frameworkRoot()) {
-            return 'php bin/foundry';
+            return is_file($paths->join('foundry'))
+                ? './foundry'
+                : 'php bin/foundry';
         }
 
         return is_file($paths->join('foundry'))
