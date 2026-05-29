@@ -136,7 +136,7 @@ Conversation script:
 
 ```text
 User:
-Please create a blog for this Foundry app. It should have many posts, an RSS feed, and the ability for one admin to log in and compose or edit a post in Markdown, then publish it when ready. Include a default stylesheet and draft and published states. Ask me any clarifying questions you need, then turn the result into a Foundry feature spec and an execution spec.
+Please create a blog feature. It should be able to have many posts, and have an RSS feed, and the ability for one admin to log in and compose or edit a post in Markdown, then publish it when ready. Include a default stylesheet and draft and published states. Ask me any clarifying questions you need, then turn the result into a Foundry feature spec and an execution spec.
 
 Codex:
 I need a few details before writing the spec:
@@ -187,13 +187,13 @@ If context verification fails because the files are empty placeholders, ask Code
 
 ```text
 User:
-Fill in the canonical Blog feature context from our conversation: update Features/Blog/blog.spec.md, Features/Blog/blog.md, and append the initial decisions to Features/Blog/blog.decisions.md. Then rerun context verification.
+Fill in the canonical Blog feature context from our conversation: update Features/Blog/blog.spec.md, Features/Blog/blog.md, and append the initial decisions to Features/Blog/blog.decisions.md. Then rerun the feature-work verification batch.
 ```
 
 Then rerun:
 
 ```bash
-./foundry verify context --feature=blog --json
+./foundry verify feature-work blog --json
 ```
 
 ## Phase 5: Create The Draft Execution Spec
@@ -284,7 +284,7 @@ Show the active spec:
 sed -n '1,120p' Features/Blog/specs/001-posts-markdown-admin-and-rss.md
 ```
 
-Verify context again:
+Run the post-promotion feature-work batch:
 
 ```bash
 ./foundry verify feature-work blog --json
@@ -309,19 +309,12 @@ Use .skills/implement-spec-and-stabilize.skill.md for Features/Blog/specs/001-po
 What Codex should do:
 
 - Read `AGENTS.md`.
-- Read the reasoning policy if the app has one.
-- Read `Features/Blog/blog.spec.md`.
-- Read `Features/Blog/blog.md`.
-- Read `Features/Blog/blog.decisions.md`.
-- Run `./foundry verify context --feature=blog --json`.
+- Read the reasoning policy and Blog feature context.
+- Run `./foundry verify feature-work blog --json` before changing behavior.
 - Implement feature-owned code under `Features/Blog/src/`.
 - Add feature-owned tests under `Features/Blog/tests/`.
-- Add or update feature docs under `Features/Blog/docs/`.
-- Append decisions to `Features/Blog/blog.decisions.md`.
-- Update the state document `Features/Blog/blog.md`.
-- Create `Features/Blog/plans/001-posts-markdown-admin-and-rss.md`.
-- Append `Features/implementation.log`.
-- Run focused tests, then broader verification.
+- Update feature docs, state, decisions, reconstruction notes, and `Features/implementation.log`.
+- Run `./foundry verify done --feature=blog --coverage-min=90 --json` before claiming completion.
 
 Say this:
 
@@ -454,8 +447,7 @@ Commands:
 
 ```bash
 ./foundry explain feature blog --full --json
-./foundry explain feature:blog --markdown
-./foundry verify architecture --json
+./foundry explain feature:blog --full --markdown
 ```
 
 Good things to point at:
@@ -495,29 +487,25 @@ Talking point:
 
 ## Phase 13: Verification Gate
 
-Feature-focused commands:
+Completion gate:
+
+```bash
+./foundry verify done --feature=blog --coverage-min=90 --json
+```
+
+Useful focused checks while iterating:
 
 ```bash
 ./foundry verify feature-work blog --json
-```
-
-Graph and contract commands:
-
-```bash
 ./foundry verify architecture --json
-```
-
-Test commands:
-
-```bash
 ./foundry test feature blog --json
 ./foundry test feature blog --full --json
 ```
 
-Coverage command, if a coverage driver is available:
+If the demo machine has no coverage driver:
 
 ```bash
-./foundry verify done --feature=blog --coverage-min=90 --json
+./foundry verify done --feature=blog --skip-coverage --json
 ```
 
 Say this:
@@ -596,7 +584,7 @@ These are based on current framework direction and open work, not public promise
 - Richer inspect UI surfaces for feature context, graph dependencies, and verification status.
 - Better generation previews and undo/restoration flows.
 - More complete policy templates for generated changes.
-- Deeper context repair and alignment workflows.
+- More advanced context repair and alignment workflows beyond the current `context recover` batch.
 - Pack and marketplace workflows once packs are ready; do not position them as part of this immediate app-local demo.
 - Event-system expansion such as async dispatch or richer listener patterns if promoted by specs.
 - MCP transport expansion beyond the current local/stdio-focused path if promoted.
@@ -625,7 +613,7 @@ If graph compilation fails:
 
 ```bash
 ./foundry verify architecture --json
-./foundry doctor --json
+./foundry doctor --ready --json
 ```
 
 If tests fail:
