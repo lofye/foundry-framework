@@ -12,6 +12,7 @@
 - `spec:validate` surfaces deterministic non-blocking warnings for missing or possibly stale module decision summaries.
 - Historical extraction now distinguishes explicit spec roots from ordinary section headings, recaps, and result/output commentary.
 - Explicit pre-canonical imports preserve marked archive lineage in `Modules/PreCanonical` without inferring modern module ownership.
+- App feature layout will make a clean no-legacy break: new app feature source/context belongs under `Features/<Feature>/`, top-level `Features/`, `Modules/`, and `Packs/` must exist in fresh apps, and obsolete `app/features/` and `docs/features/` app-layout paths should fail verification rather than be migrated or supported.
 
 ## Current State
 
@@ -85,6 +86,7 @@
 
 ## Next Steps
 
+- Implement `Modules/FeatureSystem/specs/014-canonical-app-feature-roots-without-legacy-layout.md`.
 - Expand boundary-violation classification depth in follow-up execution specs.
 - Continue incremental source/test localization through promoted execution specs.
 - Evaluate follow-up specs to migrate grandfathered legacy module plan documents into strict reconstruction-note format.

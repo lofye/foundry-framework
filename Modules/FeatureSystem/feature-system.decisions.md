@@ -711,3 +711,52 @@ Timestamp: 2026-05-08T11:45:00-04:00
 - Output Layout
 - CLI Command
 - Acceptance Criteria
+
+### Decision: make app feature roots canonical without legacy compatibility
+
+Timestamp: 2026-05-29T13:35:14-04:00
+
+**Context**
+
+- First-run app scaffolding and generation still used older `app/features/` and `docs/features/` paths even though app-facing guidance describes localized application feature roots under `Features/<Feature>/`.
+- No external Foundry applications depend on the older app feature layout yet.
+- The Blog demo revealed that feature-specific context, runtime manifests, actions, services, storage, and tests being spread across older/shared paths undermines Foundry's modularity story.
+
+**Decision**
+
+- Create execution spec `014-canonical-app-feature-roots-without-legacy-layout` to make `Features/<Feature>/` the only authored application feature root.
+- Require fresh apps to include top-level `Features/`, `Modules/`, and `Packs/` directories even when empty.
+- Remove migration-command and compatibility-branch requirements for `app/features/` and `docs/features/` because there are no older projects to preserve.
+- Treat Blog only as an illustrative feature name for examples; the framework must implement generic `<Feature>` behavior and must not special-case Blog.
+- Specify that feature-owned runtime code belongs at `Features/<Feature>/src/`, with `Features/Blog/src/` as an example.
+
+**Reasoning**
+
+- Carrying legacy compatibility before there are users would encode confusion into the product and make demos harder to explain.
+- A clean app feature root gives humans and agents a single locality boundary for context, code, tests, specs, outcomes, and docs.
+- Keeping `Modules/` and `Packs/` visible in new apps makes the framework's reserved top-level concepts explicit without implying that app feature code belongs there.
+- Making Blog an example rather than a hard-coded feature keeps the framework generic while preserving a clear demo narrative.
+
+**Alternatives Considered**
+
+- Add a `foundry migrate features --json` command for old layouts.
+- Keep legacy `app/features/` and `docs/features/` as readable compatibility paths.
+- Warn when legacy paths exist but continue running.
+- Special-case Blog support for the demo path.
+
+**Impact**
+
+- The next implementation pass should remove old app feature source/context path support instead of migrating it.
+- Verification should fail hard when obsolete app-layout directories exist.
+- Docs, stubs, examples, tests, generation, context commands, compiler discovery, and runtime loading must align on `Features/<Feature>/`.
+- Blog examples remain useful for demos but do not create Blog-specific framework behavior.
+
+**Spec Reference**
+
+- Purpose
+- Core Principle
+- Canonical App Layout
+- Illustrative Feature Placement Contract
+- Context Command Requirements
+- Feature Generation Requirements
+- Verification Requirements
