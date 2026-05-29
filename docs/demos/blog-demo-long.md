@@ -4,7 +4,7 @@ Date target: Friday, May 29, 2026
 
 Audience: developers evaluating whether they can start using Foundry immediately.
 
-Demo goal: show a real app-local Foundry feature workflow from a blank app to a tested blog implementation. The blog is not a pack and not a reusable marketplace capability. It is a normal `Features/Blog` feature owned by the application.
+Demo goal: show a real app-local Foundry feature workflow from a blank app at `~/code/demo` to a tested blog implementation served locally at `https://demo.test`. The blog is not a pack and not a reusable marketplace capability. It is a normal `Features/Blog` feature owned by the application.
 
 ## Demo Premise
 
@@ -30,6 +30,7 @@ Run these before the room is watching.
 php -v
 composer --version
 git --version
+valet --version
 ```
 
 If you are demoing from the framework repo first, confirm the app scaffold docs mention feature-local work:
@@ -53,24 +54,25 @@ What to point out:
 
 Say this:
 
-> Foundry installs like a normal Composer package. The project-local `foundry` binary gives us context, feature, graph, generation, inspection, verification, and testing workflows.
+> Foundry installs like a normal Composer package. In this demo, `~/code/demo` becomes the app root, the project-local `foundry` binary gives us context, feature, graph, generation, inspection, verification, and testing workflows, and Valet serves the app at `https://demo.test`.
 
 Commands:
 
 ```bash
-mkdir -p ~/Desktop/foundry-demo
-cd ~/Desktop/foundry-demo
+mkdir -p ~/code/demo
+cd ~/code/demo
 composer require lofye/foundry-framework
-./vendor/bin/foundry
-```
-
-Create the app:
-
-```bash
-./vendor/bin/foundry new blog-demo --starter=standard --json
-cd blog-demo
+./vendor/bin/foundry new .
 composer install
+./foundry doctor --ready --json
+valet link demo
+valet secure demo
 ```
+
+Note:
+
+- `standard` is the default starter, so the demo omits `--starter=standard`.
+- `--json` stays on verification and inspection commands because those outputs are useful for agents and automation.
 
 If the generated app exposes a project-local launcher, use it:
 
@@ -82,12 +84,6 @@ If your shell resolves local executables, this may also work:
 
 ```bash
 foundry
-```
-
-Run the first health checks:
-
-```bash
-./foundry doctor --ready --json
 ```
 
 Artifacts to show:
@@ -412,34 +408,28 @@ Say this:
 
 ## Phase 10: Run The App
 
-Start the local server:
+Use the Valet site from setup:
 
 ```bash
-php -S 127.0.0.1:8000 public/index.php
-```
-
-In a second terminal:
-
-```bash
-curl -s http://127.0.0.1:8000/blog
-curl -s http://127.0.0.1:8000/blog/hello-foundry
-curl -s http://127.0.0.1:8000/blog/rss.xml
+curl -s https://demo.test/blog
+curl -s https://demo.test/blog/hello-foundry
+curl -s https://demo.test/blog/rss.xml
 ```
 
 Show in a browser:
 
 ```text
-http://127.0.0.1:8000/blog
-http://127.0.0.1:8000/blog/hello-foundry
-http://127.0.0.1:8000/blog/rss.xml
+https://demo.test/blog
+https://demo.test/blog/hello-foundry
+https://demo.test/blog/rss.xml
 ```
 
 Admin surfaces to show if implemented:
 
 ```text
-http://127.0.0.1:8000/admin/login
-http://127.0.0.1:8000/admin/blog/posts
-http://127.0.0.1:8000/admin/blog/posts/new
+https://demo.test/admin/login
+https://demo.test/admin/blog/posts
+https://demo.test/admin/blog/posts/new
 ```
 
 ## Phase 11: Inspect And Explain The Feature
@@ -631,14 +621,14 @@ If you need to explain the failure to the room:
 ## One-Screen Command Recap
 
 ```bash
-mkdir -p ~/Desktop/foundry-demo
-cd ~/Desktop/foundry-demo
+mkdir -p ~/code/demo
+cd ~/code/demo
 composer require lofye/foundry-framework
-./vendor/bin/foundry new blog-demo --starter=standard --json
-cd blog-demo
+./vendor/bin/foundry new .
 composer install
-
 ./foundry doctor --ready --json
+valet link demo
+valet secure demo
 
 ./foundry context bootstrap blog --json
 
