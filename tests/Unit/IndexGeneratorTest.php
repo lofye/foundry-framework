@@ -17,7 +17,7 @@ final class IndexGeneratorTest extends TestCase
     {
         $this->project = new TempProject();
 
-        $featurePath = $this->project->root . '/app/features/publish_post';
+        $featurePath = $this->project->root . '/Features/PublishPost';
         mkdir($featurePath, 0777, true);
 
         file_put_contents($featurePath . '/feature.yaml', <<<'YAML'
@@ -29,9 +29,9 @@ route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]

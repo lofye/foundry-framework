@@ -14,9 +14,7 @@ final class ContextFileResolver
 
     public function legacySpecPath(string $featureName): string
     {
-        $featureName = FeatureNaming::canonical($featureName);
-
-        return 'docs/features/' . $featureName . '/' . $featureName . '.spec.md';
+        return $this->canonicalSpecPath($featureName);
     }
 
     public function canonicalSpecPath(string $featureName): string
@@ -29,17 +27,12 @@ final class ContextFileResolver
 
     public function specPath(string $featureName): string
     {
-        return $this->preferredPath(
-            canonical: $this->canonicalSpecPath($featureName),
-            legacy: $this->legacySpecPath($featureName),
-        );
+        return $this->canonicalSpecPath($featureName);
     }
 
     public function legacyStatePath(string $featureName): string
     {
-        $featureName = FeatureNaming::canonical($featureName);
-
-        return 'docs/features/' . $featureName . '/' . $featureName . '.md';
+        return $this->canonicalStatePath($featureName);
     }
 
     public function canonicalStatePath(string $featureName): string
@@ -52,17 +45,12 @@ final class ContextFileResolver
 
     public function statePath(string $featureName): string
     {
-        return $this->preferredPath(
-            canonical: $this->canonicalStatePath($featureName),
-            legacy: $this->legacyStatePath($featureName),
-        );
+        return $this->canonicalStatePath($featureName);
     }
 
     public function legacyDecisionsPath(string $featureName): string
     {
-        $featureName = FeatureNaming::canonical($featureName);
-
-        return 'docs/features/' . $featureName . '/' . $featureName . '.decisions.md';
+        return $this->canonicalDecisionsPath($featureName);
     }
 
     public function canonicalDecisionsPath(string $featureName): string
@@ -75,10 +63,7 @@ final class ContextFileResolver
 
     public function decisionsPath(string $featureName): string
     {
-        return $this->preferredPath(
-            canonical: $this->canonicalDecisionsPath($featureName),
-            legacy: $this->legacyDecisionsPath($featureName),
-        );
+        return $this->canonicalDecisionsPath($featureName);
     }
 
     /**
@@ -126,27 +111,6 @@ final class ContextFileResolver
         $parts = array_filter(explode('-', $slug), static fn(string $part): bool => $part !== '');
 
         return implode('', array_map(static fn(string $part): string => ucfirst($part), $parts));
-    }
-
-    private function preferredPath(string $canonical, string $legacy): string
-    {
-        if ($this->isFile($canonical)) {
-            return $canonical;
-        }
-
-        if ($this->isFile($legacy)) {
-            return $legacy;
-        }
-
-        if ($this->isDirectory(dirname($canonical))) {
-            return $canonical;
-        }
-
-        if ($this->isDirectory(dirname($legacy))) {
-            return $legacy;
-        }
-
-        return $legacy;
     }
 
     private function isFile(string $relativePath): bool
@@ -198,10 +162,6 @@ final class ContextFileResolver
             || $this->pathExists('Features/' . $featureDir . '/' . $featureName . '.decisions.md')
         ) {
             return 'Features';
-        }
-
-        if ($this->isDirectory('Modules')) {
-            return 'Modules';
         }
 
         if ($this->isDirectory('Features')) {

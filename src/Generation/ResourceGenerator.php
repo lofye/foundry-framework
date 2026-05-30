@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Foundry\Generation;
 
 use Foundry\Support\FoundryError;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Paths;
 use Foundry\Support\Str;
 use Foundry\Support\Yaml;
@@ -46,7 +47,7 @@ final class ResourceGenerator
                 continue;
             }
 
-            $generatedFeatures[] = $feature;
+            $generatedFeatures[] = FeatureNaming::canonical($feature);
             $definition = $this->featureDefinition(
                 canonical: $canonical,
                 resource: $resource,
@@ -60,10 +61,10 @@ final class ResourceGenerator
             }
 
             if (in_array($operation, ['create', 'update'], true)) {
-                $formPath = $this->paths->join('app/features/' . $feature . '/form.partial.php');
+                $formPath = $this->paths->join(FeatureNaming::directory($feature) . '/form.partial.php');
                 if (!is_file($formPath) || $force) {
                     $formFields = is_array($canonical['fields'] ?? null) ? $canonical['fields'] : [];
-                    file_put_contents($formPath, $this->formRenderer->render($feature . '_form', $formFields));
+                    file_put_contents($formPath, $this->formRenderer->render(FeatureNaming::codeSafe($feature) . '_form', $formFields));
                     $generatedFiles[] = $formPath;
                 }
             }
@@ -199,11 +200,11 @@ final class ResourceGenerator
     {
         $prefix = $style === 'api' ? 'api_' : '';
         $default = [
-            'list' => $prefix . 'list_' . $resource,
-            'view' => $prefix . 'view_' . $singular,
-            'create' => $prefix . 'create_' . $singular,
-            'update' => $prefix . 'update_' . $singular,
-            'delete' => $prefix . 'delete_' . $singular,
+            'list' => FeatureNaming::canonical($prefix . 'list_' . $resource),
+            'view' => FeatureNaming::canonical($prefix . 'view_' . $singular),
+            'create' => FeatureNaming::canonical($prefix . 'create_' . $singular),
+            'update' => FeatureNaming::canonical($prefix . 'update_' . $singular),
+            'delete' => FeatureNaming::canonical($prefix . 'delete_' . $singular),
         ];
 
         $map = [];
@@ -275,7 +276,8 @@ final class ResourceGenerator
         }
 
         return [
-            'feature' => $feature,
+            'feature' => FeatureNaming::codeSafe($feature),
+            'canonical_feature' => FeatureNaming::canonical($feature),
             'kind' => 'http',
             'description' => sprintf('Generated %s feature for %s resource.', $operation, $resource),
             'route' => [
@@ -342,7 +344,7 @@ final class ResourceGenerator
                 ] : [],
                 'form' => [
                     'partial' => in_array($operation, ['create', 'update'], true)
-                        ? 'app/features/' . $feature . '/form.partial.php'
+                        ? FeatureNaming::directory($feature) . '/form.partial.php'
                         : null,
                 ],
             ],

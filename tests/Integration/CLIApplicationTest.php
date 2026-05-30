@@ -69,28 +69,28 @@ YAML);
         $app = new Application();
 
         $this->assertSame(0, $this->runCommand($app, ['foundry', 'generate', 'feature', $definition, '--json'])['status']);
-        $this->assertFileExists($this->project->root . '/app/features/publish_post/feature.yaml');
+        $this->assertFileExists($this->project->root . '/Features/PublishPost/feature.yaml');
 
         $this->assertSame(0, $this->runCommand($app, ['foundry', 'generate', 'indexes', '--json'])['status']);
 
-        $inspect = $this->runCommand($app, ['foundry', 'inspect', 'feature', 'publish_post', '--json']);
+        $inspect = $this->runCommand($app, ['foundry', 'inspect', 'feature', 'publish-post', '--json']);
         $this->assertSame(0, $inspect['status']);
-        $this->assertSame('publish_post', $inspect['payload']['feature']);
+        $this->assertSame('publish-post', $inspect['payload']['feature']);
 
-        $verify = $this->runCommand($app, ['foundry', 'verify', 'feature', 'publish_post', '--json']);
+        $verify = $this->runCommand($app, ['foundry', 'verify', 'feature', 'publish-post', '--json']);
         $this->assertSame(0, $verify['status']);
         $this->assertTrue($verify['payload']['ok']);
 
-        $context = $this->runCommand($app, ['foundry', 'generate', 'context', 'publish_post', '--json']);
+        $context = $this->runCommand($app, ['foundry', 'generate', 'context', 'publish-post', '--json']);
         $this->assertSame(0, $context['status']);
 
-        $affected = $this->runCommand($app, ['foundry', 'affected-files', 'publish_post', '--json']);
+        $affected = $this->runCommand($app, ['foundry', 'affected-files', 'publish-post', '--json']);
         $this->assertSame(0, $affected['status']);
         $this->assertNotEmpty($affected['payload']['affected_files']);
 
         $impacted = $this->runCommand($app, ['foundry', 'impacted-features', 'posts.create', '--json']);
         $this->assertSame(0, $impacted['status']);
-        $this->assertContains('publish_post', $impacted['payload']['features']);
+        $this->assertContains('publish-post', $impacted['payload']['features']);
     }
 
     public function test_unknown_command_returns_structured_error(): void
@@ -317,12 +317,19 @@ YAML);
 
         $this->assertSame(0, $result['status']);
         $this->assertTrue($result['payload']['ok']);
-        $this->assertSame('phpunit_coverage', $result['payload']['steps'][3]['label']);
+        $coverageStep = array_find(
+            $result['payload']['steps'],
+            static fn(array $step): bool => (string) ($step['label'] ?? '') === 'phpunit_coverage',
+        );
+        $this->assertIsArray($coverageStep);
         $this->assertSame(
             ['bin/phpunit-coverage', '--coverage-clover', 'build/coverage/clover.xml'],
-            $result['payload']['steps'][3]['payload']['command'],
+            $coverageStep['payload']['command'],
         );
-        $this->assertSame('verify_coverage', $result['payload']['steps'][4]['label']);
+        $this->assertNotNull(array_find(
+            $result['payload']['steps'],
+            static fn(array $step): bool => (string) ($step['label'] ?? '') === 'verify_coverage',
+        ));
     }
 
     public function test_verify_coverage_rejects_non_numeric_minimum(): void
@@ -616,21 +623,22 @@ YAML);
 
     public function test_non_json_cache_commands_emit_human_readable_output(): void
     {
-        $base = $this->project->root . '/app/features/publish_post';
+        $base = $this->project->root . '/Features/PublishPost';
+        mkdir($base . '/src', 0777, true);
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
 version: 1
-feature: publish_post
+feature: publish-post
 kind: http
 description: test
 route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -651,12 +659,12 @@ tests:
 YAML);
         file_put_contents($base . '/input.schema.json', '{"type":"object"}');
         file_put_contents($base . '/output.schema.json', '{"type":"object"}');
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/cache.yaml', "version: 1\nentries: []\n");
         file_put_contents($base . '/events.yaml', "version: 1\nemit: []\nsubscribe: []\n");
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch: []\n");
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules: {}\n");
-        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"publish_post","kind":"http"}');
+        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"publish-post","kind":"http"}');
         file_put_contents($base . '/tests/publish_post_contract_test.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/tests/publish_post_feature_test.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/tests/publish_post_auth_test.php', '<?php declare(strict_types=1);');

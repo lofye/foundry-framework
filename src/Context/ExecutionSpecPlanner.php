@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Foundry\Context;
 
+use Foundry\Support\FeatureNaming;
+
 final class ExecutionSpecPlanner
 {
     private const array GENERIC_FALLBACK_SLUGS = [
@@ -257,7 +259,7 @@ final class ExecutionSpecPlanner
                 'Keep canonical feature context authoritative.',
                 'Keep generated execution specs secondary to canonical feature truth.',
                 'Keep this work deterministic and bounded to one coherent step.',
-                'Respect prior decisions recorded in docs/features/' . $featureName . '/' . $featureName . '.decisions.md.',
+                'Respect prior decisions recorded in ' . FeatureNaming::directory($featureName) . '/' . $featureName . '.decisions.md.',
             ],
             'requested_changes' => [$requestedChange],
             'non_goals' => $this->nonGoals($scope),
@@ -288,7 +290,7 @@ final class ExecutionSpecPlanner
 
         $focus = trim(rtrim($focus, '.'));
         if ($focus !== '') {
-            $signals[] = 'docs/features/' . $featureName . '/' . $featureName . '.md reflects ' . $focus . '.';
+            $signals[] = FeatureNaming::directory($featureName) . '/' . $featureName . '.md reflects ' . $focus . '.';
         }
 
         return $signals;
@@ -301,7 +303,7 @@ final class ExecutionSpecPlanner
     {
         return [
             'Current State reflects the completed bounded work.',
-            'Meaningful execution decisions are appended to docs/features/' . $featureName . '/' . $featureName . '.decisions.md when needed.',
+            'Meaningful execution decisions are appended to ' . FeatureNaming::directory($featureName) . '/' . $featureName . '.decisions.md when needed.',
             'Canonical feature context remains authoritative for later work.',
         ];
     }

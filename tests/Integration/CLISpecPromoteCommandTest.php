@@ -31,8 +31,8 @@ final class CLISpecPromoteCommandTest extends TestCase
         $app = new Application();
         $this->runCommand($app, ['foundry', 'context', 'init', 'event-bus', '--json']);
 
-        $draftPath = $this->project->root . '/docs/features/event-bus/specs/drafts/001-batch-command.md';
-        $activePath = $this->project->root . '/docs/features/event-bus/specs/001-batch-command.md';
+        $draftPath = $this->project->root . '/Features/EventBus/specs/drafts/001-batch-command.md';
+        $activePath = $this->project->root . '/Features/EventBus/specs/001-batch-command.md';
         $draftContents = <<<'MD'
 # Execution Spec: 001-batch-command
 
@@ -52,8 +52,8 @@ MD;
         $this->assertFileDoesNotExist($draftPath);
         $this->assertFileExists($activePath);
         $this->assertSame('001-batch-command', $result['payload']['name']);
-        $this->assertSame('docs/features/event-bus/specs/drafts/001-batch-command.md', $result['payload']['draft_path']);
-        $this->assertSame('docs/features/event-bus/specs/001-batch-command.md', $result['payload']['active_path']);
+        $this->assertSame('Features/EventBus/specs/drafts/001-batch-command.md', $result['payload']['draft_path']);
+        $this->assertSame('Features/EventBus/specs/001-batch-command.md', $result['payload']['active_path']);
     }
 
     public function test_requires_target(): void

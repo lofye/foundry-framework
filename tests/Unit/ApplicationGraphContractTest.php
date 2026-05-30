@@ -37,21 +37,21 @@ final class ApplicationGraphContractTest extends TestCase
 
         $graph->addNode($spec->instantiateNode(
             type: 'feature',
-            id: 'feature:publish_post',
-            sourcePath: 'app/features/publish_post/feature.yaml',
-            payload: ['feature' => 'publish_post', 'kind' => 'http'],
+            id: 'feature:publish-post',
+            sourcePath: 'Features/PublishPost/feature.yaml',
+            payload: ['feature' => 'publish-post', 'kind' => 'http'],
             sourceRegion: null,
             graphCompatibility: [2],
         ));
         $graph->addNode($spec->instantiateNode(
             type: 'route',
             id: 'route:POST /posts',
-            sourcePath: 'app/features/publish_post/feature.yaml',
+            sourcePath: 'Features/PublishPost/feature.yaml',
             payload: [
                 'method' => 'POST',
                 'path' => '/posts',
                 'signature' => 'POST /posts',
-                'features' => ['publish_post'],
+                'features' => ['publish-post'],
             ],
             sourceRegion: null,
             graphCompatibility: [2],
@@ -59,8 +59,8 @@ final class ApplicationGraphContractTest extends TestCase
         $graph->addNode($spec->instantiateNode(
             type: 'auth',
             id: 'auth:publish_post',
-            sourcePath: 'app/features/publish_post/feature.yaml',
-            payload: ['feature' => 'publish_post'],
+            sourcePath: 'Features/PublishPost/feature.yaml',
+            payload: ['feature' => 'publish-post'],
             sourceRegion: null,
             graphCompatibility: [2],
         ));
@@ -68,20 +68,20 @@ final class ApplicationGraphContractTest extends TestCase
         $graph->addVerifiedEdge(new GraphEdge(
             id: 'edge:feature-route',
             type: 'feature_to_route',
-            from: 'feature:publish_post',
+            from: 'feature:publish-post',
             to: 'route:POST /posts',
             payload: [],
         ));
         $graph->addVerifiedEdge(new GraphEdge(
             id: 'edge:feature-auth',
             type: 'feature_to_auth_config',
-            from: 'feature:publish_post',
+            from: 'feature:publish-post',
             to: 'auth:publish_post',
             payload: [],
         ));
 
         $this->assertCount(1, $graph->edgesByType('feature_to_route'));
-        $this->assertCount(2, $graph->dependencies('feature:publish_post'));
+        $this->assertCount(2, $graph->dependencies('feature:publish-post'));
         $this->assertCount(1, $graph->dependents('route:POST /posts'));
         $this->assertCount(1, $graph->nodesByCategory('structural'));
         $this->assertCount(1, $graph->nodesByCategory('policy'));
@@ -90,7 +90,7 @@ final class ApplicationGraphContractTest extends TestCase
         $graph->addVerifiedEdge(new GraphEdge(
             id: 'edge:unknown',
             type: 'unknown_edge',
-            from: 'feature:publish_post',
+            from: 'feature:publish-post',
             to: 'route:POST /posts',
             payload: [],
         ));
@@ -103,21 +103,21 @@ final class ApplicationGraphContractTest extends TestCase
 
         $graph->addNode($spec->instantiateNode(
             type: 'feature',
-            id: 'feature:publish_post',
-            sourcePath: 'app/features/publish_post/feature.yaml',
-            payload: ['feature' => 'publish_post', 'kind' => 'http'],
+            id: 'feature:publish-post',
+            sourcePath: 'Features/PublishPost/feature.yaml',
+            payload: ['feature' => 'publish-post', 'kind' => 'http'],
             sourceRegion: null,
             graphCompatibility: [2],
         ));
         $graph->addNode($spec->instantiateNode(
             type: 'route',
             id: 'route:POST /posts',
-            sourcePath: 'app/features/publish_post/feature.yaml',
+            sourcePath: 'Features/PublishPost/feature.yaml',
             payload: [
                 'method' => 'POST',
                 'path' => '/posts',
                 'signature' => 'POST /posts',
-                'features' => ['publish_post'],
+                'features' => ['publish-post'],
             ],
             sourceRegion: null,
             graphCompatibility: [2],
@@ -126,7 +126,7 @@ final class ApplicationGraphContractTest extends TestCase
         $graph->addVerifiedEdge(new GraphEdge(
             id: 'edge:feature-route',
             type: 'feature_to_route',
-            from: 'feature:publish_post',
+            from: 'feature:publish-post',
             to: 'route:POST /posts',
             payload: [],
         ));
@@ -148,7 +148,7 @@ final class ApplicationGraphContractTest extends TestCase
             $graph->addVerifiedEdge(new GraphEdge(
                 id: 'edge:missing-target',
                 type: 'feature_to_route',
-                from: 'feature:publish_post',
+                from: 'feature:publish-post',
                 to: 'route:missing',
                 payload: [],
             ));
@@ -162,7 +162,7 @@ final class ApplicationGraphContractTest extends TestCase
                 id: 'edge:illegal',
                 type: 'feature_to_route',
                 from: 'route:POST /posts',
-                to: 'feature:publish_post',
+                to: 'feature:publish-post',
                 payload: [],
             ));
             self::fail('Expected an illegal edge pairing to be rejected.');
@@ -174,7 +174,7 @@ final class ApplicationGraphContractTest extends TestCase
             $graph->addVerifiedEdge(new GraphEdge(
                 id: 'edge:feature-route',
                 type: 'feature_to_route',
-                from: 'feature:publish_post',
+                from: 'feature:publish-post',
                 to: 'route:POST /posts',
                 payload: [],
             ));
@@ -193,14 +193,14 @@ final class ApplicationGraphContractTest extends TestCase
         $compileResult = $compiler->compile(new CompileOptions());
         $graph = $compileResult->graph;
 
-        $featureGraph = $graph->featureSubgraph('publish_post');
-        $this->assertSame(['publish_post'], $featureGraph->features());
+        $featureGraph = $graph->featureSubgraph('publish-post');
+        $this->assertSame(['publish-post'], $featureGraph->features());
         $this->assertNotEmpty($featureGraph->edgesByType('feature_to_route'));
         $this->assertSame([], $graph->featureSubgraph('missing_feature')->nodes());
 
-        $execution = $graph->executionSubgraph('publish_post');
-        $ownership = $graph->ownershipSubgraph('publish_post');
-        $observability = $graph->observabilitySubgraph('publish_post');
+        $execution = $graph->executionSubgraph('publish-post');
+        $ownership = $graph->ownershipSubgraph('publish-post');
+        $observability = $graph->observabilitySubgraph('publish-post');
 
         $this->assertArrayHasKey('execution_plan_to_stage', $execution->edgeCountsByType());
         $this->assertArrayHasKey('feature_to_execution_plan', $ownership->edgeCountsByType());
@@ -233,27 +233,28 @@ final class ApplicationGraphContractTest extends TestCase
         $this->assertSame([], $featuresOnly->edges());
 
         $withoutFeature = ApplicationGraph::fromArray($serialized);
-        $withoutFeature->removeFeature('publish_post');
+        $withoutFeature->removeFeature('publish-post');
         $this->assertSame([], $withoutFeature->features());
     }
 
     private function seedFeature(): void
     {
-        $base = $this->project->root . '/app/features/publish_post';
+        $base = $this->project->root . '/Features/PublishPost';
+        mkdir($base . '/src', 0777, true);
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
 version: 2
-feature: publish_post
+feature: publish-post
 kind: http
 description: publish
 route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -286,7 +287,7 @@ YAML);
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch: []\n");
         file_put_contents($base . '/cache.yaml', "version: 1\nentries: []\n");
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules:\n  admin: [posts.create]\n");
-        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"publish_post","kind":"http"}');
+        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"publish-post","kind":"http"}');
         file_put_contents($base . '/tests/publish_post_feature_test.php', '<?php declare(strict_types=1);');
     }
 }

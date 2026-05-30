@@ -7,6 +7,7 @@ namespace Foundry\Tests\Unit;
 use Foundry\Compiler\CompileOptions;
 use Foundry\Compiler\GraphCompiler;
 use Foundry\Support\Clock;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Json;
 use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
@@ -64,7 +65,7 @@ final class GraphCompilerTest extends TestCase
             static fn(array $row): string => (string) ($row['id'] ?? ''),
             (array) ($graph['nodes'] ?? []),
         ));
-        $this->assertContains('feature:publish_post', $nodeIds);
+        $this->assertContains('feature:publish-post', $nodeIds);
 
         $routes = require $this->project->root . '/app/.foundry/build/projections/routes_index.php';
         $this->assertArrayHasKey('POST /posts', $routes);
@@ -135,15 +136,15 @@ final class GraphCompilerTest extends TestCase
         $compiler = new GraphCompiler(Paths::fromCwd($this->project->root));
         $compiler->compile(new CompileOptions());
 
-        $manifestPath = $this->project->root . '/app/features/list_posts/feature.yaml';
+        $manifestPath = $this->project->root . '/Features/ListPosts/feature.yaml';
         $manifest = (string) file_get_contents($manifestPath);
         file_put_contents($manifestPath, str_replace('description: test', 'description: updated', $manifest));
 
         $result = $compiler->compile(new CompileOptions(feature: 'list_posts'));
 
         $this->assertTrue($result->plan->incremental);
-        $this->assertContains('publish_post', $result->graph->features());
-        $this->assertContains('list_posts', $result->graph->features());
+        $this->assertContains('publish-post', $result->graph->features());
+        $this->assertContains('list-posts', $result->graph->features());
         $this->assertSame('invalidated', $result->cache['status']);
         $this->assertContains('feature_manifest_hash', $result->cache['invalidated_inputs']);
     }
@@ -225,21 +226,25 @@ final class GraphCompilerTest extends TestCase
     private function createFeature(string $feature, string $method, string $path, ?string $root = null): void
     {
         $root ??= $this->project->root;
-        $base = $root . '/app/features/' . $feature;
+        $canonical = FeatureNaming::canonical($feature);
+        $codeSafe = FeatureNaming::codeSafe($canonical);
+        $featureDir = FeatureNaming::directory($canonical);
+        $base = $root . '/' . $featureDir;
         mkdir($base . '/tests', 0777, true);
+        mkdir($base . '/src', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<YAML
 version: 1
-feature: {$feature}
+feature: {$canonical}
 kind: http
 description: test
 route:
   method: {$method}
   path: {$path}
 input:
-  schema: app/features/{$feature}/input.schema.json
+  schema: {$featureDir}/input.schema.json
 output:
-  schema: app/features/{$feature}/output.schema.json
+  schema: {$featureDir}/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -269,17 +274,17 @@ llm:
   risk: medium
 YAML);
 
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/queries.sql', "-- name: insert_post\nINSERT INTO posts(id) VALUES(:id);\n");
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules: {}\n");
-        file_put_contents($base . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [{$feature}]\n");
+        file_put_contents($base . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [{$canonical}]\n");
         file_put_contents($base . '/events.yaml', "version: 1\nemit:\n  - name: post.created\n    schema:\n      type: object\n      additionalProperties: false\n      properties: {}\nsubscribe: []\n");
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch:\n  - name: notify_followers\n    input_schema:\n      type: object\n      additionalProperties: false\n      properties: {}\n    queue: default\n    retry:\n      max_attempts: 2\n      backoff_seconds: [1,2]\n    timeout_seconds: 30\n");
-        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"' . $feature . '","kind":"http"}');
-        file_put_contents($base . '/tests/' . $feature . '_contract_test.php', '<?php declare(strict_types=1);');
-        file_put_contents($base . '/tests/' . $feature . '_feature_test.php', '<?php declare(strict_types=1);');
-        file_put_contents($base . '/tests/' . $feature . '_auth_test.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"' . $canonical . '","kind":"http"}');
+        file_put_contents($base . '/tests/' . $codeSafe . '_contract_test.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/tests/' . $codeSafe . '_feature_test.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/tests/' . $codeSafe . '_auth_test.php', '<?php declare(strict_types=1);');
     }
 }

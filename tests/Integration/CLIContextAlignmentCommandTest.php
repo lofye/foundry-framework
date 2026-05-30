@@ -98,14 +98,52 @@ final class CLIContextAlignmentCommandTest extends TestCase
 
     private function writeFeatureFiles(string $feature, string $spec, string $state, string $decisions): void
     {
-        $directory = $this->project->root . '/docs/features/' . $feature;
+        $directory = $this->project->root . '/Features/' . $this->featureDirectory($feature);
         if (!is_dir($directory)) {
             mkdir($directory, 0777, true);
         }
 
         file_put_contents($directory . '/' . $feature . '.spec.md', $spec);
         file_put_contents($directory . '/' . $feature . '.md', $state);
-        file_put_contents($directory . '/' . $feature . '.decisions.md', $decisions);
+        file_put_contents($directory . '/' . $feature . '.decisions.md', $decisions !== '' ? $decisions : $this->decisions());
+    }
+
+    private function featureDirectory(string $feature): string
+    {
+        return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+    }
+
+    private function decisions(): string
+    {
+        return <<<'MD'
+        ### Decision: establish event-bus alignment fixture
+
+        Timestamp: 2026-05-29T00:00:00-04:00
+
+        **Context**
+
+        Context alignment tests need a structurally valid decision ledger.
+
+        **Decision**
+
+        Keep the event-bus fixture minimal while preserving valid context structure.
+
+        **Reasoning**
+
+        This lets the alignment tests exercise semantic drift rather than context-file validation failures.
+
+        **Alternatives Considered**
+
+        - Leave the decision ledger empty.
+
+        **Impact**
+
+        Alignment results are driven by spec/state content.
+
+        **Spec Reference**
+
+        - Acceptance Criteria
+        MD;
     }
 
     private function spec(string $acceptanceCriteria): string

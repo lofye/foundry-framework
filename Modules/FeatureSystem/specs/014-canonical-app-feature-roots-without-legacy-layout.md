@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Make `Features/<Feature>/` the only authored application feature root for new Foundry apps, remove the obsolete `app/features/` and `docs/features/` application-layout paths, and ensure every scaffolded app visibly contains the top-level `Features/`, `Modules/`, and `Packs/` directories from first run.
+Make `Features/<Feature>/` the only authored application feature root for new Foundry apps, remove obsolete `app/features/` source and `docs/features/<feature>/` application-context paths, and ensure every scaffolded app visibly contains the top-level `Features/`, `Modules/`, and `Packs/` directories from first run.
 
 This spec intentionally makes a clean breaking alignment. No external applications depend on the legacy app layout yet, so Foundry should not carry migration commands, compatibility branches, or soft warnings for paths that should not exist.
 
@@ -50,22 +50,23 @@ No authored application feature source or context may live under:
 
 ```text
 app/features/
-docs/features/
+docs/features/<feature>/
 ```
 
 ## Goals
 
 1. Scaffold `Features/`, `Modules/`, and `Packs/` in every new Foundry app, even when empty.
 2. Remove `app/features/` from new app scaffolding, generated feature source, compiler source discovery, verifier expectations, examples, and app docs.
-3. Remove `docs/features/` from application context creation, context verification, execution-spec planning, examples, and app docs.
-4. Make `Features/<Feature>/` the only application feature root.
-5. Make `Features/<Feature>/src/` the only location for feature-owned application runtime code.
-6. Make `Features/<Feature>/tests/` the only location for feature-owned application tests.
-7. Ensure generated application feature code belongs under `Features/<Feature>/src/`; for example, Blog code belongs under `Features/Blog/src/`.
-8. Fail hard when obsolete legacy app-layout paths exist.
-9. Keep `Modules/` present in app repositories as an empty top-level root, while documenting that app feature code does not belong there.
-10. Keep `Packs/` present in app repositories as an empty top-level root for installed/local packs.
-11. Preserve generated build/projection directories only as generated outputs, never as authored feature source.
+3. Remove `docs/features/<feature>/` from application context creation, context verification, execution-spec planning, examples, and app docs while preserving authored framework documentation already under `docs/`.
+4. Treat `docs/` as an important public documentation source consumed by the foundryframework.org website through a pinned git submodule checkout; update docs where needed, but do not delete or move documentation wholesale as part of this refactor.
+5. Make `Features/<Feature>/` the only application feature root.
+6. Make `Features/<Feature>/src/` the only location for feature-owned application runtime code.
+7. Make `Features/<Feature>/tests/` the only location for feature-owned application tests.
+8. Ensure generated application feature code belongs under `Features/<Feature>/src/`; for example, Blog code belongs under `Features/Blog/src/`.
+9. Fail hard when obsolete legacy app-layout source/context paths exist.
+10. Keep `Modules/` present in app repositories as an empty top-level root, while documenting that app feature code does not belong there.
+11. Keep `Packs/` present in app repositories as an empty top-level root for installed/local packs.
+12. Preserve generated build/projection directories only as generated outputs, never as authored feature source.
 
 ## Non-Goals
 
@@ -216,11 +217,11 @@ Modules/
 Packs/
 ```
 
-Fresh app creation must not produce:
+Fresh app creation must not produce app feature source or app feature context at:
 
 ```text
 app/features/
-docs/features/
+docs/features/<feature>/
 ```
 
 Scaffolded `AGENTS.md`, `README.md`, `.gitignore`, Composer scripts, examples, starter docs, generated docs text, and first-run instructions must consistently describe `Features/<Feature>/` as the application feature source root.
@@ -311,18 +312,18 @@ The bridge must preserve the ownership rule: `Features/<Feature>/src/` remains a
 
 ## Verification Requirements
 
-`foundry verify features --json` must fail if either obsolete app-layout directory exists:
+`foundry verify features --json` must fail if obsolete `app/features/` source exists or if legacy application context exists under `docs/features/<feature>/`.
 
 ```text
 app/features/
-docs/features/
+docs/features/<feature>/
 ```
 
 Required deterministic violation codes:
 
 ```text
 APP_FEATURES_LEGACY_DIRECTORY_PRESENT
-DOCS_FEATURES_LEGACY_DIRECTORY_PRESENT
+DOCS_FEATURES_LEGACY_CONTEXT_PRESENT
 ```
 
 Required message intent:
@@ -332,7 +333,7 @@ Legacy app/features directory is not part of the current Foundry app layout. App
 ```
 
 ```text
-Legacy docs/features directory is not part of the current Foundry app layout. App feature context belongs under Features/<Feature>/.
+Legacy docs/features application context is not part of the current Foundry app layout. App feature context belongs under Features/<Feature>/.
 ```
 
 `foundry verify features --json` must also enforce that executable application features have:
@@ -352,7 +353,7 @@ Update framework and app-facing documentation so the following are consistent:
 - `Features/<Feature>/src/` is the only authored app feature runtime-code root.
 - `Features/<Feature>/tests/` is the only authored app feature test root.
 - `app/features/` is obsolete and must not appear as a new-app source path.
-- `docs/features/` is obsolete for app feature context and must not appear as a new-app context path.
+- `docs/features/<feature>/` is obsolete for app feature context and must not appear as a new-app context path.
 - `Modules/` exists in generated apps but is not where user feature code goes.
 - `Packs/` exists in generated apps for installed/local packs.
 - Code for a feature belongs at `Features/<Feature>/src/`; for example, code for a Blog feature belongs at `Features/Blog/src/`.
@@ -378,7 +379,7 @@ Required coverage includes:
 
 1. Fresh app scaffolding creates `Features/`, `Modules/`, and `Packs/`.
 2. Fresh app scaffolding does not create `app/features/`.
-3. Fresh app scaffolding does not create `docs/features/`.
+3. Fresh app scaffolding does not create `docs/features/<feature>/`.
 4. `context init <feature> --json` writes `Features/<Feature>/<feature>.spec.md`, `Features/<Feature>/<feature>.md`, and `Features/<Feature>/<feature>.decisions.md`; use Blog as one concrete test fixture if useful.
 5. `context init <feature> --json` does not write `docs/features/<feature>/*`.
 6. Feature generation writes under `Features/<Feature>/`.
@@ -387,7 +388,7 @@ Required coverage includes:
 9. Feature generation does not create `app/features/<feature>/`.
 10. Compiler/inspect/verify commands consume feature manifests from `Features/<Feature>/`.
 11. `verify features --json` fails with `APP_FEATURES_LEGACY_DIRECTORY_PRESENT` when `app/features/` exists.
-12. `verify features --json` fails with `DOCS_FEATURES_LEGACY_DIRECTORY_PRESENT` when `docs/features/` exists.
+12. `verify features --json` fails with `DOCS_FEATURES_LEGACY_CONTEXT_PRESENT` when legacy app context exists under `docs/features/<feature>/`.
 13. `verify features --json` fails when executable `Features/<Feature>/src/` is missing.
 14. `verify features --json` fails when executable `Features/<Feature>/tests/` is missing.
 15. App docs/scaffold tests assert the generic feature placement rule and may include the Blog sentence as an example.
@@ -419,15 +420,15 @@ bin/phpunit-coverage --coverage-clover build/coverage/clover.xml
 
 - New Foundry apps always include top-level `Features/`, `Modules/`, and `Packs/` roots.
 - New Foundry apps do not include `app/features/`.
-- New Foundry apps do not include `docs/features/`.
+- New Foundry apps do not include app feature context under `docs/features/<feature>/`.
 - Application feature context is created under `Features/<Feature>/` only.
 - Application feature manifests/schemas/prompts/context manifests are authored under `Features/<Feature>/` only.
 - Application feature runtime code is authored under `Features/<Feature>/src/` only.
 - Application feature tests are authored under `Features/<Feature>/tests/` only.
 - Generic feature-owned code placement is documented as `Features/<Feature>/src/`.
 - Blog is documented only as an example: `BlogService` and `BlogStorage` are feature-owned code under `Features/Blog/src/`, not `app/Support/`.
-- Generation, planning, dry-run, explain, inspect, and verification output no longer present `app/features/` or `docs/features/` as app source/context paths.
-- `verify features --json` fails hard when obsolete `app/features/` or `docs/features/` directories exist.
+- Generation, planning, dry-run, explain, inspect, and verification output no longer present `app/features/` or `docs/features/<feature>/` as app source/context paths.
+- `verify features --json` fails hard when obsolete `app/features/` source or `docs/features/<feature>/` app context exists.
 - Compiler/runtime behavior works from `Features/<Feature>/` source files without requiring `app/features/`.
 - Documentation, stubs, fixtures, and examples are aligned with the no-legacy app feature layout.
 - Required tests and verification commands pass.

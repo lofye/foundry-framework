@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Foundry\Generation;
 
 use Foundry\Support\FoundryError;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Paths;
 use Foundry\Support\Yaml;
 
@@ -33,7 +34,7 @@ final class StarterGenerator
         $generatedFeatures = [];
         $generatedFiles = [];
         foreach ($this->starterDefinitions($starter) as $definition) {
-            $generatedFeatures[] = (string) $definition['feature'];
+            $generatedFeatures[] = FeatureNaming::canonical((string) ($definition['canonical_feature'] ?? $definition['feature']));
             foreach ($this->featureGenerator->generateFromArray($definition, $force) as $path) {
                 $generatedFiles[] = $path;
             }
@@ -115,6 +116,7 @@ final class StarterGenerator
     ): array {
         return [
             'feature' => $feature,
+            'canonical_feature' => FeatureNaming::canonical($feature),
             'kind' => 'http',
             'description' => 'Generated starter feature for ' . $feature . '.',
             'route' => [

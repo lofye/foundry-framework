@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Foundry\Context;
 
 use Foundry\Support\FoundryError;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Paths;
 
 final class ExecutionSpecDraftService
@@ -95,7 +96,7 @@ final class ExecutionSpecDraftService
             throw $error;
         }
 
-        $relativeDraftDirectory = 'docs/features/' . $providedFeature . '/specs/drafts';
+        $relativeDraftDirectory = $this->draftDirectory($providedFeature);
         $absoluteDraftDirectory = $this->paths->join($relativeDraftDirectory);
         if (file_exists($absoluteDraftDirectory) && !is_dir($absoluteDraftDirectory)) {
             return $this->failure(
@@ -185,6 +186,16 @@ final class ExecutionSpecDraftService
         }, true);
 
         return $allLowInformation ? null : $normalized;
+    }
+
+    private function draftDirectory(string $feature): string
+    {
+        $moduleDirectory = 'Modules/' . FeatureNaming::pascal($feature);
+        if (is_dir($this->paths->join($moduleDirectory))) {
+            return $moduleDirectory . '/specs/drafts';
+        }
+
+        return FeatureNaming::directory($feature) . '/specs/drafts';
     }
 
     private function renderDraftSpec(string $specName, string $featureName): string

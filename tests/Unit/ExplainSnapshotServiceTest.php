@@ -60,7 +60,7 @@ final class ExplainSnapshotServiceTest extends TestCase
 
         $snapshot = $service->capture('post-generate', $graph, $extensions, GeneratorRegistry::forExtensions($extensions));
 
-        $this->assertSame('feature:publish_post', $snapshot['explain']['subject']['id']);
+        $this->assertSame('feature:publish-post', $snapshot['explain']['subject']['id']);
         $this->assertSame('POST /posts', $snapshot['categories']['routes'][0]['label']);
         $this->assertSame($graph->graphVersion(), $snapshot['metadata']['graph_version']);
         $this->assertSame($graph->sourceHash(), $snapshot['metadata']['source_hash']);
@@ -121,21 +121,21 @@ final class ExplainSnapshotServiceTest extends TestCase
 
     private function seedFeature(): void
     {
-        $feature = $this->project->root . '/app/features/publish_post';
+        $feature = $this->project->root . '/Features/PublishPost';
         mkdir($feature . '/tests', 0777, true);
 
         file_put_contents($feature . '/feature.yaml', <<<'YAML'
 version: 1
-feature: publish_post
+feature: publish-post
 kind: http
 description: Publish a post
 route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -156,9 +156,10 @@ tests:
 YAML);
         file_put_contents($feature . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($feature . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
-        file_put_contents($feature . '/action.php', '<?php declare(strict_types=1); namespace App\\Features\\PublishPost; use Foundry\\Auth\\AuthContext; use Foundry\\Feature\\FeatureAction; use Foundry\\Feature\\FeatureServices; use Foundry\\Http\\RequestContext; final class Action implements FeatureAction { public function handle(array $input, RequestContext $request, AuthContext $auth, FeatureServices $services): array { return []; } }');
+        mkdir($feature . '/src', 0777, true);
+        file_put_contents($feature . '/src/Action.php', '<?php declare(strict_types=1); namespace App\\Features\\PublishPost; use Foundry\\Auth\\AuthContext; use Foundry\\Feature\\FeatureAction; use Foundry\\Feature\\FeatureServices; use Foundry\\Http\\RequestContext; final class Action implements FeatureAction { public function handle(array $input, RequestContext $request, AuthContext $auth, FeatureServices $services): array { return []; } }');
         file_put_contents($feature . '/queries.sql', "-- name: insert_post\nINSERT INTO posts(id) VALUES(:id);\n");
-        file_put_contents($feature . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [publish_post]\n");
+        file_put_contents($feature . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [publish-post]\n");
         file_put_contents($feature . '/events.yaml', "version: 1\nemit:\n  - name: post.created\n    schema:\n      type: object\n      additionalProperties: false\n      properties: {}\nsubscribe: []\n");
         file_put_contents($feature . '/jobs.yaml', "version: 1\ndispatch:\n  - name: notify_followers\n    input_schema:\n      type: object\n      additionalProperties: false\n      properties: {}\n    queue: default\n");
         file_put_contents($feature . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules: {}\n");

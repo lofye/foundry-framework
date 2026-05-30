@@ -102,17 +102,17 @@ final class SpecLogEntryCommand extends Command
 
         $draftPath = $this->draftPathFromArgument($trimmed);
         if ($draftPath !== null) {
+            $draftRelativePath = $this->draftRelativePath($draftPath);
             throw $this->draftOnlyError([
                 'feature' => $draftPath['feature'],
                 'id' => $draftPath['id'],
-                'matches' => ['docs/features/' . $draftPath['feature'] . '/specs/drafts/' . $draftPath['name'] . '.md'],
-                'path' => 'docs/features/' . $draftPath['feature'] . '/specs/drafts/' . $draftPath['name'] . '.md',
+                'matches' => [$draftRelativePath],
+                'path' => $draftRelativePath,
             ]);
         }
 
         if (
             !str_contains($trimmed, '/')
-            && !str_starts_with($trimmed, 'docs/')
             && !str_starts_with($trimmed, 'Features/')
             && !str_starts_with($trimmed, 'Modules/')
             && !ExecutionSpecFilename::isCanonicalName($normalized)
@@ -170,10 +170,8 @@ final class SpecLogEntryCommand extends Command
     {
         $normalized = str_replace('\\', '/', trim($argument));
 
-        if (!str_starts_with($normalized, 'docs/')) {
-            if (!str_starts_with($normalized, 'Features/') && !str_starts_with($normalized, 'Modules/')) {
-                return null;
-            }
+        if (!str_starts_with($normalized, 'Features/') && !str_starts_with($normalized, 'Modules/')) {
+            return null;
         }
 
         $path = str_ends_with($normalized, '.md') ? $normalized : $normalized . '.md';
@@ -208,11 +206,6 @@ final class SpecLogEntryCommand extends Command
             'Features/' . $pascal . '/' . $feature . '.spec.md',
             'Features/' . $pascal . '/' . $feature . '.md',
             'Features/' . $pascal . '/' . $feature . '.decisions.md',
-            'docs/features/' . $feature,
-            'docs/features/' . $feature . '/specs/drafts',
-            'docs/features/' . $feature . '/' . $feature . '.spec.md',
-            'docs/features/' . $feature . '/' . $feature . '.md',
-            'docs/features/' . $feature . '/' . $feature . '.decisions.md',
         ];
 
         foreach ($paths as $path) {
@@ -226,8 +219,14 @@ final class SpecLogEntryCommand extends Command
 
     private function pascalFromSlug(string $slug): string
     {
-        $parts = array_filter(explode('-', $slug), static fn(string $part): bool => $part !== '');
+        return FeatureNaming::pascal($slug);
+    }
 
-        return implode('', array_map(static fn(string $part): string => ucfirst($part), $parts));
+    /**
+     * @param array{feature:string,name:string} $draftPath
+     */
+    private function draftRelativePath(array $draftPath): string
+    {
+        return FeatureNaming::directory($draftPath['feature']) . '/specs/drafts/' . $draftPath['name'] . '.md';
     }
 }

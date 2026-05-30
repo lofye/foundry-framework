@@ -73,11 +73,11 @@ status: draft
 MD,
         );
         $this->writeRawFile(
-            'docs/features/execution-spec-system/specs/archive/004-misplaced.md',
+            'Modules/ExecutionSpecSystem/specs/archive/004-misplaced.md',
             '# Execution Spec: 004-misplaced' . "\n",
         );
         $this->writeRawFile(
-            'docs/features/execution-spec-system/specs/not-a-spec.md',
+            'Modules/ExecutionSpecSystem/specs/not-a-spec.md',
             '# Execution Spec: not-a-spec' . "\n",
         );
         $this->writeImplementationLogEntry('execution-spec-system/001-first-active.md');
@@ -116,8 +116,8 @@ MD,
                 'feature' => 'execution-spec-system',
                 'id' => '001',
                 'paths' => [
-                    'docs/features/execution-spec-system/specs/001-first-active.md',
-                    'docs/features/execution-spec-system/specs/drafts/001-second-draft.md',
+                    'Features/ExecutionSpecSystem/specs/001-first-active.md',
+                    'Features/ExecutionSpecSystem/specs/drafts/001-second-draft.md',
                 ],
             ],
             $result['violations'][0]['details'],
@@ -235,10 +235,10 @@ MD,
             [
                 'code' => 'EXECUTION_SPEC_IMPLEMENTATION_LOG_MISSING',
                 'message' => 'Active execution specs must have a matching implementation-log entry.',
-                'file_path' => 'docs/features/execution-spec-system/specs/001-active-missing-log.md',
+                'file_path' => 'Features/ExecutionSpecSystem/specs/001-active-missing-log.md',
                 'details' => [
                     'spec' => 'execution-spec-system/001-active-missing-log.md',
-                    'log_path' => 'docs/features/implementation-log.md',
+                    'log_path' => 'Modules/implementation.log',
                 ],
             ],
             $result['violations'][0],
@@ -260,7 +260,7 @@ MD,
         $this->assertSame('003', $gap['details']['next_observed_id']);
         $this->assertSame('active', $gap['details']['location']);
         $this->assertSame('top-level', $gap['details']['parent_id']);
-        $this->assertSame('docs/features/execution-spec-system/specs/003-third.md', $gap['file_path']);
+        $this->assertSame('Features/ExecutionSpecSystem/specs/003-third.md', $gap['file_path']);
     }
 
     public function test_validate_reports_child_gap_and_missing_parent_deterministically(): void
@@ -279,8 +279,8 @@ MD,
 
         $gaps = array_values(array_filter($result['violations'], static fn(array $violation): bool => $violation['code'] === 'EXECUTION_SPEC_ID_GAP'));
         $this->assertNotEmpty($gaps);
-        $this->assertTrue($this->containsGap($gaps, '007.002', '007.003', 'docs/features/execution-spec-system/specs/007.003-child-c.md'));
-        $this->assertTrue($this->containsGap($gaps, '009', '009.001', 'docs/features/execution-spec-system/specs/009.001-orphan-child.md'));
+        $this->assertTrue($this->containsGap($gaps, '007.002', '007.003', 'Features/ExecutionSpecSystem/specs/007.003-child-c.md'));
+        $this->assertTrue($this->containsGap($gaps, '009', '009.001', 'Features/ExecutionSpecSystem/specs/009.001-orphan-child.md'));
     }
 
     public function test_validate_checks_active_and_draft_continuity_separately(): void
@@ -360,17 +360,18 @@ MD,
         $this->assertSame('Modules/ExecutionSpecSystem/specs/001-canonical.md', $violation['details']['expected']);
     }
 
-    public function test_validate_reports_duplicate_canonical_and_legacy_spec_definitions(): void
+    public function test_validate_reports_duplicate_specs_within_canonical_features_root(): void
     {
         $this->writeRawFile('Features/ExecutionSpecSystem/specs/001-shared.md', '# Execution Spec: 001-shared');
-        $this->writeSpec('execution-spec-system', '001-shared', '# Execution Spec: 001-shared');
+        $this->writeSpec('execution-spec-system', '001-other-shared', '# Execution Spec: 001-other-shared');
         $this->writeImplementationLogEntry('execution-spec-system/001-shared.md');
+        $this->writeImplementationLogEntry('execution-spec-system/001-other-shared.md');
 
         $result = $this->service()->validate();
 
         $this->assertFalse($result['ok']);
         $codes = array_map(static fn(array $violation): string => (string) $violation['code'], $result['violations']);
-        $this->assertContains('FEATURE_DUPLICATE_CANONICAL_AND_LEGACY', $codes);
+        $this->assertContains('EXECUTION_SPEC_DUPLICATE_ID', $codes);
     }
 
     public function test_validate_does_not_enforce_global_sequence_across_features(): void
@@ -428,7 +429,7 @@ MD,
             "# Implementation Plan: not-a-spec\n",
         );
         $this->writeRawFile(
-            'docs/features/execution-spec-system/outcomes/not-a-spec.md',
+            'Modules/ExecutionSpecSystem/outcomes/not-a-spec.md',
             "# Implementation Plan: not-a-spec\n",
         );
 
@@ -443,11 +444,11 @@ MD,
         $this->writeSpec('execution-spec-system', '001-first', '# Execution Spec: 001-first');
         $this->writeImplementationLogEntry('execution-spec-system/001-first.md');
         $this->writeRawFile(
-            'docs/features/execution-spec-system/outcomes/001-first.md',
+            'Modules/ExecutionSpecSystem/outcomes/001-first.md',
             "# Implementation Plan: 001-first\n\nstatus: draft\n",
         );
         $this->writeRawFile(
-            'docs/features/execution-spec-system/outcomes/archive/001-first.md',
+            'Modules/ExecutionSpecSystem/outcomes/archive/001-first.md',
             "# Implementation Plan: 001-first\n",
         );
 
@@ -462,11 +463,11 @@ MD,
         $this->writeSpec('execution-spec-system', '001-first', '# Execution Spec: 001-first');
         $this->writeImplementationLogEntry('execution-spec-system/001-first.md');
         $this->writeRawFile(
-            'docs/features/execution-spec-system/outcomes/001-first.md',
+            'Modules/ExecutionSpecSystem/outcomes/001-first.md',
             "# Implementation Plan: 001-first\n",
         );
         $this->writeRawFile(
-            'docs/features/execution-spec-system/outcomes/001-second.md',
+            'Modules/ExecutionSpecSystem/outcomes/001-second.md',
             "# Implementation Plan: 001-second\n",
         );
 
@@ -482,8 +483,8 @@ MD,
                 'feature' => 'execution-spec-system',
                 'id' => '001',
                 'paths' => [
-                    'docs/features/execution-spec-system/outcomes/001-first.md',
-                    'docs/features/execution-spec-system/outcomes/001-second.md',
+                    'Modules/ExecutionSpecSystem/outcomes/001-first.md',
+                    'Modules/ExecutionSpecSystem/outcomes/001-second.md',
                 ],
             ],
             $duplicate['details'],
@@ -492,7 +493,7 @@ MD,
 
     public function test_validate_reports_invalid_implementation_log_when_path_is_directory(): void
     {
-        $absolutePath = $this->project->root . '/docs/features/implementation-log.md';
+        $absolutePath = $this->project->root . '/Modules/implementation.log';
         if (!is_dir(dirname($absolutePath))) {
             mkdir(dirname($absolutePath), 0777, true);
         }
@@ -513,7 +514,7 @@ MD,
         $this->writeSpec('execution-spec-system', '001-implementation-plan-files', '# Execution Spec: 001-implementation-plan-files');
         $this->writeImplementationLogEntry('execution-spec-system/001-implementation-plan-files.md');
         $this->writeRawFile(
-            'docs/features/execution-spec-system/outcomes/001-implementation-plan-files.md',
+            'Modules/ExecutionSpecSystem/outcomes/001-implementation-plan-files.md',
             "# Implementation Plan: 001-implementation-plan-files\n",
         );
 
@@ -527,8 +528,8 @@ MD,
     {
         $this->writeSpec('execution-spec-system', '001-first', '# Execution Spec: 001-first');
         $this->writeImplementationLogEntry('execution-spec-system/001-first.md');
-        mkdir($this->project->root . '/docs/features/execution-spec-system/specs/002-directory.md', 0777, true);
-        mkdir($this->project->root . '/docs/features/execution-spec-system/outcomes/001-plan-directory.md', 0777, true);
+        mkdir($this->project->root . '/Modules/ExecutionSpecSystem/specs/002-directory.md', 0777, true);
+        mkdir($this->project->root . '/Modules/ExecutionSpecSystem/outcomes/001-plan-directory.md', 0777, true);
 
         $result = $this->service()->validate();
 
@@ -588,11 +589,11 @@ MD,
         $this->writeSpec('execution-spec-system', '001-implementation-plan-files', '# Execution Spec: 001-implementation-plan-files');
         $this->writeImplementationLogEntry('execution-spec-system/001-implementation-plan-files.md');
         $this->writeRawFile(
-            'docs/features/execution-spec-system/outcomes/002-orphan.md',
+            'Modules/ExecutionSpecSystem/outcomes/002-orphan.md',
             "# Implementation Plan: 002-orphan\n",
         );
         $this->writeRawFile(
-            'docs/features/execution-spec-system/outcomes/001-implementation-plan-files.md',
+            'Modules/ExecutionSpecSystem/outcomes/001-implementation-plan-files.md',
             "# Implementation Plan: execution-spec-system/001-implementation-plan-files\n",
         );
 
@@ -617,7 +618,7 @@ MD,
         $this->assertFalse($strict['ok']);
         $this->assertSame('EXECUTION_SPEC_PLAN_REQUIRED_MISSING', $strict['violations'][0]['code']);
         $this->assertSame(
-            'docs/features/execution-spec-system/outcomes/001-active-missing-plan.md',
+            'Features/ExecutionSpecSystem/outcomes/001-active-missing-plan.md',
             $strict['violations'][0]['details']['plan_path'],
         );
     }
@@ -629,7 +630,7 @@ MD,
         $this->writeImplementationLogEntry('execution-spec-system/001-has-plan.md');
         $this->writeImplementationLogEntry('execution-spec-system/002-missing-plan.md');
         $this->writeRawFile(
-            'docs/features/execution-spec-system/outcomes/001-has-plan.md',
+            'Modules/ExecutionSpecSystem/outcomes/001-has-plan.md',
             "# Implementation Plan: 001-has-plan\n",
         );
 
@@ -639,7 +640,7 @@ MD,
         $this->assertSame(1, $result['summary']['violations']);
         $this->assertSame('EXECUTION_SPEC_PLAN_REQUIRED_MISSING', $result['violations'][0]['code']);
         $this->assertSame(
-            'docs/features/execution-spec-system/outcomes/002-missing-plan.md',
+            'Modules/ExecutionSpecSystem/outcomes/002-missing-plan.md',
             $result['violations'][0]['details']['plan_path'],
         );
     }
@@ -848,7 +849,7 @@ MD,
 
     private function writeSpec(string $feature, string $name, string $contents, string $subdirectory = ''): void
     {
-        $relativePath = 'docs/features/' . $feature . '/specs' . ($subdirectory !== '' ? '/' . $subdirectory : '') . '/' . $name . '.md';
+        $relativePath = 'Features/' . str_replace(' ', '', ucwords(str_replace('-', ' ', $feature))) . '/specs' . ($subdirectory !== '' ? '/' . $subdirectory : '') . '/' . $name . '.md';
         $this->writeRawFile($relativePath, rtrim($contents, "\n") . "\n");
     }
 
@@ -866,7 +867,7 @@ MD,
 
     private function writeImplementationLogEntry(string $specReference): void
     {
-        $absolutePath = $this->project->root . '/docs/features/implementation-log.md';
+        $absolutePath = $this->project->root . '/Modules/implementation.log';
         $directory = dirname($absolutePath);
 
         if (!is_dir($directory)) {

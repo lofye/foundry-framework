@@ -27,7 +27,7 @@ final class PipelineCompilerIntegrationTest extends TestCase
     public function test_compiler_emits_pipeline_nodes_execution_plans_and_guards(): void
     {
         $this->createFeature(
-            feature: 'publish_post',
+            feature: 'publish-post',
             method: 'POST',
             path: '/posts',
             authRequired: true,
@@ -43,8 +43,8 @@ final class PipelineCompilerIntegrationTest extends TestCase
         $this->assertNotEmpty($graph->nodesByType('guard'));
         $this->assertNotEmpty($graph->nodesByType('interceptor'));
 
-        $this->assertNotNull($graph->node('execution_plan:feature:publish_post'));
-        $this->assertNotNull($graph->node('guard:auth:publish_post'));
+        $this->assertNotNull($graph->node('execution_plan:feature:publish-post'));
+        $this->assertNotNull($graph->node('guard:auth:publish-post'));
 
         $edgeTypes = array_values(array_unique(array_map(
             static fn($edge): string => $edge->type,
@@ -58,7 +58,7 @@ final class PipelineCompilerIntegrationTest extends TestCase
     public function test_compiler_reports_pipeline_diagnostics_for_unguarded_and_conflicting_rate_limits(): void
     {
         $this->createFeature(
-            feature: 'create_post',
+            feature: 'create-post',
             method: 'POST',
             path: '/posts',
             authRequired: false,
@@ -84,7 +84,8 @@ final class PipelineCompilerIntegrationTest extends TestCase
         bool $authRequired,
         string $rateLimitBody,
     ): void {
-        $base = $this->project->root . '/app/features/' . $feature;
+        $directory = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+        $base = $this->project->root . '/Features/' . $directory;
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<YAML
@@ -96,9 +97,9 @@ route:
   method: {$method}
   path: {$path}
 input:
-  schema: app/features/{$feature}/input.schema.json
+  schema: Features/{$directory}/input.schema.json
 output:
-  schema: app/features/{$feature}/output.schema.json
+  schema: Features/{$directory}/output.schema.json
 auth:
   required: {$this->boolString($authRequired)}
   strategies: [bearer]

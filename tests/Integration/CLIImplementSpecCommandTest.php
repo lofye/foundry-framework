@@ -53,12 +53,12 @@ final class CLIImplementSpecCommandTest extends TestCase
         $this->assertSame('completed', $result['payload']['status']);
         $this->assertTrue($result['payload']['quality_gate']['passed']);
         $this->assertSame('passed', $result['payload']['quality_gate']['changed_surface']['status']);
-        $this->assertContains('Appended implementation log entry: docs/features/implementation-log.md', $result['payload']['actions_taken']);
-        $this->assertContains('Applied execution spec: docs/features/event-bus/specs/001-initial.md', $result['payload']['actions_taken']);
-        $this->assertFileExists($this->project->root . '/app/features/event-bus/feature.yaml');
+        $this->assertContains('Appended implementation log entry: Features/implementation.log', $result['payload']['actions_taken']);
+        $this->assertContains('Applied execution spec: Features/EventBus/specs/001-initial.md', $result['payload']['actions_taken']);
+        $this->assertFileExists($this->project->root . '/Features/EventBus/feature.yaml');
         $this->assertMatchesRegularExpression(
             '/^## \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+-]\d{4}\n- spec: event-bus\/001-initial\.md\n$/',
-            (string) file_get_contents($this->project->root . '/docs/features/implementation-log.md'),
+            (string) file_get_contents($this->project->root . '/Features/implementation.log'),
         );
     }
 
@@ -92,7 +92,7 @@ final class CLIImplementSpecCommandTest extends TestCase
     {
         $this->runCommand(['foundry', 'context', 'init', 'event-bus', '--json']);
         $this->writeMeaningfulContext('event-bus');
-        $specPath = $this->project->root . '/docs/features/event-bus/event-bus.spec.md';
+        $specPath = $this->project->root . '/Features/EventBus/event-bus.spec.md';
         file_put_contents($specPath, str_replace(
             '- Do not add async delivery.',
             '- Do not make execution specs authoritative after implementation.',
@@ -109,7 +109,7 @@ final class CLIImplementSpecCommandTest extends TestCase
         $this->assertSame(1, $result['status']);
         $this->assertSame('blocked', $result['payload']['status']);
         $this->assertSame('EXECUTION_SPEC_CONFLICTS_WITH_CANONICAL_SPEC', $result['payload']['issues'][0]['code']);
-        $this->assertFileDoesNotExist($this->project->root . '/app/features/event-bus/feature.yaml');
+        $this->assertFileDoesNotExist($this->project->root . '/Features/EventBus/feature.yaml');
     }
 
     public function test_implement_spec_refuses_non_consumable_context(): void
@@ -149,7 +149,7 @@ final class CLIImplementSpecCommandTest extends TestCase
 ## Scope
 
 - Hook into the active execution-spec implementation flow.
-- Append entries to `docs/features/implementation-log.md`.
+- Append entries to `Modules/implementation.log`.
 - Enforce required log-entry formatting.
 - Prevent duplicate entries for the same completed implementation event.
 
@@ -167,7 +167,7 @@ final class CLIImplementSpecCommandTest extends TestCase
 
 After successful implementation of an active execution spec, Foundry must automatically append an implementation entry to:
 
-`docs/features/implementation-log.md`
+`Modules/implementation.log`
 
 This must occur only after implementation has succeeded.
 
@@ -182,7 +182,7 @@ MD);
         $this->assertSame(0, $result['status']);
         $this->assertSame('completed', $result['payload']['status']);
         $this->assertContains(
-            'Applied execution spec: docs/features/execution-spec-system/specs/004-spec-auto-log-on-implementation.md',
+            'Applied execution spec: Modules/ExecutionSpecSystem/specs/004-spec-auto-log-on-implementation.md',
             $result['payload']['actions_taken'],
         );
         $this->assertSame(
@@ -197,7 +197,11 @@ MD);
     public function test_negative_execution_spec_instruction_that_opposes_canonical_requirement_is_blocked(): void
     {
         $this->runCommand(['foundry', 'context', 'init', 'execution-spec-system', '--json']);
-        file_put_contents($this->project->root . '/docs/features/execution-spec-system/execution-spec-system.spec.md', <<<'MD'
+        if (!is_dir($this->project->root . '/Modules/ExecutionSpecSystem')) {
+            mkdir($this->project->root . '/Modules/ExecutionSpecSystem', 0777, true);
+        }
+        file_put_contents($this->project->root . '/Modules/ExecutionSpecSystem/execution-spec-system.decisions.md', "### Decision: baseline\n\nTimestamp: 2026-05-03T10:00:00-04:00\n\n**Context**\n\n- baseline\n\n**Decision**\n\n- baseline\n\n**Reasoning**\n\n- baseline\n\n**Alternatives Considered**\n\n- baseline\n\n**Impact**\n\n- baseline\n\n**Spec Reference**\n\n- baseline\n");
+        file_put_contents($this->project->root . '/Modules/ExecutionSpecSystem/execution-spec-system.spec.md', <<<'MD'
 # Feature Spec: execution-spec-system
 
 ## Purpose
@@ -228,7 +232,36 @@ Keep execution-spec implementation logging deterministic.
 
 - Feature directories continue to provide execution-spec context.
 MD);
-        file_put_contents($this->project->root . '/docs/features/execution-spec-system/execution-spec-system.md', <<<'MD'
+        file_put_contents($this->project->root . '/Modules/ExecutionSpecSystem/execution-spec-system.decisions.md', <<<'MD'
+### Decision: baseline
+
+Timestamp: 2026-05-03T10:00:00-04:00
+
+**Context**
+
+- baseline
+
+**Decision**
+
+- baseline
+
+**Reasoning**
+
+- baseline
+
+**Alternatives Considered**
+
+- baseline
+
+**Impact**
+
+- baseline
+
+**Spec Reference**
+
+- baseline
+MD);
+        file_put_contents($this->project->root . '/Modules/ExecutionSpecSystem/execution-spec-system.md', <<<'MD'
 # Feature: execution-spec-system
 
 ## Purpose
@@ -288,7 +321,7 @@ MD);
         $this->runCommand(['foundry', 'context', 'init', 'event-bus', '--json']);
         $this->writeMeaningfulContext('event-bus');
         $this->writeExecutionSpec('event-bus', '001-initial');
-        unlink($this->project->root . '/docs/features/event-bus/event-bus.md');
+        unlink($this->project->root . '/Features/EventBus/event-bus.md');
 
         $result = $this->runCommand(['foundry', 'implement', 'spec', 'event-bus/001-initial', '--repair', '--json']);
 
@@ -303,7 +336,7 @@ MD);
         $this->runCommand(['foundry', 'context', 'init', 'event-bus', '--json']);
         $this->writeMeaningfulContext('event-bus');
         $this->writeExecutionSpec('event-bus', '001-initial');
-        $path = $this->project->root . '/docs/features/event-bus/event-bus.spec.md';
+        $path = $this->project->root . '/Features/EventBus/event-bus.spec.md';
         file_put_contents($path, str_replace('# Feature Spec: event-bus', '# Spec: event-bus', (string) file_get_contents($path)));
 
         $result = $this->runCommand(['foundry', 'implement', 'spec', 'event-bus/001-initial', '--auto-repair', '--json']);
@@ -329,7 +362,7 @@ MD);
             1,
             preg_match_all(
                 '/^- spec: event-bus\/001-initial\.md$/m',
-                (string) file_get_contents($this->project->root . '/docs/features/implementation-log.md'),
+                (string) file_get_contents($this->project->root . '/Features/implementation.log'),
             ),
         );
     }
@@ -394,7 +427,7 @@ MD);
         $this->assertSame('blocked', $result['payload']['status']);
         $this->assertSame('EXECUTION_SPEC_DRAFT_ONLY', $result['payload']['issues'][0]['code']);
         $this->assertContains(
-            'Promote the draft execution spec to an active specs directory under Modules/, Features/, or docs/features/ before implementing it.',
+            'Promote the draft execution spec to an active specs directory under Modules/ or Features/ before implementing it.',
             $result['payload']['required_actions'],
         );
     }
@@ -442,7 +475,7 @@ MD);
         $this->runCommand(['foundry', 'context', 'init', 'event-bus', '--json']);
         $this->writeMeaningfulContext('event-bus');
         $this->writeExecutionSpec('event-bus', '001-initial');
-        mkdir($this->project->root . '/docs/features/implementation-log.md', 0777, true);
+        mkdir($this->project->root . '/Features/implementation.log', 0777, true);
 
         $result = $this->runCommand(['foundry', 'implement', 'spec', 'event-bus/001-initial', '--json']);
 
@@ -450,7 +483,7 @@ MD);
         $this->assertSame('completed_with_issues', $result['payload']['status']);
         $this->assertSame('EXECUTION_SPEC_IMPLEMENTATION_LOG_WRITE_FAILED', $result['payload']['issues'][0]['code']);
         $this->assertContains(
-            'Restore write access to docs/features/implementation-log.md and record the missing implementation entry.',
+            'Restore write access to Features/implementation.log and record the missing implementation entry.',
             $result['payload']['required_actions'],
         );
     }
@@ -520,7 +553,8 @@ MD);
 
     private function writeRawExecutionSpec(string $feature, string $name, string $contents): void
     {
-        $path = $this->project->root . '/docs/features/' . $feature . '/specs/' . $name . '.md';
+        $baseRoot = $feature === 'execution-spec-system' ? 'Modules' : 'Features';
+        $path = $this->project->root . '/' . $baseRoot . '/' . str_replace(' ', '', ucwords(str_replace('-', ' ', $feature))) . '/specs/' . $name . '.md';
         $directory = dirname($path);
         if (!is_dir($directory)) {
             mkdir($directory, 0777, true);
@@ -531,7 +565,8 @@ MD);
 
     private function writeRawDraftExecutionSpec(string $feature, string $name, string $contents): void
     {
-        $path = $this->project->root . '/docs/features/' . $feature . '/specs/drafts/' . $name . '.md';
+        $baseRoot = $feature === 'execution-spec-system' ? 'Modules' : 'Features';
+        $path = $this->project->root . '/' . $baseRoot . '/' . str_replace(' ', '', ucwords(str_replace('-', ' ', $feature))) . '/specs/drafts/' . $name . '.md';
         $directory = dirname($path);
         if (!is_dir($directory)) {
             mkdir($directory, 0777, true);
@@ -542,7 +577,7 @@ MD);
 
     private function writeMeaningfulContext(string $feature): void
     {
-        file_put_contents($this->project->root . '/docs/features/' . $feature . '/' . $feature . '.spec.md', <<<MD
+        file_put_contents($this->project->root . '/Features/' . str_replace(' ', '', ucwords(str_replace('-', ' ', $feature))) . '/' . $feature . '.spec.md', <<<MD
 # Feature Spec: {$feature}
 
 ## Purpose
@@ -574,7 +609,7 @@ Introduce event bus handling.
 - Initial implementation may be scaffold-first.
 MD);
 
-        file_put_contents($this->project->root . '/docs/features/' . $feature . '/' . $feature . '.md', <<<MD
+        file_put_contents($this->project->root . '/Features/' . str_replace(' ', '', ucwords(str_replace('-', ' ', $feature))) . '/' . $feature . '.md', <<<MD
 # Feature: {$feature}
 
 ## Purpose
@@ -598,7 +633,10 @@ MD);
 
     private function writeExecutionSpecSystemContext(): void
     {
-        file_put_contents($this->project->root . '/docs/features/execution-spec-system/execution-spec-system.spec.md', <<<MD
+        if (!is_dir($this->project->root . '/Modules/ExecutionSpecSystem')) {
+            mkdir($this->project->root . '/Modules/ExecutionSpecSystem', 0777, true);
+        }
+        file_put_contents($this->project->root . '/Modules/ExecutionSpecSystem/execution-spec-system.spec.md', <<<MD
 # Feature Spec: execution-spec-system
 
 ## Purpose
@@ -619,7 +657,7 @@ Keep execution-spec implementation logging deterministic.
 
 ## Expected Behavior
 
-- Successful implement spec runs for active execution specs append one required-format entry to docs/features/implementation-log.md.
+- Successful implement spec runs for active execution specs append one required-format entry to Modules/implementation.log.
 - Draft execution specs are never logged as implemented, and repeated completion of the same active spec does not duplicate the log entry.
 - If the implementation log cannot be updated, implement spec must surface that failure clearly and deterministically.
 
@@ -634,7 +672,37 @@ Keep execution-spec implementation logging deterministic.
 - Feature directories continue to provide execution-spec context.
 MD);
 
-        file_put_contents($this->project->root . '/docs/features/execution-spec-system/execution-spec-system.md', <<<MD
+        file_put_contents($this->project->root . '/Modules/ExecutionSpecSystem/execution-spec-system.decisions.md', <<<'MD'
+### Decision: baseline
+
+Timestamp: 2026-05-03T10:00:00-04:00
+
+**Context**
+
+- baseline
+
+**Decision**
+
+- baseline
+
+**Reasoning**
+
+- baseline
+
+**Alternatives Considered**
+
+- baseline
+
+**Impact**
+
+- baseline
+
+**Spec Reference**
+
+- baseline
+MD);
+
+        file_put_contents($this->project->root . '/Modules/ExecutionSpecSystem/execution-spec-system.md', <<<MD
 # Feature: execution-spec-system
 
 ## Purpose
@@ -643,7 +711,7 @@ Keep execution-spec implementation logging deterministic.
 
 ## Current State
 
-- Successful implement spec runs for active execution specs append one required-format entry to docs/features/implementation-log.md.
+- Successful implement spec runs for active execution specs append one required-format entry to Modules/implementation.log.
 - Draft execution specs are never logged as implemented, and repeated completion of the same active spec does not duplicate the log entry.
 - If the implementation log cannot be updated, implement spec must surface that failure clearly and deterministically.
 - Successful active execution-spec implementation appends exactly one correctly formatted implementation-log entry automatically.

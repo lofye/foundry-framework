@@ -631,15 +631,15 @@ final class ApiSurfaceRegistry
     public function manifestSchemas(): array
     {
         return [
-            $this->surfaceEntry('manifest_schema', 'app/features/*/feature.yaml', 'public_api', 'stable', 'Feature manifest contract safe for application code and tooling.'),
-            $this->surfaceEntry('manifest_schema', 'app/features/*/input.schema.json', 'public_api', 'stable', 'Feature input schema contract safe to depend on.'),
-            $this->surfaceEntry('manifest_schema', 'app/features/*/output.schema.json', 'public_api', 'stable', 'Feature output schema contract safe to depend on.'),
-            $this->surfaceEntry('manifest_schema', 'app/features/*/context.manifest.json', 'public_api', 'stable', 'Feature context manifest contract safe to depend on.'),
-            $this->surfaceEntry('manifest_schema', 'app/features/*/permissions.yaml', 'public_api', 'stable', 'Feature permission declaration contract safe to depend on.'),
-            $this->surfaceEntry('manifest_schema', 'app/features/*/cache.yaml', 'public_api', 'stable', 'Feature cache declaration contract safe to depend on.'),
-            $this->surfaceEntry('manifest_schema', 'app/features/*/events.yaml', 'public_api', 'stable', 'Feature event declaration contract safe to depend on.'),
-            $this->surfaceEntry('manifest_schema', 'app/features/*/jobs.yaml', 'public_api', 'stable', 'Feature job declaration contract safe to depend on.'),
-            $this->surfaceEntry('manifest_schema', 'app/features/*/prompts.md', 'experimental_api', 'experimental', 'Feature-local prompt notes remain experimental authoring aid.'),
+            $this->surfaceEntry('manifest_schema', 'Features/*/feature.yaml', 'public_api', 'stable', 'Feature manifest contract safe for application code and tooling.'),
+            $this->surfaceEntry('manifest_schema', 'Features/*/input.schema.json', 'public_api', 'stable', 'Feature input schema contract safe to depend on.'),
+            $this->surfaceEntry('manifest_schema', 'Features/*/output.schema.json', 'public_api', 'stable', 'Feature output schema contract safe to depend on.'),
+            $this->surfaceEntry('manifest_schema', 'Features/*/context.manifest.json', 'public_api', 'stable', 'Feature context manifest contract safe to depend on.'),
+            $this->surfaceEntry('manifest_schema', 'Features/*/permissions.yaml', 'public_api', 'stable', 'Feature permission declaration contract safe to depend on.'),
+            $this->surfaceEntry('manifest_schema', 'Features/*/cache.yaml', 'public_api', 'stable', 'Feature cache declaration contract safe to depend on.'),
+            $this->surfaceEntry('manifest_schema', 'Features/*/events.yaml', 'public_api', 'stable', 'Feature event declaration contract safe to depend on.'),
+            $this->surfaceEntry('manifest_schema', 'Features/*/jobs.yaml', 'public_api', 'stable', 'Feature job declaration contract safe to depend on.'),
+            $this->surfaceEntry('manifest_schema', 'Features/*/prompts.md', 'experimental_api', 'experimental', 'Feature-local prompt notes remain experimental authoring aid.'),
         ];
     }
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Foundry\Compiler;
 
 use Foundry\Packs\InstalledPackRegistry;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Paths;
 
 final readonly class SourceScanner
@@ -180,16 +181,16 @@ final readonly class SourceScanner
 
     public function featureFromPath(string $relativePath): ?string
     {
-        if (!str_starts_with($relativePath, 'app/features/')) {
+        if (!str_starts_with($relativePath, 'Features/')) {
             return null;
         }
 
         $parts = explode('/', $relativePath);
-        if (count($parts) < 3) {
+        if (count($parts) < 2) {
             return null;
         }
 
-        $feature = (string) ($parts[2] ?? '');
+        $feature = FeatureNaming::fromDirectoryName((string) ($parts[1] ?? ''));
 
         return $feature !== '' ? $feature : null;
     }

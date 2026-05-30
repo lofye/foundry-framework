@@ -35,12 +35,12 @@ final class CLIFirstRunExperienceTest extends TestCase
         $this->assertSame('canonical', $result['payload']['example']['taxonomy']);
         $this->assertSame('direct_copy', $result['payload']['example']['mode']);
         $this->assertSame(['blog-api'], $result['payload']['example']['source_examples']);
-        $this->assertSame('feature:list_posts', $result['payload']['example']['explain_default_target']);
+        $this->assertSame('feature:list-posts', $result['payload']['example']['explain_default_target']);
         $this->assertSame('working_directory', $result['payload']['workspace_mode']);
         $this->assertSame($root, $result['payload']['target_path']);
-        $this->assertContains('list_posts', $result['payload']['graph']['summary']['features']);
+        $this->assertContains('list-posts', $result['payload']['graph']['summary']['features']);
         $this->assertSame('feature', $result['payload']['explain']['subject']['kind']);
-        $this->assertFileExists($root . '/app/features/list_posts/feature.yaml');
+        $this->assertFileExists($root . '/Features/ListPosts/feature.yaml');
         $this->assertFileExists($root . '/README.md');
 
         $this->deleteDirectory($root);
@@ -59,7 +59,7 @@ final class CLIFirstRunExperienceTest extends TestCase
         $this->assertSame('temp_directory', $result['payload']['workspace_mode']);
         $this->assertNotSame($root, $result['payload']['target_path']);
         $this->assertFileExists($root . '/notes.txt');
-        $this->assertFileExists($result['payload']['target_path'] . '/app/features/list_posts/feature.yaml');
+        $this->assertFileExists($result['payload']['target_path'] . '/Features/ListPosts/feature.yaml');
 
         $this->deleteDirectory((string) $result['payload']['target_path']);
         $this->deleteDirectory($root);
@@ -91,7 +91,7 @@ final class CLIFirstRunExperienceTest extends TestCase
         $this->assertSame('reference', $load['payload']['example']['taxonomy']);
         $this->assertSame('composed', $load['payload']['example']['mode']);
         $this->assertFileExists($load['payload']['target_path'] . '/foundry.extensions.php');
-        $this->assertFileExists($load['payload']['target_path'] . '/app/features/say_hello/feature.yaml');
+        $this->assertFileExists($load['payload']['target_path'] . '/Features/SayHello/feature.yaml');
 
         $this->deleteDirectory((string) $load['payload']['target_path']);
         $this->deleteDirectory($root);
@@ -120,8 +120,8 @@ final class CLIFirstRunExperienceTest extends TestCase
 
         try {
             $this->copyDirectory(
-                $repoRoot . '/examples/hello-world/app',
-                $project->root . '/app',
+                $repoRoot . '/examples/hello-world',
+                $project->root,
             );
             chdir($project->root);
 
@@ -130,8 +130,8 @@ final class CLIFirstRunExperienceTest extends TestCase
             $this->assertSame(0, $result['status']);
             $this->assertSame('existing_project', $result['payload']['mode']);
             $this->assertTrue($result['payload']['project_detected']);
-            $this->assertContains('say_hello', $result['payload']['graph']['summary']['features']);
-            $this->assertSame('feature:say_hello', $result['payload']['explain']['subject']['id']);
+            $this->assertContains('say-hello', $result['payload']['graph']['summary']['features']);
+            $this->assertSame('feature:say-hello', $result['payload']['explain']['subject']['id']);
         } finally {
             $project->cleanup();
         }

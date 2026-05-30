@@ -9,8 +9,6 @@ final class ExecutionSpecFilename
     public const ID_PATTERN = '\d{3}(?:\.\d{3})*';
     public const SLUG_PATTERN = '[a-z0-9]+(?:-[a-z0-9]+)*';
     public const NAME_PATTERN = '(?<name>(?<id>' . self::ID_PATTERN . ')-(?<slug>' . self::SLUG_PATTERN . '))';
-    public const ACTIVE_PATH_PATTERN = '#^docs/features/(?<feature>[a-z0-9]+(?:-[a-z0-9]+)*)/specs/' . self::NAME_PATTERN . '\.md$#';
-    public const DRAFT_PATH_PATTERN = '#^docs/features/(?<feature>[a-z0-9]+(?:-[a-z0-9]+)*)/specs/drafts/' . self::NAME_PATTERN . '\.md$#';
     public const ACTIVE_MODULE_CANONICAL_PATH_PATTERN = '#^Modules/(?<feature_dir>[A-Z][A-Za-z0-9]*)/specs/' . self::NAME_PATTERN . '\.md$#';
     public const DRAFT_MODULE_CANONICAL_PATH_PATTERN = '#^Modules/(?<feature_dir>[A-Z][A-Za-z0-9]*)/specs/drafts/' . self::NAME_PATTERN . '\.md$#';
     public const ACTIVE_CANONICAL_PATH_PATTERN = '#^Features/(?<feature_dir>[A-Z][A-Za-z0-9]*)/specs/' . self::NAME_PATTERN . '\.md$#';
@@ -72,11 +70,6 @@ final class ExecutionSpecFilename
      */
     public static function parseActivePath(string $relativePath): ?array
     {
-        $legacy = self::parsePath($relativePath, self::ACTIVE_PATH_PATTERN);
-        if ($legacy !== null) {
-            return $legacy;
-        }
-
         $moduleCanonical = self::parseCanonicalPath($relativePath, self::ACTIVE_MODULE_CANONICAL_PATH_PATTERN);
         if ($moduleCanonical !== null) {
             return $moduleCanonical;
@@ -97,48 +90,12 @@ final class ExecutionSpecFilename
      */
     public static function parseDraftPath(string $relativePath): ?array
     {
-        $legacy = self::parsePath($relativePath, self::DRAFT_PATH_PATTERN);
-        if ($legacy !== null) {
-            return $legacy;
-        }
-
         $moduleCanonical = self::parseCanonicalPath($relativePath, self::DRAFT_MODULE_CANONICAL_PATH_PATTERN);
         if ($moduleCanonical !== null) {
             return $moduleCanonical;
         }
 
         return self::parseCanonicalPath($relativePath, self::DRAFT_CANONICAL_PATH_PATTERN);
-    }
-
-    /**
-     * @return array{
-     *     feature:string,
-     *     name:string,
-     *     id:string,
-     *     slug:string,
-     *     segments:list<int>,
-     *     parent_id:?string
-     * }|null
-     */
-    private static function parsePath(string $relativePath, string $pattern): ?array
-    {
-        if (preg_match($pattern, $relativePath, $matches) !== 1) {
-            return null;
-        }
-
-        $name = self::parseName((string) $matches['name']);
-        if ($name === null) {
-            return null;
-        }
-
-        return [
-            'feature' => (string) $matches['feature'],
-            'name' => $name['name'],
-            'id' => $name['id'],
-            'slug' => $name['slug'],
-            'segments' => $name['segments'],
-            'parent_id' => $name['parent_id'],
-        ];
     }
 
     /**

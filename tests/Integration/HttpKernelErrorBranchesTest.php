@@ -64,11 +64,11 @@ final class HttpKernelErrorBranchesTest extends TestCase
 
     public function test_unhandled_exception_maps_to_500(): void
     {
-        $featureDir = $this->project->root . '/app/features/explode';
-        mkdir($featureDir, 0777, true);
+        $featureDir = $this->project->root . '/Features/Explode';
+        mkdir($featureDir . '/src', 0777, true);
         file_put_contents($featureDir . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{"x":{"type":"string"}}}');
         file_put_contents($featureDir . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
-        file_put_contents($featureDir . '/action.php', <<<'PHP'
+        file_put_contents($featureDir . '/src/Action.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -88,8 +88,8 @@ final class Action implements FeatureAction
 }
 PHP);
 
-        file_put_contents($this->project->root . '/app/generated/feature_index.php', "<?php return ['explode' => ['kind' => 'http', 'description' => 'x', 'route' => ['method' => 'GET', 'path' => '/explode'], 'input_schema' => 'app/features/explode/input.schema.json', 'output_schema' => 'app/features/explode/output.schema.json', 'auth' => ['required' => false, 'strategies' => [], 'permissions' => []], 'database' => ['transactions' => 'required'], 'cache' => [], 'events' => [], 'jobs' => [], 'rate_limit' => [], 'tests' => [], 'llm' => [], 'base_path' => 'app/features/explode', 'action_class' => 'App\\\\Features\\\\Explode\\\\Action']];");
-        file_put_contents($this->project->root . '/app/generated/routes.php', "<?php return ['GET /explode' => ['feature' => 'explode', 'kind' => 'http', 'input_schema' => 'app/features/explode/input.schema.json', 'output_schema' => 'app/features/explode/output.schema.json']];");
+        file_put_contents($this->project->root . '/app/generated/feature_index.php', "<?php return ['explode' => ['kind' => 'http', 'description' => 'x', 'route' => ['method' => 'GET', 'path' => '/explode'], 'input_schema' => 'Features/Explode/input.schema.json', 'output_schema' => 'Features/Explode/output.schema.json', 'auth' => ['required' => false, 'strategies' => [], 'permissions' => []], 'database' => ['transactions' => 'required'], 'cache' => [], 'events' => [], 'jobs' => [], 'rate_limit' => [], 'tests' => [], 'llm' => [], 'base_path' => 'Features/Explode', 'action_class' => 'App\\\\Features\\\\Explode\\\\Action']];");
+        file_put_contents($this->project->root . '/app/generated/routes.php', "<?php return ['GET /explode' => ['feature' => 'explode', 'kind' => 'http', 'input_schema' => 'Features/Explode/input.schema.json', 'output_schema' => 'Features/Explode/output.schema.json']];");
 
         $kernel = $this->makeKernel($this->project->root);
         $response = $kernel->handle(new RequestContext('GET', '/explode', [], [], ['x' => 'ok']));

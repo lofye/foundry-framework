@@ -19,7 +19,7 @@ final class CLIConfigValidationTest extends TestCase
         $this->cwd = getcwd() ?: '.';
         chdir($this->project->root);
 
-        $base = $this->project->root . '/app/features/list_posts';
+        $base = $this->project->root . '/Features/ListPosts';
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
@@ -31,9 +31,9 @@ route:
   method: GET
   path: /posts
 input:
-  schema: app/features/list_posts/input.schema.json
+  schema: Features/ListPosts/input.schema.json
 output:
-  schema: app/features/list_posts/output.schema.json
+  schema: Features/ListPosts/output.schema.json
 auth:
   required: false
   public: true
@@ -63,7 +63,10 @@ YAML);
 
         file_put_contents($base . '/input.schema.json', '{"type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/output.schema.json', '{"type":"object","additionalProperties":false,"properties":{}}');
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        if (!is_dir($base . '/src')) {
+            mkdir($base . '/src', 0777, true);
+        }
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/queries.sql', '');
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: []\nrules: {}\n");
         file_put_contents($base . '/cache.yaml', "version: 1\nentries: []\n");

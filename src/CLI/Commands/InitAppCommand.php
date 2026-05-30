@@ -12,6 +12,7 @@ use Foundry\Documentation\GraphDocsGenerator;
 use Foundry\Documentation\InspectUiGenerator;
 use Foundry\Generation\FeatureGenerator;
 use Foundry\Support\ApiSurfaceRegistry;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Json;
 use Foundry\Support\Paths;
@@ -152,11 +153,11 @@ final class InitAppCommand extends Command
                 $written[] = $path;
             }
 
-            $actionPath = $paths->join('app/features/' . $feature . '/action.php');
+            $actionPath = $paths->join(FeatureNaming::directory($feature) . '/src/Action.php');
             file_put_contents($actionPath, (string) ($spec['action'] ?? ''));
             $written[] = $actionPath;
 
-            $features[] = $feature;
+            $features[] = FeatureNaming::canonical($feature);
             $routes[] = sprintf(
                 '%s %s',
                 strtoupper((string) ($definition['route']['method'] ?? 'GET')),
@@ -222,6 +223,9 @@ final class InitAppCommand extends Command
                 'psr-4' => [
                     'App\\' => 'app/',
                 ],
+                'classmap' => [
+                    'Features/',
+                ],
             ],
             'scripts' => [
                 'foundry:compile' => '@php foundry compile graph --json',
@@ -258,6 +262,9 @@ final class InitAppCommand extends Command
 !/storage/tmp/.gitignore
 TXT
             ,
+            'Features/.gitkeep' => '',
+            'Modules/.gitkeep' => '',
+            'Packs/.gitkeep' => '',
             '.env.example' => $this->replace(<<<'ENV'
 APP_NAME="{{DISPLAY_NAME}}"
 APP_ENV=local
@@ -374,7 +381,7 @@ BAT
          failOnWarning="true">
     <testsuites>
         <testsuite name="feature">
-            <directory suffix="_test.php">app/features</directory>
+            <directory suffix="_test.php">Features</directory>
         </testsuite>
         <testsuite name="smoke">
             <directory suffix="Test.php">tests</directory>
@@ -383,6 +390,7 @@ BAT
     <source>
         <include>
             <directory>app</directory>
+            <directory>Features</directory>
             <directory>tests</directory>
         </include>
     </source>
@@ -903,7 +911,7 @@ PHP;
             'status' => 'ok',
             'framework' => 'foundry',
             'starter' => '{$starterMode}',
-            'message' => 'Edit app/features to build your app and inspect /docs to explore the generated Foundry surfaces.',
+            'message' => 'Edit Features/ to build your app and inspect /docs to explore the generated Foundry surfaces.',
             'next_route' => '/docs',
         ];
 PHP);

@@ -24,7 +24,7 @@ final class DeepTestGeneratorTest extends TestCase
     protected function setUp(): void
     {
         $this->project = new TempProject();
-        $this->createFeature('api_create_post', 'POST', '/api/posts');
+        $this->createFeature('api-create-post', 'POST', '/api/posts');
 
         $compiler = new GraphCompiler(Paths::fromCwd($this->project->root));
         $compiler->compile(new CompileOptions());
@@ -41,16 +41,16 @@ final class DeepTestGeneratorTest extends TestCase
         $compiler = new GraphCompiler($paths);
         $generator = new DeepTestGenerator($paths, $compiler, new TestGenerator());
 
-        $result = $generator->generateForTarget('api_create_post', 'deep');
+        $result = $generator->generateForTarget('api-create-post', 'deep');
 
         $this->assertSame('feature', $result['kind']);
         $this->assertNotEmpty($result['files']);
-        $this->assertFileExists($this->project->root . '/app/features/api_create_post/tests/api_create_post_deep_test.php');
+        $this->assertFileExists($this->project->root . '/Features/ApiCreatePost/tests/api_create_post_deep_test.php');
     }
 
     public function test_generates_all_missing_tests(): void
     {
-        @unlink($this->project->root . '/app/features/api_create_post/tests/api_create_post_contract_test.php');
+        @unlink($this->project->root . '/Features/ApiCreatePost/tests/api_create_post_contract_test.php');
 
         $paths = Paths::fromCwd($this->project->root);
         $compiler = new GraphCompiler($paths);
@@ -58,8 +58,8 @@ final class DeepTestGeneratorTest extends TestCase
 
         $result = $generator->generateAllMissing('basic');
 
-        $this->assertContains('api_create_post', $result['features']);
-        $this->assertFileExists($this->project->root . '/app/features/api_create_post/tests/api_create_post_contract_test.php');
+        $this->assertContains('api-create-post', $result['features']);
+        $this->assertFileExists($this->project->root . '/Features/ApiCreatePost/tests/api_create_post_contract_test.php');
     }
 
     public function test_generate_for_target_requires_non_empty_target(): void
@@ -98,7 +98,7 @@ version: 1
 resource: posts
 features: [create]
 feature_names:
-  create: api_create_post
+  create: api-create-post
 YAML);
 
         file_put_contents($this->project->root . '/app/definitions/api/posts.api-resource.yaml', <<<'YAML'
@@ -107,7 +107,7 @@ resource: posts
 style: api
 features: [create]
 feature_names:
-  create: api_create_post
+  create: api-create-post
 YAML);
 
         $paths = Paths::fromCwd($this->project->root);
@@ -118,7 +118,7 @@ YAML);
         $result = $generator->generateForTarget('posts', 'api');
 
         $this->assertSame('api_resource', $result['kind']);
-        $this->assertSame(['api_create_post'], $result['features']);
+        $this->assertSame(['api-create-post'], $result['features']);
         $this->assertNotEmpty($result['files']);
     }
 
@@ -127,7 +127,7 @@ YAML);
         $graph = new ApplicationGraph(1, '0.1.0', '2026-03-09T00:00:00+00:00', 'hash');
         $graph->addNode(new FeatureNode(
             'feature:ghost_feature',
-            'app/features/ghost_feature/feature.yaml',
+            'Features/GhostFeature/feature.yaml',
             [
                 'feature' => 'ghost_feature',
                 'tests' => ['required' => ['contract']],
@@ -172,7 +172,7 @@ YAML);
 
     public function test_deep_mode_includes_not_found_and_notification_dispatch_scenarios(): void
     {
-        $this->createFeature('api_view_post', 'GET', '/api/posts/{id}');
+        $this->createFeature('api-view-post', 'GET', '/api/posts/{id}');
         mkdir($this->project->root . '/app/definitions/notifications', 0777, true);
         mkdir($this->project->root . '/app/notifications/templates', 0777, true);
         mkdir($this->project->root . '/app/notifications/schemas', 0777, true);
@@ -184,7 +184,7 @@ channel: mail
 queue: default
 template: post_viewed
 input_schema: app/notifications/schemas/post_viewed.input.schema.json
-dispatch_features: [api_view_post]
+dispatch_features: [api-view-post]
 YAML);
         file_put_contents($this->project->root . '/app/notifications/templates/post_viewed.mail.php', <<<'PHP'
 <?php
@@ -201,9 +201,9 @@ JSON);
         $compiler->compile(new CompileOptions());
 
         $generator = new DeepTestGenerator($paths, $compiler, new TestGenerator());
-        $result = $generator->generateForTarget('api_view_post', 'deep');
+        $result = $generator->generateForTarget('api-view-post', 'deep');
 
-        $deepTestPath = $this->project->root . '/app/features/api_view_post/tests/api_view_post_deep_test.php';
+        $deepTestPath = $this->project->root . '/Features/ApiViewPost/tests/api_view_post_deep_test.php';
         $contents = file_get_contents($deepTestPath) ?: '';
 
         $this->assertContains($deepTestPath, $result['files']);
@@ -213,7 +213,8 @@ JSON);
 
     private function createFeature(string $feature, string $method, string $path): void
     {
-        $base = $this->project->root . '/app/features/' . $feature;
+        $directory = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+        $base = $this->project->root . '/Features/' . $directory;
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<YAML
@@ -225,9 +226,9 @@ route:
   method: {$method}
   path: {$path}
 input:
-  schema: app/features/{$feature}/input.schema.json
+  schema: Features/{$directory}/input.schema.json
 output:
-  schema: app/features/{$feature}/output.schema.json
+  schema: Features/{$directory}/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -259,7 +260,8 @@ llm:
   risk_level: low
 YAML);
 
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        mkdir($base . '/src', 0777, true);
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"required":["title"],"properties":{"title":{"type":"string"}}}');
         file_put_contents($base . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{"data":{"type":"object"}}}');
         file_put_contents($base . '/queries.sql', "-- name: insert_post\nINSERT INTO posts(title) VALUES(:title);\n");

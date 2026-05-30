@@ -194,7 +194,7 @@ final class DefinitionMigrator
             $formats = [
                 new DefinitionFormat(
                     name: 'feature_manifest',
-                    description: 'Feature manifest files under app/features/<feature>/feature.yaml',
+                    description: 'Feature manifest files under Features/<Feature>/feature.yaml',
                     currentVersion: $this->resolver->currentFeatureVersion(),
                     supportedVersions: [1, $this->resolver->currentFeatureVersion()],
                 ),

@@ -10,6 +10,7 @@ use Foundry\Compiler\GraphEdge;
 use Foundry\Compiler\IR\ApiResourceNode;
 use Foundry\Compiler\IR\NotificationNode;
 use Foundry\Compiler\IR\SchemaNode;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Json;
 
 final class IntegrationDefinitionPass implements CompilerPass
@@ -353,17 +354,17 @@ final class IntegrationDefinitionPass implements CompilerPass
     {
         $singular = $this->singularize($resource);
         $defaults = [
-            'list' => 'api_list_' . $resource,
-            'view' => 'api_view_' . $singular,
-            'create' => 'api_create_' . $singular,
-            'update' => 'api_update_' . $singular,
-            'delete' => 'api_delete_' . $singular,
+            'list' => FeatureNaming::canonical('api_list_' . $resource),
+            'view' => FeatureNaming::canonical('api_view_' . $singular),
+            'create' => FeatureNaming::canonical('api_create_' . $singular),
+            'update' => FeatureNaming::canonical('api_update_' . $singular),
+            'delete' => FeatureNaming::canonical('api_delete_' . $singular),
         ];
 
         $map = [];
         foreach ($operations as $operation) {
             $override = (string) ($overrides[$operation] ?? '');
-            $map[$operation] = $override !== '' ? $override : $defaults[$operation];
+            $map[$operation] = FeatureNaming::canonical($override !== '' ? $override : $defaults[$operation]);
         }
 
         ksort($map);

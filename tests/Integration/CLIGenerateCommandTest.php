@@ -129,7 +129,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertFalse($generate['payload']['ok']);
         $this->assertSame('GENERATE_APPROVAL_REQUIRED', $generate['payload']['error']['code']);
         $this->assertSame('pending_approval', $generate['payload']['plan_record']['status']);
-        $this->assertFileDoesNotExist($this->project->root . '/app/features/comments/feature.yaml');
+        $this->assertFileDoesNotExist($this->project->root . '/Features/Comments/feature.yaml');
 
         $approveA = $this->runCommand($app, [
             'foundry',
@@ -210,7 +210,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertArrayHasKey('outcome_confidence', $generate['payload']);
         $this->assertSame(['foundry/blog'], $generate['payload']['packs_used']);
         $this->assertSame('pack:foundry/blog', $generate['payload']['metadata']['target']['resolved']);
-        $this->assertFileExists($this->project->root . '/app/features/blog_post_notes/feature.yaml');
+        $this->assertFileExists($this->project->root . '/Features/BlogPostNotes/feature.yaml');
     }
 
     public function test_generate_can_auto_install_required_pack_when_allowed(): void
@@ -250,7 +250,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertArrayHasKey('plan_confidence', $generate['payload']);
         $this->assertArrayHasKey('outcome_confidence', $generate['payload']);
         $this->assertFileExists($this->project->root . '/Packs/foundry/blog/foundry.json');
-        $this->assertFileExists($this->project->root . '/app/features/blog_post_notes/feature.yaml');
+        $this->assertFileExists($this->project->root . '/Features/BlogPostNotes/feature.yaml');
     }
 
     public function test_generate_blocks_auto_install_when_entitlement_is_missing(): void
@@ -391,8 +391,8 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertNotEmpty($result['payload']['workflow']['steps'][0]['record_id']);
         $this->assertNotSame('', $firstFeature);
         $this->assertNotSame('', $secondFeature);
-        $this->assertFileExists($this->project->root . '/app/features/' . $firstFeature . '/feature.yaml');
-        $this->assertFileExists($this->project->root . '/app/features/' . $secondFeature . '/feature.yaml');
+        $this->assertFileExists($this->featureFile($firstFeature));
+        $this->assertFileExists($this->featureFile($secondFeature));
         $this->assertSame('completed', $result['payload']['plan_record']['status']);
     }
 
@@ -436,8 +436,8 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertNotEmpty($result['payload']['workflow']['rollback_guidance']);
         $firstFeature = (string) $result['payload']['workflow']['steps'][0]['output']['plan']['metadata']['feature'];
         $this->assertNotSame('', $firstFeature);
-        $this->assertFileExists($this->project->root . '/app/features/' . $firstFeature . '/feature.yaml');
-        $this->assertFileDoesNotExist($this->project->root . '/app/features/missing_feature/feature.yaml');
+        $this->assertFileExists($this->featureFile($firstFeature));
+        $this->assertFileDoesNotExist($this->featureFile('missing_feature'));
         $this->assertSame('failed', $result['payload']['plan_record']['status']);
     }
 
@@ -656,7 +656,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame('.foundry/templates/single.json', $generate['payload']['metadata']['template']['path']);
         $this->assertSame(['name' => 'comments'], $generate['payload']['metadata']['template']['resolved_parameters']);
         $this->assertSame('Create comments', $generate['payload']['intent']);
-        $this->assertFileExists($this->project->root . '/app/features/comments_system/feature.yaml');
+        $this->assertFileExists($this->project->root . '/Features/CommentsSystem/feature.yaml');
         $this->assertSame(0, $show['status']);
         $this->assertSame('feature.recipe', $show['payload']['metadata']['template']['template_id']);
     }
@@ -1144,7 +1144,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame(1, $generate['status']);
         $this->assertSame('GENERATE_GIT_DIRTY_TREE', $generate['payload']['error']['code']);
         $this->assertContains('composer.json', $generate['payload']['error']['details']['changed_files']);
-        $this->assertFileDoesNotExist($this->project->root . '/app/features/comments/feature.yaml');
+        $this->assertFileDoesNotExist($this->project->root . '/Features/Comments/feature.yaml');
     }
 
     public function test_generate_can_allow_dirty_repo_and_persist_generate_history(): void
@@ -1195,7 +1195,7 @@ final class CLIGenerateCommandTest extends TestCase
                 'description' => 'Prevent feature file creation.',
                 'match' => [
                     'actions' => ['create_file'],
-                    'paths' => ['app/features/**'],
+                    'paths' => ['Features/**'],
                 ],
             ]],
         ]);
@@ -1213,7 +1213,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame('GENERATE_POLICY_VIOLATION', $result['payload']['error']['code']);
         $this->assertSame('deny', $result['payload']['error']['details']['policy']['status']);
         $this->assertSame(['protect-features'], $result['payload']['error']['details']['policy']['matched_rule_ids']);
-        $this->assertFileDoesNotExist($this->project->root . '/app/features/comments_system/feature.yaml');
+        $this->assertFileDoesNotExist($this->project->root . '/Features/CommentsSystem/feature.yaml');
     }
 
     public function test_generate_policy_warnings_surface_without_blocking_execution(): void
@@ -1226,7 +1226,7 @@ final class CLIGenerateCommandTest extends TestCase
                 'description' => 'Warn on feature file creation.',
                 'match' => [
                     'actions' => ['create_file'],
-                    'paths' => ['app/features/**'],
+                    'paths' => ['Features/**'],
                 ],
             ]],
         ]);
@@ -1257,7 +1257,7 @@ final class CLIGenerateCommandTest extends TestCase
                 'description' => 'Prevent feature file creation.',
                 'match' => [
                     'actions' => ['create_file'],
-                    'paths' => ['app/features/**'],
+                    'paths' => ['Features/**'],
                 ],
             ]],
         ]);
@@ -1277,7 +1277,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame('deny', $result['payload']['policy']['status']);
         $this->assertTrue($result['payload']['policy']['blocking']);
         $this->assertTrue($result['payload']['verification_results']['skipped']);
-        $this->assertFileDoesNotExist($this->project->root . '/app/features/comments_system/feature.yaml');
+        $this->assertFileDoesNotExist($this->project->root . '/Features/CommentsSystem/feature.yaml');
     }
 
     public function test_generate_can_explicitly_override_policy_violations_and_persist_policy_result(): void
@@ -1290,7 +1290,7 @@ final class CLIGenerateCommandTest extends TestCase
                 'description' => 'Prevent feature file creation.',
                 'match' => [
                     'actions' => ['create_file'],
-                    'paths' => ['app/features/**'],
+                    'paths' => ['Features/**'],
                 ],
             ]],
         ]);
@@ -1316,7 +1316,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertTrue($generate['payload']['policy']['override_requested']);
         $this->assertTrue($generate['payload']['policy']['override_used']);
         $this->assertSame('flag', $generate['payload']['policy']['override_source']);
-        $this->assertFileExists($this->project->root . '/app/features/comments_system/feature.yaml');
+        $this->assertFileExists($this->project->root . '/Features/CommentsSystem/feature.yaml');
         $this->assertSame(0, $show['status']);
         $this->assertSame('deny', $show['payload']['policy']['status']);
         $this->assertTrue($show['payload']['policy']['override_used']);
@@ -1332,7 +1332,7 @@ final class CLIGenerateCommandTest extends TestCase
                 'description' => 'Prevent feature file creation.',
                 'match' => [
                     'actions' => ['create_file'],
-                    'paths' => ['app/features/**'],
+                    'paths' => ['Features/**'],
                 ],
             ]],
         ]);
@@ -1366,7 +1366,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame('deny', $result['payload']['policy']['status']);
         $this->assertTrue($result['payload']['policy']['override_used']);
         $this->assertSame('interactive_confirmation', $result['payload']['policy']['override_source']);
-        $this->assertFileExists($this->project->root . '/app/features/comments_system/feature.yaml');
+        $this->assertFileExists($this->project->root . '/Features/CommentsSystem/feature.yaml');
     }
 
     public function test_generate_human_output_includes_policy_summary(): void
@@ -1379,7 +1379,7 @@ final class CLIGenerateCommandTest extends TestCase
                 'description' => 'Warn on feature file creation.',
                 'match' => [
                     'actions' => ['create_file'],
-                    'paths' => ['app/features/**'],
+                    'paths' => ['Features/**'],
                 ],
             ]],
         ]);
@@ -1425,7 +1425,7 @@ final class CLIGenerateCommandTest extends TestCase
                 'description' => 'Prevent feature file creation.',
                 'match' => [
                     'actions' => ['create_file'],
-                    'paths' => ['app/features/**'],
+                    'paths' => ['Features/**'],
                 ],
             ]],
         ]);
@@ -1455,7 +1455,7 @@ final class CLIGenerateCommandTest extends TestCase
                 'description' => 'Prevent feature file creation.',
                 'match' => [
                     'actions' => ['create_file'],
-                    'paths' => ['app/features/**'],
+                    'paths' => ['Features/**'],
                 ],
             ]],
         ]);
@@ -1570,10 +1570,10 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame('replayed', $replay['payload']['status']);
         $this->assertFalse($replay['payload']['drift_detected']);
         $this->assertSame('original', $replay['payload']['source_record']['selected_plan']);
-        $this->assertFileExists($this->project->root . '/app/features/' . $feature . '/feature.yaml');
+        $this->assertFileExists($this->featureFile($feature));
         $this->assertStringContainsString(
             'Replay-owned description.',
-            (string) file_get_contents($this->project->root . '/app/features/' . $feature . '/feature.yaml'),
+            (string) file_get_contents($this->featureFile($feature)),
         );
     }
 
@@ -1630,7 +1630,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertTrue($replay['payload']['drift_detected']);
         $this->assertNotEmpty($replay['payload']['drift_summary']['messages']);
         $this->assertSame('replayed', $replay['payload']['status']);
-        $this->assertFileExists($this->project->root . '/app/features/' . $feature . '/feature.yaml');
+        $this->assertFileExists($this->featureFile($feature));
     }
 
     public function test_plan_replay_dry_run_validates_without_writing_files(): void
@@ -1656,7 +1656,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertTrue($replay['payload']['replayable']);
         $this->assertTrue($replay['payload']['verification']['skipped']);
         $this->assertNotEmpty($replay['payload']['actions_executed']);
-        $this->assertFileDoesNotExist($this->project->root . '/app/features/' . $feature . '/feature.yaml');
+        $this->assertFileDoesNotExist($this->featureFile($feature));
     }
 
     public function test_plan_undo_dry_run_previews_without_changing_files(): void
@@ -1673,7 +1673,7 @@ final class CLIGenerateCommandTest extends TestCase
 
         $planId = (string) $generate['payload']['plan_record']['plan_id'];
         $feature = (string) $generate['payload']['plan']['metadata']['feature'];
-        $featurePath = $this->project->root . '/app/features/' . $feature . '/feature.yaml';
+        $featurePath = $this->featureFile($feature);
 
         $undo = $this->runCommand($app, ['foundry', 'plan:undo', $planId, '--dry-run', '--json']);
 
@@ -1703,7 +1703,7 @@ final class CLIGenerateCommandTest extends TestCase
 
         $planId = (string) $generate['payload']['plan_record']['plan_id'];
         $feature = (string) $generate['payload']['plan']['metadata']['feature'];
-        $featurePath = $this->project->root . '/app/features/' . $feature . '/feature.yaml';
+        $featurePath = $this->featureFile($feature);
 
         $undo = $this->runCommand($app, ['foundry', 'plan:undo', $planId, '--json']);
 
@@ -1729,7 +1729,7 @@ final class CLIGenerateCommandTest extends TestCase
 
         $planId = (string) $generate['payload']['plan_record']['plan_id'];
         $feature = (string) $generate['payload']['plan']['metadata']['feature'];
-        $featurePath = $this->project->root . '/app/features/' . $feature . '/feature.yaml';
+        $featurePath = $this->featureFile($feature);
         $recordPath = $this->project->root . '/' . $generate['payload']['plan_record']['storage_path'];
         $record = json_decode((string) file_get_contents($recordPath), true, 512, JSON_THROW_ON_ERROR);
 
@@ -1744,7 +1744,7 @@ final class CLIGenerateCommandTest extends TestCase
             ),
         );
         $this->assertContains(
-            'app/features/' . $feature . '/feature.yaml',
+            $this->featureRelativePath($feature),
             array_values(array_map(
                 static fn(array $patch): string => (string) ($patch['path'] ?? ''),
                 $record['undo']['patches'],
@@ -1759,7 +1759,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame('snapshot', $undo['payload']['rollback_mode']);
         $this->assertTrue($undo['payload']['fully_reversible']);
         $this->assertNotEmpty($undo['payload']['reversed_actions']);
-        $this->assertContains('app/features/' . $feature . '/feature.yaml', $undo['payload']['files_recovered']);
+        $this->assertContains($this->featureRelativePath($feature), $undo['payload']['files_recovered']);
         $this->assertFileDoesNotExist($featurePath);
     }
 
@@ -1883,7 +1883,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame(0, $generate['status']);
         $this->assertTrue($generate['payload']['git']['commit']['created']);
         $this->assertNotEmpty($generate['payload']['git']['commit']['commit']);
-        $this->assertContains('app/features/comments_system/feature.yaml', $generate['payload']['git']['commit']['files']);
+        $this->assertContains('Features/CommentsSystem/feature.yaml', $generate['payload']['git']['commit']['files']);
         $this->assertSame('foundry generate (new): Create comments', $this->git(['log', '-1', '--format=%s']));
     }
 
@@ -2002,7 +2002,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame([['type' => 'reject']], $result['payload']['interactive']['user_decisions']);
         $this->assertArrayHasKey('original_plan', $result['payload']['interactive']);
         $this->assertTrue($result['payload']['verification_results']['skipped']);
-        $this->assertFileDoesNotExist($this->project->root . '/app/features/comments_system/feature.yaml');
+        $this->assertFileDoesNotExist($this->project->root . '/Features/CommentsSystem/feature.yaml');
     }
 
     public function test_generate_interactive_reject_aborts_without_writing_files(): void
@@ -2030,7 +2030,7 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame(0, $result['status']);
         $this->assertTrue($result['payload']['interactive']['rejected']);
         $this->assertTrue($result['payload']['verification_results']['skipped']);
-        $this->assertFileDoesNotExist($this->project->root . '/app/features/comments_system/feature.yaml');
+        $this->assertFileDoesNotExist($this->project->root . '/Features/CommentsSystem/feature.yaml');
     }
 
     public function test_generate_interactive_can_execute_filtered_modify_plan(): void
@@ -2046,18 +2046,18 @@ final class CLIGenerateCommandTest extends TestCase
         $this->assertSame(0, $baseline['status']);
 
         $feature = (string) $baseline['payload']['plan']['metadata']['feature'];
-        $manifestPath = $this->project->root . '/app/features/' . $feature . '/feature.yaml';
-        $promptsPath = $this->project->root . '/app/features/' . $feature . '/prompts.md';
+        $manifestPath = $this->featureFile($feature);
+        $promptsPath = $this->featureFile($feature, 'prompts.md');
         $originalPrompts = (string) file_get_contents($promptsPath);
 
         $app = $this->interactiveApplication(function (InteractiveGenerateReviewRequest $request) use ($feature): InteractiveGenerateReviewResult {
-            $filtered = $this->modifiedPlanWithoutPath($request->plan, 'app/features/' . $feature . '/prompts.md');
+            $filtered = $this->modifiedPlanWithoutPath($request->plan, $this->featureRelativePath($feature, 'prompts.md'));
 
             return new InteractiveGenerateReviewResult(
                 approved: true,
                 plan: $filtered,
                 userDecisions: [
-                    ['type' => 'exclude_file', 'path' => 'app/features/' . $feature . '/prompts.md'],
+                    ['type' => 'exclude_file', 'path' => $this->featureRelativePath($feature, 'prompts.md')],
                     ['type' => 'approve'],
                 ],
                 preview: ['summary' => [], 'actions' => [], 'diffs' => []],
@@ -2353,5 +2353,15 @@ final class CLIGenerateCommandTest extends TestCase
             metadata: $plan->metadata,
             confidence: $plan->confidence,
         );
+    }
+
+    private function featureFile(string $feature, string $file = 'feature.yaml'): string
+    {
+        return $this->project->root . '/' . $this->featureRelativePath($feature, $file);
+    }
+
+    private function featureRelativePath(string $feature, string $file = 'feature.yaml'): string
+    {
+        return 'Features/' . str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature))) . '/' . $file;
     }
 }

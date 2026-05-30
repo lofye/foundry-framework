@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Foundry\Generate;
 
+use Foundry\Support\FeatureNaming;
+
 final class FeaturePlanBuilder
 {
     /**
@@ -12,12 +14,13 @@ final class FeaturePlanBuilder
      */
     public static function predictedFiles(string $feature, array $requiredTests): array
     {
-        $base = 'app/features/' . $feature;
+        $base = FeatureNaming::directory($feature);
+        $codeSafeFeature = FeatureNaming::codeSafe($feature);
         $files = [
             $base . '/feature.yaml',
             $base . '/input.schema.json',
             $base . '/output.schema.json',
-            $base . '/action.php',
+            $base . '/src/Action.php',
             $base . '/queries.sql',
             $base . '/permissions.yaml',
             $base . '/cache.yaml',
@@ -28,7 +31,7 @@ final class FeaturePlanBuilder
         ];
 
         foreach ($requiredTests as $type) {
-            $files[] = $base . '/tests/' . $feature . '_' . $type . '_test.php';
+            $files[] = $base . '/tests/' . $codeSafeFeature . '_' . $type . '_test.php';
         }
 
         $files = array_values(array_unique(array_map('strval', $files)));

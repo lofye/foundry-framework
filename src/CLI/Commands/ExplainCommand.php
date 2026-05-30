@@ -482,7 +482,7 @@ final class ExplainCommand extends Command
             return true;
         }
 
-        foreach (['app/', 'config/', 'database/', 'docs/', '.foundry/', 'bootstrap/', 'lang/', 'public/', 'storage/'] as $prefix) {
+        foreach (['Features/', 'Modules/', 'Packs/', 'app/', 'config/', 'database/', 'docs/', '.foundry/', 'bootstrap/', 'lang/', 'public/', 'storage/'] as $prefix) {
             if (str_starts_with($value, $prefix)) {
                 return true;
             }

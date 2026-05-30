@@ -9,6 +9,7 @@ use Foundry\Generate\FeaturePlanBuilder;
 use Foundry\Generate\GenerationPlan;
 use Foundry\Generate\Generator;
 use Foundry\Generate\Intent;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Str;
 
 final class CoreNewFeatureGenerator implements Generator
@@ -27,10 +28,12 @@ final class CoreNewFeatureGenerator implements Generator
         $explainNodeId = (string) ($subject['id'] ?? 'system:root');
         [$singular, $plural, $baseRoute] = $this->resourceContext($subject, $metadata, $intent);
         $action = $this->actionToken($intent, $singular, $plural);
-        $feature = Str::toSnakeCase($action . '_' . $singular);
+        $definitionFeature = Str::toSnakeCase($action . '_' . $singular);
+        $feature = FeatureNaming::canonical($definitionFeature);
         $requiredTests = ['contract', 'feature', 'auth'];
         $definition = [
-            'feature' => $feature,
+            'feature' => $definitionFeature,
+            'canonical_feature' => $feature,
             'description' => ucfirst($action) . ' a ' . str_replace('_', ' ', $singular) . '.',
             'kind' => 'http',
             'owners' => ['platform'],
@@ -58,7 +61,7 @@ final class CoreNewFeatureGenerator implements Generator
                 'reads' => [$plural],
                 'writes' => [$plural],
                 'transactions' => 'required',
-                'queries' => [$feature],
+                'queries' => [$definitionFeature],
             ],
             'cache' => [
                 'reads' => [],

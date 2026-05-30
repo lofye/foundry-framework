@@ -123,11 +123,7 @@ final class ContextInitService
      */
     private function targetPaths(string $featureName): array
     {
-        if (is_dir($this->paths->join('Modules')) || is_dir($this->paths->join('Features'))) {
-            return $this->resolver->canonicalPaths($featureName);
-        }
-
-        return $this->resolver->legacyPaths($featureName);
+        return $this->resolver->canonicalPaths($featureName);
     }
 
     private function renderStub(string $stub, string $featureName): string

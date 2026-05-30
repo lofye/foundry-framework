@@ -23,21 +23,22 @@ final class CLIExtendedCommandsTest extends TestCase
         $this->cwd = getcwd() ?: '.';
         chdir($this->project->root);
 
-        $feature = $this->project->root . '/app/features/publish_post';
+        $feature = $this->project->root . '/Features/PublishPost';
         mkdir($feature . '/tests', 0777, true);
+        mkdir($feature . '/src', 0777, true);
 
         file_put_contents($feature . '/feature.yaml', <<<'YAML'
 version: 1
-feature: publish_post
+feature: publish-post
 kind: http
 description: test
 route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -66,10 +67,10 @@ YAML);
 
         file_put_contents($feature . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($feature . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
-        file_put_contents($feature . '/action.php', '<?php declare(strict_types=1); namespace App\\Features\\PublishPost; use Foundry\\Feature\\FeatureAction; use Foundry\\Feature\\FeatureServices; use Foundry\\Auth\\AuthContext; use Foundry\\Http\\RequestContext; final class Action implements FeatureAction { public function handle(array $input, RequestContext $request, AuthContext $auth, FeatureServices $services): array { return []; } }');
+        file_put_contents($feature . '/src/Action.php', '<?php declare(strict_types=1); namespace App\\Features\\PublishPost; use Foundry\\Feature\\FeatureAction; use Foundry\\Feature\\FeatureServices; use Foundry\\Auth\\AuthContext; use Foundry\\Http\\RequestContext; final class Action implements FeatureAction { public function handle(array $input, RequestContext $request, AuthContext $auth, FeatureServices $services): array { return []; } }');
         file_put_contents($feature . '/queries.sql', "-- name: insert_post\nINSERT INTO posts(id) VALUES(:id);\n");
         file_put_contents($feature . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules: {}\n");
-        file_put_contents($feature . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [publish_post]\n");
+        file_put_contents($feature . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [publish-post]\n");
         file_put_contents($feature . '/events.yaml', "version: 1\nemit:\n  - name: post.created\n    schema:\n      type: object\n      additionalProperties: false\n      properties: {}\nsubscribe: []\n");
         file_put_contents($feature . '/jobs.yaml', "version: 1\ndispatch:\n  - name: notify_followers\n    input_schema:\n      type: object\n      additionalProperties: false\n      properties: {}\n    queue: default\n    retry:\n      max_attempts: 2\n      backoff_seconds: [1,2]\n    timeout_seconds: 30\n\n");
 
@@ -80,7 +81,7 @@ YAML);
         $paths = Paths::fromCwd($this->project->root);
         (new IndexGenerator($paths))->generate();
         $manifest = Yaml::parseFile($feature . '/feature.yaml');
-        (new ContextManifestGenerator($paths))->write('publish_post', $manifest);
+        (new ContextManifestGenerator($paths))->write('publish-post', $manifest);
 
         file_put_contents($this->project->root . '/migration.yaml', "name: add_posts\ntable: posts\n");
         file_put_contents($this->project->root . '/storage/logs/trace.log', "event-1\n");
@@ -97,7 +98,7 @@ YAML);
         $app = new Application();
 
         foreach (['auth', 'cache', 'events', 'jobs', 'context', 'dependencies'] as $target) {
-            $result = $this->runCommand($app, ['foundry', 'inspect', $target, 'publish_post', '--json']);
+            $result = $this->runCommand($app, ['foundry', 'inspect', $target, 'publish-post', '--json']);
             $this->assertSame(0, $result['status']);
         }
 
@@ -112,7 +113,7 @@ YAML);
     {
         $app = new Application();
 
-        $generateTests = $this->runCommand($app, ['foundry', 'generate', 'tests', 'publish_post', '--json']);
+        $generateTests = $this->runCommand($app, ['foundry', 'generate', 'tests', 'publish-post', '--json']);
         $this->assertSame(0, $generateTests['status']);
 
         $migration = $this->runCommand($app, ['foundry', 'generate', 'migration', 'migration.yaml', '--json']);
@@ -131,7 +132,7 @@ YAML);
 
         $ok = $this->runCommand($app, ['foundry', 'inspect', 'route', 'POST', '/posts', '--json']);
         $this->assertSame(0, $ok['status']);
-        $this->assertSame('publish_post', $ok['payload']['feature']);
+        $this->assertSame('publish-post', $ok['payload']['feature']);
 
         $fail = $this->runCommand($app, ['foundry', 'inspect', 'route', 'GET', '/missing', '--json']);
         $this->assertSame(1, $fail['status']);

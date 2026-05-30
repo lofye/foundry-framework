@@ -18,11 +18,11 @@ final class ResourceVerifierTest extends TestCase
     protected function setUp(): void
     {
         $this->project = new TempProject();
-        $this->createFeature('list_posts');
-        $this->createFeature('view_post');
-        $this->createFeature('create_post');
-        $this->createFeature('update_post');
-        $this->createFeature('delete_post');
+        $this->createFeature('list-posts');
+        $this->createFeature('view-post');
+        $this->createFeature('create-post');
+        $this->createFeature('update-post');
+        $this->createFeature('delete-post');
 
         mkdir($this->project->root . '/app/definitions/resources', 0777, true);
         mkdir($this->project->root . '/app/definitions/listing', 0777, true);
@@ -42,11 +42,11 @@ fields:
     form: text
 features: [list, view, create, update, delete]
 feature_names:
-  list: list_posts
-  view: view_post
-  create: create_post
-  update: update_post
-  delete: delete_post
+  list: list-posts
+  view: view-post
+  create: create-post
+  update: update-post
+  delete: delete-post
 YAML);
 
         file_put_contents($this->project->root . '/app/definitions/listing/posts.list.yaml', <<<'YAML'
@@ -92,7 +92,8 @@ YAML);
 
     private function createFeature(string $feature): void
     {
-        $base = $this->project->root . '/app/features/' . $feature;
+        $directory = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+        $base = $this->project->root . '/Features/' . $directory;
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<YAML
@@ -104,9 +105,9 @@ route:
   method: GET
   path: /{$feature}
 input:
-  schema: app/features/{$feature}/input.schema.json
+  schema: Features/{$directory}/input.schema.json
 output:
-  schema: app/features/{$feature}/output.schema.json
+  schema: Features/{$directory}/output.schema.json
 auth:
   required: true
   strategies: [session]
@@ -136,7 +137,10 @@ llm:
   risk_level: low
 YAML);
 
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        if (!is_dir($base . '/src')) {
+            mkdir($base . '/src', 0777, true);
+        }
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/queries.sql', "-- name: q\nSELECT 1;\n");
@@ -145,6 +149,6 @@ YAML);
         file_put_contents($base . '/events.yaml', "version: 1\nemit: []\nsubscribe: []\n");
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch: []\n");
         file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"' . $feature . '","kind":"http"}');
-        file_put_contents($base . '/tests/' . $feature . '_contract_test.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/tests/' . str_replace('-', '_', $feature) . '_contract_test.php', '<?php declare(strict_types=1);');
     }
 }

@@ -95,7 +95,7 @@ final class ExecutionSpecResolver
                 'EXECUTION_SPEC_PATH_NON_CANONICAL',
                 'validation',
                 ['path' => $relativePath],
-                'Execution spec ids must resolve to Modules/<ModulePascalName>/specs/<id>-<slug>.md, Features/<FeaturePascalName>/specs/<id>-<slug>.md, or docs/features/<feature>/specs/<id>-<slug>.md, where <id> uses one or more dot-separated 3-digit segments.',
+                'Execution spec ids must resolve to Modules/<ModulePascalName>/specs/<id>-<slug>.md or Features/<FeaturePascalName>/specs/<id>-<slug>.md, where <id> uses one or more dot-separated 3-digit segments.',
             );
         }
 
@@ -185,7 +185,7 @@ final class ExecutionSpecResolver
     {
         $pathInput = str_replace('\\', '/', $specId);
 
-        if (str_starts_with($pathInput, 'docs/') || str_starts_with($pathInput, 'Features/') || str_starts_with($pathInput, 'Modules/')) {
+        if (str_starts_with($pathInput, 'Features/') || str_starts_with($pathInput, 'Modules/')) {
             $path = str_ends_with($pathInput, '.md') ? $pathInput : $pathInput . '.md';
             $draftPath = ExecutionSpecFilename::parseDraftPath($path);
             if ($draftPath !== null) {
@@ -222,7 +222,7 @@ final class ExecutionSpecResolver
                 'EXECUTION_SPEC_PATH_NON_CANONICAL',
                 'validation',
                 ['spec_id' => $specId],
-                'Execution spec ids must resolve to Modules/<ModulePascalName>/specs/<id>-<slug>.md, Features/<FeaturePascalName>/specs/<id>-<slug>.md, or docs/features/<feature>/specs/<id>-<slug>.md, where <id> uses one or more dot-separated 3-digit segments.',
+                'Execution spec ids must resolve to Modules/<ModulePascalName>/specs/<id>-<slug>.md or Features/<FeaturePascalName>/specs/<id>-<slug>.md, where <id> uses one or more dot-separated 3-digit segments.',
             );
         }
 
@@ -232,7 +232,7 @@ final class ExecutionSpecResolver
                 'EXECUTION_SPEC_PATH_NON_CANONICAL',
                 'validation',
                 ['spec_id' => $specId],
-                'Execution spec ids must resolve to Modules/<ModulePascalName>/specs/<id>-<slug>.md, Features/<FeaturePascalName>/specs/<id>-<slug>.md, or docs/features/<feature>/specs/<id>-<slug>.md, where <id> uses one or more dot-separated 3-digit segments.',
+                'Execution spec ids must resolve to Modules/<ModulePascalName>/specs/<id>-<slug>.md or Features/<FeaturePascalName>/specs/<id>-<slug>.md, where <id> uses one or more dot-separated 3-digit segments.',
             );
         }
 
@@ -291,7 +291,7 @@ final class ExecutionSpecResolver
                 'EXECUTION_SPEC_PATH_NON_CANONICAL',
                 'validation',
                 ['path' => $relativePath],
-                'Execution spec ids must resolve to Modules/<ModulePascalName>/specs/<id>-<slug>.md, Features/<FeaturePascalName>/specs/<id>-<slug>.md, or docs/features/<feature>/specs/<id>-<slug>.md, where <id> uses one or more dot-separated 3-digit segments.',
+                'Execution spec ids must resolve to Modules/<ModulePascalName>/specs/<id>-<slug>.md or Features/<FeaturePascalName>/specs/<id>-<slug>.md, where <id> uses one or more dot-separated 3-digit segments.',
             );
         }
 
@@ -332,12 +332,10 @@ final class ExecutionSpecResolver
         $patterns = [
             'Modules/' . $this->pascalFromSlug($feature) . '/specs/*.md',
             'Features/' . $this->pascalFromSlug($feature) . '/specs/*.md',
-            'docs/features/' . $feature . '/specs/*.md',
         ];
         if ($includeDrafts) {
             $patterns[] = 'Modules/' . $this->pascalFromSlug($feature) . '/specs/drafts/*.md';
             $patterns[] = 'Features/' . $this->pascalFromSlug($feature) . '/specs/drafts/*.md';
-            $patterns[] = 'docs/features/' . $feature . '/specs/drafts/*.md';
         }
 
         $matches = [];
@@ -377,11 +375,6 @@ final class ExecutionSpecResolver
             $featureCanonicalRoot . '/' . $feature . '.spec.md',
             $featureCanonicalRoot . '/' . $feature . '.md',
             $featureCanonicalRoot . '/' . $feature . '.decisions.md',
-            'docs/features/' . $feature,
-            'docs/features/' . $feature . '/specs/drafts',
-            'docs/features/' . $feature . '/' . $feature . '.spec.md',
-            'docs/features/' . $feature . '/' . $feature . '.md',
-            'docs/features/' . $feature . '/' . $feature . '.decisions.md',
         ];
 
         foreach ($paths as $path) {
@@ -405,7 +398,7 @@ final class ExecutionSpecResolver
             return $canonical;
         }
 
-        return 'docs/features/' . $feature . '/specs/' . $name . '.md';
+        return 'Features/' . $this->pascalFromSlug($feature) . '/specs/' . $name . '.md';
     }
 
     /**
@@ -418,7 +411,6 @@ final class ExecutionSpecResolver
         foreach ([
             'Modules/*/specs/' . $basename . '.md',
             'Features/*/specs/' . $basename . '.md',
-            'docs/features/*/specs/' . $basename . '.md',
         ] as $pattern) {
             foreach (glob($this->paths->join($pattern)) ?: [] as $match) {
                 $relative = $this->relativePath($match);
@@ -443,7 +435,6 @@ final class ExecutionSpecResolver
         foreach ([
             'Modules/*/specs/drafts/' . $basename . '.md',
             'Features/*/specs/drafts/' . $basename . '.md',
-            'docs/features/*/specs/drafts/' . $basename . '.md',
         ] as $pattern) {
             foreach (glob($this->paths->join($pattern)) ?: [] as $match) {
                 $relative = $this->relativePath($match);

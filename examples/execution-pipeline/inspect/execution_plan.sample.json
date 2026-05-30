@@ -1,15 +1,15 @@
 {
-  "target": "publish_post",
+  "target": "publish-post",
   "plan": {
-    "id": "execution_plan:feature:publish_post",
+    "id": "execution_plan:feature:publish-post",
     "type": "execution_plan",
-    "source_path": "app/features/publish_post/feature.yaml",
+    "source_path": "Features/PublishPost/feature.yaml",
     "source_region": {
       "line_start": 1,
       "line_end": null
     },
     "payload": {
-      "feature": "publish_post",
+      "feature": "publish-post",
       "route_signature": "POST /posts",
       "route_node": "route:POST:/posts",
       "stages": [
@@ -26,11 +26,11 @@
         "response_send"
       ],
       "guards": [
-        "guard:auth:publish_post",
-        "guard:permission:publish_post:publish_post_execute",
-        "guard:rate_limit:publish_post:publish_post",
-        "guard:request_validation:publish_post",
-        "guard:transaction:publish_post"
+        "guard:auth:publish-post",
+        "guard:permission:publish-post:publish-post_execute",
+        "guard:rate_limit:publish-post:publish-post",
+        "guard:request_validation:publish-post",
+        "guard:transaction:publish-post"
       ],
       "interceptors": {
         "request_received": [
@@ -49,7 +49,7 @@
           "trace.response_send"
         ]
       },
-      "action_node": "feature:publish_post",
+      "action_node": "feature:publish-post",
       "plan_version": 1
     },
     "graph_compatibility": [
@@ -58,10 +58,10 @@
   },
   "guards": [
     {
-      "id": "guard:auth:publish_post",
+      "id": "guard:auth:publish-post",
       "type": "guard",
       "payload": {
-        "feature": "publish_post",
+        "feature": "publish-post",
         "type": "authentication",
         "required": true,
         "public": false,
@@ -71,12 +71,12 @@
       }
     },
     {
-      "id": "guard:permission:publish_post:publish_post_execute",
+      "id": "guard:permission:publish-post:publish-post_execute",
       "type": "guard",
       "payload": {
-        "feature": "publish_post",
+        "feature": "publish-post",
         "type": "permission",
-        "permission": "publish_post.execute"
+        "permission": "publish-post.execute"
       }
     }
   ],

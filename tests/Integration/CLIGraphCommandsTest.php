@@ -19,21 +19,22 @@ final class CLIGraphCommandsTest extends TestCase
         $this->cwd = getcwd() ?: '.';
         chdir($this->project->root);
 
-        $base = $this->project->root . '/app/features/publish_post';
+        $base = $this->project->root . '/Features/PublishPost';
+        mkdir($base . '/src', 0777, true);
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
 version: 1
-feature: publish_post
+feature: publish-post
 kind: http
 description: test
 route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -65,13 +66,13 @@ YAML);
 
         file_put_contents($base . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/queries.sql', "-- name: insert_post\nINSERT INTO posts(id) VALUES(:id);\n");
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules: {}\n");
-        file_put_contents($base . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [publish_post]\n");
+        file_put_contents($base . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [publish-post]\n");
         file_put_contents($base . '/events.yaml', "version: 1\nemit:\n  - name: post.created\n    schema:\n      type: object\n      additionalProperties: false\n      properties: {}\nsubscribe: []\n");
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch:\n  - name: notify_followers\n    input_schema:\n      type: object\n      additionalProperties: false\n      properties: {}\n    queue: default\n    retry:\n      max_attempts: 2\n      backoff_seconds: [1,2]\n    timeout_seconds: 30\n");
-        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"publish_post","kind":"http"}');
+        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"publish-post","kind":"http"}');
         file_put_contents($base . '/tests/publish_post_contract_test.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/tests/publish_post_feature_test.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/tests/publish_post_auth_test.php', '<?php declare(strict_types=1);');
@@ -110,30 +111,30 @@ YAML);
         $this->assertSame(0, $inspectEdgeTypes['status']);
         $this->assertNotEmpty($inspectEdgeTypes['payload']['edge_types']);
 
-        $inspectNode = $this->runCommand($app, ['foundry', 'inspect', 'node', 'feature:publish_post', '--json']);
+        $inspectNode = $this->runCommand($app, ['foundry', 'inspect', 'node', 'feature:publish-post', '--json']);
         $this->assertSame(0, $inspectNode['status']);
         $this->assertSame('feature', $inspectNode['payload']['node']['type']);
 
-        $inspectDependencies = $this->runCommand($app, ['foundry', 'inspect', 'dependencies', 'feature:publish_post', '--json']);
+        $inspectDependencies = $this->runCommand($app, ['foundry', 'inspect', 'dependencies', 'feature:publish-post', '--json']);
         $this->assertSame(0, $inspectDependencies['status']);
         $this->assertNotEmpty($inspectDependencies['payload']['dependencies']);
 
-        $inspectDependents = $this->runCommand($app, ['foundry', 'inspect', 'dependents', 'schema:app/features/publish_post/input.schema.json', '--json']);
+        $inspectDependents = $this->runCommand($app, ['foundry', 'inspect', 'dependents', 'schema:Features/PublishPost/input.schema.json', '--json']);
         $this->assertSame(0, $inspectDependents['status']);
 
         $inspectPipeline = $this->runCommand($app, ['foundry', 'inspect', 'pipeline', '--json']);
         $this->assertSame(0, $inspectPipeline['status']);
         $this->assertNotEmpty($inspectPipeline['payload']['order']);
 
-        $inspectExecutionPlanFeature = $this->runCommand($app, ['foundry', 'inspect', 'execution-plan', 'publish_post', '--json']);
+        $inspectExecutionPlanFeature = $this->runCommand($app, ['foundry', 'inspect', 'execution-plan', 'publish-post', '--json']);
         $this->assertSame(0, $inspectExecutionPlanFeature['status']);
-        $this->assertSame('publish_post', $inspectExecutionPlanFeature['payload']['plan']['payload']['feature']);
+        $this->assertSame('publish-post', $inspectExecutionPlanFeature['payload']['plan']['payload']['feature']);
 
         $inspectExecutionPlanRoute = $this->runCommand($app, ['foundry', 'inspect', 'execution-plan', 'POST', '/posts', '--json']);
         $this->assertSame(0, $inspectExecutionPlanRoute['status']);
         $this->assertSame('POST /posts', $inspectExecutionPlanRoute['payload']['plan']['payload']['route_signature']);
 
-        $inspectGuards = $this->runCommand($app, ['foundry', 'inspect', 'guards', 'publish_post', '--json']);
+        $inspectGuards = $this->runCommand($app, ['foundry', 'inspect', 'guards', 'publish-post', '--json']);
         $this->assertSame(0, $inspectGuards['status']);
         $this->assertNotEmpty($inspectGuards['payload']['guards']);
 
@@ -141,9 +142,9 @@ YAML);
         $this->assertSame(0, $inspectInterceptors['status']);
         $this->assertIsArray($inspectInterceptors['payload']['interceptors']);
 
-        $inspectSubgraph = $this->runCommand($app, ['foundry', 'inspect', 'subgraph', 'publish_post', '--json']);
+        $inspectSubgraph = $this->runCommand($app, ['foundry', 'inspect', 'subgraph', 'publish-post', '--json']);
         $this->assertSame(0, $inspectSubgraph['status']);
-        $this->assertSame('publish_post', $inspectSubgraph['payload']['feature']);
+        $this->assertSame('publish-post', $inspectSubgraph['payload']['feature']);
         $this->assertArrayHasKey('subgraph', $inspectSubgraph['payload']);
         $this->assertArrayHasKey('execution_subgraph', $inspectSubgraph['payload']);
         $this->assertArrayHasKey('ownership_subgraph', $inspectSubgraph['payload']);
@@ -152,21 +153,21 @@ YAML);
         $this->assertSame(0, $inspectGraphIntegrity['status']);
         $this->assertTrue($inspectGraphIntegrity['payload']['ok']);
 
-        $impactNode = $this->runCommand($app, ['foundry', 'inspect', 'impact', 'feature:publish_post', '--json']);
+        $impactNode = $this->runCommand($app, ['foundry', 'inspect', 'impact', 'feature:publish-post', '--json']);
         $this->assertSame(0, $impactNode['status']);
         $this->assertArrayHasKey('risk', $impactNode['payload']);
 
-        $impactFile = $this->runCommand($app, ['foundry', 'inspect', 'impact', '--file=app/features/publish_post/feature.yaml', '--json']);
+        $impactFile = $this->runCommand($app, ['foundry', 'inspect', 'impact', '--file=Features/PublishPost/feature.yaml', '--json']);
         $this->assertSame(0, $impactFile['status']);
         $this->assertNotEmpty($impactFile['payload']['nodes']);
 
-        $affectedTests = $this->runCommand($app, ['foundry', 'inspect', 'affected-tests', 'feature:publish_post', '--json']);
+        $affectedTests = $this->runCommand($app, ['foundry', 'inspect', 'affected-tests', 'feature:publish-post', '--json']);
         $this->assertSame(0, $affectedTests['status']);
-        $this->assertContains('publish_post_contract_test', $affectedTests['payload']['tests']);
+        $this->assertContains('publish-post_contract_test', $affectedTests['payload']['tests']);
 
-        $affectedFeatures = $this->runCommand($app, ['foundry', 'inspect', 'affected-features', 'feature:publish_post', '--json']);
+        $affectedFeatures = $this->runCommand($app, ['foundry', 'inspect', 'affected-features', 'feature:publish-post', '--json']);
         $this->assertSame(0, $affectedFeatures['status']);
-        $this->assertContains('publish_post', $affectedFeatures['payload']['features']);
+        $this->assertContains('publish-post', $affectedFeatures['payload']['features']);
 
         $extensions = $this->runCommand($app, ['foundry', 'inspect', 'extensions', '--json']);
         $this->assertSame(0, $extensions['status']);
@@ -239,9 +240,9 @@ YAML);
         $this->assertSame(0, $migrateDryRun['status']);
         $this->assertSame('dry-run', $migrateDryRun['payload']['mode']);
 
-        $migratePathDryRun = $this->runCommand($app, ['foundry', 'migrate', 'definitions', '--path=app/features/publish_post/feature.yaml', '--dry-run', '--json']);
+        $migratePathDryRun = $this->runCommand($app, ['foundry', 'migrate', 'definitions', '--path=Features/PublishPost/feature.yaml', '--dry-run', '--json']);
         $this->assertSame(0, $migratePathDryRun['status']);
-        $this->assertSame('app/features/publish_post/feature.yaml', $migratePathDryRun['payload']['path']);
+        $this->assertSame('Features/PublishPost/feature.yaml', $migratePathDryRun['payload']['path']);
 
         $codemodDryRun = $this->runCommand($app, ['foundry', 'codemod', 'run', 'feature-manifest-v1-to-v2', '--dry-run', '--json']);
         $this->assertSame(0, $codemodDryRun['status']);

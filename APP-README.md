@@ -59,7 +59,9 @@ foundry verify features --json
 foundry feature:map --feature=<feature> --json
 ```
 
-Legacy `app/features/*`, `docs/features/*`, and generated compatibility paths may exist during migration, but new feature work should prefer localized feature roots.
+`Features/*` is obsolete for authored feature source. `Features/<Feature>/*` is obsolete for application feature context. Public docs still live under `docs/`; feature-owned context, code, and tests live under `Features/<Feature>/`.
+
+Code for a Blog feature belongs at `Features/Blog/src/`.
 
 ### Feature Reconstruction Notes
 
@@ -85,7 +87,7 @@ When Git is available, `foundry generate` can warn on dirty repository state, an
 composer install
 foundry
 foundry explain --json
-foundry explain publish_post --git --json
+foundry explain publish-post --git --json
 foundry explain --diff --json
 foundry compile graph --json
 foundry inspect graph --json

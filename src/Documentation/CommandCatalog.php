@@ -715,8 +715,8 @@ final class CommandCatalog
             'extension' => $extension,
             'pack' => $extension . '.pack',
             'pipeline_stage' => $pipelineStage,
-            'node' => $firstNode instanceof GraphNode ? $firstNode->id() : 'feature:publish_post',
-            'schema' => $schemaNode instanceof GraphNode ? (string) (($schemaNode->payload()['path'] ?? '') ?: 'app/features/publish_post/input.schema.json') : 'app/features/publish_post/input.schema.json',
+            'node' => $firstNode instanceof GraphNode ? $firstNode->id() : 'feature:publish-post',
+            'schema' => $schemaNode instanceof GraphNode ? (string) (($schemaNode->payload()['path'] ?? '') ?: 'Features/PublishPost/input.schema.json') : 'Features/PublishPost/input.schema.json',
         ];
     }
 

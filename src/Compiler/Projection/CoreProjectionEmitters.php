@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Foundry\Compiler\Projection;
 
 use Foundry\Compiler\ApplicationGraph;
+use Foundry\Support\FeatureNaming;
 
 final class CoreProjectionEmitters
 {
@@ -91,7 +92,7 @@ final class CoreProjectionEmitters
                     'ui' => is_array($payload['ui'] ?? null) ? $payload['ui'] : [],
                     'tests' => is_array($payload['tests'] ?? null) ? $payload['tests'] : [],
                     'llm' => is_array($payload['llm'] ?? null) ? $payload['llm'] : [],
-                    'base_path' => (string) ($payload['base_path'] ?? ('app/features/' . $feature)),
+                    'base_path' => (string) ($payload['base_path'] ?? FeatureNaming::directory($feature)),
                     'action_class' => (string) ($payload['action_class'] ?? ''),
                 ];
             }

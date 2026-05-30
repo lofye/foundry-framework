@@ -6,6 +6,7 @@ namespace Foundry\Tests\Unit;
 
 use Foundry\Context\ContextDoctorService;
 use Foundry\Context\ContextInitService;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
@@ -27,8 +28,6 @@ final class ContextInitAndDoctorServiceTest extends TestCase
 
     public function test_init_uses_canonical_feature_paths_when_features_root_exists(): void
     {
-        mkdir($this->project->root . '/Features', 0777, true);
-
         $result = $this->initService()->init('event-bus');
 
         $this->assertTrue($result['success']);
@@ -58,15 +57,15 @@ final class ContextInitAndDoctorServiceTest extends TestCase
         $this->assertTrue($result['success']);
         $this->assertSame([], $result['created']);
         $this->assertSame([
-            'docs/features/event-bus/event-bus.spec.md',
-            'docs/features/event-bus/event-bus.md',
-            'docs/features/event-bus/event-bus.decisions.md',
+            'Features/EventBus/event-bus.spec.md',
+            'Features/EventBus/event-bus.md',
+            'Features/EventBus/event-bus.decisions.md',
         ], $result['existing']);
     }
 
     public function test_init_fails_when_context_file_path_is_blocked_by_directory(): void
     {
-        $blocked = $this->project->root . '/docs/features/event-bus/event-bus.spec.md';
+        $blocked = $this->project->root . '/Features/EventBus/event-bus.spec.md';
         mkdir($blocked, 0777, true);
 
         $this->expectException(FoundryError::class);
@@ -76,7 +75,7 @@ final class ContextInitAndDoctorServiceTest extends TestCase
             $this->initService()->init('event-bus');
         } catch (FoundryError $error) {
             $this->assertSame('CONTEXT_FILE_PATH_BLOCKED', $error->errorCode);
-            $this->assertSame('docs/features/event-bus/event-bus.spec.md', $error->details['path']);
+            $this->assertSame('Features/EventBus/event-bus.spec.md', $error->details['path']);
             throw $error;
         }
     }
@@ -149,11 +148,11 @@ final class ContextInitAndDoctorServiceTest extends TestCase
 
     public function test_init_fails_when_feature_context_directory_cannot_be_created(): void
     {
-        $parent = $this->project->root . '/docs/features';
+        $parent = $this->project->root . '/Features';
         if (!is_dir($parent)) {
             mkdir($parent, 0777, true);
         }
-        file_put_contents($parent . '/event-bus', 'blocked');
+        file_put_contents($parent . '/' . basename(FeatureNaming::directory('event-bus')), 'blocked');
 
         $this->expectException(FoundryError::class);
         $warnings = [];
@@ -171,7 +170,7 @@ final class ContextInitAndDoctorServiceTest extends TestCase
             $this->initService()->init('event-bus');
         } catch (FoundryError $error) {
             $this->assertSame('CONTEXT_DIRECTORY_CREATE_FAILED', $error->errorCode);
-            $this->assertSame('docs/features/event-bus', $error->details['path']);
+            $this->assertSame('Features/EventBus', $error->details['path']);
             $this->assertNotSame([], $warnings);
             throw $error;
         } finally {
@@ -181,7 +180,7 @@ final class ContextInitAndDoctorServiceTest extends TestCase
 
     public function test_init_fails_when_context_file_cannot_be_written(): void
     {
-        $directory = $this->project->root . '/docs/features/event-bus';
+        $directory = $this->project->root . '/Features/EventBus';
         mkdir($directory, 0777, true);
         file_put_contents($directory . '/event-bus.spec.md', '# existing');
         chmod($directory, 0555);
@@ -202,7 +201,7 @@ final class ContextInitAndDoctorServiceTest extends TestCase
             $this->initService()->init('event-bus');
         } catch (FoundryError $error) {
             $this->assertSame('CONTEXT_FILE_WRITE_FAILED', $error->errorCode);
-            $this->assertSame('docs/features/event-bus/event-bus.md', $error->details['path']);
+            $this->assertSame('Features/EventBus/event-bus.md', $error->details['path']);
             $this->assertNotSame([], $warnings);
             throw $error;
         } finally {

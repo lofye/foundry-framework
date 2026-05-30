@@ -10,6 +10,7 @@ use Foundry\Generation\FeatureGenerator;
 use Foundry\Generation\WorkflowGenerator;
 use Foundry\Pro\Generation\AIGenerationService;
 use Foundry\Support\FoundryError;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
 use Foundry\Verification\ContractsVerifier;
@@ -49,9 +50,9 @@ final class AIGenerationServiceTest extends TestCase
         $this->assertTrue($result['payload']['deterministic']);
         $this->assertSame('deterministic', $result['payload']['provider']['mode']);
         $this->assertSame('bookmark_post', $result['payload']['plan']['feature']['feature']);
-        $this->assertSame(['publish_post'], $result['payload']['context']['selected_features']);
+        $this->assertSame(['publish-post'], $result['payload']['context']['selected_features']);
         $this->assertContains(
-            $this->project->root . '/app/features/bookmark_post/feature.yaml',
+            $this->project->root . '/Features/BookmarkPost/feature.yaml',
             $result['payload']['predicted_files'],
         );
         $this->assertSame(0, $result['payload']['preflight']['diagnostics']['summary']['error']);
@@ -136,10 +137,10 @@ PHP);
         $this->assertSame(0, $result['status']);
         $this->assertFalse($result['payload']['dry_run']);
         $this->assertSame('bookmark_post', $result['payload']['plan']['feature']['feature']);
-        $this->assertFileExists($this->project->root . '/app/features/bookmark_post/feature.yaml');
-        $this->assertFileExists($this->project->root . '/app/features/bookmark_post/tests/bookmark_post_contract_test.php');
+        $this->assertFileExists($this->project->root . '/Features/BookmarkPost/feature.yaml');
+        $this->assertFileExists($this->project->root . '/Features/BookmarkPost/tests/bookmark_post_contract_test.php');
         $this->assertContains(
-            $this->project->root . '/app/features/bookmark_post/feature.yaml',
+            $this->project->root . '/Features/BookmarkPost/feature.yaml',
             $result['payload']['generated']['files'],
         );
         $this->assertTrue($result['payload']['verification']['graph']['ok']);
@@ -172,21 +173,25 @@ PHP);
 
     private function createFeature(string $feature, string $method, string $path): void
     {
-        $base = $this->project->root . '/app/features/' . $feature;
+        $canonical = FeatureNaming::canonical($feature);
+        $codeSafe = FeatureNaming::codeSafe($canonical);
+        $featureDir = FeatureNaming::directory($canonical);
+        $base = $this->project->root . '/' . $featureDir;
         mkdir($base . '/tests', 0777, true);
+        mkdir($base . '/src', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<YAML
 version: 1
-feature: {$feature}
+feature: {$canonical}
 kind: http
 description: test
 route:
   method: {$method}
   path: {$path}
 input:
-  schema: app/features/{$feature}/input.schema.json
+  schema: {$featureDir}/input.schema.json
 output:
-  schema: app/features/{$feature}/output.schema.json
+  schema: {$featureDir}/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -207,14 +212,14 @@ tests:
 YAML);
         file_put_contents($base . '/input.schema.json', '{"type":"object"}');
         file_put_contents($base . '/output.schema.json', '{"type":"object"}');
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/cache.yaml', "version: 1\nentries: []\n");
         file_put_contents($base . '/events.yaml', "version: 1\nemit: []\nsubscribe: []\n");
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch: []\n");
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules: {}\n");
-        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"' . $feature . '","kind":"http"}');
-        file_put_contents($base . '/tests/' . $feature . '_contract_test.php', '<?php declare(strict_types=1);');
-        file_put_contents($base . '/tests/' . $feature . '_feature_test.php', '<?php declare(strict_types=1);');
-        file_put_contents($base . '/tests/' . $feature . '_auth_test.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"' . $canonical . '","kind":"http"}');
+        file_put_contents($base . '/tests/' . $codeSafe . '_contract_test.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/tests/' . $codeSafe . '_feature_test.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/tests/' . $codeSafe . '_auth_test.php', '<?php declare(strict_types=1);');
     }
 }

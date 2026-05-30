@@ -7,6 +7,7 @@ namespace Foundry\CLI\Commands;
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
 use Foundry\Support\FoundryError;
+use Foundry\Support\FeatureNaming;
 use Foundry\Tooling\ProcessRunner;
 
 final class TestFeatureCommand extends Command
@@ -141,11 +142,9 @@ final class TestFeatureCommand extends Command
     private function featureTestPath(CommandContext $context, string $feature): ?string
     {
         $slug = $this->canonicalFeature($feature);
-        $pascal = $this->pascalFromSlug($slug);
         $candidates = [
-            'Features/' . $pascal . '/tests',
-            'Modules/' . $pascal . '/tests',
-            'docs/features/' . $slug . '/tests',
+            FeatureNaming::directory($slug) . '/tests',
+            'Modules/' . FeatureNaming::pascal($slug) . '/tests',
         ];
 
         foreach ($candidates as $candidate) {
@@ -172,17 +171,10 @@ final class TestFeatureCommand extends Command
 
     private function canonicalFeature(string $value): string
     {
-        $normalized = strtolower(trim($value));
+        $normalized = strtolower(FeatureNaming::canonical(trim($value)));
         $normalized = preg_replace('/[^a-z0-9]+/', '-', $normalized) ?? $normalized;
 
         return trim($normalized, '-');
-    }
-
-    private function pascalFromSlug(string $slug): string
-    {
-        $parts = array_filter(explode('-', $slug), static fn(string $part): bool => $part !== '');
-
-        return implode('', array_map(static fn(string $part): string => ucfirst($part), $parts));
     }
 
     /**

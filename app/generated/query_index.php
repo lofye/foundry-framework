@@ -7,22 +7,22 @@ declare(strict_types=1);
  * Regenerate with: foundry compile graph
  */
 return array (
-  'publish_post:find_user_by_id' => 
+  'publish-post:find_user_by_id' =>
   array (
-    'feature' => 'publish_post',
+    'feature' => 'publish-post',
     'name' => 'find_user_by_id',
     'sql' => 'SELECT id, email, role
 FROM users
 WHERE id = :id
 LIMIT 1;',
-    'placeholders' => 
+    'placeholders' =>
     array (
       0 => 'id',
     ),
   ),
-  'publish_post:insert_post' => 
+  'publish-post:insert_post' =>
   array (
-    'feature' => 'publish_post',
+    'feature' => 'publish-post',
     'name' => 'insert_post',
     'sql' => 'INSERT INTO posts (
   id,
@@ -43,7 +43,7 @@ LIMIT 1;',
   :publish_at,
   :created_at
 );',
-    'placeholders' => 
+    'placeholders' =>
     array (
       0 => 'author_id',
       1 => 'body_markdown',

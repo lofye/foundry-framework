@@ -69,7 +69,7 @@ final class CLIUpgradeCheckCommandTest extends TestCase
 
     private function seedFeatureManifestV1(): void
     {
-        $base = $this->project->root . '/app/features/publish_post';
+        $base = $this->project->root . '/Features/PublishPost';
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
@@ -81,9 +81,9 @@ route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -108,7 +108,10 @@ YAML);
 
         file_put_contents($base . '/input.schema.json', '{"type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/output.schema.json', '{"type":"object","additionalProperties":false,"properties":{}}');
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        if (!is_dir($base . '/src')) {
+            mkdir($base . '/src', 0777, true);
+        }
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/queries.sql', "-- name: insert_post\nINSERT INTO posts(id) VALUES(:id);\n");
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules: {}\n");
         file_put_contents($base . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [publish_post]\n");

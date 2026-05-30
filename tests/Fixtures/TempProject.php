@@ -14,7 +14,9 @@ final class TempProject
         mkdir($base, 0777, true);
         $this->root = $base;
 
-        mkdir($this->root . '/app/features', 0777, true);
+        mkdir($this->root . '/Features', 0777, true);
+        mkdir($this->root . '/Modules', 0777, true);
+        mkdir($this->root . '/Packs', 0777, true);
         mkdir($this->root . '/app/generated', 0777, true);
         mkdir($this->root . '/app/.foundry/build', 0777, true);
         mkdir($this->root . '/database/migrations', 0777, true);

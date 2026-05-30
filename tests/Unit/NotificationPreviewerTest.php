@@ -257,7 +257,8 @@ YAML);
 
     private function createFeature(string $feature, string $method, string $path): void
     {
-        $base = $this->project->root . '/app/features/' . $feature;
+        $directory = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+        $base = $this->project->root . '/Features/' . $directory;
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<YAML
@@ -269,9 +270,9 @@ route:
   method: {$method}
   path: {$path}
 input:
-  schema: app/features/{$feature}/input.schema.json
+  schema: Features/{$directory}/input.schema.json
 output:
-  schema: app/features/{$feature}/output.schema.json
+  schema: Features/{$directory}/output.schema.json
 auth:
   required: true
   strategies: [session]

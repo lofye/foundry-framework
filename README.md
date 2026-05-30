@@ -109,7 +109,7 @@ foundry verify features --json
 foundry feature:map --feature=<feature> --json
 ```
 
-Legacy `docs/features/*`, `src/*`, and `tests/*` paths may exist during migration, but new feature work should prefer localized feature roots.
+Framework documentation under `docs/` is canonical public documentation and is consumed by the foundryframework.org website. Application feature context belongs under `Features/<Feature>/`, not `docs/features/<feature>/`; feature runtime code belongs under `Features/<Feature>/src/`.
 
 ## Shell Completion
 

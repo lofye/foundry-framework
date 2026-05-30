@@ -34,8 +34,8 @@ final class GeneratedFeatureApplierTest extends TestCase
         $files = $applier->predictedFiles($this->planFixture());
 
         $this->assertContains($this->project->root . '/app/definitions/workflows/posts_review.workflow.yaml', $files);
-        $this->assertContains($this->project->root . '/app/features/approve_post/feature.yaml', $files);
-        $this->assertContains($this->project->root . '/app/features/transition_post_workflow/feature.yaml', $files);
+        $this->assertContains($this->project->root . '/Features/ApprovePost/feature.yaml', $files);
+        $this->assertContains($this->project->root . '/Features/TransitionPostWorkflow/feature.yaml', $files);
     }
 
     public function test_apply_writes_feature_and_workflow_files(): void
@@ -44,10 +44,10 @@ final class GeneratedFeatureApplierTest extends TestCase
 
         $result = $applier->apply($this->planFixture());
 
-        $this->assertFileExists($this->project->root . '/app/features/approve_post/feature.yaml');
-        $this->assertFileExists($this->project->root . '/app/features/approve_post/action.php');
+        $this->assertFileExists($this->project->root . '/Features/ApprovePost/feature.yaml');
+        $this->assertFileExists($this->project->root . '/Features/ApprovePost/src/Action.php');
         $this->assertFileExists($this->project->root . '/app/definitions/workflows/posts_review.workflow.yaml');
-        $this->assertFileExists($this->project->root . '/app/features/transition_post_workflow/feature.yaml');
+        $this->assertFileExists($this->project->root . '/Features/TransitionPostWorkflow/feature.yaml');
         $this->assertArrayHasKey('workflow', $result['artifacts']);
         $this->assertContains($this->project->root . '/app/definitions/workflows/posts_review.workflow.yaml', $result['files']);
     }

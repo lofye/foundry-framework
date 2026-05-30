@@ -11,7 +11,7 @@ What it teaches:
 
 Source-of-truth rules:
 
-- copy only `app/features/*`
+- copy only `Features/*`
 - `app/generated/*` is intentionally not committed here; compile it from source
 - there is no committed `public/index.php`; use the framework scaffold when you want a runnable app shell
 
@@ -20,8 +20,8 @@ From a generated Foundry app, run:
 ```bash
 foundry compile graph --json
 foundry inspect graph --command="GET /posts" --json
-foundry inspect feature publish_post --json
-foundry doctor --feature=list_posts --json
+foundry inspect feature publish-post --json
+foundry doctor --feature=list-posts --json
 foundry verify graph --json
 foundry verify pipeline --json
 foundry verify contracts --json
@@ -29,6 +29,6 @@ foundry verify contracts --json
 
 Read these folders in order:
 
-- `app/features/list_posts`
-- `app/features/view_post`
-- `app/features/publish_post`
+- `Features/ListPosts`
+- `Features/ViewPost`
+- `Features/PublishPost`

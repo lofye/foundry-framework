@@ -7,6 +7,7 @@ namespace Foundry\Compiler\Passes;
 use Foundry\Compiler\CompilationState;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\IR\FeatureNode;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Str;
 
 final class NormalizePass implements CompilerPass
@@ -28,7 +29,7 @@ final class NormalizePass implements CompilerPass
             }
 
             $manifest = is_array($discovered['manifest'] ?? null) ? $discovered['manifest'] : [];
-            $manifestFeature = (string) ($manifest['feature'] ?? $feature);
+            $manifestFeature = FeatureNaming::canonical((string) ($manifest['feature'] ?? $feature));
             if ($manifestFeature !== $feature) {
                 $state->diagnostics->error(
                     code: 'FDY0201_FEATURE_NAME_MISMATCH',
@@ -227,8 +228,8 @@ final class NormalizePass implements CompilerPass
             }
             usort($queries, static fn(array $a, array $b): int => strcmp((string) $a['name'], (string) $b['name']));
 
-            $inputSchemaPath = (string) ($discovered['input_schema_path'] ?? 'app/features/' . $feature . '/input.schema.json');
-            $outputSchemaPath = (string) ($discovered['output_schema_path'] ?? 'app/features/' . $feature . '/output.schema.json');
+            $inputSchemaPath = (string) ($discovered['input_schema_path'] ?? FeatureNaming::directory($feature) . '/input.schema.json');
+            $outputSchemaPath = (string) ($discovered['output_schema_path'] ?? FeatureNaming::directory($feature) . '/output.schema.json');
 
             $payload = [
                 'feature' => $feature,
@@ -236,7 +237,7 @@ final class NormalizePass implements CompilerPass
                 'description' => (string) ($manifest['description'] ?? ''),
                 'manifest_version' => (int) ($manifest['version'] ?? 1),
                 'manifest_path' => (string) ($discovered['manifest_path'] ?? ''),
-                'base_path' => (string) ($discovered['base_path'] ?? ('app/features/' . $feature)),
+                'base_path' => (string) ($discovered['base_path'] ?? FeatureNaming::directory($feature)),
                 'route' => $route,
                 'input_schema_path' => $inputSchemaPath,
                 'output_schema_path' => $outputSchemaPath,

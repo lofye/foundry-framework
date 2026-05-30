@@ -20,7 +20,7 @@ final class DefinitionMigratorTest extends TestCase
     {
         $this->project = new TempProject();
 
-        $feature = $this->project->root . '/app/features/publish_post';
+        $feature = $this->project->root . '/Features/PublishPost';
         mkdir($feature, 0777, true);
 
         file_put_contents($feature . '/feature.yaml', <<<'YAML'
@@ -62,7 +62,7 @@ YAML);
         $this->assertTrue($write->written);
         $this->assertCount(1, $write->changes);
 
-        $manifest = Yaml::parseFile($this->project->root . '/app/features/publish_post/feature.yaml');
+        $manifest = Yaml::parseFile($this->project->root . '/Features/PublishPost/feature.yaml');
         $this->assertSame(2, $manifest['version']);
         $this->assertSame(['bearer'], $manifest['auth']['strategies']);
         $this->assertSame('POST', $manifest['route']['method']);
@@ -77,8 +77,8 @@ YAML);
             [new FeatureManifestV2Rule()],
         );
 
-        $result = $migrator->migrate(false, 'app/features/publish_post/feature.yaml');
-        $this->assertSame('app/features/publish_post/feature.yaml', $result->pathFilter);
+        $result = $migrator->migrate(false, 'Features/PublishPost/feature.yaml');
+        $this->assertSame('Features/PublishPost/feature.yaml', $result->pathFilter);
         $this->assertCount(1, $result->changes);
         $this->assertNotEmpty($result->plans);
     }

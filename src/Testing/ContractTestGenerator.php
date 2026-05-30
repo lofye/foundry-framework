@@ -33,6 +33,6 @@ PHP;
 
     private function className(string $feature, string $suffix): string
     {
-        return str_replace(' ', '', ucwords(str_replace('_', ' ', $feature))) . $suffix;
+        return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature))) . $suffix;
     }
 }

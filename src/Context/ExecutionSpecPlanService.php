@@ -75,7 +75,7 @@ final class ExecutionSpecPlanService
         }
 
         $relativeSpecPath = $executionSpec->path;
-        $relativeOutcomePath = 'docs/features/' . $feature . '/outcomes/' . $parsedPath['name'] . '.md';
+        $relativeOutcomePath = (str_starts_with($executionSpec->path, 'Modules/') ? 'Modules' : 'Features') . '/' . $this->pascalFromSlug($feature) . '/outcomes/' . $parsedPath['name'] . '.md';
         $absoluteOutcomePath = $this->paths->join($relativeOutcomePath);
 
         if (file_exists($absoluteOutcomePath) && !$force) {
@@ -181,12 +181,18 @@ final class ExecutionSpecPlanService
 
     private function featureExists(string $feature): bool
     {
+        $pascal = $this->pascalFromSlug($feature);
         $paths = [
-            'docs/features/' . $feature,
-            'docs/features/' . $feature . '/specs/drafts',
-            'docs/features/' . $feature . '/' . $feature . '.spec.md',
-            'docs/features/' . $feature . '/' . $feature . '.md',
-            'docs/features/' . $feature . '/' . $feature . '.decisions.md',
+            'Modules/' . $pascal,
+            'Modules/' . $pascal . '/specs/drafts',
+            'Modules/' . $pascal . '/' . $feature . '.spec.md',
+            'Modules/' . $pascal . '/' . $feature . '.md',
+            'Modules/' . $pascal . '/' . $feature . '.decisions.md',
+            'Features/' . $pascal,
+            'Features/' . $pascal . '/specs/drafts',
+            'Features/' . $pascal . '/' . $feature . '.spec.md',
+            'Features/' . $pascal . '/' . $feature . '.md',
+            'Features/' . $pascal . '/' . $feature . '.decisions.md',
         ];
 
         foreach ($paths as $path) {
@@ -197,4 +203,11 @@ final class ExecutionSpecPlanService
 
         return false;
     }
+    private function pascalFromSlug(string $slug): string
+    {
+        $parts = array_filter(explode('-', $slug), static fn(string $part): bool => $part !== '');
+
+        return implode('', array_map(static fn(string $part): string => ucfirst($part), $parts));
+    }
+
 }

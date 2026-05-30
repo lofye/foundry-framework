@@ -109,18 +109,18 @@ final class CoverageBoostCoreTest extends TestCase
         mkdir($projectionDir, 0777, true);
 
         $this->writePhpArray($projectionDir . '/permission_index.php', [
-            'publish_post' => ['permissions' => ['posts.create', 'posts.publish']],
+            'publish-post' => ['permissions' => ['posts.create', 'posts.publish']],
             'invalid' => 'not-an-array',
         ]);
 
         $this->writePhpArray($projectionDir . '/query_index.php', [
-            ['feature' => 'publish_post', 'name' => 'insert_post', 'sql' => 'INSERT INTO posts(id) VALUES(:id)', 'placeholders' => ['id']],
+            ['feature' => 'publish-post', 'name' => 'insert_post', 'sql' => 'INSERT INTO posts(id) VALUES(:id)', 'placeholders' => ['id']],
             ['feature' => '', 'name' => 'ignored', 'sql' => 'SELECT 1', 'placeholders' => []],
             'invalid-row',
         ]);
 
         $this->writePhpArray($projectionDir . '/cache_index.php', [
-            'posts:list' => ['kind' => 'computed', 'ttl_seconds' => 90, 'invalidated_by' => ['publish_post']],
+            'posts:list' => ['kind' => 'computed', 'ttl_seconds' => 90, 'invalidated_by' => ['publish-post']],
             'invalid' => 'not-an-array',
         ]);
 
@@ -154,11 +154,11 @@ final class CoverageBoostCoreTest extends TestCase
         $this->assertTrue($permissions->has('posts.create'));
 
         $this->assertInstanceOf(QueryRegistry::class, $queries);
-        $this->assertTrue($queries->has('publish_post', 'insert_post'));
+        $this->assertTrue($queries->has('publish-post', 'insert_post'));
 
         $this->assertInstanceOf(CacheRegistry::class, $cache);
         $this->assertTrue($cache->has('posts:list'));
-        $this->assertCount(1, $cache->invalidatedBy('publish_post'));
+        $this->assertCount(1, $cache->invalidatedBy('publish-post'));
 
         $this->assertArrayHasKey('post.created', $events->allEvents());
 
@@ -169,12 +169,12 @@ final class CoverageBoostCoreTest extends TestCase
         $this->assertSame(2, $jobs->get('cleanup_posts')->retry->maxAttempts);
 
         @unlink($projectionDir . '/query_index.php');
-        $featureDir = $this->project->root . '/app/features/fallback_feature';
+        $featureDir = $this->project->root . '/Features/FallbackFeature';
         mkdir($featureDir, 0777, true);
         file_put_contents($featureDir . '/queries.sql', "-- name: list_posts\nSELECT * FROM posts;\n");
 
         $fallbackQueries = $this->invokeRuntimeFactory('queryRegistry', $paths);
-        $this->assertTrue($fallbackQueries->has('fallback_feature', 'list_posts'));
+        $this->assertTrue($fallbackQueries->has('fallback-feature', 'list_posts'));
     }
 
     public function test_runtime_factory_connection_and_http_kernel_factory_work_without_prebuilt_indexes(): void

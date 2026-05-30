@@ -57,7 +57,7 @@ Input: `migration/feature.v1.yaml`
 
 ```yaml
 version: 1
-feature: publish_post
+feature: publish-post
 route:
   method: post
   path: /posts
@@ -71,7 +71,7 @@ Target: `migration/feature.v2.yaml`
 
 ```yaml
 version: 2
-feature: publish_post
+feature: publish-post
 route:
   method: POST
   path: /posts
@@ -84,7 +84,7 @@ llm:
 Dry run command:
 
 ```bash
-php bin/foundry migrate definitions --path=app/features/publish_post/feature.yaml --dry-run --json
+php bin/foundry migrate definitions --path=Features/PublishPost/feature.yaml --dry-run --json
 ```
 
 ## Example D - Codemod Example

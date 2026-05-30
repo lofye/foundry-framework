@@ -1,7 +1,7 @@
 {
   "ok": false,
   "exit_code": 1,
-  "feature_filter": "publish_post",
+  "feature_filter": "publish-post",
   "strict": true,
   "command_prefix": "foundry",
   "risk": "medium",
@@ -36,9 +36,9 @@
         "unguarded_routes": [],
         "permission_gaps": [
           {
-            "feature": "publish_post",
+            "feature": "publish-post",
             "missing_permissions": [
-              "publish_post.execute"
+              "publish-post.execute"
             ]
           }
         ]
@@ -46,11 +46,11 @@
     }
   },
   "impact_preview": {
-    "node_id": "feature:publish_post",
+    "node_id": "feature:publish-post",
     "node_type": "feature",
     "risk": "medium",
     "affected_features": [
-      "publish_post"
+      "publish-post"
     ],
     "affected_routes": [
       "POST /posts"
@@ -61,22 +61,22 @@
       "routes_index.php"
     ],
     "recommended_verification": [
-      "foundry verify feature publish_post --json",
+      "foundry verify feature publish-post --json",
       "foundry verify graph --json",
       "foundry verify pipeline --json",
       "php vendor/bin/phpunit"
     ],
     "recommended_tests": [
-      "publish_post_auth_test",
-      "publish_post_contract_test",
-      "publish_post_feature_test"
+      "publish-post_auth_test",
+      "publish-post_contract_test",
+      "publish-post_feature_test"
     ]
   },
   "suggested_actions": [
     "foundry compile graph --json",
-    "foundry inspect impact feature:publish_post --json",
+    "foundry inspect impact feature:publish-post --json",
     "foundry verify contracts --json",
-    "foundry verify feature publish_post --json",
+    "foundry verify feature publish-post --json",
     "foundry verify graph --json",
     "php vendor/bin/phpunit"
   ]

@@ -150,7 +150,7 @@ final class CoreCompilerExtension extends AbstractCompilerExtension
         return [
             new DefinitionFormat(
                 name: 'feature_manifest',
-                description: 'Feature source-of-truth manifest at app/features/<feature>/feature.yaml.',
+                description: 'Feature source-of-truth manifest at Features/<Feature>/feature.yaml.',
                 currentVersion: 2,
                 supportedVersions: [1, 2],
             ),

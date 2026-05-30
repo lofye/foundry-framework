@@ -246,14 +246,14 @@ final class ImplementSpecCommand extends Command
                 (array) ($error->details['matches'] ?? []),
             )),
             'EXECUTION_SPEC_NOT_FOUND' => [isset($error->details['feature'], $error->details['id'])
-                ? 'Create or promote an active execution spec under Modules/<Module>/specs/, Features/<Feature>/specs/, or docs/features/<feature>/specs/, then use a valid active execution spec id for that feature.'
-                : 'Create the execution spec under Modules/<Module>/specs/, Features/<Feature>/specs/, or docs/features/<feature>/specs/, or use a valid existing execution spec id.'],
-            'EXECUTION_SPEC_FEATURE_NOT_FOUND' => ['Use a valid feature/module with execution specs under Modules/, Features/, or docs/features/ before invoking implement spec.'],
-            'EXECUTION_SPEC_DRAFT_ONLY' => ['Promote the draft execution spec to an active specs directory under Modules/, Features/, or docs/features/ before implementing it.'],
+                ? 'Create or promote an active execution spec under Modules/<Module>/specs/ or Features/<Feature>/specs/, then use a valid active execution spec id for that target.'
+                : 'Create the execution spec under Modules/<Module>/specs/ or Features/<Feature>/specs/, or use a valid existing execution spec id.'],
+            'EXECUTION_SPEC_FEATURE_NOT_FOUND' => ['Use a valid module or feature with execution specs under Modules/ or Features/ before invoking implement spec.'],
+            'EXECUTION_SPEC_DRAFT_ONLY' => ['Promote the draft execution spec to an active specs directory under Modules/ or Features/ before implementing it.'],
             'EXECUTION_SPEC_ID_INVALID' => ['Use an execution spec id with one or more dot-separated 3-digit segments, such as 018 or 015.001.'],
             'EXECUTION_SPEC_HEADING_NON_CANONICAL' => ['Make the first line match `# Execution Spec: <id>-<slug>` for this file.'],
             'EXECUTION_SPEC_FEATURE_SECTION_MISSING' => ['Add a ## Feature section naming the canonical feature.'],
-            'EXECUTION_SPEC_FEATURE_MISMATCH' => ['Make the ## Feature section match the execution spec directory feature under Modules/, Features/, or docs/features/.'],
+            'EXECUTION_SPEC_FEATURE_MISMATCH' => ['Make the ## Feature section match the execution spec directory target under Modules/ or Features/.'],
             'EXECUTION_SPEC_FEATURE_INVALID' => ['Use a lowercase kebab-case feature name in the execution spec ## Feature section.'],
             'EXECUTION_SPEC_PATH_NON_CANONICAL' => ['Use a canonical execution spec id in the form <feature>/<id>-<slug>, <id>-<slug>, or invoke the command as <feature> <id>.'],
             'CLI_IMPLEMENT_SPEC_TARGET_REQUIRED' => ['Use `implement spec <feature>/<id>-<slug>`, `implement spec <id>-<slug>`, or `implement spec <feature> <id>`.'],

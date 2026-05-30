@@ -37,11 +37,11 @@ resource: posts
 style: api
 features: [list, view, create, update, delete]
 feature_names:
-  list: api_list_posts
-  view: api_view_post
-  create: api_create_post
-  update: api_update_post
-  delete: api_delete_post
+  list: api-list-posts
+  view: api-view-post
+  create: api-create-post
+  update: api-update-post
+  delete: api-delete-post
 ```
 
 ## Compiler and Graph Integration

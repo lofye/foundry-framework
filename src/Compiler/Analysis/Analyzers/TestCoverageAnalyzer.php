@@ -82,7 +82,7 @@ final class TestCoverageAnalyzer implements GraphAnalyzer
                     category: 'tests',
                     message: sprintf('Feature %s lacks required %s test.', $feature, $kind),
                     nodeId: $featureNode->id(),
-                    suggestedFix: sprintf('Add %s under app/features/%s/tests/.', $expected, $feature),
+                    suggestedFix: sprintf('Add %s under %s/tests/.', $expected, \Foundry\Support\FeatureNaming::directory($feature)),
                     pass: 'doctor.' . $this->id(),
                 );
             }

@@ -83,7 +83,7 @@ final class CompilerPassCoverageTest extends TestCase
     private function seedComplexFeature(): void
     {
         $feature = 'complex_feature';
-        $base = $this->project->root . '/app/features/' . $feature;
+        $base = $this->project->root . '/Features/' . str_replace(' ', '', ucwords(str_replace('_', ' ', $feature)));
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
@@ -95,9 +95,9 @@ route:
   method: POST
   path: /posts
 input:
-  schema: app/features/complex_feature/input.schema.json
+  schema: Features/ComplexFeature/input.schema.json
 output:
-  schema: app/features/complex_feature/output.schema.json
+  schema: Features/ComplexFeature/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -152,7 +152,7 @@ SQL);
     private function seedDuplicateRouteFeature(): void
     {
         $feature = 'duplicate_route';
-        $base = $this->project->root . '/app/features/' . $feature;
+        $base = $this->project->root . '/Features/' . str_replace(' ', '', ucwords(str_replace('_', ' ', $feature)));
         mkdir($base, 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
@@ -164,9 +164,9 @@ route:
   method: POST
   path: /posts
 input:
-  schema: app/features/duplicate_route/input.schema.json
+  schema: Features/DuplicateRoute/input.schema.json
 output:
-  schema: app/features/duplicate_route/output.schema.json
+  schema: Features/DuplicateRoute/output.schema.json
 auth:
   required: false
   strategies: []
@@ -200,7 +200,7 @@ YAML);
     private function seedBadFeature(): void
     {
         $feature = 'bad_feature';
-        $base = $this->project->root . '/app/features/' . $feature;
+        $base = $this->project->root . '/Features/' . str_replace(' ', '', ucwords(str_replace('_', ' ', $feature)));
         mkdir($base, 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
@@ -212,9 +212,9 @@ route:
   method: GET
   path: relative
 input:
-  schema: app/features/bad_feature/missing_input.schema.json
+  schema: Features/BadFeature/missing_input.schema.json
 output:
-  schema: app/features/bad_feature/missing_output.schema.json
+  schema: Features/BadFeature/missing_output.schema.json
 auth:
   required: true
   strategies: [unknown_strategy]
@@ -247,7 +247,7 @@ YAML);
     private function seedSubscriberOnlyFeature(): void
     {
         $feature = 'subscriber_only';
-        $base = $this->project->root . '/app/features/' . $feature;
+        $base = $this->project->root . '/Features/' . str_replace(' ', '', ucwords(str_replace('_', ' ', $feature)));
         mkdir($base, 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
@@ -259,9 +259,9 @@ route:
   method: GET
   path: /subscriber
 input:
-  schema: app/features/subscriber_only/input.schema.json
+  schema: Features/SubscriberOnly/input.schema.json
 output:
-  schema: app/features/subscriber_only/output.schema.json
+  schema: Features/SubscriberOnly/output.schema.json
 auth:
   required: false
   strategies: []
@@ -296,7 +296,7 @@ YAML);
     private function seedBadOptionalFilesFeature(): void
     {
         $feature = 'bad_optional';
-        $base = $this->project->root . '/app/features/' . $feature;
+        $base = $this->project->root . '/Features/' . str_replace(' ', '', ucwords(str_replace('_', ' ', $feature)));
         mkdir($base, 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
@@ -308,9 +308,9 @@ route:
   method: GET
   path: /bad-optional
 input:
-  schema: app/features/bad_optional/input.schema.json
+  schema: Features/BadOptional/input.schema.json
 output:
-  schema: app/features/bad_optional/output.schema.json
+  schema: Features/BadOptional/output.schema.json
 auth:
   required: false
   strategies: []
@@ -358,7 +358,7 @@ SQL);
     private function seedInvalidManifestFeature(): void
     {
         $feature = 'invalid_manifest';
-        $base = $this->project->root . '/app/features/' . $feature;
+        $base = $this->project->root . '/Features/' . str_replace(' ', '', ucwords(str_replace('_', ' ', $feature)));
         mkdir($base, 0777, true);
         file_put_contents($base . '/feature.yaml', "version: 1\nfeature: invalid_manifest\nkind: http\nroute: [\n");
     }

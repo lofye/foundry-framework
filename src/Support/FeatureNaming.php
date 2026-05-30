@@ -8,7 +8,7 @@ final class FeatureNaming
 {
     public static function canonical(string $feature): string
     {
-        return str_replace('_', '-', $feature);
+        return str_replace('_', '-', trim($feature));
     }
 
     public static function codeSafe(string $feature): string
@@ -16,8 +16,20 @@ final class FeatureNaming
         return Str::toSnakeCase(self::canonical($feature));
     }
 
+    public static function pascal(string $feature): string
+    {
+        return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', self::canonical($feature))));
+    }
+
     public static function directory(string $feature): string
     {
-        return 'app/features/' . self::canonical($feature);
+        return 'Features/' . self::pascal($feature);
+    }
+
+    public static function fromDirectoryName(string $directory): string
+    {
+        $slug = preg_replace('/(?<!^)[A-Z]/', '-$0', $directory) ?? $directory;
+
+        return strtolower(self::canonical($slug));
     }
 }

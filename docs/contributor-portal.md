@@ -16,14 +16,14 @@ In this repository use `./foundry ...`. In generated Foundry apps use `foundry .
 
 Foundry keeps contributor boundaries explicit: `collect -> analyze -> assemble -> render`.
 
-- Collect: source-of-truth feature files under `app/features/*` and explain context collectors gather deterministic inputs only.
+- Collect: source-of-truth feature files under `Features/<Feature>/` and explain context collectors gather deterministic inputs only.
 - Analyze: compiler analyze passes, graph analyzers, doctor checks, and explain analyzers interpret structured state without rendering.
 - Assemble: the compiler assembles the canonical application graph, and `ExplanationPlanAssembler` merges canonical plus contributed explain sections using stable `sectionOrder`.
 - Render: runtime projections, docs generators, graph visualizers, and explain renderers consume assembled outputs only. Renderers must not reach back into graph, compiler, or runtime state directly.
 
 ### Graph System
 
-- Source of truth lives in `app/features/*`; canonical compiled output lives in `app/.foundry/build/*`.
+- Application feature source of truth lives in `Features/<Feature>/`; canonical compiled output lives in `app/.foundry/build/*`.
 - Read [Semantic Compiler](semantic-compiler.md), [Execution Pipeline](execution-pipeline.md), [Architecture Tools](architecture-tools.md), [Graph Overview](graph-overview.md), and [Architecture Explorer](architecture-explorer.html).
 - Core framework loop in this repo:
 

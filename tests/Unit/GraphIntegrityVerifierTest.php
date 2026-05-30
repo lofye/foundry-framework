@@ -106,7 +106,7 @@ final class GraphIntegrityVerifierTest extends TestCase
         $graph['nodes'][] = [
             'id' => 'unknown:publish_post',
             'type' => 'unknown_type',
-            'source_path' => 'app/features/publish_post/feature.yaml',
+            'source_path' => 'Features/PublishPost/feature.yaml',
             'payload' => ['feature' => 'publish_post'],
             'graph_compatibility' => [2],
         ];
@@ -327,14 +327,14 @@ final class GraphIntegrityVerifierTest extends TestCase
                 [
                     'id' => 'feature:publish_post',
                     'type' => 'feature',
-                    'source_path' => 'app/features/publish_post/feature.yaml',
+                    'source_path' => 'Features/PublishPost/feature.yaml',
                     'payload' => ['feature' => 'publish_post', 'kind' => 'http'],
                     'graph_compatibility' => [2],
                 ],
                 [
                     'id' => 'context:publish_post',
                     'type' => 'context_manifest',
-                    'source_path' => 'app/features/publish_post/context.manifest.json',
+                    'source_path' => 'Features/PublishPost/context.manifest.json',
                     'payload' => ['feature' => 'publish_post'],
                     'graph_compatibility' => [2],
                 ],
@@ -423,7 +423,7 @@ final class GraphIntegrityVerifierTest extends TestCase
 
     private function seedFeature(): void
     {
-        $base = $this->project->root . '/app/features/publish_post';
+        $base = $this->project->root . '/Features/PublishPost';
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
@@ -435,9 +435,9 @@ route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]

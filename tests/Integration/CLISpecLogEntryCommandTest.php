@@ -39,18 +39,18 @@ final class CLISpecLogEntryCommandTest extends TestCase
         $this->assertSame([
             'spec_id' => 'execution-spec-system/001-spec-auto-log-on-implementation',
             'feature' => 'execution-spec-system',
-            'spec_ref' => 'execution-spec-system/001-spec-auto-log-on-implementation.md',
-            'spec_path' => 'docs/features/execution-spec-system/specs/001-spec-auto-log-on-implementation.md',
-            'log_path' => 'docs/features/implementation-log.md',
+            'spec_ref' => 'Modules/ExecutionSpecSystem/specs/001-spec-auto-log-on-implementation.md',
+            'spec_path' => 'Modules/ExecutionSpecSystem/specs/001-spec-auto-log-on-implementation.md',
+            'log_path' => 'Modules/implementation.log',
             'timestamp' => '2026-04-17 12:30:45 -0400',
             'timestamp_heading' => '## 2026-04-17 12:30:45 -0400',
-            'spec_log_line' => '- spec: execution-spec-system/001-spec-auto-log-on-implementation.md',
-            'entry' => "## 2026-04-17 12:30:45 -0400\n- spec: execution-spec-system/001-spec-auto-log-on-implementation.md\n",
+            'spec_log_line' => '- spec: Modules/ExecutionSpecSystem/specs/001-spec-auto-log-on-implementation.md',
+            'entry' => "## 2026-04-17 12:30:45 -0400\n- spec: Modules/ExecutionSpecSystem/specs/001-spec-auto-log-on-implementation.md\n",
         ], $json['payload']);
 
         $this->assertSame(0, $raw['status']);
         $this->assertSame(
-            "## 2026-04-17 12:30:45 -0400\n- spec: execution-spec-system/001-spec-auto-log-on-implementation.md\n",
+            "## 2026-04-17 12:30:45 -0400\n- spec: Modules/ExecutionSpecSystem/specs/001-spec-auto-log-on-implementation.md\n",
             $raw['output'],
         );
     }
@@ -228,7 +228,7 @@ MD
     private function writeExecutionSpec(string $feature, string $name, string $declaredFeature): void
     {
         $this->writeRawFile(
-            'docs/features/' . $feature . '/specs/' . $name . '.md',
+            'Modules/' . str_replace(' ', '', ucwords(str_replace('-', ' ', $feature))) . '/specs/' . $name . '.md',
             <<<MD
 # Execution Spec: {$name}
 
@@ -259,7 +259,7 @@ MD
     private function writeDraftExecutionSpec(string $feature, string $name, string $declaredFeature): void
     {
         $this->writeRawFile(
-            'docs/features/' . $feature . '/specs/drafts/' . $name . '.md',
+            'Modules/' . str_replace(' ', '', ucwords(str_replace('-', ' ', $feature))) . '/specs/drafts/' . $name . '.md',
             <<<MD
 # Execution Spec: {$name}
 

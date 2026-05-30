@@ -18,18 +18,18 @@ final class PlatformDefinitionCompilerTest extends TestCase
     {
         $this->project = new TempProject();
 
-        $this->createFeature('list_posts', 'GET', '/posts', ['posts.view']);
-        $this->createFeature('view_post', 'GET', '/posts/{id}', ['posts.view']);
-        $this->createFeature('create_post', 'POST', '/posts', ['posts.create']);
-        $this->createFeature('update_post', 'PUT', '/posts/{id}', ['posts.update']);
-        $this->createFeature('delete_post', 'DELETE', '/posts/{id}', ['posts.delete']);
-        $this->createFeature('publish_post', 'POST', '/posts/{id}/publish', ['posts.publish'], ['post.published']);
+        $this->createFeature('list-posts', 'GET', '/posts', ['posts.view']);
+        $this->createFeature('view-post', 'GET', '/posts/{id}', ['posts.view']);
+        $this->createFeature('create-post', 'POST', '/posts', ['posts.create']);
+        $this->createFeature('update-post', 'PUT', '/posts/{id}', ['posts.update']);
+        $this->createFeature('delete-post', 'DELETE', '/posts/{id}', ['posts.delete']);
+        $this->createFeature('publish-post', 'POST', '/posts/{id}/publish', ['posts.publish'], ['post.published']);
 
-        $this->createFeature('create_checkout_session', 'POST', '/billing/checkout', ['billing.manage']);
-        $this->createFeature('view_billing_portal', 'GET', '/billing/portal', ['billing.manage']);
-        $this->createFeature('handle_billing_webhook', 'POST', '/billing/webhook');
-        $this->createFeature('list_invoices', 'GET', '/billing/invoices', ['billing.view']);
-        $this->createFeature('view_current_subscription', 'GET', '/billing/subscription', ['billing.view']);
+        $this->createFeature('create-checkout-session', 'POST', '/billing/checkout', ['billing.manage']);
+        $this->createFeature('view-billing-portal', 'GET', '/billing/portal', ['billing.manage']);
+        $this->createFeature('handle-billing-webhook', 'POST', '/billing/webhook');
+        $this->createFeature('list-invoices', 'GET', '/billing/invoices', ['billing.view']);
+        $this->createFeature('view-current-subscription', 'GET', '/billing/subscription', ['billing.view']);
 
         $this->createFeature(
             'run_document_pipeline',
@@ -86,11 +86,11 @@ fields:
     required: true
 features: [list, view, create, update, delete]
 feature_names:
-  list: list_posts
-  view: view_post
-  create: create_post
-  update: update_post
-  delete: delete_post
+  list: list-posts
+  view: view-post
+  create: create-post
+  update: update-post
+  delete: delete-post
 YAML);
 
         file_put_contents($this->project->root . '/app/definitions/billing/stripe.billing.yaml', <<<'YAML'
@@ -108,11 +108,11 @@ plans:
     interval: month
     trial_days: 14
 feature_names:
-  checkout: create_checkout_session
-  portal: view_billing_portal
-  webhook: handle_billing_webhook
-  invoices: list_invoices
-  subscription: view_current_subscription
+  checkout: create-checkout-session
+  portal: view-billing-portal
+  webhook: handle-billing-webhook
+  invoices: list-invoices
+  subscription: view-current-subscription
 webhook_signing_secret_env: STRIPE_WEBHOOK_SECRET
 YAML);
 
@@ -131,9 +131,9 @@ transitions:
     to: archived
 YAML);
 
-        file_put_contents($this->project->root . '/app/definitions/orchestrations/process_uploaded_document.orchestration.yaml', <<<'YAML'
+        file_put_contents($this->project->root . '/app/definitions/orchestrations/process-uploaded-document.orchestration.yaml', <<<'YAML'
 version: 1
-name: process_uploaded_document
+name: process-uploaded-document
 steps:
   - name: extract_text
     job: extract_document_text
@@ -169,7 +169,7 @@ route:
 auth:
   required: true
   strategies: [session]
-publish_features: [publish_post]
+publish_features: [publish-post]
 payload_schema:
   type: object
   additionalProperties: false
@@ -230,7 +230,7 @@ YAML);
 
         $this->assertNotNull($result->graph->node('billing:stripe'));
         $this->assertNotNull($result->graph->node('workflow:posts'));
-        $this->assertNotNull($result->graph->node('orchestration:process_uploaded_document'));
+        $this->assertNotNull($result->graph->node('orchestration:process-uploaded-document'));
         $this->assertNotNull($result->graph->node('search_index:posts'));
         $this->assertNotNull($result->graph->node('stream:job_progress'));
         $this->assertNotNull($result->graph->node('locale_bundle:core'));
@@ -279,7 +279,8 @@ YAML);
         array $emitEvents = [],
         array $dispatchJobs = [],
     ): void {
-        $base = $this->project->root . '/app/features/' . $feature;
+        $directory = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+        $base = $this->project->root . '/Features/' . $directory;
         mkdir($base . '/tests', 0777, true);
 
         $permissions = array_values(array_unique(array_map('strval', $permissions)));
@@ -299,9 +300,9 @@ route:
   method: {$method}
   path: {$path}
 input:
-  schema: app/features/{$feature}/input.schema.json
+  schema: Features/{$directory}/input.schema.json
 output:
-  schema: app/features/{$feature}/output.schema.json
+  schema: Features/{$directory}/output.schema.json
 auth:
   required: true
   strategies: [session]
@@ -331,7 +332,10 @@ llm:
   risk_level: low
 YAML);
 
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        if (!is_dir($base . '/src')) {
+            mkdir($base . '/src', 0777, true);
+        }
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/queries.sql', "-- name: q\nSELECT 1;\n");
@@ -340,6 +344,6 @@ YAML);
         file_put_contents($base . '/events.yaml', "version: 1\nemit: {$emitYaml}\nsubscribe: []\n");
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch: {$jobsYaml}\n");
         file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"' . $feature . '","kind":"http"}');
-        file_put_contents($base . '/tests/' . $feature . '_contract_test.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/tests/' . str_replace('-', '_', $feature) . '_contract_test.php', '<?php declare(strict_types=1);');
     }
 }

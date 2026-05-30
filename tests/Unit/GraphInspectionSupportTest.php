@@ -44,7 +44,7 @@ final class GraphInspectionSupportTest extends TestCase
             '--workflows',
             '--view',
             'command',
-            '--feature=publish_post',
+            '--feature=publish-post',
             '--extension=core',
             '--pipeline=auth',
             '--pipeline-stage',
@@ -63,7 +63,7 @@ final class GraphInspectionSupportTest extends TestCase
         ]);
 
         $this->assertSame('pipeline', $options['view']);
-        $this->assertSame('publish_post', $options['feature']);
+        $this->assertSame('publish-post', $options['feature']);
         $this->assertSame('core', $options['extension']);
         $this->assertSame('validation', $options['pipeline']);
         $this->assertSame('POST /posts', $options['command']);
@@ -75,7 +75,7 @@ final class GraphInspectionSupportTest extends TestCase
 
         $context = new CommandContext($this->project->root, true);
         $graph = $helper->loadOrCompileGraphForInspection($context);
-        $this->assertTrue($graph->hasNode('feature:publish_post'));
+        $this->assertTrue($graph->hasNode('feature:publish-post'));
 
         $payload = $helper->buildGraphInspectionPayload($context, [
             'command' => 'POST /posts',
@@ -112,22 +112,23 @@ final class GraphInspectionSupportTest extends TestCase
 
     private function seedProject(): void
     {
-        $base = $this->project->root . '/app/features/publish_post';
+        $base = $this->project->root . '/Features/PublishPost';
+        mkdir($base . '/src', 0777, true);
         mkdir($base . '/tests', 0777, true);
         mkdir($this->project->root . '/app/definitions/workflows', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
 version: 1
-feature: publish_post
+feature: publish-post
 kind: http
 description: publish
 route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -157,7 +158,7 @@ YAML);
         file_put_contents($base . '/output.schema.json', '{"type":"object"}');
         file_put_contents($base . '/queries.sql', '');
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules: {}\n");
-        file_put_contents($base . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 120\n    invalidated_by: [publish_post]\n");
+        file_put_contents($base . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 120\n    invalidated_by: [publish-post]\n");
         file_put_contents($base . '/events.yaml', <<<'YAML'
 version: 1
 emit:

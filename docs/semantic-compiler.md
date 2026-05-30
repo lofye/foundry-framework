@@ -12,7 +12,7 @@ The graph is the internal contract for:
 
 ## Source-of-truth and graph model
 Author these files as source of truth:
-- `app/features/<feature>/feature.yaml`
+- `Features/<Feature>/feature.yaml`
 - `input.schema.json` / `output.schema.json`
 - `queries.sql`
 - `permissions.yaml`
@@ -173,7 +173,7 @@ Example:
 ```bash
 foundry compile graph --json
 foundry inspect graph --json
-foundry inspect impact --file=app/features/publish_post/feature.yaml --json
+foundry inspect impact --file=Features/PublishPost/feature.yaml --json
 foundry verify graph --json
 foundry verify contracts --json
 php vendor/bin/phpunit

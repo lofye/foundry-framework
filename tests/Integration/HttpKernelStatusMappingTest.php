@@ -117,10 +117,10 @@ final class HttpKernelStatusMappingTest extends TestCase
 
     private function writeFeature(): void
     {
-        $featureDir = $this->project->root . '/app/features/publish_post';
-        mkdir($featureDir, 0777, true);
+        $featureDir = $this->project->root . '/Features/PublishPost';
+        mkdir($featureDir . '/src', 0777, true);
 
-        file_put_contents($featureDir . '/action.php', <<<'PHP'
+        file_put_contents($featureDir . '/src/Action.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -150,8 +150,8 @@ return [
         'kind' => 'http',
         'description' => 'Create post',
         'route' => ['method' => 'POST', 'path' => '/posts'],
-        'input_schema' => 'app/features/publish_post/input.schema.json',
-        'output_schema' => 'app/features/publish_post/output.schema.json',
+        'input_schema' => 'Features/PublishPost/input.schema.json',
+        'output_schema' => 'Features/PublishPost/output.schema.json',
         'auth' => ['required' => true, 'strategies' => ['bearer'], 'permissions' => ['posts.create']],
         'database' => ['transactions' => 'required'],
         'cache' => [],
@@ -160,7 +160,7 @@ return [
         'rate_limit' => [],
         'tests' => [],
         'llm' => [],
-        'base_path' => 'app/features/publish_post',
+        'base_path' => 'Features/PublishPost',
         'action_class' => 'App\\Features\\PublishPost\\Action',
     ],
 ];
@@ -171,8 +171,8 @@ return [
     'POST /posts' => [
         'feature' => 'publish_post',
         'kind' => 'http',
-        'input_schema' => 'app/features/publish_post/input.schema.json',
-        'output_schema' => 'app/features/publish_post/output.schema.json',
+        'input_schema' => 'Features/PublishPost/input.schema.json',
+        'output_schema' => 'Features/PublishPost/output.schema.json',
     ],
 ];
 PHP);

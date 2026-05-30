@@ -105,8 +105,8 @@ return [
   'POST /legacy' => [
     'feature' => 'publish_post',
     'kind' => 'http',
-    'input_schema' => 'app/features/publish_post/input.schema.json',
-    'output_schema' => 'app/features/publish_post/output.schema.json',
+    'input_schema' => 'Features/PublishPost/input.schema.json',
+    'output_schema' => 'Features/PublishPost/output.schema.json',
   ],
 ];
 PHP);
@@ -129,7 +129,7 @@ PHP);
 
     public function test_analyzer_reports_unsupported_manifest_versions_as_blockers(): void
     {
-        $manifestPath = $this->project->root . '/app/features/publish_post/feature.yaml';
+        $manifestPath = $this->project->root . '/Features/PublishPost/feature.yaml';
         $manifest = (string) file_get_contents($manifestPath);
         file_put_contents($manifestPath, str_replace("version: 1\n", "version: 99\n", $manifest));
 
@@ -138,7 +138,7 @@ PHP);
 
         $issue = $this->firstIssueByCode((array) $payload['issues'], 'FDY7003_UNSUPPORTED_DEFINITION_VERSION');
         $this->assertNotNull($issue);
-        $this->assertSame('app/features/publish_post/feature.yaml', $issue['affected']['source_path']);
+        $this->assertSame('Features/PublishPost/feature.yaml', $issue['affected']['source_path']);
         $this->assertStringContainsString('inspect migrations --json', (string) $issue['migration']);
         $this->assertFalse($report->ok);
     }
@@ -177,7 +177,7 @@ JSON);
 
     private function seedFeatureManifestV1(): void
     {
-        $base = $this->project->root . '/app/features/publish_post';
+        $base = $this->project->root . '/Features/PublishPost';
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
@@ -189,9 +189,9 @@ route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -216,7 +216,10 @@ YAML);
 
         file_put_contents($base . '/input.schema.json', '{"type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/output.schema.json', '{"type":"object","additionalProperties":false,"properties":{}}');
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        if (!is_dir($base . '/src')) {
+            mkdir($base . '/src', 0777, true);
+        }
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/queries.sql', "-- name: insert_post\nINSERT INTO posts(id) VALUES(:id);\n");
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules: {}\n");
         file_put_contents($base . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [publish_post]\n");

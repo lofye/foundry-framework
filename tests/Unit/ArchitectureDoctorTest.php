@@ -74,34 +74,34 @@ final class ArchitectureDoctorTest extends TestCase
             analyzers: $compiler->extensionRegistry()->graphAnalyzers(),
             impactAnalyzer: $compiler->impactAnalyzer(),
         );
-        $report = $doctor->analyze($compiled->graph, 'list_posts');
+        $report = $doctor->analyze($compiled->graph, 'list-posts');
 
-        $this->assertSame('list_posts', $report['feature_filter']);
-        $this->assertSame('feature:list_posts', $report['impact_preview']['node_id']);
+        $this->assertSame('list-posts', $report['feature_filter']);
+        $this->assertSame('feature:list-posts', $report['impact_preview']['node_id']);
         $this->assertSame(0, $report['analyzers']['dependency_cycles']['result']['cycle_count']);
 
         $authRows = (array) ($report['analyzers']['auth_coverage']['result']['unguarded_routes'] ?? []);
         $this->assertNotEmpty($authRows);
-        $this->assertSame('list_posts', $authRows[0]['feature']);
+        $this->assertSame('list-posts', $authRows[0]['feature']);
     }
 
     private function seedPublishPost(): void
     {
-        $base = $this->project->root . '/app/features/publish_post';
+        $base = $this->project->root . '/Features/PublishPost';
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
 version: 2
-feature: publish_post
+feature: publish-post
 kind: http
 description: publish
 route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -134,27 +134,27 @@ YAML);
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules:\n  admin: [posts.read]\n");
         file_put_contents($base . '/events.yaml', "version: 1\nemit:\n  - name: post.created\n    schema: {type: object}\nsubscribe: [feed.updated]\n");
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch: []\n");
-        file_put_contents($base . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 60\n    invalidated_by: [publish_post]\n  - key: posts:detail\n    kind: computed\n    ttl_seconds: 60\n    invalidated_by: []\n  - key: posts:orphan\n    kind: computed\n    ttl_seconds: 60\n    invalidated_by: []\n");
+        file_put_contents($base . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 60\n    invalidated_by: [publish-post]\n  - key: posts:detail\n    kind: computed\n    ttl_seconds: 60\n    invalidated_by: []\n  - key: posts:orphan\n    kind: computed\n    ttl_seconds: 60\n    invalidated_by: []\n");
         file_put_contents($base . '/tests/publish_post_feature_test.php', '<?php declare(strict_types=1);');
     }
 
     private function seedUpdateFeed(): void
     {
-        $base = $this->project->root . '/app/features/update_feed';
+        $base = $this->project->root . '/Features/UpdateFeed';
         mkdir($base, 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
 version: 2
-feature: update_feed
+feature: update-feed
 kind: http
 description: feed
 route:
   method: POST
   path: /feed
 input:
-  schema: app/features/update_feed/input.schema.json
+  schema: Features/UpdateFeed/input.schema.json
 output:
-  schema: app/features/update_feed/output.schema.json
+  schema: Features/UpdateFeed/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -191,21 +191,21 @@ YAML);
 
     private function seedListPosts(): void
     {
-        $base = $this->project->root . '/app/features/list_posts';
+        $base = $this->project->root . '/Features/ListPosts';
         mkdir($base, 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
 version: 2
-feature: list_posts
+feature: list-posts
 kind: http
 description: list
 route:
   method: GET
   path: /posts
 input:
-  schema: app/features/list_posts/input.schema.json
+  schema: Features/ListPosts/input.schema.json
 output:
-  schema: app/features/list_posts/output.schema.json
+  schema: Features/ListPosts/output.schema.json
 auth:
   required: false
   strategies: []

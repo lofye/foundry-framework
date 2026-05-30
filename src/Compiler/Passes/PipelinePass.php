@@ -6,6 +6,7 @@ namespace Foundry\Compiler\Passes;
 
 use Foundry\Compiler\CompilationState;
 use Foundry\Compiler\CompilerPass;
+use Foundry\Support\FeatureNaming;
 use Foundry\Compiler\GraphEdge;
 use Foundry\Compiler\IR\ExecutionPlanNode;
 use Foundry\Compiler\IR\GuardNode;
@@ -297,7 +298,7 @@ final class PipelinePass implements CompilerPass
     private function buildGuards(string $feature, array $featurePayload, CompilationState $state): array
     {
         $guards = [];
-        $manifestPath = (string) ($featurePayload['manifest_path'] ?? ('app/features/' . $feature . '/feature.yaml'));
+        $manifestPath = (string) ($featurePayload['manifest_path'] ?? (FeatureNaming::directory($feature) . '/feature.yaml'));
         $route = is_array($featurePayload['route'] ?? null) ? $featurePayload['route'] : [];
         $method = strtoupper((string) ($route['method'] ?? 'GET'));
 

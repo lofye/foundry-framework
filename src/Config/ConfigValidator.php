@@ -116,7 +116,7 @@ final class ConfigValidator
         }
 
         foreach ($discoveredFeatures as $feature => $row) {
-            $manifestPath = (string) ($row['manifest_path'] ?? ('app/features/' . $feature . '/feature.yaml'));
+            $manifestPath = (string) ($row['manifest_path'] ?? (\Foundry\Support\FeatureNaming::directory((string) $feature) . '/feature.yaml'));
             $route = is_array($row['manifest']['route'] ?? null) ? $row['manifest']['route'] : null;
             if ($route === null) {
                 continue;

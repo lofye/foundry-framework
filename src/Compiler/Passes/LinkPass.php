@@ -7,6 +7,7 @@ namespace Foundry\Compiler\Passes;
 use Foundry\Compiler\CompilationState;
 use Foundry\Compiler\CompilerPass;
 use Foundry\Compiler\GraphEdge;
+use Foundry\Support\FeatureNaming;
 use Foundry\Compiler\IR\AuthNode;
 use Foundry\Compiler\IR\CacheNode;
 use Foundry\Compiler\IR\ContextManifestNode;
@@ -54,8 +55,8 @@ final class LinkPass implements CompilerPass
             }
 
             $featureId = 'feature:' . $feature;
-            $manifestPath = (string) ($payload['manifest_path'] ?? 'app/features/' . $feature . '/feature.yaml');
-            $basePath = (string) ($payload['base_path'] ?? ('app/features/' . $feature));
+            $manifestPath = (string) ($payload['manifest_path'] ?? FeatureNaming::directory($feature) . '/feature.yaml');
+            $basePath = (string) ($payload['base_path'] ?? FeatureNaming::directory($feature));
 
             $route = is_array($payload['route'] ?? null) ? $payload['route'] : null;
             if ($route !== null) {

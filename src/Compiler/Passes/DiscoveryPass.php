@@ -7,6 +7,7 @@ namespace Foundry\Compiler\Passes;
 use Foundry\Compiler\CompilationState;
 use Foundry\Compiler\CompilerPass;
 use Foundry\DB\SqlFileLoader;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Json;
 use Foundry\Support\Yaml;
 
@@ -25,7 +26,8 @@ final class DiscoveryPass implements CompilerPass
         sort($selected);
 
         foreach ($selected as $feature) {
-            $base = $state->paths->join('app/features/' . $feature);
+            $basePath = FeatureNaming::directory($feature);
+            $base = $state->paths->join($basePath);
             if (!is_dir($base)) {
                 $state->discoveredFeatures[$feature] = [
                     'feature' => $feature,
@@ -41,8 +43,8 @@ final class DiscoveryPass implements CompilerPass
                     category: 'discovery',
                     message: 'Feature is missing required feature.yaml manifest.',
                     nodeId: 'feature:' . $feature,
-                    sourcePath: 'app/features/' . $feature,
-                    suggestedFix: 'Create app/features/' . $feature . '/feature.yaml.',
+                    sourcePath: $basePath,
+                    suggestedFix: 'Create ' . $basePath . '/feature.yaml.',
                     pass: $this->name(),
                 );
                 continue;
@@ -53,8 +55,8 @@ final class DiscoveryPass implements CompilerPass
                 continue;
             }
 
-            $inputSchemaPath = $this->normalizeSchemaPath($feature, (string) ($manifest['input']['schema'] ?? 'app/features/' . $feature . '/input.schema.json'));
-            $outputSchemaPath = $this->normalizeSchemaPath($feature, (string) ($manifest['output']['schema'] ?? 'app/features/' . $feature . '/output.schema.json'));
+            $inputSchemaPath = $this->normalizeSchemaPath($feature, (string) ($manifest['input']['schema'] ?? $basePath . '/input.schema.json'));
+            $outputSchemaPath = $this->normalizeSchemaPath($feature, (string) ($manifest['output']['schema'] ?? $basePath . '/output.schema.json'));
 
             $inputSchema = $this->safeJson($state, $state->paths->join($inputSchemaPath), 'FDY0103_INPUT_SCHEMA_INVALID', 'schemas', false);
             $outputSchema = $this->safeJson($state, $state->paths->join($outputSchemaPath), 'FDY0104_OUTPUT_SCHEMA_INVALID', 'schemas', false);
@@ -78,7 +80,7 @@ final class DiscoveryPass implements CompilerPass
                         category: 'queries',
                         message: 'Unable to read queries.sql.',
                         nodeId: 'feature:' . $feature,
-                        sourcePath: 'app/features/' . $feature . '/queries.sql',
+                        sourcePath: $basePath . '/queries.sql',
                         pass: $this->name(),
                     );
                 } else {
@@ -97,7 +99,7 @@ final class DiscoveryPass implements CompilerPass
                             category: 'queries',
                             message: $error->getMessage(),
                             nodeId: 'feature:' . $feature,
-                            sourcePath: 'app/features/' . $feature . '/queries.sql',
+                            sourcePath: $basePath . '/queries.sql',
                             pass: $this->name(),
                         );
                     }
@@ -106,7 +108,7 @@ final class DiscoveryPass implements CompilerPass
 
             $sourceFiles = [];
             foreach ($state->sourceHashes as $path => $hash) {
-                if (str_starts_with($path, 'app/features/' . $feature . '/')) {
+                if (str_starts_with($path, $basePath . '/')) {
                     $sourceFiles[] = $path;
                 }
             }
@@ -124,7 +126,7 @@ final class DiscoveryPass implements CompilerPass
             $state->discoveredFeatures[$feature] = [
                 'feature' => $feature,
                 'removed' => false,
-                'base_path' => 'app/features/' . $feature,
+                'base_path' => $basePath,
                 'manifest_path' => $this->relativePath($state, $manifestPath),
                 'manifest' => $manifest,
                 'input_schema_path' => $inputSchemaPath,
@@ -152,14 +154,14 @@ final class DiscoveryPass implements CompilerPass
     private function normalizeSchemaPath(string $feature, string $path): string
     {
         if ($path === '') {
-            return 'app/features/' . $feature . '/input.schema.json';
+            return FeatureNaming::directory($feature) . '/input.schema.json';
         }
 
-        if (str_starts_with($path, 'app/')) {
+        if (str_starts_with($path, 'app/') || str_starts_with($path, 'Features/')) {
             return $path;
         }
 
-        return 'app/features/' . $feature . '/' . ltrim($path, '/');
+        return FeatureNaming::directory($feature) . '/' . ltrim($path, '/');
     }
 
     /**

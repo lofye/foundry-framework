@@ -6,6 +6,7 @@ namespace Foundry\Generation;
 
 use Foundry\Compiler\CompileOptions;
 use Foundry\Compiler\GraphCompiler;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Paths;
 
@@ -108,7 +109,7 @@ final class DeepTestGenerator
                 continue;
             }
 
-            $base = $this->paths->join('app/features/' . $feature);
+            $base = $this->paths->join(FeatureNaming::directory($feature));
             if (!is_dir($base)) {
                 continue;
             }
@@ -153,7 +154,7 @@ final class DeepTestGenerator
         }
 
         $payload = $node->payload();
-        $base = $this->paths->join('app/features/' . $feature);
+        $base = $this->paths->join(FeatureNaming::directory($feature));
         if (!is_dir($base)) {
             throw new FoundryError('FEATURE_NOT_FOUND', 'not_found', ['feature' => $feature], 'Feature directory not found.');
         }
@@ -185,7 +186,7 @@ final class DeepTestGenerator
 
         $missing = [];
         foreach ($required as $kind) {
-            $path = $this->paths->join('app/features/' . $feature . '/tests/' . $feature . '_' . $kind . '_test.php');
+            $path = $this->paths->join(FeatureNaming::directory($feature) . '/tests/' . FeatureNaming::codeSafe($feature) . '_' . $kind . '_test.php');
             if (!is_file($path)) {
                 $missing[] = $kind;
             }
@@ -205,9 +206,10 @@ final class DeepTestGenerator
             mkdir($testsPath, 0777, true);
         }
 
-        $path = $testsPath . '/' . $feature . '_deep_test.php';
+        $codeSafeFeature = FeatureNaming::codeSafe($feature);
+        $path = $testsPath . '/' . $codeSafeFeature . '_deep_test.php';
         $scenarios = $this->scenarios($graph, $feature, $payload);
-        $class = str_replace(' ', '', ucwords(str_replace('_', ' ', $feature))) . 'DeepTest';
+        $class = FeatureNaming::pascal($feature) . 'DeepTest';
 
         $methods = [];
         foreach ($scenarios as $scenario) {

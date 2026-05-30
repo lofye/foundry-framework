@@ -32,7 +32,7 @@ final class ExecutionSpecResolverTest extends TestCase
 
         $this->assertSame('blog/001-initial', $spec->specId);
         $this->assertSame('blog', $spec->feature);
-        $this->assertSame('docs/features/blog/specs/001-initial.md', $spec->path);
+        $this->assertSame('Features/Blog/specs/001-initial.md', $spec->path);
         $this->assertSame('001-initial', $spec->name);
         $this->assertSame('001', $spec->id);
         $this->assertNull($spec->parentId);
@@ -351,7 +351,7 @@ MD);
 - Add initial blog scaffolding.
 MD);
 
-        $error = $this->expectFoundryError(fn() => $this->resolver()->resolve('docs/features/blog/specs/drafts/001-initial.md'));
+        $error = $this->expectFoundryError(fn() => $this->resolver()->resolve('Features/Blog/specs/drafts/001-initial.md'));
 
         $this->assertSame('EXECUTION_SPEC_DRAFT_ONLY', $error->errorCode);
     }
@@ -382,7 +382,7 @@ MD);
 
     public function test_non_canonical_flat_execution_spec_path_is_rejected(): void
     {
-        $path = $this->project->root . '/docs/features/blog-1/specs.md';
+        $path = $this->project->root . '/Features/Blog-1/specs.md';
         $directory = dirname($path);
         if (!is_dir($directory)) {
             mkdir($directory, 0777, true);
@@ -390,7 +390,7 @@ MD);
 
         file_put_contents($path, '# Execution Spec: blog-1');
 
-        $error = $this->expectFoundryError(fn() => $this->resolver()->resolve('docs/features/blog-1.md'));
+        $error = $this->expectFoundryError(fn() => $this->resolver()->resolve('Features/Blog-1.md'));
 
         $this->assertSame('EXECUTION_SPEC_PATH_NON_CANONICAL', $error->errorCode);
     }
@@ -446,7 +446,7 @@ MD);
 
 After successful implementation of an active execution spec, Foundry must automatically append an implementation entry to:
 
-`docs/features/implementation-log.md`
+`Modules/implementation.log`
 
 This must occur only after implementation has succeeded.
 
@@ -474,7 +474,7 @@ MD);
 
     public function test_resolve_rejects_noncanonical_nested_path_input(): void
     {
-        $error = $this->expectFoundryError(fn() => $this->resolver()->resolve('docs/features/blog/specs/extra/001-initial.md'));
+        $error = $this->expectFoundryError(fn() => $this->resolver()->resolve('Features/Blog/specs/extra/001-initial.md'));
         $this->assertSame('EXECUTION_SPEC_PATH_NON_CANONICAL', $error->errorCode);
     }
 
@@ -562,7 +562,7 @@ MD);
 
     private function writeRawExecutionSpec(string $feature, string $name, string $contents): void
     {
-        $path = $this->project->root . '/docs/features/' . $feature . '/specs/' . $name . '.md';
+        $path = $this->project->root . '/Features/' . str_replace(' ', '', ucwords(str_replace('-', ' ', $feature))) . '/specs/' . $name . '.md';
         $directory = dirname($path);
         if (!is_dir($directory)) {
             mkdir($directory, 0777, true);
@@ -573,7 +573,7 @@ MD);
 
     private function writeRawDraftExecutionSpec(string $feature, string $name, string $contents): void
     {
-        $path = $this->project->root . '/docs/features/' . $feature . '/specs/drafts/' . $name . '.md';
+        $path = $this->project->root . '/Features/' . str_replace(' ', '', ucwords(str_replace('-', ' ', $feature))) . '/specs/drafts/' . $name . '.md';
         $directory = dirname($path);
         if (!is_dir($directory)) {
             mkdir($directory, 0777, true);

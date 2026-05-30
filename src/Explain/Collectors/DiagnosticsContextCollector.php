@@ -69,7 +69,7 @@ final readonly class DiagnosticsContextCollector implements ExplainContextCollec
             return false;
         }
 
-        if ($sourcePath !== '' && str_starts_with($sourcePath, 'app/features/' . $feature . '/')) {
+        if ($sourcePath !== '' && str_starts_with($sourcePath, \Foundry\Support\FeatureNaming::directory($feature) . '/')) {
             return true;
         }
 

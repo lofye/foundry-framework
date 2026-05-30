@@ -793,3 +793,7 @@
 - spec: Modules/CliExperience/specs/004-framework-root-foundry-launcher.md
 - note: Added a framework-root `./foundry` launcher that delegates to `bin/foundry`, preserves argument forwarding, fails clearly when unreadable, and resolves PHP via deterministic candidate order (`PHP_BIN`, `/opt/homebrew/bin/php`, `/usr/local/bin/php`, PATH `php`).
 - note: Updated framework command-prefix output and framework-facing docs/demo guidance to prefer `./foundry ...` while preserving generated-app `foundry ...` guidance.
+
+## 2026-05-29 14:45:00 -0400
+- spec: Modules/FeatureSystem/specs/014-canonical-app-feature-roots-without-legacy-layout.md
+- note: Made `Features/<Feature>/` the canonical app feature source root without `app/features/` compatibility, ensured fresh apps include `Features/`, `Modules/`, and `Packs/`, moved smoke feature fixtures to `Features/*/src`, preserved public docs under `docs/`, and updated verification/docs/tests for the new layout.

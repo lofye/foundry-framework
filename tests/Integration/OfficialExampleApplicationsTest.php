@@ -38,12 +38,12 @@ final class OfficialExampleApplicationsTest extends TestCase
         $this->assertSame(0, $inspect['status']);
         $this->assertSame('command', $inspect['payload']['view']);
         $this->assertSame('GET /hello', $inspect['payload']['command_filter']);
-        $this->assertContains('say_hello', $inspect['payload']['summary']['features']);
+        $this->assertContains('say-hello', $inspect['payload']['summary']['features']);
 
-        $feature = $this->runCommand($app, ['foundry', 'inspect', 'feature', 'say_hello', '--json']);
+        $feature = $this->runCommand($app, ['foundry', 'inspect', 'feature', 'say-hello', '--json']);
         $this->assertSame(0, $feature['status']);
 
-        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=say_hello', '--json']);
+        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=say-hello', '--json']);
         $this->assertSame(0, $doctor['status']);
         $this->assertTrue($doctor['payload']['ok']);
 
@@ -63,12 +63,12 @@ final class OfficialExampleApplicationsTest extends TestCase
         $this->assertSame(0, $inspect['status']);
         $this->assertSame('command', $inspect['payload']['view']);
         $this->assertSame('GET /posts', $inspect['payload']['command_filter']);
-        $this->assertContains('list_posts', $inspect['payload']['summary']['features']);
+        $this->assertContains('list-posts', $inspect['payload']['summary']['features']);
 
-        $feature = $this->runCommand($app, ['foundry', 'inspect', 'feature', 'publish_post', '--json']);
+        $feature = $this->runCommand($app, ['foundry', 'inspect', 'feature', 'publish-post', '--json']);
         $this->assertSame(0, $feature['status']);
 
-        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=list_posts', '--json']);
+        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=list-posts', '--json']);
         $this->assertSame(0, $doctor['status']);
         $this->assertTrue($doctor['payload']['ok']);
 
@@ -96,10 +96,10 @@ final class OfficialExampleApplicationsTest extends TestCase
         $this->assertSame('editorial', $workflow['payload']['workflow_filter']);
         $this->assertContains('editorial', $workflow['payload']['summary']['workflows']);
 
-        $feature = $this->runCommand($app, ['foundry', 'inspect', 'feature', 'publish_story', '--json']);
+        $feature = $this->runCommand($app, ['foundry', 'inspect', 'feature', 'publish-story', '--json']);
         $this->assertSame(0, $feature['status']);
 
-        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=publish_story', '--json']);
+        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=publish-story', '--json']);
         $this->assertSame(0, $doctor['status']);
         $this->assertTrue($doctor['payload']['ok']);
 
@@ -126,8 +126,8 @@ final class OfficialExampleApplicationsTest extends TestCase
 
     private function importExampleApp(string $slug): void
     {
-        $source = dirname(__DIR__, 2) . '/examples/' . $slug . '/app';
-        $this->copyDirectory($source, $this->project->root . '/app');
+        $source = dirname(__DIR__, 2) . '/examples/' . $slug;
+        $this->copyDirectory($source, $this->project->root);
     }
 
     private function copyDirectory(string $source, string $target): void

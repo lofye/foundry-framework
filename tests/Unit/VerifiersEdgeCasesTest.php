@@ -183,7 +183,10 @@ database:
 tests:
   required: [contract]
 YAML);
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        if (!is_dir($base . '/src')) {
+            mkdir($base . '/src', 0777, true);
+        }
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/context.manifest.json', '{"version":1}');
         file_put_contents($base . '/input.schema.json', '{');
         file_put_contents($base . '/output.schema.json', '{');
@@ -202,7 +205,8 @@ YAML);
 
     private function featurePath(string $feature): string
     {
-        $path = $this->project->root . '/app/features/' . $feature;
+        $directory = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+        $path = $this->project->root . '/Features/' . $directory;
         if (!is_dir($path)) {
             mkdir($path, 0777, true);
         }

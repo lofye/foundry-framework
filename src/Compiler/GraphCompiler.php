@@ -16,6 +16,7 @@ use Foundry\Compiler\Passes\LinkPass;
 use Foundry\Compiler\Passes\NormalizePass;
 use Foundry\Compiler\Passes\ValidatePass;
 use Foundry\Support\Clock;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Json;
 use Foundry\Support\Paths;
 
@@ -45,8 +46,7 @@ final class GraphCompiler
     {
         $frameworkVersion = $this->detectedFrameworkVersion();
 
-        $currentFeatures = array_map('basename', glob($this->paths->features() . '/*', GLOB_ONLYDIR) ?: []);
-        sort($currentFeatures);
+        $currentFeatures = $this->currentFeatures();
 
         $sourceFiles = $this->sourceScanner->sourceFiles();
         $sourceHashes = $this->sourceScanner->hashFiles($sourceFiles);
@@ -251,6 +251,27 @@ final class GraphCompiler
     public function frameworkVersion(): string
     {
         return $this->detectedFrameworkVersion();
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function currentFeatures(): array
+    {
+        $features = [];
+        $directories = glob($this->paths->features() . '/*', GLOB_ONLYDIR) ?: [];
+        sort($directories);
+
+        foreach ($directories as $directory) {
+            $feature = FeatureNaming::fromDirectoryName(basename($directory));
+            if ($feature !== '') {
+                $features[] = $feature;
+            }
+        }
+
+        sort($features);
+
+        return array_values(array_unique($features));
     }
 
     /**

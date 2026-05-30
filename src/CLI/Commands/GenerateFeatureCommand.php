@@ -6,6 +6,7 @@ namespace Foundry\CLI\Commands;
 
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Yaml;
 
@@ -62,7 +63,7 @@ final class GenerateFeatureCommand extends Command
                 throw new FoundryError('CLI_FEATURE_REQUIRED', 'validation', [], 'Feature name required.');
             }
 
-            $base = $context->paths()->join('app/features/' . $feature);
+            $base = $context->paths()->join(FeatureNaming::directory($feature));
             $manifestPath = $base . '/feature.yaml';
             if (!is_file($manifestPath)) {
                 throw new FoundryError('FEATURE_NOT_FOUND', 'not_found', ['feature' => $feature], 'Feature not found.');
@@ -83,7 +84,7 @@ final class GenerateFeatureCommand extends Command
         if ($feature === '') {
             throw new FoundryError('CLI_FEATURE_REQUIRED', 'validation', [], 'Feature name required.');
         }
-        $base = $context->paths()->join('app/features/' . $feature);
+        $base = $context->paths()->join(FeatureNaming::directory($feature));
         $manifestPath = $base . '/feature.yaml';
         if (!is_file($manifestPath)) {
             throw new FoundryError('FEATURE_NOT_FOUND', 'not_found', ['feature' => $feature], 'Feature not found.');

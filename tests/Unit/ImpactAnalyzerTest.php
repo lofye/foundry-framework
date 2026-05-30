@@ -19,21 +19,22 @@ final class ImpactAnalyzerTest extends TestCase
     {
         $this->project = new TempProject();
 
-        $base = $this->project->root . '/app/features/publish_post';
+        $base = $this->project->root . '/Features/PublishPost';
+        mkdir($base . '/src', 0777, true);
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
 version: 1
-feature: publish_post
+feature: publish-post
 kind: http
 description: test
 route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -67,7 +68,7 @@ YAML);
         file_put_contents($base . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/queries.sql', "-- name: insert_post\nINSERT INTO posts(id) VALUES(:id);\n");
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules: {}\n");
-        file_put_contents($base . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [publish_post]\n");
+        file_put_contents($base . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [publish-post]\n");
         file_put_contents($base . '/events.yaml', "version: 1\nemit:\n  - name: post.created\n    schema:\n      type: object\n      additionalProperties: false\n      properties: {}\nsubscribe: []\n");
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch:\n  - name: notify_followers\n    input_schema:\n      type: object\n      additionalProperties: false\n      properties: {}\n    queue: default\n    retry:\n      max_attempts: 2\n      backoff_seconds: [1,2]\n    timeout_seconds: 30\n");
         file_put_contents($base . '/tests/publish_post_contract_test.php', '<?php declare(strict_types=1);');
@@ -88,22 +89,22 @@ YAML);
         $result = $compiler->compile(new CompileOptions());
 
         $analyzer = new ImpactAnalyzer(Paths::fromCwd($this->project->root));
-        $nodeReport = $analyzer->reportForNode($result->graph, 'feature:publish_post');
+        $nodeReport = $analyzer->reportForNode($result->graph, 'feature:publish-post');
 
-        $this->assertSame('feature:publish_post', $nodeReport['node_id']);
-        $this->assertContains('publish_post', $nodeReport['affected_features']);
+        $this->assertSame('feature:publish-post', $nodeReport['node_id']);
+        $this->assertContains('publish-post', $nodeReport['affected_features']);
         $this->assertContains('feature_index.php', $nodeReport['affected_projections']);
         $this->assertNotEmpty($nodeReport['recommended_verification']);
         $this->assertContains('foundry verify graph --json', $nodeReport['recommended_verification']);
 
-        $fileReport = $analyzer->reportForFile($result->graph, 'app/features/publish_post/feature.yaml');
-        $this->assertSame('app/features/publish_post/feature.yaml', $fileReport['file']);
+        $fileReport = $analyzer->reportForFile($result->graph, 'Features/PublishPost/feature.yaml');
+        $this->assertSame('Features/PublishPost/feature.yaml', $fileReport['file']);
         $this->assertNotEmpty($fileReport['nodes']);
 
-        $tests = $analyzer->affectedTests($result->graph, 'feature:publish_post');
-        $this->assertContains('publish_post_contract_test', $tests);
+        $tests = $analyzer->affectedTests($result->graph, 'feature:publish-post');
+        $this->assertContains('publish-post_contract_test', $tests);
 
-        $features = $analyzer->affectedFeatures($result->graph, 'feature:publish_post');
-        $this->assertSame(['publish_post'], $features);
+        $features = $analyzer->affectedFeatures($result->graph, 'feature:publish-post');
+        $this->assertSame(['publish-post'], $features);
     }
 }

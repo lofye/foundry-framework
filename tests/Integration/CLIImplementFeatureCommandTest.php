@@ -52,7 +52,7 @@ final class CLIImplementFeatureCommandTest extends TestCase
         $this->assertFalse($result['payload']['requires_repair']);
         $this->assertTrue($result['payload']['quality_gate']['passed']);
         $this->assertSame('passed', $result['payload']['quality_gate']['changed_surface']['status']);
-        $this->assertFileExists($this->project->root . '/app/features/event-bus/feature.yaml');
+        $this->assertFileExists($this->project->root . '/Features/EventBus/feature.yaml');
         $this->assertSame(0, $verify['status']);
         $this->assertSame('pass', $verify['payload']['status']);
     }
@@ -66,9 +66,9 @@ final class CLIImplementFeatureCommandTest extends TestCase
 
         $this->assertSame(0, $result['status']);
         $this->assertSame('event-bus', $result['payload']['feature']);
-        $this->assertFileExists($this->project->root . '/app/features/event-bus/feature.yaml');
-        $this->assertFileExists($this->project->root . '/app/features/event-bus/tests/event_bus_contract_test.php');
-        $this->assertFileDoesNotExist($this->project->root . '/app/features/event_bus/feature.yaml');
+        $this->assertFileExists($this->project->root . '/Features/EventBus/feature.yaml');
+        $this->assertFileExists($this->project->root . '/Features/EventBus/tests/event_bus_contract_test.php');
+        $this->assertFileDoesNotExist($this->project->root . '/Features/Event_bus/feature.yaml');
     }
 
     public function test_blocked_feature_returns_correct_blocked_result(): void
@@ -84,14 +84,14 @@ final class CLIImplementFeatureCommandTest extends TestCase
             'Run `php bin/foundry verify context --json` and resolve all issues before proceeding.',
             $result['payload']['required_action'],
         );
-        $this->assertContains('Create missing spec file: docs/features/event-bus/event-bus.spec.md', $result['payload']['required_actions']);
+        $this->assertContains('Create missing spec file: Features/EventBus/event-bus.spec.md', $result['payload']['required_actions']);
     }
 
     public function test_repair_enables_recovery_when_repairable(): void
     {
         $this->runCommand(['foundry', 'context', 'init', 'event-bus', '--json']);
         $this->writeMeaningfulContext('event-bus');
-        unlink($this->project->root . '/docs/features/event-bus/event-bus.md');
+        unlink($this->project->root . '/Features/EventBus/event-bus.md');
 
         $result = $this->runCommand(['foundry', 'implement', 'feature', 'event-bus', '--repair', '--json']);
 
@@ -105,7 +105,7 @@ final class CLIImplementFeatureCommandTest extends TestCase
     {
         $this->runCommand(['foundry', 'context', 'init', 'event-bus', '--json']);
         $this->writeMeaningfulContext('event-bus');
-        $path = $this->project->root . '/docs/features/event-bus/event-bus.spec.md';
+        $path = $this->project->root . '/Features/EventBus/event-bus.spec.md';
         file_put_contents($path, str_replace('# Feature Spec: event-bus', '# Spec: event-bus', (string) file_get_contents($path)));
 
         $result = $this->runCommand(['foundry', 'implement', 'feature', 'event-bus', '--auto-repair', '--json']);
@@ -122,8 +122,8 @@ final class CLIImplementFeatureCommandTest extends TestCase
         $this->writeMeaningfulContext('event-bus');
 
         $result = $this->runCommand(['foundry', 'implement', 'feature', 'event-bus', '--json']);
-        $state = (string) file_get_contents($this->project->root . '/docs/features/event-bus/event-bus.md');
-        $decisions = (string) file_get_contents($this->project->root . '/docs/features/event-bus/event-bus.decisions.md');
+        $state = (string) file_get_contents($this->project->root . '/Features/EventBus/event-bus.md');
+        $decisions = (string) file_get_contents($this->project->root . '/Features/EventBus/event-bus.decisions.md');
 
         $this->assertSame(0, $result['status']);
         $this->assertStringContainsString('## Current State', $state);
@@ -196,7 +196,12 @@ final class CLIImplementFeatureCommandTest extends TestCase
 
     private function writeMeaningfulContext(string $feature): void
     {
-        file_put_contents($this->project->root . '/docs/features/' . $feature . '/' . $feature . '.spec.md', <<<MD
+        $contextRoot = $this->project->root . '/Features/' . str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+        if (!is_dir($contextRoot)) {
+            mkdir($contextRoot, 0777, true);
+        }
+
+        file_put_contents($contextRoot . '/' . $feature . '.spec.md', <<<MD
 # Feature Spec: {$feature}
 
 ## Purpose
@@ -228,7 +233,7 @@ Introduce event bus handling.
 - Initial implementation may be scaffold-first.
 MD);
 
-        file_put_contents($this->project->root . '/docs/features/' . $feature . '/' . $feature . '.md', <<<MD
+        file_put_contents($contextRoot . '/' . $feature . '.md', <<<MD
 # Feature: {$feature}
 
 ## Purpose
@@ -247,6 +252,38 @@ Introduce event bus handling.
 
 - Event bus feature scaffolding exists in the app.
 - Event bus feature files are present.
+MD);
+
+        file_put_contents($contextRoot . '/' . $feature . '.decisions.md', <<<MD
+# Decisions: {$feature}
+
+### Decision: baseline
+
+Timestamp: 2026-05-03T10:00:00-04:00
+
+**Context**
+
+- Baseline context exists.
+
+**Decision**
+
+- Keep context deterministic.
+
+**Reasoning**
+
+- CLI implementation requires consumable context.
+
+**Alternatives Considered**
+
+- Leave placeholder context incomplete.
+
+**Impact**
+
+- Implement feature can run.
+
+**Spec Reference**
+
+- {$feature}
 MD);
     }
 }

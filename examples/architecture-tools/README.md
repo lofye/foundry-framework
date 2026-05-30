@@ -15,7 +15,7 @@ Command:
 
 ```bash
 php bin/foundry doctor --json
-php bin/foundry doctor --feature=publish_post --strict --json
+php bin/foundry doctor --feature=publish-post --strict --json
 ```
 
 See `doctor/doctor.sample.json` for representative output shape.

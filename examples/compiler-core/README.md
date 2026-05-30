@@ -6,14 +6,14 @@ If you copy the example slice into a generated app, switch the prefix to `foundr
 ## Example A: Simple App Compile
 
 Source files (authored truth):
-- `app/features/publish_post/feature.yaml`
-- `app/features/publish_post/input.schema.json`
-- `app/features/publish_post/output.schema.json`
-- `app/features/publish_post/queries.sql`
-- `app/features/publish_post/permissions.yaml`
-- `app/features/publish_post/events.yaml`
-- `app/features/publish_post/jobs.yaml`
-- `app/features/publish_post/cache.yaml`
+- `Features/PublishPost/feature.yaml`
+- `Features/PublishPost/input.schema.json`
+- `Features/PublishPost/output.schema.json`
+- `Features/PublishPost/queries.sql`
+- `Features/PublishPost/permissions.yaml`
+- `Features/PublishPost/events.yaml`
+- `Features/PublishPost/jobs.yaml`
+- `Features/PublishPost/cache.yaml`
 
 Compile:
 ```bash
@@ -35,11 +35,11 @@ php bin/foundry inspect build --json
 ## Example B: Impact Analysis
 
 Change:
-- edit `app/features/publish_post/input.schema.json`
+- edit `Features/PublishPost/input.schema.json`
 
 Inspect impact:
 ```bash
-php bin/foundry inspect impact --file=app/features/publish_post/input.schema.json --json
+php bin/foundry inspect impact --file=Features/PublishPost/input.schema.json --json
 ```
 
 Expected response includes:

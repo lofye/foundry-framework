@@ -24,7 +24,7 @@ Those stages produce the canonical graph, projections, manifests, diagnostics, a
 
 The execution model starts from explicit authored inputs:
 
-- feature files under `app/features/*`
+- feature files under `Features/<Feature>/`, with runtime actions in `Features/<Feature>/src/`
 - capability-specific definitions under `app/definitions/*` when used
 - framework and app configuration under `config/*`
 

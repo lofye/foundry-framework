@@ -172,15 +172,6 @@ final class ContextDoctorService
     private function discoverContextFeatures(): array
     {
         $features = [];
-        foreach ($this->discoverLegacyFeatureSlugs() as $featureName) {
-            $contextPaths = $this->resolver->legacyPaths($featureName);
-            if ($this->contextFilesMissing($contextPaths)) {
-                continue;
-            }
-
-            $features[] = $featureName;
-        }
-
         foreach ($this->discoverCanonicalFeatureSlugs() as $featureName) {
             $contextPaths = $this->resolver->canonicalPaths($featureName);
             if ($this->contextFilesMissing($contextPaths)) {
@@ -199,7 +190,7 @@ final class ContextDoctorService
     private function discoverExecutionSpecFeatures(): array
     {
         $features = [];
-        foreach (array_values(array_unique(array_merge($this->discoverLegacyFeatureSlugs(), $this->discoverCanonicalFeatureSlugs()))) as $featureName) {
+        foreach ($this->discoverCanonicalFeatureSlugs() as $featureName) {
             if ($this->featureHasExecutionSpecs($featureName)) {
                 $features[] = $featureName;
             }
@@ -511,8 +502,6 @@ final class ContextDoctorService
     {
         $featureName = FeatureNaming::canonical($featureName);
 
-        $legacySpecs = 'docs/features/' . $featureName . '/specs';
-        $legacyDraftSpecs = 'docs/features/' . $featureName . '/specs/drafts';
         $modulesCanonicalRoot = 'Modules/' . $this->pascalFromSlug($featureName);
         $modulesCanonicalSpecs = $modulesCanonicalRoot . '/specs';
         $modulesCanonicalDraftSpecs = $modulesCanonicalRoot . '/specs/drafts';
@@ -520,9 +509,7 @@ final class ContextDoctorService
         $featuresCanonicalSpecs = $featuresCanonicalRoot . '/specs';
         $featuresCanonicalDraftSpecs = $featuresCanonicalRoot . '/specs/drafts';
 
-        return $this->directoryContainsMarkdownFiles($legacySpecs)
-            || $this->directoryContainsMarkdownFiles($legacyDraftSpecs)
-            || $this->directoryContainsMarkdownFiles($modulesCanonicalSpecs)
+        return $this->directoryContainsMarkdownFiles($modulesCanonicalSpecs)
             || $this->directoryContainsMarkdownFiles($modulesCanonicalDraftSpecs)
             || $this->directoryContainsMarkdownFiles($featuresCanonicalSpecs)
             || $this->directoryContainsMarkdownFiles($featuresCanonicalDraftSpecs);
@@ -557,11 +544,6 @@ final class ContextDoctorService
         return false;
     }
 
-    private function isLegacyFeatureDirectory(string $name): bool
-    {
-        return preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $name) === 1;
-    }
-
     private function isCanonicalFeatureDirectory(string $name): bool
     {
         return preg_match('/^[A-Z][A-Za-z0-9]*$/', $name) === 1;
@@ -572,12 +554,7 @@ final class ContextDoctorService
      */
     private function preferredContextPaths(string $featureName): array
     {
-        $canonical = $this->resolver->canonicalPaths($featureName);
-        if (!$this->contextFilesMissing($canonical) || is_dir($this->paths->join(dirname($canonical['spec'])))) {
-            return $canonical;
-        }
-
-        return $this->resolver->legacyPaths($featureName);
+        return $this->resolver->canonicalPaths($featureName);
     }
 
     /**
@@ -588,37 +565,6 @@ final class ContextDoctorService
         return !is_file($this->paths->join($paths['spec']))
             && !is_file($this->paths->join($paths['state']))
             && !is_file($this->paths->join($paths['decisions']));
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function discoverLegacyFeatureSlugs(): array
-    {
-        $directory = $this->paths->join('docs/features');
-        if (!is_dir($directory)) {
-            return [];
-        }
-
-        $items = scandir($directory);
-        if ($items === false) {
-            return [];
-        }
-
-        $features = [];
-        foreach ($items as $item) {
-            if ($item === '.' || $item === '..') {
-                continue;
-            }
-
-            if (!is_dir($directory . '/' . $item) || !$this->isLegacyFeatureDirectory($item)) {
-                continue;
-            }
-
-            $features[] = $item;
-        }
-
-        return $features;
     }
 
     /**

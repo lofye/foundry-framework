@@ -9,6 +9,7 @@ use Foundry\Compiler\CompileOptions;
 use Foundry\Compiler\GraphCompiler;
 use Foundry\Doctor\Checks\DirectoryHealthCheck;
 use Foundry\Doctor\Checks\GraphIntegrityCheck;
+use Foundry\Doctor\Checks\InstallCompletenessCheck;
 use Foundry\Doctor\Checks\MetadataFreshnessCheck;
 use Foundry\Doctor\Checks\PipelineConsistencyCheck;
 use Foundry\Doctor\Checks\RuntimeCompatibilityCheck;
@@ -39,7 +40,7 @@ final class FrameworkDoctorTest extends TestCase
         $paths = Paths::fromCwd($this->project->root);
         $compiler = new GraphCompiler($paths);
         $compileResult = $compiler->compile(new CompileOptions());
-        $base = $this->project->root . '/app/features/publish_post';
+        $base = $this->project->root . '/Features/PublishPost';
 
         $contextMtime = filemtime($base . '/context.manifest.json') ?: time();
         touch($base . '/feature.yaml', $contextMtime + 20);
@@ -62,7 +63,7 @@ final class FrameworkDoctorTest extends TestCase
         $this->assertContains('FDY9102_REQUIRED_EXTENSION_MISSING', $codes);
         $this->assertContains('FDY9114_CONTEXT_MANIFEST_STALE', $codes);
         $this->assertSame(['pdo'], $report['checks']['runtime_compatibility']['result']['missing_extensions']);
-        $this->assertContains('publish_post', $report['checks']['metadata_freshness']['result']['stale_context_features']);
+        $this->assertContains('publish-post', $report['checks']['metadata_freshness']['result']['stale_context_features']);
     }
 
     public function test_framework_doctor_reports_graph_integrity_and_pipeline_failures(): void
@@ -72,7 +73,7 @@ final class FrameworkDoctorTest extends TestCase
         $compileResult = $compiler->compile(new CompileOptions());
 
         @unlink($this->project->root . '/app/.foundry/build/graph/app_graph.json');
-        $compileResult->graph->removeNode('execution_plan:feature:publish_post');
+        $compileResult->graph->removeNode('execution_plan:feature:publish-post');
 
         $report = $this->doctor([
             new GraphIntegrityCheck(),
@@ -143,6 +144,45 @@ final class FrameworkDoctorTest extends TestCase
         $this->assertCount(13, $report['checks']['directory_health']['result']['directories']);
     }
 
+    public function test_install_completeness_reports_invalid_composer_and_missing_required_paths(): void
+    {
+        $paths = Paths::fromCwd($this->project->root);
+        $compiler = new GraphCompiler($paths);
+        $compileResult = $compiler->compile(new CompileOptions());
+        $baseContext = $this->doctorContext($compiler, $compileResult);
+
+        @unlink($this->project->root . '/vendor/autoload.php');
+        $this->deleteDirectory($this->project->root . '/Packs');
+
+        $context = new DoctorContext(
+            paths: $baseContext->paths,
+            layout: $baseContext->layout,
+            compileResult: $baseContext->compileResult,
+            extensionRegistry: $baseContext->extensionRegistry,
+            extensionReport: $baseContext->extensionReport,
+            featureFilter: $baseContext->featureFilter,
+            commandPrefix: $baseContext->commandPrefix,
+            composerPath: $baseContext->composerPath,
+            composerConfig: $baseContext->composerConfig,
+            composerError: 'syntax error',
+        );
+
+        $report = $this->doctor([
+            new InstallCompletenessCheck(),
+        ], $compiler, $compileResult)->diagnose($context);
+
+        $codes = array_values(array_map(
+            static fn(array $row): string => (string) ($row['code'] ?? ''),
+            (array) ($report['diagnostics']['items'] ?? []),
+        ));
+        sort($codes);
+
+        $this->assertContains('FDY9105_COMPOSER_CONFIG_INVALID', $codes);
+        $this->assertContains('FDY9103_INSTALL_PATH_MISSING', $codes);
+        $this->assertSame('error', $report['checks']['install_completeness']['result']['status']);
+        $this->assertSame(['vendor/autoload.php', 'Packs'], $report['checks']['install_completeness']['result']['missing_paths']);
+    }
+
     /**
      * @param array<int,\Foundry\Doctor\DoctorCheck> $checks
      */
@@ -185,21 +225,21 @@ final class FrameworkDoctorTest extends TestCase
 
     private function seedFeature(): void
     {
-        $base = $this->project->root . '/app/features/publish_post';
+        $base = $this->project->root . '/Features/PublishPost';
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
 version: 2
-feature: publish_post
+feature: publish-post
 kind: http
 description: publish
 route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -232,7 +272,7 @@ YAML);
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch: []\n");
         file_put_contents($base . '/cache.yaml', "version: 1\nentries: []\n");
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules:\n  admin: [posts.create]\n");
-        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"publish_post","kind":"http"}');
+        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"publish-post","kind":"http"}');
         file_put_contents($base . '/tests/publish_post_feature_test.php', '<?php declare(strict_types=1);');
     }
 

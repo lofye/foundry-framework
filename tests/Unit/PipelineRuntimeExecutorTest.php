@@ -155,12 +155,11 @@ final class PipelineRuntimeExecutorTest extends TestCase
 
     private function writeFeature(string $name, string $method, string $path, bool $authRequired): void
     {
-        $featureDir = $this->project->root . '/app/features/' . $name;
-        mkdir($featureDir, 0777, true);
+        $studly = str_replace(' ', '', ucwords(str_replace(['_', '-'], ' ', $name)));
+        $featureDir = $this->project->root . '/Features/' . $studly;
+        mkdir($featureDir . '/src', 0777, true);
 
-        $studly = str_replace(' ', '', ucwords(str_replace('_', ' ', $name)));
-
-        file_put_contents($featureDir . '/action.php', <<<PHP
+        file_put_contents($featureDir . '/src/Action.php', <<<PHP
 <?php
 declare(strict_types=1);
 namespace App\Features\\{$studly};
@@ -178,8 +177,12 @@ PHP);
         file_put_contents($featureDir . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":true,"properties":{}}');
         file_put_contents($featureDir . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"required":["id"],"properties":{"id":{"type":"string"}}}');
 
-        file_put_contents($this->project->root . '/app/generated/feature_index.php', "<?php return ['{$name}' => ['kind' => 'http', 'description' => 'x', 'route' => ['method' => '{$method}', 'path' => '{$path}'], 'input_schema' => 'app/features/{$name}/input.schema.json', 'output_schema' => 'app/features/{$name}/output.schema.json', 'auth' => ['required' => " . ($authRequired ? 'true' : 'false') . ", 'strategies' => ['bearer'], 'permissions' => []], 'database' => ['transactions' => 'required'], 'cache' => [], 'events' => [], 'jobs' => [], 'rate_limit' => [], 'tests' => [], 'llm' => [], 'base_path' => 'app/features/{$name}', 'action_class' => 'App\\\\Features\\\\{$studly}\\\\Action']];");
-        file_put_contents($this->project->root . '/app/generated/routes.php', "<?php return ['{$method} {$path}' => ['feature' => '{$name}', 'kind' => 'http', 'input_schema' => 'app/features/{$name}/input.schema.json', 'output_schema' => 'app/features/{$name}/output.schema.json']];");
+        $inputSchema = 'Features/' . $studly . '/input.schema.json';
+        $outputSchema = 'Features/' . $studly . '/output.schema.json';
+        $basePath = 'Features/' . $studly;
+
+        file_put_contents($this->project->root . '/app/generated/feature_index.php', "<?php return ['{$name}' => ['kind' => 'http', 'description' => 'x', 'route' => ['method' => '{$method}', 'path' => '{$path}'], 'input_schema' => '{$inputSchema}', 'output_schema' => '{$outputSchema}', 'auth' => ['required' => " . ($authRequired ? 'true' : 'false') . ", 'strategies' => ['bearer'], 'permissions' => []], 'database' => ['transactions' => 'required'], 'cache' => [], 'events' => [], 'jobs' => [], 'rate_limit' => [], 'tests' => [], 'llm' => [], 'base_path' => '{$basePath}', 'action_class' => 'App\\\\Features\\\\{$studly}\\\\Action']];");
+        file_put_contents($this->project->root . '/app/generated/routes.php', "<?php return ['{$method} {$path}' => ['feature' => '{$name}', 'kind' => 'http', 'input_schema' => '{$inputSchema}', 'output_schema' => '{$outputSchema}']];");
     }
 
     /**

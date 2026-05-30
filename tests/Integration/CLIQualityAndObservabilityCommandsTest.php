@@ -32,12 +32,12 @@ final class CLIQualityAndObservabilityCommandsTest extends TestCase
         $this->writePassingQualityTools();
         $app = new Application();
 
-        $trace = $this->runCommand($app, ['foundry', 'observe:trace', 'publish_post', '--json']);
+        $trace = $this->runCommand($app, ['foundry', 'observe:trace', 'publish-post', '--json']);
         $this->assertSame(0, $trace['status']);
         $this->assertSame(1, $trace['payload']['summary']['execution_paths']);
-        $this->assertSame('execution_plan:feature:publish_post', $trace['payload']['execution_paths'][0]['graph_mapping']['execution_plan']);
+        $this->assertSame('execution_plan:feature:publish-post', $trace['payload']['execution_paths'][0]['graph_mapping']['execution_plan']);
 
-        $profile = $this->runCommand($app, ['foundry', 'observe:profile', 'publish_post', '--json']);
+        $profile = $this->runCommand($app, ['foundry', 'observe:profile', 'publish-post', '--json']);
         $this->assertSame(0, $profile['status']);
         $this->assertArrayHasKey('compile_ms', $profile['payload']['timings']);
         $this->assertNotEmpty($profile['payload']['record']['id']);
@@ -88,21 +88,21 @@ final class CLIQualityAndObservabilityCommandsTest extends TestCase
 
     private function seedFeature(): void
     {
-        $base = $this->project->root . '/app/features/publish_post';
+        $base = $this->project->root . '/Features/PublishPost';
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<'YAML'
 version: 2
-feature: publish_post
+feature: publish-post
 kind: http
 description: publish
 route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -130,7 +130,10 @@ llm:
 YAML);
         file_put_contents($base . '/input.schema.json', '{"type":"object","properties":{"title":{"type":"string"}}}');
         file_put_contents($base . '/output.schema.json', '{"type":"object","properties":{"id":{"type":"string"}}}');
-        file_put_contents($base . '/action.php', <<<'PHP'
+        if (!is_dir($base . '/src')) {
+            mkdir($base . '/src', 0777, true);
+        }
+        file_put_contents($base . '/src/Action.php', <<<'PHP'
 <?php
 declare(strict_types=1);
 
@@ -153,7 +156,7 @@ PHP);
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch: []\n");
         file_put_contents($base . '/cache.yaml', "version: 1\nentries: []\n");
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules:\n  admin: [posts.create]\n");
-        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"publish_post","kind":"http"}');
+        file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"publish-post","kind":"http"}');
         file_put_contents($base . '/tests/publish_post_feature_test.php', '<?php declare(strict_types=1);');
     }
 
@@ -180,7 +183,7 @@ SH);
         $this->writeExecutable($this->project->root . '/vendor/bin/phpstan', <<<'SH'
 #!/bin/sh
 cat <<'JSON'
-{"totals":{"errors":0,"file_errors":1},"files":{"app/features/publish_post/action.php":{"errors":1,"messages":[{"message":"Undefined method call.","line":12,"identifier":"method.notFound","tip":"Fix the receiver type."}]}}}
+{"totals":{"errors":0,"file_errors":1},"files":{"Features/PublishPost/action.php":{"errors":1,"messages":[{"message":"Undefined method call.","line":12,"identifier":"method.notFound","tip":"Fix the receiver type."}]}}}
 JSON
 exit 1
 SH);

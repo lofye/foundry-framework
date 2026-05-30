@@ -7,14 +7,14 @@ declare(strict_types=1);
  * Regenerate with: foundry compile graph
  */
 return array (
-  'posts:list' => 
+  'posts:list' =>
   array (
     'kind' => 'computed',
     'ttl_seconds' => 300,
-    'invalidated_by' => 
+    'invalidated_by' =>
     array (
-      0 => 'publish_post',
+      0 => 'publish-post',
     ),
-    'feature' => 'publish_post',
+    'feature' => 'publish-post',
   ),
 );

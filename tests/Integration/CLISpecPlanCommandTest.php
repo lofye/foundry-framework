@@ -35,15 +35,15 @@ final class CLISpecPlanCommandTest extends TestCase
         $this->assertSame(0, $result['status']);
         $this->assertSame('created', $result['payload']['status']);
         $this->assertSame(
-            'docs/features/execution-spec-system/specs/001-implementation-plan-files.md',
+            'Modules/ExecutionSpecSystem/specs/001-implementation-plan-files.md',
             $result['payload']['spec'],
         );
         $this->assertSame(
-            'docs/features/execution-spec-system/outcomes/001-implementation-plan-files.md',
+            'Modules/ExecutionSpecSystem/outcomes/001-implementation-plan-files.md',
             $result['payload']['plan'],
         );
 
-        $planPath = $this->project->root . '/docs/features/execution-spec-system/outcomes/001-implementation-plan-files.md';
+        $planPath = $this->project->root . '/Modules/ExecutionSpecSystem/outcomes/001-implementation-plan-files.md';
         $this->assertFileExists($planPath);
         $contents = (string) file_get_contents($planPath);
         $this->assertStringStartsWith('# Implementation Plan: 001-implementation-plan-files', $contents);
@@ -54,7 +54,7 @@ final class CLISpecPlanCommandTest extends TestCase
     public function test_spec_plan_refuses_overwrite_without_force(): void
     {
         $this->writeActiveSpec('execution-spec-system', '001-implementation-plan-files');
-        $path = $this->project->root . '/docs/features/execution-spec-system/outcomes/001-implementation-plan-files.md';
+        $path = $this->project->root . '/Modules/ExecutionSpecSystem/outcomes/001-implementation-plan-files.md';
         mkdir(dirname($path), 0777, true);
         file_put_contents($path, "# Implementation Plan: 001-implementation-plan-files\n");
 
@@ -63,7 +63,7 @@ final class CLISpecPlanCommandTest extends TestCase
         $this->assertSame(1, $result['status']);
         $this->assertSame('error', $result['payload']['status']);
         $this->assertSame('plan_already_exists', $result['payload']['error']);
-        $this->assertSame('docs/features/execution-spec-system/outcomes/001-implementation-plan-files.md', $result['payload']['plan']);
+        $this->assertSame('Modules/ExecutionSpecSystem/outcomes/001-implementation-plan-files.md', $result['payload']['plan']);
     }
 
     public function test_spec_plan_failures_are_deterministic_for_missing_feature_and_spec(): void
@@ -110,7 +110,7 @@ final class CLISpecPlanCommandTest extends TestCase
     public function test_spec_plan_force_overwrites_when_target_exists_as_directory_and_returns_write_failed(): void
     {
         $this->writeActiveSpec('execution-spec-system', '001-first');
-        $planPath = $this->project->root . '/docs/features/execution-spec-system/outcomes/001-first.md';
+        $planPath = $this->project->root . '/Modules/ExecutionSpecSystem/outcomes/001-first.md';
         mkdir(dirname($planPath), 0777, true);
         mkdir($planPath, 0777, true);
 
@@ -123,7 +123,7 @@ final class CLISpecPlanCommandTest extends TestCase
     public function test_spec_plan_reports_directory_create_failure_when_outcomes_path_is_blocked(): void
     {
         $this->writeActiveSpec('execution-spec-system', '001-first');
-        $blocked = $this->project->root . '/docs/features/execution-spec-system/outcomes';
+        $blocked = $this->project->root . '/Modules/ExecutionSpecSystem/outcomes';
         if (!is_dir(dirname($blocked))) {
             mkdir(dirname($blocked), 0777, true);
         }
@@ -138,7 +138,7 @@ final class CLISpecPlanCommandTest extends TestCase
     public function test_spec_plan_returns_draft_only_error_for_draft_match(): void
     {
         $this->writeRawFile(
-            'docs/features/execution-spec-system/specs/drafts/001-draft-only.md',
+            'Modules/ExecutionSpecSystem/specs/drafts/001-draft-only.md',
             "# Execution Spec: 001-draft-only\n\n## Feature\n\n- execution-spec-system\n",
         );
 
@@ -180,7 +180,7 @@ final class CLISpecPlanCommandTest extends TestCase
     private function writeActiveSpec(string $feature, string $name): void
     {
         $this->writeRawFile(
-            'docs/features/' . $feature . '/specs/' . $name . '.md',
+            'Modules/' . str_replace(' ', '', ucwords(str_replace('-', ' ', $feature))) . '/specs/' . $name . '.md',
             <<<MD
 # Execution Spec: {$name}
 

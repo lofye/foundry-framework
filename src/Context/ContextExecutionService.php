@@ -424,12 +424,12 @@ final class ContextExecutionService
         return [
             'issue' => [
                 'code' => 'EXECUTION_SPEC_FRAMEWORK_APP_SCAFFOLD_BLOCKED',
-                'message' => 'Framework-repository execution specs must not scaffold files into app/features/*.',
+                'message' => 'Framework-repository execution specs must not scaffold app-owned feature files into Features/*.',
                 'file_path' => $executionSpec->path,
             ],
             'required_actions' => [
-                'Implement framework-internal changes directly in src/, tests/, docs/, or stubs/ instead of app/features/*.',
-                'Remove any misplaced app/features/' . $executionSpec->feature . '/ output before rerunning verification.',
+                'Implement framework-internal changes directly in src/, tests/, docs/, or stubs/ instead of app-owned Features/* source.',
+                'Remove any misplaced app-owned Features/' . $executionSpec->feature . '/ output before rerunning verification.',
             ],
         ];
     }
@@ -586,7 +586,7 @@ final class ContextExecutionService
         return [
             'Updated feature manifest: ' . $input['paths']['manifest'],
             'Updated feature prompts: ' . $input['paths']['prompts'],
-            'Updated context manifest: app/features/' . $input['feature'] . '/context.manifest.json',
+            'Updated context manifest: ' . \Foundry\Support\FeatureNaming::directory($input['feature']) . '/context.manifest.json',
         ];
     }
 
@@ -1235,7 +1235,7 @@ final class ContextExecutionService
                             'file_path' => $executionSpec->path,
                         ],
                         'required_actions' => [
-                            'Update the execution spec so it no longer conflicts with docs/features/' . $executionSpec->feature . '/' . $executionSpec->feature . '.spec.md.',
+                            'Update the execution spec so it no longer conflicts with the canonical feature spec at ' . \Foundry\Support\FeatureNaming::directory($executionSpec->feature) . '/' . $executionSpec->feature . '.spec.md.',
                             'If intended behavior changed, update the canonical feature spec and log a decision before rerunning implement spec.',
                         ],
                     ];

@@ -342,17 +342,17 @@ final class CompileCacheInspector
                 continue;
             }
 
-            if (preg_match('#^app/features/[^/]+/feature\.yaml$#', $path) === 1) {
+            if (preg_match('#^Features/[^/]+/feature\.yaml$#', $path) === 1) {
                 $groups['feature_manifests'][$path] = $hash;
                 continue;
             }
 
-            if (preg_match('#^app/features/[^/]+/(input\.schema\.json|output\.schema\.json|context\.manifest\.json)$#', $path) === 1) {
+            if (preg_match('#^Features/[^/]+/(input\.schema\.json|output\.schema\.json|context\.manifest\.json)$#', $path) === 1) {
                 $groups['schemas'][$path] = $hash;
                 continue;
             }
 
-            if (str_starts_with($path, 'app/features/')) {
+            if (str_starts_with($path, 'Features/')) {
                 $groups['feature_sources'][$path] = $hash;
             }
         }

@@ -4,7 +4,7 @@ Build a Foundry blog application in the current workspace.
 
 Requirements:
 
-- keep `app/features/*` as the source of truth
+- keep `Features/*` as the source of truth
 - use `version: 2` feature manifests
 - create public routes for blog index, post detail, RSS feed, and about page
 - create protected routes for admin login, dashboard, create post, update post, and publish post

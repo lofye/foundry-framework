@@ -7,256 +7,256 @@ declare(strict_types=1);
  * Regenerate with: foundry compile graph
  */
 return array (
-  'context-persistence' => 
+  'context-persistence' =>
   array (
     'kind' => 'http',
     'description' => 'Preserve feature intent, implementation state, and decision history across sessions.',
-    'route' => 
+    'route' =>
     array (
       'method' => 'POST',
       'path' => '/context-persistence',
     ),
-    'input_schema' => 'app/features/context-persistence/input.schema.json',
-    'output_schema' => 'app/features/context-persistence/output.schema.json',
-    'auth' => 
+    'input_schema' => 'Features/ContextPersistence/input.schema.json',
+    'output_schema' => 'Features/ContextPersistence/output.schema.json',
+    'auth' =>
     array (
       'required' => false,
-      'strategies' => 
+      'strategies' =>
       array (
       ),
-      'permissions' => 
+      'permissions' =>
       array (
       ),
       'public' => false,
     ),
-    'database' => 
+    'database' =>
     array (
-      'reads' => 
+      'reads' =>
       array (
       ),
-      'writes' => 
+      'writes' =>
       array (
       ),
       'transactions' => 'optional',
-      'queries' => 
+      'queries' =>
       array (
       ),
     ),
-    'cache' => 
+    'cache' =>
     array (
-      'reads' => 
+      'reads' =>
       array (
       ),
-      'writes' => 
+      'writes' =>
       array (
       ),
-      'invalidate' => 
+      'invalidate' =>
       array (
       ),
-      'entries' => 
+      'entries' =>
       array (
       ),
     ),
-    'events' => 
+    'events' =>
     array (
-      'emit' => 
+      'emit' =>
       array (
       ),
-      'emit_definitions' => 
+      'emit_definitions' =>
       array (
       ),
-      'subscribe' => 
+      'subscribe' =>
       array (
       ),
     ),
-    'jobs' => 
+    'jobs' =>
     array (
-      'dispatch' => 
+      'dispatch' =>
       array (
       ),
-      'definitions' => 
+      'definitions' =>
       array (
       ),
     ),
-    'rate_limit' => 
+    'rate_limit' =>
     array (
       'bucket' => 'context-persistence',
       'cost' => 1,
       'strategy' => 'user',
     ),
-    'csrf' => 
+    'csrf' =>
     array (
     ),
-    'resource' => 
+    'resource' =>
     array (
     ),
-    'listing' => 
+    'listing' =>
     array (
     ),
-    'uploads' => 
+    'uploads' =>
     array (
     ),
-    'ui' => 
+    'ui' =>
     array (
     ),
-    'tests' => 
+    'tests' =>
     array (
-      'required' => 
+      'required' =>
       array (
         0 => 'contract',
         1 => 'feature',
       ),
-      'files' => 
+      'files' =>
       array (
-        0 => 'app/features/context-persistence/tests/context-persistence_contract_test.php',
-        1 => 'app/features/context-persistence/tests/context-persistence_feature_test.php',
+        0 => 'Features/ContextPersistence/tests/context_persistence_contract_test.php',
+        1 => 'Features/ContextPersistence/tests/context_persistence_feature_test.php',
       ),
     ),
-    'llm' => 
+    'llm' =>
     array (
       'editable' => true,
       'risk_level' => 'medium',
       'notes_file' => 'prompts.md',
     ),
-    'base_path' => 'app/features/context-persistence',
+    'base_path' => 'Features/ContextPersistence',
     'action_class' => 'App\\Features\\ContextPersistence\\Action',
   ),
-  'publish_post' => 
+  'publish-post' =>
   array (
     'kind' => 'http',
     'description' => 'Create a new post and optionally publish it immediately.',
-    'route' => 
+    'route' =>
     array (
       'method' => 'POST',
       'path' => '/posts',
     ),
-    'input_schema' => 'app/features/publish_post/input.schema.json',
-    'output_schema' => 'app/features/publish_post/output.schema.json',
-    'auth' => 
+    'input_schema' => 'Features/PublishPost/input.schema.json',
+    'output_schema' => 'Features/PublishPost/output.schema.json',
+    'auth' =>
     array (
       'required' => true,
-      'strategies' => 
+      'strategies' =>
       array (
         0 => 'bearer',
       ),
-      'permissions' => 
+      'permissions' =>
       array (
         0 => 'posts.create',
       ),
       'public' => false,
     ),
-    'database' => 
+    'database' =>
     array (
-      'reads' => 
+      'reads' =>
       array (
         0 => 'users',
       ),
-      'writes' => 
+      'writes' =>
       array (
         0 => 'posts',
       ),
       'transactions' => 'required',
-      'queries' => 
+      'queries' =>
       array (
         0 => 'find_user_by_id',
         1 => 'insert_post',
       ),
     ),
-    'cache' => 
+    'cache' =>
     array (
-      'reads' => 
+      'reads' =>
       array (
       ),
-      'writes' => 
+      'writes' =>
       array (
       ),
-      'invalidate' => 
+      'invalidate' =>
       array (
         0 => 'posts:list',
       ),
-      'entries' => 
+      'entries' =>
       array (
-        'posts:list' => 
+        'posts:list' =>
         array (
           'kind' => 'computed',
           'ttl_seconds' => 300,
-          'invalidated_by' => 
+          'invalidated_by' =>
           array (
-            0 => 'publish_post',
+            0 => 'publish-post',
           ),
         ),
       ),
     ),
-    'events' => 
+    'events' =>
     array (
-      'emit' => 
+      'emit' =>
       array (
         0 => 'post.created',
       ),
-      'emit_definitions' => 
+      'emit_definitions' =>
       array (
-        'post.created' => 
+        'post.created' =>
         array (
           'type' => 'object',
           'additionalProperties' => false,
-          'required' => 
+          'required' =>
           array (
             0 => 'post_id',
             1 => 'author_id',
             2 => 'status',
           ),
-          'properties' => 
+          'properties' =>
           array (
-            'post_id' => 
+            'post_id' =>
             array (
               'type' => 'string',
             ),
-            'author_id' => 
+            'author_id' =>
             array (
               'type' => 'string',
             ),
-            'status' => 
+            'status' =>
             array (
               'type' => 'string',
             ),
           ),
         ),
       ),
-      'subscribe' => 
+      'subscribe' =>
       array (
       ),
     ),
-    'jobs' => 
+    'jobs' =>
     array (
-      'dispatch' => 
+      'dispatch' =>
       array (
         0 => 'notify_followers',
       ),
-      'definitions' => 
+      'definitions' =>
       array (
-        'notify_followers' => 
+        'notify_followers' =>
         array (
-          'input_schema' => 
+          'input_schema' =>
           array (
             'type' => 'object',
             'additionalProperties' => false,
-            'required' => 
+            'required' =>
             array (
               0 => 'post_id',
             ),
-            'properties' => 
+            'properties' =>
             array (
-              'post_id' => 
+              'post_id' =>
               array (
                 'type' => 'string',
               ),
             ),
           ),
           'queue' => 'default',
-          'retry' => 
+          'retry' =>
           array (
             'max_attempts' => 5,
-            'backoff_seconds' => 
+            'backoff_seconds' =>
             array (
               0 => 5,
               1 => 30,
@@ -270,50 +270,50 @@ return array (
         ),
       ),
     ),
-    'rate_limit' => 
+    'rate_limit' =>
     array (
       'bucket' => 'post_create',
       'cost' => 1,
       'strategy' => 'user',
     ),
-    'csrf' => 
+    'csrf' =>
     array (
     ),
-    'resource' => 
+    'resource' =>
     array (
     ),
-    'listing' => 
+    'listing' =>
     array (
     ),
-    'uploads' => 
+    'uploads' =>
     array (
     ),
-    'ui' => 
+    'ui' =>
     array (
     ),
-    'tests' => 
+    'tests' =>
     array (
-      'required' => 
+      'required' =>
       array (
         0 => 'auth',
         1 => 'contract',
         2 => 'feature',
       ),
-      'files' => 
+      'files' =>
       array (
-        0 => 'app/features/publish_post/tests/publish_post_auth_test.php',
-        1 => 'app/features/publish_post/tests/publish_post_contract_test.php',
-        2 => 'app/features/publish_post/tests/publish_post_feature_test.php',
+        0 => 'Features/PublishPost/tests/publish_post_auth_test.php',
+        1 => 'Features/PublishPost/tests/publish_post_contract_test.php',
+        2 => 'Features/PublishPost/tests/publish_post_feature_test.php',
       ),
     ),
-    'llm' => 
+    'llm' =>
     array (
       'editable' => true,
       'risk' => 'medium',
       'notes_file' => 'prompts.md',
       'risk_level' => 'medium',
     ),
-    'base_path' => 'app/features/publish_post',
+    'base_path' => 'Features/PublishPost',
     'action_class' => 'App\\Features\\PublishPost\\Action',
   ),
 );

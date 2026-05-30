@@ -27,14 +27,13 @@ final class StateValidator
         $fileExists = is_file($filePath);
 
         if (!$this->hasCanonicalPath($filePath, [
-            $this->resolver->legacyStatePath($featureName),
             'Modules/' . $this->pascalFromSlug($featureName) . '/' . $featureName . '.md',
             'Features/' . $this->pascalFromSlug($featureName) . '/' . $featureName . '.md',
             $this->resolver->canonicalStatePath($featureName),
         ])) {
             $issues[] = new ValidationIssue(
                 code: 'CONTEXT_STATE_PATH_NON_CANONICAL',
-                message: sprintf('State path must be canonical: docs/features/%1$s/%1$s.md, Features/%2$s/%1$s.md, or Modules/%2$s/%1$s.md.', $featureName, $this->pascalFromSlug($featureName)),
+                message: sprintf('State path must be canonical: Features/%2$s/%1$s.md or Modules/%2$s/%1$s.md.', $featureName, $this->pascalFromSlug($featureName)),
                 file_path: $filePath,
             );
         }

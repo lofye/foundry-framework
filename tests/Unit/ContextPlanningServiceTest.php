@@ -6,6 +6,7 @@ namespace Foundry\Tests\Unit;
 
 use Foundry\Context\ContextInitService;
 use Foundry\Context\ContextPlanningService;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Paths;
 use Foundry\Tests\Fixtures\TempProject;
 use PHPUnit\Framework\TestCase;
@@ -34,8 +35,8 @@ final class ContextPlanningServiceTest extends TestCase
 
         $this->assertSame('planned', $result['status']);
         $this->assertSame('event-bus/003-contract-test-coverage', $result['spec_id']);
-        $this->assertFileExists($this->project->root . '/docs/features/event-bus/specs/drafts/003-contract-test-coverage.md');
-        $this->assertFileDoesNotExist($this->project->root . '/docs/features/event-bus/specs/003-contract-test-coverage.md');
+        $this->assertFileExists($this->project->root . '/Features/EventBus/specs/drafts/003-contract-test-coverage.md');
+        $this->assertFileDoesNotExist($this->project->root . '/Features/EventBus/specs/003-contract-test-coverage.md');
     }
 
     public function test_next_execution_spec_number_considers_drafts_and_hierarchical_ids(): void
@@ -51,8 +52,8 @@ final class ContextPlanningServiceTest extends TestCase
 
         $this->assertSame('planned', $result['status']);
         $this->assertSame('event-bus/005-contract-test-coverage', $result['spec_id']);
-        $this->assertFileExists($this->project->root . '/docs/features/event-bus/specs/drafts/005-contract-test-coverage.md');
-        $this->assertFileDoesNotExist($this->project->root . '/docs/features/event-bus/specs/005-contract-test-coverage.md');
+        $this->assertFileExists($this->project->root . '/Features/EventBus/specs/drafts/005-contract-test-coverage.md');
+        $this->assertFileDoesNotExist($this->project->root . '/Features/EventBus/specs/005-contract-test-coverage.md');
     }
 
     public function test_planning_writes_exactly_one_draft_spec_and_reports_it_truthfully(): void
@@ -68,17 +69,17 @@ final class ContextPlanningServiceTest extends TestCase
             [(string) $result['spec_path']],
             array_values(array_diff($afterPaths, $beforePaths)),
         );
-        $this->assertSame('docs/features/event-bus/specs/drafts/001-contract-test-coverage.md', $result['spec_path']);
+        $this->assertSame('Features/EventBus/specs/drafts/001-contract-test-coverage.md', $result['spec_path']);
         $this->assertSame('event-bus/001-contract-test-coverage', $result['spec_id']);
         $this->assertFileExists($this->project->root . '/' . (string) $result['spec_path']);
-        $this->assertFileDoesNotExist($this->project->root . '/docs/features/event-bus/specs/001-contract-test-coverage.md');
+        $this->assertFileDoesNotExist($this->project->root . '/Features/EventBus/specs/001-contract-test-coverage.md');
     }
 
     public function test_planning_ignores_directory_matches_when_snapshotting_spec_markdown_paths(): void
     {
         $this->writeMeaningfulContext('event-bus');
-        mkdir($this->project->root . '/docs/features/event-bus/specs/099-directory.md', 0777, true);
-        mkdir($this->project->root . '/docs/features/event-bus/specs/drafts/098-directory.md', 0777, true);
+        mkdir($this->project->root . '/Features/EventBus/specs/099-directory.md', 0777, true);
+        mkdir($this->project->root . '/Features/EventBus/specs/drafts/098-directory.md', 0777, true);
 
         $result = $this->service()->plan('event-bus')->toArray();
 
@@ -109,7 +110,7 @@ final class ContextPlanningServiceTest extends TestCase
 - Keep canonical feature context authoritative.
 - Keep generated execution specs secondary to canonical feature truth.
 - Keep this work deterministic and bounded to one coherent step.
-- Respect prior decisions recorded in docs/features/event-bus/event-bus.decisions.md.
+- Respect prior decisions recorded in Features/EventBus/event-bus.decisions.md.
 
 ## Requested Changes
 - Add contract test coverage for the event bus feature.
@@ -120,11 +121,11 @@ final class ContextPlanningServiceTest extends TestCase
 
 ## Completion Signals
 - Add contract test coverage for the event bus feature.
-- docs/features/event-bus/event-bus.md reflects contract test coverage for the event bus feature.
+- Features/EventBus/event-bus.md reflects contract test coverage for the event bus feature.
 
 ## Post-Execution Expectations
 - Current State reflects the completed bounded work.
-- Meaningful execution decisions are appended to docs/features/event-bus/event-bus.decisions.md when needed.
+- Meaningful execution decisions are appended to Features/EventBus/event-bus.decisions.md when needed.
 - Canonical feature context remains authoritative for later work.
 MD . "\n", $contents);
     }
@@ -158,7 +159,7 @@ MD . "\n", $contents);
     public function test_planning_normalizes_decision_entries_before_rendering(): void
     {
         $this->writeMeaningfulContext('event-bus');
-        file_put_contents($this->project->root . '/docs/features/event-bus/event-bus.decisions.md', <<<'MD'
+        file_put_contents($this->project->root . '/Features/EventBus/event-bus.decisions.md', <<<'MD'
 # Decisions: event-bus
 
 ### Decision: zebra choice
@@ -275,7 +276,7 @@ MD);
         $this->assertSame('blocked', $result['status']);
         $this->assertFalse($result['can_proceed']);
         $this->assertTrue($result['requires_repair']);
-        $this->assertContains('Create missing spec file: docs/features/event-bus/event-bus.spec.md', $result['required_actions']);
+        $this->assertContains('Create missing spec file: Features/EventBus/event-bus.spec.md', $result['required_actions']);
     }
 
     public function test_planning_is_blocked_when_only_non_meaningful_gap_remains(): void
@@ -289,7 +290,7 @@ MD);
         $this->assertTrue($result['requires_repair']);
         $this->assertSame('PLANNING_NO_BOUNDED_STEP', $result['issues'][0]['code']);
         $this->assertContains(
-            'Update docs/features/context-persistence/context-persistence.spec.md or docs/features/context-persistence/context-persistence.md so there is a concrete actionable gap between Expected Behavior and Current State.',
+            'Update Features/ContextPersistence/context-persistence.spec.md or Features/ContextPersistence/context-persistence.md so there is a concrete actionable gap between Expected Behavior and Current State.',
             $result['required_actions'],
         );
     }
@@ -304,14 +305,14 @@ MD);
         $this->assertFalse($result['can_proceed']);
         $this->assertTrue($result['requires_repair']);
         $this->assertSame('PLANNING_NO_BOUNDED_STEP', $result['issues'][0]['code']);
-        $this->assertFileDoesNotExist($this->project->root . '/docs/features/event-bus/specs/drafts/001-support.md');
+        $this->assertFileDoesNotExist($this->project->root . '/Features/EventBus/specs/drafts/001-support.md');
     }
 
     public function test_planning_fails_clearly_when_draft_directory_path_is_blocked(): void
     {
         $this->writeMeaningfulContext('event-bus');
-        mkdir($this->project->root . '/docs/features/event-bus/specs', 0777, true);
-        file_put_contents($this->project->root . '/docs/features/event-bus/specs/drafts', 'blocked');
+        mkdir($this->project->root . '/Features/EventBus/specs', 0777, true);
+        file_put_contents($this->project->root . '/Features/EventBus/specs/drafts', 'blocked');
 
         $this->expectException(\Foundry\Support\FoundryError::class);
         $this->expectExceptionMessage('Draft execution spec directory path exists but is not a directory.');
@@ -362,14 +363,14 @@ MD);
     {
         $this->writeMeaningfulContext('event-bus');
         $this->writeExistingSpec('event-bus', '001-initial');
-        mkdir($this->project->root . '/docs/features/event-bus/specs/drafts', 0777, true);
-        mkdir($this->project->root . '/docs/features/event-bus/specs/drafts/002-contract-test-coverage.md', 0777, true);
+        mkdir($this->project->root . '/Features/EventBus/specs/drafts', 0777, true);
+        mkdir($this->project->root . '/Features/EventBus/specs/drafts/002-contract-test-coverage.md', 0777, true);
 
         $result = $this->service()->plan('event-bus')->toArray();
 
         $this->assertSame('blocked', $result['status']);
         $this->assertSame('PLANNING_SPEC_PATH_EXISTS', $result['issues'][0]['code']);
-        $this->assertSame('docs/features/event-bus/specs/drafts/002-contract-test-coverage.md', $result['spec_path']);
+        $this->assertSame('Features/EventBus/specs/drafts/002-contract-test-coverage.md', $result['spec_path']);
     }
 
     public function test_missing_or_invalid_stubs_fail_fast(): void
@@ -418,8 +419,8 @@ MD);
         $paths = [];
 
         foreach ([
-            $this->project->root . '/docs/features/' . $feature . '/specs',
-            $this->project->root . '/docs/features/' . $feature . '/specs/drafts',
+            $this->project->root . '/' . FeatureNaming::directory($feature) . '/specs',
+            $this->project->root . '/' . FeatureNaming::directory($feature) . '/specs/drafts',
         ] as $directory) {
             foreach (glob($directory . '/*.md') ?: [] as $path) {
                 $paths[] = str_replace($this->project->root . '/', '', $path);
@@ -433,7 +434,7 @@ MD);
 
     private function writeExistingSpec(string $feature, string $name, string $subdirectory = ''): void
     {
-        $directory = $this->project->root . '/docs/features/' . $feature . '/specs' . ($subdirectory !== '' ? '/' . $subdirectory : '');
+        $directory = $this->project->root . '/' . FeatureNaming::directory($feature) . '/specs' . ($subdirectory !== '' ? '/' . $subdirectory : '');
         if (!is_dir($directory)) {
             mkdir($directory, 0777, true);
         }
@@ -462,7 +463,7 @@ MD);
     {
         $this->initService()->init($feature);
 
-        file_put_contents($this->project->root . '/docs/features/' . $feature . '/' . $feature . '.spec.md', <<<MD
+        file_put_contents($this->project->root . '/' . FeatureNaming::directory($feature) . '/' . $feature . '.spec.md', <<<MD
 # Feature Spec: {$feature}
 
 ## Purpose
@@ -494,7 +495,7 @@ Introduce event bus handling.
 - Initial implementation may be scaffold-first.
 MD);
 
-        file_put_contents($this->project->root . '/docs/features/' . $feature . '/' . $feature . '.md', <<<MD
+        file_put_contents($this->project->root . '/' . FeatureNaming::directory($feature) . '/' . $feature . '.md', <<<MD
 # Feature: {$feature}
 
 ## Purpose
@@ -520,7 +521,7 @@ MD);
         $initService = new ContextInitService(new Paths($project->root));
         $initService->init($feature);
 
-        file_put_contents($project->root . '/docs/features/' . $feature . '/' . $feature . '.spec.md', <<<MD
+        file_put_contents($project->root . '/' . FeatureNaming::directory($feature) . '/' . $feature . '.spec.md', <<<MD
 # Feature Spec: {$feature}
 
 ## Purpose
@@ -552,7 +553,7 @@ Introduce event bus handling.
 - Initial implementation may be scaffold-first.
 MD);
 
-        file_put_contents($project->root . '/docs/features/' . $feature . '/' . $feature . '.md', <<<MD
+        file_put_contents($project->root . '/' . FeatureNaming::directory($feature) . '/' . $feature . '.md', <<<MD
 # Feature: {$feature}
 
 ## Purpose
@@ -577,7 +578,7 @@ MD);
     {
         $this->initService()->init($feature);
 
-        file_put_contents($this->project->root . '/docs/features/' . $feature . '/' . $feature . '.spec.md', <<<MD
+        file_put_contents($this->project->root . '/' . FeatureNaming::directory($feature) . '/' . $feature . '.spec.md', <<<MD
 # Feature Spec: {$feature}
 
 ## Purpose
@@ -598,7 +599,7 @@ Preserve feature intent across sessions.
 
 ## Expected Behavior
 
-- Plan feature generates the next bounded execution spec deterministically under docs/features/<feature>/specs/drafts/<id>-<slug>.md.
+- Plan feature generates the next bounded execution spec deterministically under Features/<Feature>/specs/drafts/<id>-<slug>.md.
 - Later execution systems can consume canonical feature context files safely.
 
 ## Acceptance Criteria
@@ -610,7 +611,7 @@ Preserve feature intent across sessions.
 - Execution specs remain secondary.
 MD);
 
-        file_put_contents($this->project->root . '/docs/features/' . $feature . '/' . $feature . '.md', <<<MD
+        file_put_contents($this->project->root . '/' . FeatureNaming::directory($feature) . '/' . $feature . '.md', <<<MD
 # Feature: {$feature}
 
 ## Purpose
@@ -619,7 +620,7 @@ Preserve feature intent across sessions.
 
 ## Current State
 
-- Plan feature generates the next bounded execution spec deterministically under docs/features/<feature>/specs/drafts/<id>-<slug>.md.
+- Plan feature generates the next bounded execution spec deterministically under Features/<Feature>/specs/drafts/<id>-<slug>.md.
 - Plan feature returns deterministic planned or blocked results.
 
 ## Open Questions
@@ -636,7 +637,7 @@ MD);
     {
         $this->initService()->init($feature);
 
-        file_put_contents($this->project->root . '/docs/features/' . $feature . '/' . $feature . '.spec.md', <<<MD
+        file_put_contents($this->project->root . '/' . FeatureNaming::directory($feature) . '/' . $feature . '.spec.md', <<<MD
 # Feature Spec: {$feature}
 
 ## Purpose
@@ -668,7 +669,7 @@ Introduce event bus handling.
 - Initial implementation may be scaffold-first.
 MD);
 
-        file_put_contents($this->project->root . '/docs/features/' . $feature . '/' . $feature . '.md', <<<MD
+        file_put_contents($this->project->root . '/' . FeatureNaming::directory($feature) . '/' . $feature . '.md', <<<MD
 # Feature: {$feature}
 
 ## Purpose

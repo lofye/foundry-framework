@@ -175,7 +175,7 @@ final class FirstRunService
 
     private function projectDetected(Paths $paths): bool
     {
-        if ((glob($paths->join('app/features/*/feature.yaml')) ?: []) !== []) {
+        if ((glob($paths->join('Features/*/feature.yaml')) ?: []) !== []) {
             return true;
         }
 

@@ -33,8 +33,9 @@ final class CLILicensedCommandsTest extends TestCase
         mkdir($this->project->root . '/config', 0777, true);
         mkdir($this->project->root . '/docs', 0777, true);
 
-        $feature = $this->project->root . '/app/features/publish_post';
+        $feature = $this->project->root . '/Features/PublishPost';
         mkdir($feature . '/tests', 0777, true);
+        mkdir($feature . '/src', 0777, true);
 
         file_put_contents($this->project->root . '/docs/architecture-tools.md', "# Architecture Tools\n");
         file_put_contents($this->project->root . '/docs/execution-pipeline.md', "# Execution Pipeline\n");
@@ -46,16 +47,16 @@ final class CLILicensedCommandsTest extends TestCase
 
         file_put_contents($feature . '/feature.yaml', <<<'YAML'
 version: 1
-feature: publish_post
+feature: publish-post
 kind: http
 description: test
 route:
   method: POST
   path: /posts
 input:
-  schema: app/features/publish_post/input.schema.json
+  schema: Features/PublishPost/input.schema.json
 output:
-  schema: app/features/publish_post/output.schema.json
+  schema: Features/PublishPost/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -83,10 +84,10 @@ YAML);
 
         file_put_contents($feature . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($feature . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
-        file_put_contents($feature . '/action.php', '<?php declare(strict_types=1); namespace App\\Features\\PublishPost; use Foundry\\Feature\\FeatureAction; use Foundry\\Feature\\FeatureServices; use Foundry\\Auth\\AuthContext; use Foundry\\Http\\RequestContext; final class Action implements FeatureAction { public function handle(array $input, RequestContext $request, AuthContext $auth, FeatureServices $services): array { return []; } }');
+        file_put_contents($feature . '/src/Action.php', '<?php declare(strict_types=1); namespace App\\Features\\PublishPost; use Foundry\\Feature\\FeatureAction; use Foundry\\Feature\\FeatureServices; use Foundry\\Auth\\AuthContext; use Foundry\\Http\\RequestContext; final class Action implements FeatureAction { public function handle(array $input, RequestContext $request, AuthContext $auth, FeatureServices $services): array { return []; } }');
         file_put_contents($feature . '/queries.sql', "-- name: insert_post\nINSERT INTO posts(id) VALUES(:id);\n");
         file_put_contents($feature . '/permissions.yaml', "version: 1\npermissions: [posts.create]\nrules: {}\n");
-        file_put_contents($feature . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [publish_post]\n");
+        file_put_contents($feature . '/cache.yaml', "version: 1\nentries:\n  - key: posts:list\n    kind: computed\n    ttl_seconds: 300\n    invalidated_by: [publish-post]\n");
         file_put_contents($feature . '/events.yaml', "version: 1\nemit:\n  - name: post.created\n    schema:\n      type: object\n      additionalProperties: false\n      properties: {}\nsubscribe: []\n");
         file_put_contents($feature . '/jobs.yaml', "version: 1\ndispatch:\n  - name: notify_followers\n    input_schema:\n      type: object\n      additionalProperties: false\n      properties: {}\n    queue: default\n    retry:\n      max_attempts: 2\n      backoff_seconds: [1,2]\n    timeout_seconds: 30\n\n");
         file_put_contents($feature . '/tests/publish_post_contract_test.php', '<?php declare(strict_types=1);');
@@ -97,7 +98,7 @@ YAML);
         $paths = Paths::fromCwd($this->project->root);
         (new IndexGenerator($paths))->generate();
         $manifest = Yaml::parseFile($feature . '/feature.yaml');
-        (new ContextManifestGenerator($paths))->write('publish_post', $manifest);
+        (new ContextManifestGenerator($paths))->write('publish-post', $manifest);
     }
 
     protected function tearDown(): void
@@ -116,9 +117,9 @@ YAML);
         $this->assertSame(0, $status['status']);
         $this->assertFalse($status['payload']['license']['valid']);
 
-        $explain = $this->runCommand($app, ['foundry', 'explain', 'publish_post', '--json']);
+        $explain = $this->runCommand($app, ['foundry', 'explain', 'publish-post', '--json']);
         $this->assertSame(0, $explain['status']);
-        $this->assertSame('feature:publish_post', $explain['payload']['subject']['id']);
+        $this->assertSame('feature:publish-post', $explain['payload']['subject']['id']);
         $this->assertArrayHasKey('confidence', $explain['payload']);
 
         $deep = $this->runCommand($app, ['foundry', 'doctor', '--deep', '--json']);
@@ -135,7 +136,7 @@ YAML);
         $this->assertArrayHasKey('plan_confidence', $generate['payload']);
         $this->assertArrayHasKey('outcome_confidence', $generate['payload']);
 
-        $explainText = $this->runCommandRaw($app, ['foundry', 'explain', 'publish_post']);
+        $explainText = $this->runCommandRaw($app, ['foundry', 'explain', 'publish-post']);
         $this->assertSame(0, $explainText['status']);
         $this->assertStringContainsString('Subject', $explainText['output']);
         $this->assertStringContainsString('Confidence', $explainText['output']);
@@ -156,15 +157,15 @@ YAML);
         $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json']);
         $this->assertSame(0, $compile['status']);
 
-        $explain = $this->runCommand($app, ['foundry', 'explain', 'publish_post', '--json']);
+        $explain = $this->runCommand($app, ['foundry', 'explain', 'publish-post', '--json']);
         $this->assertSame(0, $explain['status']);
-        $this->assertSame('feature:publish_post', $explain['payload']['subject']['id']);
+        $this->assertSame('feature:publish-post', $explain['payload']['subject']['id']);
         $this->assertSame('feature', $explain['payload']['subject']['kind']);
-        $this->assertSame('publish_post', $explain['payload']['executionFlow']['action']['feature']);
+        $this->assertSame('publish-post', $explain['payload']['executionFlow']['action']['feature']);
         $this->assertNotEmpty($explain['payload']['executionFlow']['guards']);
         $this->assertNotEmpty($explain['payload']['executionFlow']['events']);
         $this->assertNotEmpty($explain['payload']['relatedDocs']);
-        $this->assertSame('publish_post', $explain['payload']['metadata']['target']['selector']);
+        $this->assertSame('publish-post', $explain['payload']['metadata']['target']['selector']);
         $this->assertArrayHasKey('confidence', $explain['payload']);
 
         $trace = $this->runCommand($app, ['foundry', 'trace', 'publish', '--json']);
@@ -177,8 +178,8 @@ YAML);
         $this->assertArrayHasKey('deep_diagnostics', $deep['payload']['monetization']);
 
         file_put_contents(
-            $this->project->root . '/app/features/publish_post/feature.yaml',
-            str_replace('description: test', 'description: updated test', (string) file_get_contents($this->project->root . '/app/features/publish_post/feature.yaml')),
+            $this->project->root . '/Features/PublishPost/feature.yaml',
+            str_replace('description: test', 'description: updated test', (string) file_get_contents($this->project->root . '/Features/PublishPost/feature.yaml')),
         );
 
         $diff = $this->runCommand($app, ['foundry', 'diff', '--json']);
@@ -223,26 +224,26 @@ YAML);
         $default = $this->runCommand($app, ['foundry', 'explain', '--json']);
         $this->assertSame(0, $default['status']);
         $this->assertSame('feature', $default['payload']['subject']['kind']);
-        $this->assertSame('feature:publish_post', $default['payload']['subject']['id']);
+        $this->assertSame('feature:publish-post', $default['payload']['subject']['id']);
     }
 
     public function test_explain_can_include_git_context_when_requested(): void
     {
         $this->initGitRepository();
         file_put_contents(
-            $this->project->root . '/app/features/publish_post/feature.yaml',
-            str_replace('description: test', 'description: git-aware test', (string) file_get_contents($this->project->root . '/app/features/publish_post/feature.yaml')),
+            $this->project->root . '/Features/PublishPost/feature.yaml',
+            str_replace('description: test', 'description: git-aware test', (string) file_get_contents($this->project->root . '/Features/PublishPost/feature.yaml')),
         );
 
         $app = new Application();
-        $explain = $this->runCommand($app, ['foundry', 'explain', 'publish_post', '--git', '--json']);
+        $explain = $this->runCommand($app, ['foundry', 'explain', 'publish-post', '--git', '--json']);
 
         $this->assertSame(0, $explain['status']);
         $this->assertTrue($explain['payload']['git']['available']);
         $this->assertGreaterThan(0, $explain['payload']['git']['summary']['relevant_files']);
         $this->assertGreaterThan(0, $explain['payload']['git']['summary']['dirty_relevant_files']);
         $this->assertContains(
-            'app/features/publish_post/feature.yaml',
+            'Features/PublishPost/feature.yaml',
             array_values(array_map(
                 static fn(array $row): string => (string) ($row['path'] ?? ''),
                 $explain['payload']['git']['relevant_files'],
@@ -255,20 +256,21 @@ YAML);
         $app = new Application();
         $this->activateLicense($app);
 
-        $feature = $this->project->root . '/app/features/publish_profile';
+        $feature = $this->project->root . '/Features/PublishProfile';
         mkdir($feature . '/tests', 0777, true);
+        mkdir($feature . '/src', 0777, true);
         file_put_contents($feature . '/feature.yaml', <<<'YAML'
 version: 1
-feature: publish_profile
+feature: publish-profile
 kind: http
 description: profile publish
 route:
   method: POST
   path: /profiles
 input:
-  schema: app/features/publish_profile/input.schema.json
+  schema: Features/PublishProfile/input.schema.json
 output:
-  schema: app/features/publish_profile/output.schema.json
+  schema: Features/PublishProfile/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -295,7 +297,7 @@ llm:
 YAML);
         file_put_contents($feature . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($feature . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
-        file_put_contents($feature . '/action.php', '<?php declare(strict_types=1); namespace App\\Features\\PublishProfile; use Foundry\\Feature\\FeatureAction; use Foundry\\Feature\\FeatureServices; use Foundry\\Auth\\AuthContext; use Foundry\\Http\\RequestContext; final class Action implements FeatureAction { public function handle(array $input, RequestContext $request, AuthContext $auth, FeatureServices $services): array { return []; } }');
+        file_put_contents($feature . '/src/Action.php', '<?php declare(strict_types=1); namespace App\\Features\\PublishProfile; use Foundry\\Feature\\FeatureAction; use Foundry\\Feature\\FeatureServices; use Foundry\\Auth\\AuthContext; use Foundry\\Http\\RequestContext; final class Action implements FeatureAction { public function handle(array $input, RequestContext $request, AuthContext $auth, FeatureServices $services): array { return []; } }');
         file_put_contents($feature . '/permissions.yaml', "version: 1\npermissions: [profiles.create]\nrules: {}\n");
         file_put_contents($feature . '/cache.yaml', "version: 1\nentries: []\n");
         file_put_contents($feature . '/events.yaml', "version: 1\nemit: []\nsubscribe: []\n");
@@ -305,7 +307,7 @@ YAML);
 
         $paths = Paths::fromCwd($this->project->root);
         $manifest = Yaml::parseFile($feature . '/feature.yaml');
-        (new ContextManifestGenerator($paths))->write('publish_profile', $manifest);
+        (new ContextManifestGenerator($paths))->write('publish-profile', $manifest);
 
         $this->assertSame(0, $this->runCommand($app, ['foundry', 'compile', 'graph', '--json'])['status']);
 
@@ -316,8 +318,8 @@ YAML);
         $ambiguous = $this->runCommandRaw($app, ['foundry', 'explain', 'publish']);
         $this->assertSame(1, $ambiguous['status']);
         $this->assertStringContainsString('Ambiguous target: "publish"', $ambiguous['output']);
-        $this->assertStringContainsString('publish_post (feature)', $ambiguous['output']);
-        $this->assertStringContainsString('publish_profile (feature)', $ambiguous['output']);
+        $this->assertStringContainsString('publish-post (feature)', $ambiguous['output']);
+        $this->assertStringContainsString('publish-profile (feature)', $ambiguous['output']);
     }
 
     public function test_generate_requires_mode_and_target_contracts(): void
@@ -347,9 +349,10 @@ YAML);
         $this->assertSame(0, $second['status']);
         $this->assertSame($first['payload']['plan'], $second['payload']['plan']);
         $this->assertSame('core.feature.new', $first['payload']['plan']['generator_id']);
-        $this->assertSame('bookmark_post', $first['payload']['plan']['metadata']['feature']);
+        $this->assertSame('bookmark-post', $first['payload']['plan']['metadata']['feature']);
+        $this->assertSame('bookmark_post', $first['payload']['plan']['metadata']['execution']['feature_definition']['feature']);
         $this->assertSame('/posts/{id}/bookmark', $first['payload']['plan']['metadata']['execution']['feature_definition']['route']['path']);
-        $this->assertSame('feature:publish_post', $first['payload']['metadata']['target']['resolved']);
+        $this->assertSame('feature:publish-post', $first['payload']['metadata']['target']['resolved']);
         $this->assertTrue($first['payload']['verification_results']['ok']);
         $this->assertSame([], $first['payload']['actions_taken']);
     }
@@ -366,7 +369,7 @@ YAML);
             'moderation',
             'notes',
             '--mode=modify',
-            '--target=publish_post',
+            '--target=publish-post',
             '--json',
         ]);
 
@@ -376,8 +379,8 @@ YAML);
         $this->assertTrue($generate['payload']['verification_results']['ok']);
         $this->assertArrayHasKey('plan_confidence', $generate['payload']);
         $this->assertArrayHasKey('outcome_confidence', $generate['payload']);
-        $featureYaml = (string) file_get_contents($this->project->root . '/app/features/publish_post/feature.yaml');
-        $prompts = (string) file_get_contents($this->project->root . '/app/features/publish_post/prompts.md');
+        $featureYaml = (string) file_get_contents($this->project->root . '/Features/PublishPost/feature.yaml');
+        $prompts = (string) file_get_contents($this->project->root . '/Features/PublishPost/prompts.md');
         $this->assertStringContainsString('Modification intent: Add moderation notes.', $featureYaml);
         $this->assertStringContainsString('Latest generate intent: Add moderation notes', $prompts);
     }
@@ -386,8 +389,8 @@ YAML);
     {
         $app = new Application();
         $this->activateLicense($app);
-        @unlink($this->project->root . '/app/features/publish_post/context.manifest.json');
-        @unlink($this->project->root . '/app/features/publish_post/tests/publish_post_auth_test.php');
+        @unlink($this->project->root . '/Features/PublishPost/context.manifest.json');
+        @unlink($this->project->root . '/Features/PublishPost/tests/publish_post_auth_test.php');
 
         $generate = $this->runCommand($app, [
             'foundry',
@@ -397,7 +400,7 @@ YAML);
             'generated',
             'artifacts',
             '--mode=repair',
-            '--target=publish_post',
+            '--target=publish-post',
             '--json',
         ]);
 
@@ -407,8 +410,8 @@ YAML);
         $this->assertTrue($generate['payload']['verification_results']['ok']);
         $this->assertArrayHasKey('plan_confidence', $generate['payload']);
         $this->assertArrayHasKey('outcome_confidence', $generate['payload']);
-        $this->assertFileExists($this->project->root . '/app/features/publish_post/context.manifest.json');
-        $this->assertFileExists($this->project->root . '/app/features/publish_post/tests/publish_post_auth_test.php');
+        $this->assertFileExists($this->project->root . '/Features/PublishPost/context.manifest.json');
+        $this->assertFileExists($this->project->root . '/Features/PublishPost/tests/publish_post_auth_test.php');
     }
 
     public function test_generate_emits_human_readable_messages_without_json(): void

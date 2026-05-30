@@ -7,10 +7,10 @@ declare(strict_types=1);
  * Regenerate with: foundry compile graph
  */
 return array (
-  'incoming' => 
+  'incoming' =>
   array (
   ),
-  'outgoing' => 
+  'outgoing' =>
   array (
   ),
 );

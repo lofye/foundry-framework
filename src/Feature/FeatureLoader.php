@@ -7,6 +7,7 @@ namespace Foundry\Feature;
 use Foundry\Http\Route;
 use Foundry\Http\RouteCollection;
 use Foundry\Pipeline\PipelineDefinitionResolver;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Json;
 use Foundry\Support\Paths;
@@ -116,7 +117,7 @@ final class FeatureLoader implements FeatureRegistry
 
     public function contextManifest(string $feature): ?FeatureContextManifest
     {
-        $path = $this->paths->join('app/features/' . $feature . '/context.manifest.json');
+        $path = $this->paths->join(FeatureNaming::directory($feature) . '/context.manifest.json');
         if (!is_file($path)) {
             return null;
         }

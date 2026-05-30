@@ -13,6 +13,7 @@ use Foundry\Compiler\IR\ListingConfigNode;
 use Foundry\Compiler\IR\ResourceNode;
 use Foundry\Compiler\IR\StarterKitNode;
 use Foundry\Compiler\IR\UploadProfileNode;
+use Foundry\Support\FeatureNaming;
 
 final class FoundationDefinitionPass implements CompilerPass
 {
@@ -245,7 +246,7 @@ final class FoundationDefinitionPass implements CompilerPass
                 }
             }
 
-            $adminListFeature = 'admin_list_' . $resource;
+            $adminListFeature = FeatureNaming::canonical('admin_list_' . $resource);
             if ($state->graph->hasNode('feature:' . $adminListFeature)) {
                 $state->graph->addEdge(GraphEdge::make('listing_config_to_feature', $nodeId, 'feature:' . $adminListFeature, ['operation' => 'admin_list']));
             }
@@ -280,11 +281,11 @@ final class FoundationDefinitionPass implements CompilerPass
             }
 
             $featureMap = [
-                'list' => 'admin_list_' . $resource,
-                'view' => 'admin_view_' . $this->singularize($resource),
-                'update' => 'admin_update_' . $this->singularize($resource),
-                'delete' => 'admin_delete_' . $this->singularize($resource),
-                'bulk' => 'admin_bulk_update_' . $resource,
+                'list' => FeatureNaming::canonical('admin_list_' . $resource),
+                'view' => FeatureNaming::canonical('admin_view_' . $this->singularize($resource)),
+                'update' => FeatureNaming::canonical('admin_update_' . $this->singularize($resource)),
+                'delete' => FeatureNaming::canonical('admin_delete_' . $this->singularize($resource)),
+                'bulk' => FeatureNaming::canonical('admin_bulk_update_' . $resource),
             ];
 
             $nodeId = 'admin_resource:' . $resource;
@@ -399,7 +400,10 @@ final class FoundationDefinitionPass implements CompilerPass
                 continue;
             }
 
-            $features = $this->sortedStrings((array) ($document['features'] ?? []));
+            $features = array_map(
+                static fn(string $feature): string => FeatureNaming::canonical($feature),
+                $this->sortedStrings((array) ($document['features'] ?? [])),
+            );
             $nodeId = 'starter_kit:' . $starter;
             $state->graph->addNode(new StarterKitNode(
                 id: $nodeId,
@@ -527,17 +531,17 @@ final class FoundationDefinitionPass implements CompilerPass
         $singular = $this->singularize($resource);
 
         $defaults = [
-            'list' => 'list_' . $resource,
-            'view' => 'view_' . $singular,
-            'create' => 'create_' . $singular,
-            'update' => 'update_' . $singular,
-            'delete' => 'delete_' . $singular,
+            'list' => FeatureNaming::canonical('list_' . $resource),
+            'view' => FeatureNaming::canonical('view_' . $singular),
+            'create' => FeatureNaming::canonical('create_' . $singular),
+            'update' => FeatureNaming::canonical('update_' . $singular),
+            'delete' => FeatureNaming::canonical('delete_' . $singular),
         ];
 
         $map = [];
         foreach ($operations as $operation) {
             $override = (string) ($overrides[$operation] ?? '');
-            $map[$operation] = $override !== '' ? $override : $defaults[$operation];
+            $map[$operation] = FeatureNaming::canonical($override !== '' ? $override : $defaults[$operation]);
         }
 
         ksort($map);
@@ -568,6 +572,8 @@ final class FoundationDefinitionPass implements CompilerPass
             if ($override !== '') {
                 $defaults[$operation] = $override;
             }
+
+            $defaults[$operation] = FeatureNaming::canonical($defaults[$operation]);
         }
 
         ksort($defaults);

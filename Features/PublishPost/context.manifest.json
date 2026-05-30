@@ -1,0 +1,54 @@
+{
+    "version": 1,
+    "feature": "publish-post",
+    "kind": "http",
+    "relevant_files": [
+        "Features/PublishPost/feature.yaml",
+        "Features/PublishPost/src/Action.php",
+        "Features/PublishPost/input.schema.json",
+        "Features/PublishPost/output.schema.json",
+        "Features/PublishPost/queries.sql",
+        "Features/PublishPost/permissions.yaml",
+        "Features/PublishPost/cache.yaml",
+        "Features/PublishPost/events.yaml",
+        "Features/PublishPost/jobs.yaml",
+        "Features/PublishPost/tests/publish_post_contract_test.php",
+        "Features/PublishPost/tests/publish_post_feature_test.php",
+        "Features/PublishPost/tests/publish_post_auth_test.php"
+    ],
+    "generated_files": [
+        "app/generated/routes.php",
+        "app/generated/schema_index.php",
+        "app/generated/feature_index.php",
+        "app/generated/permission_index.php",
+        "app/generated/event_index.php",
+        "app/generated/job_index.php",
+        "app/generated/cache_index.php",
+        "app/generated/scheduler_index.php",
+        "app/generated/webhook_index.php"
+    ],
+    "upstream_dependencies": [
+        "auth",
+        "db",
+        "queue",
+        "events",
+        "cache"
+    ],
+    "downstream_dependents": [
+        "notify_followers"
+    ],
+    "contracts": {
+        "input": "Features/PublishPost/input.schema.json",
+        "output": "Features/PublishPost/output.schema.json"
+    },
+    "tests": [
+        "publish_post_contract_test",
+        "publish_post_feature_test",
+        "publish_post_auth_test"
+    ],
+    "forbidden_paths": [
+        "src/Core",
+        "src/Http"
+    ],
+    "risk_level": "medium"
+}

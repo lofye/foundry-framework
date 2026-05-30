@@ -7,6 +7,7 @@ namespace Foundry\CLI\Commands;
 use Foundry\CLI\Command;
 use Foundry\CLI\CommandContext;
 use Foundry\CLI\Commands\Concerns\InteractsWithGraphInspection;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\FoundryError;
 
 final class GraphVisualizeCommand extends Command
@@ -67,6 +68,6 @@ final class GraphVisualizeCommand extends Command
 
     private function featureExists(CommandContext $context, string $feature): bool
     {
-        return is_dir($context->paths()->features() . '/' . $feature);
+        return is_dir($context->paths()->join(FeatureNaming::directory($feature)));
     }
 }

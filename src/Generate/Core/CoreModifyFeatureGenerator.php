@@ -8,6 +8,7 @@ use Foundry\Explain\ExplainModel;
 use Foundry\Generate\GenerationPlan;
 use Foundry\Generate\Generator;
 use Foundry\Generate\Intent;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Str;
 use Foundry\Support\Yaml;
 
@@ -33,7 +34,7 @@ final class CoreModifyFeatureGenerator implements Generator
             ? Yaml::parseFile($manifestPath)
             : [];
         $manifest['description'] = $this->updatedDescription((string) ($manifest['description'] ?? ''), $intent->raw);
-        $promptsPath = ($basePath !== '' ? $basePath : 'app/features/' . $feature) . '/prompts.md';
+        $promptsPath = ($basePath !== '' ? $basePath : FeatureNaming::directory($feature)) . '/prompts.md';
         $promptsContent = $this->updatedPrompts($promptsPath, $feature, $intent);
         $explainNodeId = (string) ($subject['id'] ?? 'feature:' . $feature);
 

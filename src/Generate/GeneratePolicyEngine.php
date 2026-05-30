@@ -678,13 +678,13 @@ final class GeneratePolicyEngine
     private function featureFromPath(string $path): ?string
     {
         $normalized = str_replace('\\', '/', trim($path));
-        if (!str_starts_with($normalized, 'app/features/')) {
+        if (!str_starts_with($normalized, 'Features/')) {
             return null;
         }
 
         $parts = explode('/', $normalized);
 
-        return $parts[2] ?? null;
+        return isset($parts[1]) ? \Foundry\Support\FeatureNaming::fromDirectoryName((string) $parts[1]) : null;
     }
 
     private function graphNodeType(mixed $value): string

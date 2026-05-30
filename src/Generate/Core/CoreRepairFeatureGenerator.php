@@ -8,6 +8,7 @@ use Foundry\Explain\ExplainModel;
 use Foundry\Generate\GenerationPlan;
 use Foundry\Generate\Generator;
 use Foundry\Generate\Intent;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Yaml;
 
 final class CoreRepairFeatureGenerator implements Generator
@@ -26,7 +27,7 @@ final class CoreRepairFeatureGenerator implements Generator
         $subject = $model->subject;
         $metadata = is_array($subject['metadata'] ?? null) ? $subject['metadata'] : [];
         $feature = trim((string) ($metadata['feature'] ?? $subject['label'] ?? ''));
-        $basePath = trim((string) ($metadata['base_path'] ?? 'app/features/' . $feature));
+        $basePath = trim((string) ($metadata['base_path'] ?? FeatureNaming::directory($feature)));
         $manifestPath = trim((string) ($metadata['manifest_path'] ?? ($basePath . '/feature.yaml')));
         $manifest = is_file($manifestPath) ? Yaml::parseFile($manifestPath) : [];
         $requiredTests = array_values(array_map('strval', (array) ($metadata['tests']['required'] ?? $manifest['tests']['required'] ?? [])));
@@ -34,7 +35,7 @@ final class CoreRepairFeatureGenerator implements Generator
 
         $missingTests = [];
         foreach ($requiredTests as $type) {
-            $path = $basePath . '/tests/' . $feature . '_' . $type . '_test.php';
+            $path = $basePath . '/tests/' . FeatureNaming::codeSafe($feature) . '_' . $type . '_test.php';
             if (!is_file($path)) {
                 $missingTests[] = $type;
             }
@@ -47,7 +48,7 @@ final class CoreRepairFeatureGenerator implements Generator
         foreach ($missingTests as $type) {
             $actions[] = [
                 'type' => 'add_test',
-                'path' => $basePath . '/tests/' . $feature . '_' . $type . '_test.php',
+                'path' => $basePath . '/tests/' . FeatureNaming::codeSafe($feature) . '_' . $type . '_test.php',
                 'summary' => 'Restore missing `' . $type . '` test for `' . $feature . '`.',
                 'explain_node_id' => (string) ($subject['id'] ?? 'feature:' . $feature),
                 'origin' => 'core',

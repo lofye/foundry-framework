@@ -55,7 +55,7 @@ final class MetadataFreshnessCheck implements DoctorCheck
 
         $staleContextFeatures = [];
         foreach (glob($context->paths->features() . '/*', GLOB_ONLYDIR) ?: [] as $dir) {
-            $feature = basename($dir);
+            $feature = \Foundry\Support\FeatureNaming::fromDirectoryName(basename($dir));
             if ($context->featureFilter !== null && $context->featureFilter !== '' && $feature !== $context->featureFilter) {
                 continue;
             }
@@ -80,7 +80,7 @@ final class MetadataFreshnessCheck implements DoctorCheck
                 code: 'FDY9114_CONTEXT_MANIFEST_STALE',
                 category: 'metadata',
                 message: 'Context manifest is older than the current feature source files for ' . $feature . '.',
-                sourcePath: 'app/features/' . $feature . '/context.manifest.json',
+                sourcePath: \Foundry\Support\FeatureNaming::directory($feature) . '/context.manifest.json',
                 suggestedFix: $context->commandPrefix . ' generate context ' . $feature . ' --json',
                 pass: 'doctor.metadata_freshness',
                 whyItMatters: 'Stale context manifests can mislead inspect and prompt tooling that relies on generated feature context metadata.',

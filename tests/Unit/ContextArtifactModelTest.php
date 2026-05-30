@@ -94,9 +94,9 @@ final class ContextArtifactModelTest extends TestCase
 
         $paths = $resolver->paths($featureName);
 
-        $this->assertSame('docs/features/blog-posts/blog-posts.spec.md', $paths['spec']);
-        $this->assertSame('docs/features/blog-posts/blog-posts.md', $paths['state']);
-        $this->assertSame('docs/features/blog-posts/blog-posts.decisions.md', $paths['decisions']);
+        $this->assertSame('Features/BlogPosts/blog-posts.spec.md', $paths['spec']);
+        $this->assertSame('Features/BlogPosts/blog-posts.md', $paths['state']);
+        $this->assertSame('Features/BlogPosts/blog-posts.decisions.md', $paths['decisions']);
         $this->assertSame($paths, $resolver->paths($featureName));
         $this->assertSame($original, $featureName);
     }
@@ -105,9 +105,41 @@ final class ContextArtifactModelTest extends TestCase
     {
         $paths = (new ContextFileResolver())->paths('blog_posts');
 
-        $this->assertSame('docs/features/blog-posts/blog-posts.spec.md', $paths['spec']);
-        $this->assertSame('docs/features/blog-posts/blog-posts.md', $paths['state']);
-        $this->assertSame('docs/features/blog-posts/blog-posts.decisions.md', $paths['decisions']);
+        $this->assertSame('Features/BlogPosts/blog-posts.spec.md', $paths['spec']);
+        $this->assertSame('Features/BlogPosts/blog-posts.md', $paths['state']);
+        $this->assertSame('Features/BlogPosts/blog-posts.decisions.md', $paths['decisions']);
+    }
+
+    public function test_context_file_resolver_legacy_aliases_return_canonical_paths(): void
+    {
+        $resolver = new ContextFileResolver();
+
+        $this->assertSame('Features/BlogPosts/blog-posts.spec.md', $resolver->legacySpecPath('blog_posts'));
+        $this->assertSame('Features/BlogPosts/blog-posts.md', $resolver->legacyStatePath('blog_posts'));
+        $this->assertSame('Features/BlogPosts/blog-posts.decisions.md', $resolver->legacyDecisionsPath('blog_posts'));
+        $this->assertSame($resolver->canonicalPaths('blog_posts'), $resolver->legacyPaths('blog_posts'));
+    }
+
+    public function test_context_file_resolver_prefers_existing_module_context_root(): void
+    {
+        $this->writeFile($this->contextPath('Modules/FeatureSystem/feature-system.spec.md'), '# Feature Spec: feature-system');
+
+        $paths = (new ContextFileResolver($this->project->root))->paths('feature-system');
+
+        $this->assertSame('Modules/FeatureSystem/feature-system.spec.md', $paths['spec']);
+        $this->assertSame('Modules/FeatureSystem/feature-system.md', $paths['state']);
+        $this->assertSame('Modules/FeatureSystem/feature-system.decisions.md', $paths['decisions']);
+    }
+
+    public function test_context_file_resolver_prefers_features_root_for_app_feature_workspace(): void
+    {
+        if (!is_dir($this->project->root . '/Features')) {
+            mkdir($this->project->root . '/Features', 0777, true);
+        }
+
+        $paths = (new ContextFileResolver($this->project->root))->paths('blog-posts');
+
+        $this->assertSame('Features/BlogPosts/blog-posts.spec.md', $paths['spec']);
     }
 
     public function test_spec_validator_accepts_valid_minimal_spec(): void
@@ -177,7 +209,7 @@ final class ContextArtifactModelTest extends TestCase
     public function test_spec_validator_rejects_noncanonical_spec_filename_pattern(): void
     {
         $featureName = 'blog-posts';
-        $path = $this->contextPath('docs/features/blog-posts.spec.v2.md');
+        $path = $this->contextPath('Features/BlogPosts.spec.v2.md');
         $this->writeFile($path, $this->minimalSpec($featureName));
 
         $result = (new SpecValidator())->validate($featureName, $path);

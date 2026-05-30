@@ -136,7 +136,7 @@ final class ExecutionSpecImplementationLogService
             return 'Features/implementation.log';
         }
 
-        return 'docs/features/implementation-log.md';
+        return 'Features/implementation.log';
     }
 
     private function absoluteLogPath(string $relativeLogPath): string

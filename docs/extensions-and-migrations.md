@@ -4,7 +4,7 @@ The compiler core established Foundry as a semantic compiler with a canonical gr
 
 ## Design Rules
 
-- Source-of-truth files remain under `app/features/*`.
+- Application feature source-of-truth files live under `Features/<Feature>/`.
 - The canonical compiled graph remains authoritative.
 - Extensions and packs register through explicit registries.
 - Compatibility is validated and inspectable.

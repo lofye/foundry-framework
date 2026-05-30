@@ -49,7 +49,7 @@ Execution rules:
 
 ## Source Of Truth
 
-- Treat `app/features/*` as source-of-truth application behavior
+- Treat `Features/<Feature>/*` as source-of-truth application behavior
 - Treat `app/definitions/*` as source-of-truth definitions when that folder exists
 - Treat `app/.foundry/build/*` as canonical compiled output
 - Treat `.foundry/packs/installed.json` as explicit local pack activation state when packs are in use
@@ -104,20 +104,20 @@ Features/
 Rules:
 
 - `Features/<FeatureName>/` is the primary LLM context boundary for app feature work.
-- Feature-specific app behavior MUST live under `Features/<FeatureName>/src/` once localized feature layout is enabled.
+- Feature-specific app behavior MUST live under `Features/<FeatureName>/src/`.
 - Feature-specific tests MUST live under `Features/<FeatureName>/tests/`.
-- Feature-specific specs, plans, supporting docs, canonical spec/state files, and decision ledgers MUST live under that feature root once the localized layout is enabled.
+- Feature-specific specs, plans, supporting docs, canonical spec/state files, and decision ledgers MUST live under that feature root.
 - Shared app or framework surfaces MAY contain thin registration glue only.
 - Shared surfaces MUST NOT contain feature-specific business logic, policy logic, validators, handlers, renderers, or workflows when that logic can live inside the owning feature.
 - Cross-feature imports MUST be explicit, minimal, and justified by the feature contract.
 - Generated output, installed pack files, cached registry data, and compiled projections MUST NOT be hand-edited to bypass feature boundaries.
 - Boundary violations MUST be fixed rather than normalized away, ignored, or hidden in shared files.
 
-Compatibility rule:
+Canonical layout rule:
 
-- Existing legacy paths such as `app/features/*`, `docs/features/*`, `app/generated/*`, and global tests may exist during migration.
-- New feature work MUST prefer the localized `Features/<FeatureName>/` layout once the feature-boundary system is available.
-- Legacy placement is allowed only when the active execution spec explicitly requires it, when migration has not yet occurred, or when the boundary validator reports it as grandfathered.
+- `app/features/*` is obsolete and MUST NOT contain authored application feature source.
+- `docs/features/<feature>/*` is obsolete for application feature context; keep public docs under `docs/`, but put feature context under `Features/<Feature>/`.
+- New feature work MUST use the localized `Features/<FeatureName>/` layout.
 
 Boundary enforcement is ON by default.
 
@@ -189,7 +189,7 @@ foundry verify context --feature=<feature> --json
 foundry compile graph --json
 foundry inspect graph --json
 foundry inspect pipeline --json
-foundry inspect impact --file=app/features/<feature>/feature.yaml --json
+foundry inspect impact --file=Features/<Feature>/feature.yaml --json
 foundry verify graph --json
 foundry verify pipeline --json
 foundry verify contracts --json

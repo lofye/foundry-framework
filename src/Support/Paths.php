@@ -37,7 +37,7 @@ final class Paths
 
     public function features(): string
     {
-        return $this->join('app/features');
+        return $this->join('Features');
     }
 
     public function generated(): string

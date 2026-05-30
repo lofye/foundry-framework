@@ -64,8 +64,8 @@ return [
     'kind' => 'http',
     'description' => 'x',
     'route' => ['method' => 'GET', 'path' => '/alpha'],
-    'input_schema' => 'app/features/alpha/input.schema.json',
-    'output_schema' => 'app/features/alpha/output.schema.json',
+    'input_schema' => 'Features/Alpha/input.schema.json',
+    'output_schema' => 'Features/Alpha/output.schema.json',
     'auth' => [],
     'database' => [],
     'cache' => [],
@@ -74,13 +74,13 @@ return [
     'rate_limit' => [],
     'tests' => [],
     'llm' => [],
-    'base_path' => 'app/features/alpha',
+    'base_path' => 'Features/Alpha',
     'action_class' => 'App\\Features\\Alpha\\Action',
   ],
 ];
 PHP);
 
-        $featureDir = $this->project->root . '/app/features/alpha';
+        $featureDir = $this->project->root . '/Features/Alpha';
         mkdir($featureDir, 0777, true);
         file_put_contents($featureDir . '/context.manifest.json', <<<'JSON'
 {"version":1,"feature":"alpha","kind":"http","relevant_files":["a"],"generated_files":["b"],"upstream_dependencies":[],"downstream_dependents":[],"contracts":{},"tests":[],"forbidden_paths":[],"risk_level":"low"}

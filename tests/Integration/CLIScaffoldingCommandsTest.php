@@ -75,21 +75,21 @@ YAML);
 
         $starter = $this->runCommand($app, ['foundry', 'generate', 'starter', 'server-rendered', '--name=demo-app', '--json']);
         $this->assertSame(0, $starter['status']);
-        $this->assertContains('register_user', $starter['payload']['features']);
+        $this->assertContains('register-user', $starter['payload']['features']);
 
         $resource = $this->runCommand($app, ['foundry', 'generate', 'resource', 'posts', '--definition=definitions/posts.resource.yaml', '--json']);
         $this->assertSame(0, $resource['status']);
-        $this->assertContains('list_posts', $resource['payload']['features']);
+        $this->assertContains('list-posts', $resource['payload']['features']);
         $this->assertFileExists($this->project->root . '/app/definitions/resources/posts.resource.yaml');
         $this->assertFileExists($this->project->root . '/app/definitions/listing/posts.list.yaml');
 
         $admin = $this->runCommand($app, ['foundry', 'generate', 'admin-resource', 'posts', '--json']);
         $this->assertSame(0, $admin['status']);
-        $this->assertContains('admin_list_posts', $admin['payload']['features']);
+        $this->assertContains('admin-list-posts', $admin['payload']['features']);
 
         $uploads = $this->runCommand($app, ['foundry', 'generate', 'uploads', 'avatar', '--json']);
         $this->assertSame(0, $uploads['status']);
-        $this->assertContains('upload_avatar', $uploads['payload']['features']);
+        $this->assertContains('upload-avatar', $uploads['payload']['features']);
         $this->assertFileExists($this->project->root . '/app/definitions/uploads/avatar.uploads.yaml');
 
         $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json']);

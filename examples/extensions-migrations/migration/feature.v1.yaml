@@ -1,5 +1,5 @@
 version: 1
-feature: publish_post
+feature: publish-post
 kind: http
 route:
   method: post

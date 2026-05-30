@@ -171,7 +171,7 @@ TXT);
 
     public function test_build_classifies_eras_and_import_actions_around_transition_anchor(): void
     {
-        $this->writeRawFile('Modules/ContextPersistence/specs/001-initial.md', "# Execution Spec: 001-initial\n");
+        $this->writeRawFile('Features/ContextPersistence/specs/001-initial.md', "# Execution Spec: 001-initial\n");
         $this->writeSpecFile('Foundry-Spec-35D.md', "Spec 35D\nTitle: Marketplace bridge\nPurpose: Marketplace bridge.\nRequirements: Import safely.\n");
         $this->writeSpecFile('Foundry-Spec-35D1.md', "Spec 35D1\nTitle: Canonical transition\n");
         $this->writeSpecFile('Foundry-Spec-35D2.md', "Spec 35D2\nTitle: Canonical after anchor\n");
@@ -198,7 +198,7 @@ TXT);
         $this->assertSame('canonical_existing', $rowsByLabel['Spec35D1']['era']);
         $this->assertSame('at', $rowsByLabel['Spec35D1']['canonical_transition_relative']);
         $this->assertSame('link_existing', $rowsByLabel['Spec35D1']['import_action']);
-        $this->assertSame('Modules/ContextPersistence/specs/001-initial.md', $rowsByLabel['Spec35D1']['existing_spec_path']);
+        $this->assertSame('Features/ContextPersistence/specs/001-initial.md', $rowsByLabel['Spec35D1']['existing_spec_path']);
 
         $this->assertSame('canonical_existing', $rowsByLabel['Spec35D2']['era']);
         $this->assertSame('review', $rowsByLabel['Spec35D2']['import_action']);
@@ -297,7 +297,7 @@ TXT);
 
     public function test_build_includes_deterministic_transition_and_counts(): void
     {
-        $this->writeRawFile('Modules/ContextPersistence/specs/001-initial.md', "# Execution Spec: 001-initial\n");
+        $this->writeRawFile('Features/ContextPersistence/specs/001-initial.md', "# Execution Spec: 001-initial\n");
         $this->writeSpecFile('Foundry-Spec-35D.md', "Spec 35D\nTitle: Marketplace\n");
         $this->writeSpecFile('Foundry-Spec-35D1.md', "Spec 35D1\nTitle: Context persistence\n");
         $this->writeSpecFile('Foundry-Spec-Summaries.md', "Summary only\n");
@@ -312,8 +312,8 @@ TXT);
         );
 
         $this->assertSame('Spec35D1', $payload['canonical_transition']['legacy_label']);
-        $this->assertSame('docs/features/context-persistence/001-initial.md', $payload['canonical_transition']['canonical_path']);
-        $this->assertSame('Modules/ContextPersistence/specs/001-initial.md', $payload['canonical_transition']['current_canonical_path']);
+        $this->assertSame('Features/ContextPersistence/specs/001-initial.md', $payload['canonical_transition']['canonical_path']);
+        $this->assertSame('Features/ContextPersistence/specs/001-initial.md', $payload['canonical_transition']['current_canonical_path']);
         $this->assertSame('high', $payload['canonical_transition']['confidence']);
         $this->assertSame([
             'pre_canonical' => 1,

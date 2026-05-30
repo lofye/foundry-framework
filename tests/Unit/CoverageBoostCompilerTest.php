@@ -54,15 +54,15 @@ final class CoverageBoostCompilerTest extends TestCase
 
         $previousManifest = [
             'source_files' => [
-                'app/features/a/feature.yaml' => 'hash-a-old',
-                'app/features/c/feature.yaml' => 'hash-c-old',
+                'Features/A/feature.yaml' => 'hash-a-old',
+                'Features/C/feature.yaml' => 'hash-c-old',
             ],
             'features' => ['a', 'c'],
             'framework_version' => '1.0.0',
         ];
         $currentHashes = [
-            'app/features/a/feature.yaml' => 'hash-a-new',
-            'app/features/b/feature.yaml' => 'hash-b-new',
+            'Features/A/feature.yaml' => 'hash-a-new',
+            'Features/B/feature.yaml' => 'hash-b-new',
         ];
 
         $full = $planner->plan(
@@ -357,7 +357,8 @@ final class CoverageBoostCompilerTest extends TestCase
 
     private function createFeature(string $feature, string $method, string $path): void
     {
-        $base = $this->project->root . '/app/features/' . $feature;
+        $directory = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+        $base = $this->project->root . '/Features/' . $directory;
         mkdir($base, 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<YAML
@@ -369,9 +370,9 @@ route:
   method: {$method}
   path: {$path}
 input:
-  schema: app/features/{$feature}/input.schema.json
+  schema: Features/{$directory}/input.schema.json
 output:
-  schema: app/features/{$feature}/output.schema.json
+  schema: Features/{$directory}/output.schema.json
 auth:
   required: false
   strategies: []

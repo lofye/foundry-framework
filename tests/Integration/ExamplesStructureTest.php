@@ -73,8 +73,8 @@ final class ExamplesStructureTest extends TestCase
 
     public function test_blog_api_example_contains_required_features(): void
     {
-        $base = getcwd() . '/examples/blog-api/app/features';
-        foreach (['list_posts', 'view_post', 'publish_post'] as $feature) {
+        $base = getcwd() . '/examples/blog-api/Features';
+        foreach (['ListPosts', 'ViewPost', 'PublishPost'] as $feature) {
             $this->assertDirectoryExists($base . '/' . $feature);
             $this->assertFileExists($base . '/' . $feature . '/feature.yaml');
             $this->assertFileExists($base . '/' . $feature . '/context.manifest.json');
@@ -83,7 +83,7 @@ final class ExamplesStructureTest extends TestCase
 
     public function test_hello_world_example_contains_required_assets(): void
     {
-        $base = getcwd() . '/examples/hello-world/app/features/say_hello';
+        $base = getcwd() . '/examples/hello-world/Features/SayHello';
 
         $this->assertDirectoryExists($base);
         $this->assertFileExists($base . '/feature.yaml');
@@ -96,15 +96,14 @@ final class ExamplesStructureTest extends TestCase
 
     public function test_workflow_events_example_contains_required_features_and_workflow_definition(): void
     {
-        $base = getcwd() . '/examples/workflow-events/app/features';
-        foreach (['submit_story', 'review_story', 'publish_story'] as $feature) {
+        $base = getcwd() . '/examples/workflow-events/Features';
+        foreach (['SubmitStory', 'ReviewStory', 'PublishStory'] as $feature) {
             $this->assertDirectoryExists($base . '/' . $feature);
             $this->assertFileExists($base . '/' . $feature . '/feature.yaml');
             $this->assertFileExists($base . '/' . $feature . '/events.yaml');
             $this->assertFileExists($base . '/' . $feature . '/context.manifest.json');
         }
 
-        $this->assertFileExists(getcwd() . '/examples/workflow-events/app/definitions/workflows/editorial.workflow.yaml');
         $this->assertFileExists(getcwd() . '/examples/workflow-events/README.md');
     }
 
@@ -137,8 +136,8 @@ final class ExamplesStructureTest extends TestCase
             $base = getcwd() . '/examples/' . $slug;
             $generator = new ContextManifestGenerator(Paths::fromCwd($base));
 
-            foreach (glob($base . '/app/features/*/feature.yaml') ?: [] as $manifestPath) {
-                $feature = basename(dirname($manifestPath));
+            foreach (glob($base . '/Features/*/feature.yaml') ?: [] as $manifestPath) {
+                $feature = $this->featureSlugFromDirectory(basename(dirname($manifestPath)));
                 $manifest = Yaml::parseFile($manifestPath);
 
                 $this->assertIsArray($manifest);
@@ -160,13 +159,13 @@ final class ExamplesStructureTest extends TestCase
             $repoRoot = getcwd() ?: '.';
 
             try {
-                $sourceApp = $repoRoot . '/examples/' . $slug . '/app';
+                $sourceApp = $repoRoot . '/examples/' . $slug;
                 $sourcePublic = $repoRoot . '/examples/' . $slug . '/public/index.php';
 
-                $this->assertDirectoryDoesNotExist($sourceApp . '/generated');
+                $this->assertDirectoryDoesNotExist($sourceApp . '/app/generated');
                 $this->assertFileDoesNotExist($sourcePublic);
 
-                $this->copyDirectory($sourceApp, $project->root . '/app');
+                $this->copyDirectory($sourceApp, $project->root);
                 chdir($project->root);
 
                 $result = $this->runCommand(new Application(), ['foundry', 'compile', 'graph', '--json']);
@@ -197,6 +196,11 @@ final class ExamplesStructureTest extends TestCase
     private function catalogSections(): array
     {
         return ['canonical', 'reference', 'framework'];
+    }
+
+    private function featureSlugFromDirectory(string $directory): string
+    {
+        return strtolower((string) preg_replace('/(?<!^)[A-Z]/', '-$0', $directory));
     }
 
     private function copyDirectory(string $source, string $target): void

@@ -113,7 +113,7 @@ When pipeline projections are unavailable, runtime falls back to deterministic d
 
 ## Development Loop
 
-1. Edit source-of-truth feature files under `app/features/*`.
+1. Edit source-of-truth feature files under `Features/<Feature>/`.
 2. `foundry compile graph --json`
 3. `foundry inspect execution-plan <feature> --json`
 4. `foundry doctor --json`

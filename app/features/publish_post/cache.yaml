@@ -1,7 +1,0 @@
-version: 1
-entries:
-  - key: posts:list
-    kind: computed
-    ttl_seconds: 300
-    invalidated_by:
-      - publish_post

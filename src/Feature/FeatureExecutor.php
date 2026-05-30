@@ -232,7 +232,9 @@ final class FeatureExecutor
     private function resolveAction(FeatureDefinition $feature): FeatureAction
     {
         $class = $feature->actionClass;
-        $actionFile = $this->paths->join('app/features/' . $feature->name . '/action.php');
+        $actionFile = $feature->basePath !== ''
+            ? $this->paths->join($feature->basePath . '/src/Action.php')
+            : $this->paths->join('Features/' . Str::studly($feature->name) . '/src/Action.php');
         if (is_file($actionFile)) {
             require_once $actionFile;
         }

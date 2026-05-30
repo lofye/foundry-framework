@@ -22,27 +22,27 @@ Specs are organized by feature.
 
 Paths:
 
-- `docs/features/<feature-name>/specs/drafts/<id>-<slug>.md` = draft, not executable
-- `docs/features/<feature-name>/specs/<id>-<slug>.md` = active, executable
+- `Features/<FeatureName>/specs/drafts/<id>-<slug>.md` = draft, not executable
+- `Features/<FeatureName>/specs/<id>-<slug>.md` = active, executable
 
 Examples:
 
-- `docs/features/execution-spec-system/specs/001-hierarchical-spec-ids-with-padded-segments.md`
-- `docs/features/execution-spec-system/specs/drafts/002-next-id-allocation.md`
-- `docs/features/execution-spec-system/specs/drafts/002.001-third-id-allocation.md`
+- `Modules/ExecutionSpecSystem/specs/001-hierarchical-spec-ids-with-padded-segments.md`
+- `Modules/ExecutionSpecSystem/specs/drafts/002-next-id-allocation.md`
+- `Modules/ExecutionSpecSystem/specs/drafts/002.001-third-id-allocation.md`
 
 The feature path provides context and execution state.
 The filename provides identity.
 
 Canonical feature context remains separate from execution specs:
 
-- `docs/features/<feature>/<feature>.spec.md` → authoritative feature intent
-- `docs/features/<feature>/<feature>.md` → current state
-- `docs/features/<feature>/<feature>.decisions.md` → append-only decision history
-- `docs/features/<feature>/specs/*.md` → execution specs (planning artifacts, non-authoritative after implementation)
-- `docs/features/<feature>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
-- `docs/features/<feature>/outcomes/*.md` → implementation plans (planning artifacts)
-- `docs/features/implementation-log.md` → completed execution-spec ledger
+- `Features/<Feature>/<feature>.spec.md` → authoritative feature intent
+- `Features/<Feature>/<feature>.md` → current state
+- `Features/<Feature>/<feature>.decisions.md` → append-only decision history
+- `Features/<Feature>/specs/*.md` → execution specs (planning artifacts, non-authoritative after implementation)
+- `Features/<Feature>/specs/drafts/*.md` → draft execution specs (non-executable planning artifacts)
+- `Features/<Feature>/outcomes/*.md` → implementation plans (planning artifacts)
+- `Features/implementation.log` → completed execution-spec ledger
 
 For new active execution specs, create the corresponding implementation plan file before implementation begins. Chat-only plans are not sufficient, and plans must not expand or alter execution-spec scope.
 
@@ -105,8 +105,8 @@ Specs do not store status in file metadata.
 
 Status is inferred from path:
 
-- `docs/features/<feature-name>/specs/drafts/<id>-<slug>.md` = draft, not executable
-- `docs/features/<feature-name>/specs/<id>-<slug>.md` = active, executable
+- `Features/<FeatureName>/specs/drafts/<id>-<slug>.md` = draft, not executable
+- `Features/<FeatureName>/specs/<id>-<slug>.md` = active, executable
 
 Moving a spec from `drafts/` to the feature root promotes it from draft to executable without changing its contents.
 
@@ -118,7 +118,7 @@ Moving a spec from `drafts/` to the feature root promotes it from draft to execu
 
 A draft spec is any spec located in:
 
-`docs/features/<feature>/specs/drafts/<id>-<slug>.md`
+`Features/<Feature>/specs/drafts/<id>-<slug>.md`
 
 Drafts:
 - are not executed
@@ -143,7 +143,7 @@ or:
 `foundry spec:log-entry <feature> <id>`
 
 Validation also enforces required implementation-log coverage for active specs:
-- active specs must have a matching `- spec: <feature>/<id>-<slug>.md` entry in `docs/features/implementation-log.md`
+- active specs must have a matching `- spec: <feature>/<id>-<slug>.md` entry in `Features/implementation.log`
 - drafts remain exempt
 - matching is exact rather than fuzzy
 
@@ -158,7 +158,7 @@ Validation also enforces required implementation-log coverage for active specs:
 
 A draft becomes an active spec when it is moved to:
 
-`docs/features/<feature>/specs/<id>-<slug>.md`
+`Features/<Feature>/specs/<id>-<slug>.md`
 
 Promotion rules:
 - The filename must not change during promotion.
@@ -170,7 +170,7 @@ Promotion rules:
 After an active spec is implemented:
 
 - The agent must append a correctly formatted entry to:
-  `docs/features/implementation-log.md`
+  `Features/implementation.log`
 
 ### Deletion and Replacement
 
@@ -304,7 +304,7 @@ These are inferred from filename and path.
 
 Project-wide implementation chronology is recorded in:
 
-`docs/features/implementation-log.md`
+`Features/implementation.log`
 
 Agents must append a new entry immediately after completing an active execution spec implementation.
 

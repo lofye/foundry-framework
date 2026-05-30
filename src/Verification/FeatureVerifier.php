@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Foundry\Verification;
 
 use Foundry\DB\SqlFileLoader;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Json;
 use Foundry\Support\Paths;
 use Foundry\Support\Yaml;
@@ -18,12 +19,14 @@ final class FeatureVerifier
 
     public function verify(string $feature): VerificationResult
     {
-        $base = $this->paths->join('app/features/' . $feature);
+        $feature = FeatureNaming::canonical($feature);
+        $base = $this->paths->join(FeatureNaming::directory($feature));
         $errors = [];
 
         $requiredFiles = [
             'feature.yaml',
-            'action.php',
+            'src',
+            'src/Action.php',
             'input.schema.json',
             'output.schema.json',
             'context.manifest.json',
@@ -46,7 +49,7 @@ final class FeatureVerifier
             $errors[] = 'feature.yaml: version must be integer.';
         }
 
-        $featureName = (string) ($manifest['feature'] ?? '');
+        $featureName = FeatureNaming::canonical((string) ($manifest['feature'] ?? ''));
         if ($featureName !== $feature) {
             $errors[] = 'feature.yaml: feature mismatch with folder name.';
         }
@@ -103,7 +106,7 @@ final class FeatureVerifier
 
         $requiredTests = array_values(array_map('strval', (array) ($manifest['tests']['required'] ?? [])));
         foreach ($requiredTests as $testType) {
-            $testPath = $base . '/tests/' . $feature . '_' . $testType . '_test.php';
+            $testPath = $base . '/tests/' . FeatureNaming::codeSafe($feature) . '_' . $testType . '_test.php';
             if (!is_file($testPath)) {
                 $errors[] = "Missing required test file: {$testPath}";
             }

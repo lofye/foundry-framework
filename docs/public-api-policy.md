@@ -123,14 +123,14 @@ Documentation is part of the contract surface, not marketing copy.
 
 Stable application contracts include:
 
-- `app/features/*/feature.yaml`
-- `app/features/*/input.schema.json`
-- `app/features/*/output.schema.json`
-- `app/features/*/context.manifest.json`
-- `app/features/*/permissions.yaml`
-- `app/features/*/cache.yaml`
-- `app/features/*/events.yaml`
-- `app/features/*/jobs.yaml`
+- `Features/*/feature.yaml`
+- `Features/*/input.schema.json`
+- `Features/*/output.schema.json`
+- `Features/*/context.manifest.json`
+- `Features/*/permissions.yaml`
+- `Features/*/cache.yaml`
+- `Features/*/events.yaml`
+- `Features/*/jobs.yaml`
 
 Stable extension registration contracts include:
 

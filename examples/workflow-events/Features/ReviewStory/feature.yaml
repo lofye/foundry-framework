@@ -1,0 +1,40 @@
+version: 2
+feature: review-story
+kind: http
+description: Request editorial review for a story and emit the handoff event.
+owners:
+  - examples
+route:
+  method: POST
+  path: /editorial/stories/{story_id}/review
+input:
+  schema: Features/ReviewStory/input.schema.json
+output:
+  schema: Features/ReviewStory/output.schema.json
+auth:
+  required: true
+  strategies:
+    - bearer
+  permissions: []
+database:
+  reads:
+    - stories
+  writes:
+    - stories
+  transactions: required
+  queries: []
+events:
+  emit:
+    - story.review_requested
+  subscribe:
+    - story.submitted
+observability:
+  audit: true
+  trace: true
+  log_level: info
+tests:
+  required:
+    - feature
+llm:
+  editable: true
+  risk_level: low

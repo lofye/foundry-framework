@@ -89,7 +89,7 @@ final readonly class GraphPromptBuilder
         );
 
         $constraints = [
-            'Edit only source-of-truth files under app/features/* and app/definitions/*.',
+            'Edit only source-of-truth files under Features/* and app/definitions/*.',
             'Do not hand-edit app/.foundry/build/* or app/generated/*.',
             'Preserve existing graph node IDs and naming conventions when possible.',
             'Keep manifests, schemas, queries, permissions, events, jobs, cache, and tests in sync.',
@@ -100,7 +100,7 @@ final readonly class GraphPromptBuilder
         $workflow = [
             $this->commandPrefix . ' compile graph --json',
             $this->commandPrefix . ' inspect execution-plan <feature> --json',
-            $this->commandPrefix . ' inspect impact --file=app/features/<feature>/feature.yaml --json',
+            $this->commandPrefix . ' inspect impact --file=Features/<Feature>/feature.yaml --json',
             $this->commandPrefix . ' verify graph --json',
             $this->commandPrefix . ' verify pipeline --json',
             $this->commandPrefix . ' verify contracts --json',

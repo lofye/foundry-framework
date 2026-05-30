@@ -133,9 +133,9 @@ final class CLICompletionCommandTest extends TestCase
 
     public function test_dynamic_feature_completion_lists_feature_directories_deterministically(): void
     {
-        mkdir($this->project->root . '/docs/features/event-bus/specs', 0777, true);
-        mkdir($this->project->root . '/docs/features/payments/specs/drafts', 0777, true);
-        mkdir($this->project->root . '/docs/features/Bad.Feature', 0777, true);
+        mkdir($this->project->root . '/Features/EventBus/specs', 0777, true);
+        mkdir($this->project->root . '/Features/Payments/specs/drafts', 0777, true);
+        mkdir($this->project->root . '/Features/Bad.Feature', 0777, true);
 
         $result = $this->runCommand([
             'foundry',
@@ -212,7 +212,7 @@ final class CLICompletionCommandTest extends TestCase
 
     private function writeExecutionSpec(string $feature, string $name): void
     {
-        $directory = $this->project->root . '/docs/features/' . $feature . '/specs';
+        $directory = $this->project->root . '/Features/' . $this->featureDirectory($feature) . '/specs';
         if (!is_dir($directory)) {
             mkdir($directory, 0777, true);
         }
@@ -244,7 +244,7 @@ MD);
 
     private function writeDraftExecutionSpec(string $feature, string $name): void
     {
-        $directory = $this->project->root . '/docs/features/' . $feature . '/specs/drafts';
+        $directory = $this->project->root . '/Features/' . $this->featureDirectory($feature) . '/specs/drafts';
         if (!is_dir($directory)) {
             mkdir($directory, 0777, true);
         }
@@ -272,5 +272,10 @@ MD);
 
 - Add deterministic completion support.
 MD);
+    }
+
+    private function featureDirectory(string $feature): string
+    {
+        return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
     }
 }

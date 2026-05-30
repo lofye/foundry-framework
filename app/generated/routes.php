@@ -7,18 +7,18 @@ declare(strict_types=1);
  * Regenerate with: foundry compile graph
  */
 return array (
-  'POST /context-persistence' => 
+  'POST /context-persistence' =>
   array (
     'feature' => 'context-persistence',
     'kind' => 'http',
-    'input_schema' => 'app/features/context-persistence/input.schema.json',
-    'output_schema' => 'app/features/context-persistence/output.schema.json',
+    'input_schema' => 'Features/ContextPersistence/input.schema.json',
+    'output_schema' => 'Features/ContextPersistence/output.schema.json',
   ),
-  'POST /posts' => 
+  'POST /posts' =>
   array (
-    'feature' => 'publish_post',
+    'feature' => 'publish-post',
     'kind' => 'http',
-    'input_schema' => 'app/features/publish_post/input.schema.json',
-    'output_schema' => 'app/features/publish_post/output.schema.json',
+    'input_schema' => 'Features/PublishPost/input.schema.json',
+    'output_schema' => 'Features/PublishPost/output.schema.json',
   ),
 );

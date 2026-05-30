@@ -7,29 +7,29 @@ declare(strict_types=1);
  * Regenerate with: foundry compile graph
  */
 return array (
-  'notify_followers' => 
+  'notify_followers' =>
   array (
-    'input_schema' => 
+    'input_schema' =>
     array (
       'type' => 'object',
       'additionalProperties' => false,
-      'required' => 
+      'required' =>
       array (
         0 => 'post_id',
       ),
-      'properties' => 
+      'properties' =>
       array (
-        'post_id' => 
+        'post_id' =>
         array (
           'type' => 'string',
         ),
       ),
     ),
     'queue' => 'default',
-    'retry' => 
+    'retry' =>
     array (
       'max_attempts' => 5,
-      'backoff_seconds' => 
+      'backoff_seconds' =>
       array (
         0 => 5,
         1 => 30,
@@ -40,6 +40,6 @@ return array (
     ),
     'timeout_seconds' => 60,
     'idempotency_key' => 'post_id',
-    'feature' => 'publish_post',
+    'feature' => 'publish-post',
   ),
 );

@@ -9,7 +9,7 @@ The app scaffolding layer adds graph-native generators for the most common appli
 - uploads/media profile generation
 - listing/search/filter/sort/pagination definitions
 
-All generated artifacts remain source-of-truth files first (`app/features/*`, `app/definitions/*`).
+Generated application features remain source-of-truth files under `Features/<Feature>/`; capability definitions remain under `app/definitions/*`.
 The semantic compiler then compiles those files into the canonical graph and emits projections.
 
 Project scaffolds also emit first-run inspectability output under:

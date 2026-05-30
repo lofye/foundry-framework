@@ -11,6 +11,7 @@ use Foundry\Observability\GraphExecutionMap;
 use Foundry\Observability\ObservationComparator;
 use Foundry\Observability\ProfileObserver;
 use Foundry\Observability\TraceObserver;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\FoundryError;
 use Foundry\Tooling\BuildArtifactStore;
 
@@ -72,7 +73,7 @@ final class ObserveCommand extends Command
         }
 
         [$feature, $routeSignature] = $this->parseTargetOptions($args);
-        if ($feature !== null && $feature !== '' && !is_dir($context->paths()->features() . '/' . $feature)) {
+        if ($feature !== null && $feature !== '' && !is_dir($context->paths()->join(FeatureNaming::directory($feature)))) {
             throw new FoundryError(
                 'FEATURE_NOT_FOUND',
                 'not_found',

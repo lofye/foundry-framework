@@ -40,6 +40,7 @@ use Foundry\Queue\RetryPolicy;
 use Foundry\Queue\SyncQueueDriver;
 use Foundry\Schema\JsonSchemaValidator;
 use Foundry\Storage\LocalStorageDriver;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Paths;
 
@@ -331,7 +332,7 @@ final class RuntimeFactory
         sort($featureDirs);
 
         foreach ($featureDirs as $featureDir) {
-            $feature = basename($featureDir);
+            $feature = FeatureNaming::fromDirectoryName(basename($featureDir));
             $sqlPath = $featureDir . '/queries.sql';
             if (!is_file($sqlPath)) {
                 continue;

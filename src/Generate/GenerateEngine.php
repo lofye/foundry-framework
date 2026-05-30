@@ -24,6 +24,7 @@ use Foundry\Marketplace\PackEntitlementResolver;
 use Foundry\Packs\PackManager;
 use Foundry\Pro\ArchitectureExplainer;
 use Foundry\Support\ApiSurfaceRegistry;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Paths;
 use Foundry\Support\Uuid;
@@ -2846,7 +2847,7 @@ final class GenerateEngine
     {
         $feature = trim((string) ($plan->metadata['feature'] ?? ''));
         if ($feature !== '') {
-            return 'feature:' . $feature;
+            return 'feature:' . FeatureNaming::canonical($feature);
         }
 
         $resolved = trim((string) ($context->targets[0]['resolved'] ?? ''));
@@ -3403,7 +3404,7 @@ final class GenerateEngine
 
         $feature = trim((string) ($plan->metadata['feature'] ?? ''));
         if ($feature !== '') {
-            $results['verify_feature'] = $this->runCliCommand(['foundry', 'verify', 'feature', $feature, '--json']);
+            $results['verify_feature'] = $this->runCliCommand(['foundry', 'verify', 'feature', FeatureNaming::canonical($feature), '--json']);
         }
 
         $ok = true;

@@ -35,7 +35,7 @@ final class EmitPass implements CompilerPass
         $writtenFiles[] = $graphJsonPath;
 
         $graphPhpPath = $state->layout->graphPhpPath();
-        file_put_contents($graphPhpPath, $this->phpHeader() . 'return ' . var_export($graph, true) . ";\n");
+        file_put_contents($graphPhpPath, $this->phpHeader() . 'return ' . $this->exportPhp($graph) . ";\n");
         $writtenFiles[] = $graphPhpPath;
 
         $diagnosticsPath = $state->layout->diagnosticsPath();
@@ -71,13 +71,13 @@ final class EmitPass implements CompilerPass
             ];
 
             $projectionPath = $state->layout->projectionPath($emitter->fileName());
-            file_put_contents($projectionPath, $this->phpHeader() . 'return ' . var_export($payload, true) . ";\n");
+            file_put_contents($projectionPath, $this->phpHeader() . 'return ' . $this->exportPhp($payload) . ";\n");
             $writtenFiles[] = $projectionPath;
 
             $legacyFile = $emitter->legacyFileName();
             if ($legacyFile !== null && $legacyFile !== '') {
                 $legacyPath = $state->layout->legacyProjectionPath($legacyFile);
-                file_put_contents($legacyPath, $this->phpHeader() . 'return ' . var_export($payload, true) . ";\n");
+                file_put_contents($legacyPath, $this->phpHeader() . 'return ' . $this->exportPhp($payload) . ";\n");
                 $writtenFiles[] = $legacyPath;
             }
         }
@@ -235,6 +235,16 @@ declare(strict_types=1);
  */
 
 PHP;
+    }
+
+    /**
+     * var_export emits trailing spaces before new lines for nested arrays. Keep generated files diff-clean.
+     *
+     * @param array<mixed> $payload
+     */
+    private function exportPhp(array $payload): string
+    {
+        return preg_replace('/[ \t]+$/m', '', var_export($payload, true)) ?? var_export($payload, true);
     }
 
     private function relativePath(CompilationState $state, string $path): string

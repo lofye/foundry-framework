@@ -760,3 +760,33 @@ Timestamp: 2026-05-29T13:35:14-04:00
 - Context Command Requirements
 - Feature Generation Requirements
 - Verification Requirements
+
+### Decision: preserve docs as public documentation while removing app context from docs/features
+
+Timestamp: 2026-05-29T14:35:00-04:00
+
+**Context**
+
+`docs/` contains important authored framework documentation, and the foundryframework.org website consumes this repository's docs through a checked-out and pinned git submodule. The canonical app feature root refactor must not treat all docs content as disposable legacy material.
+
+**Decision**
+
+Keep `docs/` as a canonical public documentation surface and update docs in place where path guidance changes. Treat only application feature context under `docs/features/<feature>/` as obsolete; application feature context, runtime code, and tests now belong under `Features/<Feature>/`.
+
+**Reasoning**
+
+Deleting or moving docs wholesale would break the public documentation pipeline and discard important framework information. The confusing legacy behavior was app feature context living in docs, not public docs existing under `docs/`.
+
+**Alternatives Considered**
+
+- Fail verification whenever `docs/features/` exists at all.
+- Move existing framework docs out of `docs/` during the feature-root refactor.
+- Preserve `docs/features/<feature>/` as an app context compatibility path.
+
+**Impact**
+
+Feature verification can keep hard-failing legacy app context under `docs/features/<feature>/` without blocking ordinary framework documentation. Future docs updates should preserve website-consumed docs and update stale path guidance instead of deleting docs.
+
+**Spec Reference**
+
+- Modules/FeatureSystem/specs/014-canonical-app-feature-roots-without-legacy-layout.md

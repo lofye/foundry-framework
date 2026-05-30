@@ -1,0 +1,33 @@
+version: 2
+feature: say-hello
+kind: http
+description: Smallest current Foundry route for learning feature-local structure and inspect or verify flow.
+owners:
+  - examples
+route:
+  method: GET
+  path: /hello
+input:
+  schema: Features/SayHello/input.schema.json
+output:
+  schema: Features/SayHello/output.schema.json
+auth:
+  required: false
+  public: true
+  strategies: []
+  permissions: []
+database:
+  reads: []
+  writes: []
+  transactions: optional
+  queries: []
+observability:
+  audit: false
+  trace: true
+  log_level: info
+tests:
+  required:
+    - feature
+llm:
+  editable: true
+  risk_level: low

@@ -210,9 +210,6 @@ final class ExecutionSpecCatalog
             $directories['modules_draft'] = 'Modules/' . $pascal . '/specs/drafts';
         }
 
-        $directories['legacy_active'] = 'docs/features/' . $featureName . '/specs';
-        $directories['legacy_draft'] = 'docs/features/' . $featureName . '/specs/drafts';
-
         return $directories;
     }
 

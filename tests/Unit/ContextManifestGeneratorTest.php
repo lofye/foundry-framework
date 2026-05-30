@@ -16,14 +16,15 @@ final class ContextManifestGeneratorTest extends TestCase
     protected function setUp(): void
     {
         $this->project = new TempProject();
-        $base = $this->project->root . '/app/features/publish_post/tests';
+        $base = $this->project->root . '/Features/PublishPost/tests';
         mkdir($base, 0777, true);
 
-        file_put_contents($this->project->root . '/app/features/publish_post/feature.yaml', 'x');
-        file_put_contents($this->project->root . '/app/features/publish_post/action.php', '<?php');
-        file_put_contents($this->project->root . '/app/features/publish_post/input.schema.json', '{}');
-        file_put_contents($this->project->root . '/app/features/publish_post/output.schema.json', '{}');
-        file_put_contents($this->project->root . '/app/features/publish_post/tests/publish_post_contract_test.php', '<?php');
+        file_put_contents($this->project->root . '/Features/PublishPost/feature.yaml', 'x');
+        mkdir($this->project->root . '/Features/PublishPost/src', 0777, true);
+        file_put_contents($this->project->root . '/Features/PublishPost/src/Action.php', '<?php');
+        file_put_contents($this->project->root . '/Features/PublishPost/input.schema.json', '{}');
+        file_put_contents($this->project->root . '/Features/PublishPost/output.schema.json', '{}');
+        file_put_contents($this->project->root . '/Features/PublishPost/tests/publish_post_contract_test.php', '<?php');
     }
 
     protected function tearDown(): void
@@ -44,8 +45,8 @@ final class ContextManifestGeneratorTest extends TestCase
             'llm' => ['risk' => 'medium'],
         ]);
 
-        $this->assertSame('publish_post', $manifest['feature']);
-        $this->assertContains('app/features/publish_post/action.php', $manifest['relevant_files']);
+        $this->assertSame('publish-post', $manifest['feature']);
+        $this->assertContains('Features/PublishPost/src/Action.php', $manifest['relevant_files']);
 
         $path = $generator->write('publish_post', [
             'kind' => 'http',
@@ -62,14 +63,15 @@ final class ContextManifestGeneratorTest extends TestCase
 
     public function test_build_uses_canonical_feature_directory_and_snake_case_test_identifiers(): void
     {
-        $base = $this->project->root . '/app/features/context-persistence/tests';
+        $base = $this->project->root . '/Features/ContextPersistence/tests';
         mkdir($base, 0777, true);
 
-        file_put_contents($this->project->root . '/app/features/context-persistence/feature.yaml', 'x');
-        file_put_contents($this->project->root . '/app/features/context-persistence/action.php', '<?php');
-        file_put_contents($this->project->root . '/app/features/context-persistence/input.schema.json', '{}');
-        file_put_contents($this->project->root . '/app/features/context-persistence/output.schema.json', '{}');
-        file_put_contents($this->project->root . '/app/features/context-persistence/tests/context_persistence_contract_test.php', '<?php');
+        file_put_contents($this->project->root . '/Features/ContextPersistence/feature.yaml', 'x');
+        mkdir($this->project->root . '/Features/ContextPersistence/src', 0777, true);
+        file_put_contents($this->project->root . '/Features/ContextPersistence/src/Action.php', '<?php');
+        file_put_contents($this->project->root . '/Features/ContextPersistence/input.schema.json', '{}');
+        file_put_contents($this->project->root . '/Features/ContextPersistence/output.schema.json', '{}');
+        file_put_contents($this->project->root . '/Features/ContextPersistence/tests/context_persistence_contract_test.php', '<?php');
 
         $generator = new ContextManifestGenerator(Paths::fromCwd($this->project->root));
         $manifest = $generator->build('context-persistence', [
@@ -83,8 +85,8 @@ final class ContextManifestGeneratorTest extends TestCase
         ]);
 
         $this->assertSame('context-persistence', $manifest['feature']);
-        $this->assertContains('app/features/context-persistence/action.php', $manifest['relevant_files']);
+        $this->assertContains('Features/ContextPersistence/src/Action.php', $manifest['relevant_files']);
         $this->assertContains('context_persistence_contract_test', $manifest['tests']);
-        $this->assertContains('app/features/context-persistence/input.schema.json', $manifest['contracts']);
+        $this->assertContains('Features/ContextPersistence/input.schema.json', $manifest['contracts']);
     }
 }

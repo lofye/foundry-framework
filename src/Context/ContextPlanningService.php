@@ -386,8 +386,6 @@ final class ContextPlanningService
         foreach ([
             $this->canonicalActiveSpecDirectory($featureName),
             $this->canonicalDraftSpecDirectory($featureName),
-            'docs/features/' . $featureName . '/specs',
-            'docs/features/' . $featureName . '/specs/drafts',
         ] as $directory) {
             $absoluteDirectory = $this->paths->join($directory);
             if (!is_dir($absoluteDirectory)) {
@@ -415,20 +413,22 @@ final class ContextPlanningService
 
     private function canonicalActiveSpecDirectory(string $featureName): string
     {
-        if (is_dir($this->paths->join('Modules'))) {
+        $moduleDirectory = 'Modules/' . $this->pascalFromSlug($featureName);
+        if (is_dir($this->paths->join($moduleDirectory))) {
             return 'Modules/' . $this->pascalFromSlug($featureName) . '/specs';
         }
 
-        return 'docs/features/' . $featureName . '/specs';
+        return 'Features/' . $this->pascalFromSlug($featureName) . '/specs';
     }
 
     private function canonicalDraftSpecDirectory(string $featureName): string
     {
-        if (is_dir($this->paths->join('Modules'))) {
+        $moduleDirectory = 'Modules/' . $this->pascalFromSlug($featureName);
+        if (is_dir($this->paths->join($moduleDirectory))) {
             return 'Modules/' . $this->pascalFromSlug($featureName) . '/specs/drafts';
         }
 
-        return 'docs/features/' . $featureName . '/specs/drafts';
+        return 'Features/' . $this->pascalFromSlug($featureName) . '/specs/drafts';
     }
 
     private function pascalFromSlug(string $slug): string

@@ -20,8 +20,8 @@ final class IntegrationVerifiersTest extends TestCase
     {
         $this->project = new TempProject();
 
-        $this->createFeature('api_list_posts', 'GET', '/api/posts');
-        $this->createFeature('dispatch_welcome_email', 'POST', '/dispatch/welcome');
+        $this->createFeature('api-list-posts', 'GET', '/api/posts');
+        $this->createFeature('dispatch-welcome-email', 'POST', '/dispatch/welcome');
 
         mkdir($this->project->root . '/app/definitions/api', 0777, true);
         mkdir($this->project->root . '/app/definitions/notifications', 0777, true);
@@ -34,7 +34,7 @@ resource: posts
 style: api
 features: [list]
 feature_names:
-  list: api_list_posts
+  list: api-list-posts
 YAML);
 
         file_put_contents($this->project->root . '/app/definitions/notifications/welcome_email.notification.yaml', <<<'YAML'
@@ -44,7 +44,7 @@ channel: mail
 queue: default
 template: welcome_email
 input_schema: app/notifications/schemas/welcome_email.input.schema.json
-dispatch_features: [dispatch_welcome_email]
+dispatch_features: [dispatch-welcome-email]
 YAML);
 
         file_put_contents($this->project->root . '/app/notifications/schemas/welcome_email.input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"required":["user_id"],"properties":{"user_id":{"type":"string"}}}');
@@ -118,7 +118,7 @@ YAML);
 
     public function test_api_verifier_reports_missing_features_and_invalid_route_prefix(): void
     {
-        $this->createFeature('api_bad_create', 'POST', '/posts');
+        $this->createFeature('api-bad-create', 'POST', '/posts');
 
         file_put_contents($this->project->root . '/app/definitions/api/posts.api-resource.yaml', <<<'YAML'
 version: 1
@@ -126,16 +126,16 @@ resource: posts
 style: api
 features: [list, create]
 feature_names:
-  list: missing_list_feature
-  create: api_bad_create
+  list: missing-list-feature
+  create: api-bad-create
 YAML);
 
         $paths = Paths::fromCwd($this->project->root);
         $result = (new ApiVerifier(new GraphCompiler($paths)))->verify('posts');
 
         $this->assertFalse($result->ok);
-        $this->assertContains('API resource posts missing feature missing_list_feature.', $result->errors);
-        $this->assertContains('API feature api_bad_create route must start with /api (got /posts).', $result->errors);
+        $this->assertContains('API resource posts missing feature missing-list-feature.', $result->errors);
+        $this->assertContains('API feature api-bad-create route must start with /api (got /posts).', $result->errors);
     }
 
     public function test_api_verifier_reports_resource_not_found(): void
@@ -149,7 +149,8 @@ YAML);
 
     private function createFeature(string $feature, string $method, string $path): void
     {
-        $base = $this->project->root . '/app/features/' . $feature;
+        $directory = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+        $base = $this->project->root . '/Features/' . $directory;
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<YAML
@@ -161,9 +162,9 @@ route:
   method: {$method}
   path: {$path}
 input:
-  schema: app/features/{$feature}/input.schema.json
+  schema: Features/{$directory}/input.schema.json
 output:
-  schema: app/features/{$feature}/output.schema.json
+  schema: Features/{$directory}/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -193,7 +194,10 @@ llm:
   risk_level: low
 YAML);
 
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        if (!is_dir($base . '/src')) {
+            mkdir($base . '/src', 0777, true);
+        }
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/queries.sql', "-- name: q\nSELECT 1;\n");
@@ -202,6 +206,6 @@ YAML);
         file_put_contents($base . '/events.yaml', "version: 1\nemit: []\nsubscribe: []\n");
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch: []\n");
         file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"' . $feature . '","kind":"http"}');
-        file_put_contents($base . '/tests/' . $feature . '_contract_test.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/tests/' . str_replace('-', '_', $feature) . '_contract_test.php', '<?php declare(strict_types=1);');
     }
 }

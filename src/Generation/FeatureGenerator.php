@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Foundry\Generation;
 
 use Foundry\Support\FoundryError;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Json;
 use Foundry\Support\Paths;
 use Foundry\Support\Str;
@@ -36,7 +37,7 @@ final class FeatureGenerator
     public function generateFromArray(array $definition, bool $force = false): array
     {
         $feature = (string) ($definition['feature'] ?? '');
-        $canonicalFeature = (string) ($definition['canonical_feature'] ?? $feature);
+        $canonicalFeature = (string) ($definition['canonical_feature'] ?? FeatureNaming::canonical($feature));
 
         if ($feature === '' || !Str::isSnakeCase($feature)) {
             throw new FoundryError('FEATURE_NAME_INVALID', 'validation', ['feature' => $feature], 'Feature name must be snake_case.');
@@ -51,7 +52,7 @@ final class FeatureGenerator
             );
         }
 
-        $base = $this->paths->join('app/features/' . $canonicalFeature);
+        $base = $this->paths->join(FeatureNaming::directory($canonicalFeature));
         if (!is_dir($base)) {
             mkdir($base, 0777, true);
         }
@@ -59,10 +60,15 @@ final class FeatureGenerator
         $manifest = $this->buildFeatureManifest($definition, $canonicalFeature);
 
         $written = [];
+        $src = $base . '/src';
+        if (!is_dir($src)) {
+            mkdir($src, 0777, true);
+        }
+
         $written[] = $this->writeIfAllowed($base . '/feature.yaml', Yaml::dump($manifest), true, $force);
         $written[] = $this->writeIfAllowed($base . '/input.schema.json', Json::encode($this->schemas->fromFieldDefinition($feature . '_input', (array) $definition['input']), true) . "\n", true, $force);
         $written[] = $this->writeIfAllowed($base . '/output.schema.json', Json::encode($this->schemas->fromFieldDefinition($feature . '_output', (array) $definition['output']), true) . "\n", true, $force);
-        $written[] = $this->writeIfAllowed($base . '/action.php', $this->actionTemplate($feature, $canonicalFeature), false, $force);
+        $written[] = $this->writeIfAllowed($src . '/Action.php', $this->actionTemplate($feature, $canonicalFeature), false, $force);
 
         $queries = array_values(array_map('strval', (array) (($definition['database']['queries'] ?? []))));
         $written[] = $this->writeIfAllowed($base . '/queries.sql', $this->queries->generate($queries), true, $force);
@@ -138,8 +144,8 @@ final class FeatureGenerator
             'description' => (string) ($definition['description'] ?? 'No description.'),
             'owners' => (array) ($definition['owners'] ?? ['platform']),
             'route' => (array) ($definition['route'] ?? []),
-            'input' => ['schema' => 'app/features/' . $canonicalFeature . '/input.schema.json'],
-            'output' => ['schema' => 'app/features/' . $canonicalFeature . '/output.schema.json'],
+            'input' => ['schema' => FeatureNaming::directory($canonicalFeature) . '/input.schema.json'],
+            'output' => ['schema' => FeatureNaming::directory($canonicalFeature) . '/output.schema.json'],
             'auth' => (array) ($definition['auth'] ?? ['required' => true, 'strategies' => ['bearer'], 'permissions' => []]),
             'database' => array_merge([
                 'reads' => [],

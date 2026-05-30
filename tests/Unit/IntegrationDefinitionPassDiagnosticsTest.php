@@ -18,8 +18,8 @@ final class IntegrationDefinitionPassDiagnosticsTest extends TestCase
     {
         $this->project = new TempProject();
 
-        $this->createFeature('dispatch_welcome_email', 'GET', '/dispatch/welcome');
-        $this->createFeature('api_list_posts', 'GET', '/posts');
+        $this->createFeature('dispatch-welcome-email', 'GET', '/dispatch/welcome');
+        $this->createFeature('api-list-posts', 'GET', '/posts');
 
         mkdir($this->project->root . '/app/definitions/notifications', 0777, true);
         mkdir($this->project->root . '/app/definitions/api', 0777, true);
@@ -40,7 +40,7 @@ resource: posts
 style: server-rendered
 features: [list]
 feature_names:
-  list: api_list_posts
+  list: api-list-posts
 YAML);
     }
 
@@ -72,7 +72,8 @@ YAML);
 
     private function createFeature(string $feature, string $method, string $path): void
     {
-        $base = $this->project->root . '/app/features/' . $feature;
+        $directory = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+        $base = $this->project->root . '/Features/' . $directory;
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<YAML
@@ -84,9 +85,9 @@ route:
   method: {$method}
   path: {$path}
 input:
-  schema: app/features/{$feature}/input.schema.json
+  schema: Features/{$directory}/input.schema.json
 output:
-  schema: app/features/{$feature}/output.schema.json
+  schema: Features/{$directory}/output.schema.json
 auth:
   required: true
   strategies: [bearer]
@@ -116,7 +117,10 @@ llm:
   risk_level: low
 YAML);
 
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        if (!is_dir($base . '/src')) {
+            mkdir($base . '/src', 0777, true);
+        }
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/queries.sql', "-- name: q\nSELECT 1;\n");
@@ -125,6 +129,6 @@ YAML);
         file_put_contents($base . '/events.yaml', "version: 1\nemit: []\nsubscribe: []\n");
         file_put_contents($base . '/jobs.yaml', "version: 1\ndispatch: []\n");
         file_put_contents($base . '/context.manifest.json', '{"version":1,"feature":"' . $feature . '","kind":"http"}');
-        file_put_contents($base . '/tests/' . $feature . '_contract_test.php', '<?php declare(strict_types=1);');
+        file_put_contents($base . '/tests/' . str_replace('-', '_', $feature) . '_contract_test.php', '<?php declare(strict_types=1);');
     }
 }

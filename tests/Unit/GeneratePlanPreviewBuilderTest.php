@@ -28,7 +28,7 @@ final class GeneratePlanPreviewBuilderTest extends TestCase
 
     public function test_build_preview_for_modify_feature_plan_includes_unified_diff(): void
     {
-        $base = $this->project->root . '/app/features/comments';
+        $base = $this->project->root . '/Features/Comments';
         mkdir($base, 0777, true);
         file_put_contents($base . '/feature.yaml', "version: 1\nfeature: comments\ndescription: Old\n");
         file_put_contents($base . '/prompts.md', "# comments\n\nOld notes.\n");
@@ -37,20 +37,20 @@ final class GeneratePlanPreviewBuilderTest extends TestCase
             actions: [
                 [
                     'type' => 'update_file',
-                    'path' => 'app/features/comments/feature.yaml',
+                    'path' => 'Features/Comments/feature.yaml',
                     'summary' => 'Update feature manifest.',
                     'explain_node_id' => 'feature:comments',
                 ],
                 [
                     'type' => 'update_docs',
-                    'path' => 'app/features/comments/prompts.md',
+                    'path' => 'Features/Comments/prompts.md',
                     'summary' => 'Update prompts.',
                     'explain_node_id' => 'feature:comments',
                 ],
             ],
             affectedFiles: [
-                'app/features/comments/feature.yaml',
-                'app/features/comments/prompts.md',
+                'Features/Comments/feature.yaml',
+                'Features/Comments/prompts.md',
             ],
             risks: ['Updates feature metadata.'],
             validations: ['verify_feature'],
@@ -59,13 +59,13 @@ final class GeneratePlanPreviewBuilderTest extends TestCase
             metadata: [
                 'execution' => [
                     'strategy' => 'modify_feature',
-                    'manifest_path' => 'app/features/comments/feature.yaml',
+                    'manifest_path' => 'Features/Comments/feature.yaml',
                     'manifest' => [
                         'version' => 2,
                         'feature' => 'comments',
                         'description' => 'Updated description.',
                     ],
-                    'prompts_path' => 'app/features/comments/prompts.md',
+                    'prompts_path' => 'Features/Comments/prompts.md',
                     'prompts_content' => "# comments\n\nUpdated notes.\n",
                 ],
                 'feature' => 'comments',
@@ -78,8 +78,8 @@ final class GeneratePlanPreviewBuilderTest extends TestCase
         );
 
         $this->assertCount(2, $preview['files']);
-        $this->assertSame('app/features/comments/feature.yaml', $preview['files'][0]['path']);
-        $this->assertStringContainsString('--- a/app/features/comments/feature.yaml', $preview['files'][0]['unified_diff']);
+        $this->assertSame('Features/Comments/feature.yaml', $preview['files'][0]['path']);
+        $this->assertStringContainsString('--- a/Features/Comments/feature.yaml', $preview['files'][0]['unified_diff']);
         $this->assertStringContainsString('Updated description.', $preview['files'][0]['unified_diff']);
     }
 
@@ -160,11 +160,11 @@ final class GeneratePlanPreviewBuilderTest extends TestCase
 
         $featureYaml = array_values(array_filter(
             $preview['files'],
-            static fn(array $file): bool => $file['path'] === 'app/features/' . $feature . '/feature.yaml',
+            static fn(array $file): bool => $file['path'] === 'Features/CommentNotes/feature.yaml',
         ));
 
         $this->assertCount(1, $featureYaml);
         $this->assertSame('create', $featureYaml[0]['change_type']);
-        $this->assertStringContainsString('+++ b/app/features/' . $feature . '/feature.yaml', $featureYaml[0]['unified_diff']);
+        $this->assertStringContainsString('+++ b/Features/CommentNotes/feature.yaml', $featureYaml[0]['unified_diff']);
     }
 }

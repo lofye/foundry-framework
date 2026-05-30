@@ -14,7 +14,7 @@ After the prompt-driven edits are done, verify the result:
 
 ```bash
 foundry compile graph --json
-foundry inspect feature publish_post --json
+foundry inspect feature publish-post --json
 foundry inspect feature admin_login --json
 foundry doctor --json
 foundry verify graph --json

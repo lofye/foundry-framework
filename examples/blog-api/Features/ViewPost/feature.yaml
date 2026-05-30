@@ -1,0 +1,34 @@
+version: 2
+feature: view-post
+kind: http
+description: Read one published post through an explicit route-param feature.
+owners:
+  - examples
+route:
+  method: GET
+  path: /posts/{post_id}
+input:
+  schema: Features/ViewPost/input.schema.json
+output:
+  schema: Features/ViewPost/output.schema.json
+auth:
+  required: false
+  public: true
+  strategies: []
+  permissions: []
+database:
+  reads:
+    - posts
+  writes: []
+  transactions: optional
+  queries: []
+observability:
+  audit: false
+  trace: true
+  log_level: info
+tests:
+  required:
+    - feature
+llm:
+  editable: true
+  risk_level: low

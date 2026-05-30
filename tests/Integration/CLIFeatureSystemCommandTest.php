@@ -56,7 +56,7 @@ final class CLIFeatureSystemCommandTest extends TestCase
         $this->assertContains('Features/EventSystem/src/EventRegistry.php', $mapFirst['payload']['features'][0]['owned_paths']);
     }
 
-    public function test_verify_features_reports_duplicate_canonical_and_legacy_feature(): void
+    public function test_verify_features_reports_legacy_docs_feature_context(): void
     {
         $this->writeContext('Features/EventSystem', 'event-system');
         $this->writeContext('docs/features/event-system', 'event-system');
@@ -65,7 +65,8 @@ final class CLIFeatureSystemCommandTest extends TestCase
 
         $this->assertSame(1, $result['status']);
         $this->assertSame('failed', $result['payload']['status']);
-        $this->assertSame('FEATURE_DUPLICATE_CANONICAL_AND_LEGACY', $result['payload']['violations'][0]['code']);
+        $this->assertSame('DOCS_FEATURES_LEGACY_CONTEXT_PRESENT', $result['payload']['violations'][0]['code']);
+        $this->assertSame('docs/features/event-system', $result['payload']['violations'][0]['path']);
     }
 
     public function test_verify_features_allows_feature_without_optional_subdirectories(): void
@@ -121,7 +122,9 @@ final class CLIFeatureSystemCommandTest extends TestCase
 
     public function test_verify_features_reports_framework_module_misplaced_in_features_root_when_modules_root_exists(): void
     {
-        mkdir($this->project->root . '/Modules', 0777, true);
+        if (!is_dir($this->project->root . '/Modules')) {
+            mkdir($this->project->root . '/Modules', 0777, true);
+        }
         $this->writeContext('Modules/StateStore', 'state-store');
         $this->writeContext('Features/StateStore', 'state-store');
 

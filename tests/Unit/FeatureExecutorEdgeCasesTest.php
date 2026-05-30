@@ -98,6 +98,82 @@ PHP);
         $executor->executeHttp(new RequestContext('GET', '/bad-output'));
     }
 
+    public function test_missing_action_class_throws(): void
+    {
+        $this->writeFeature(
+            'missing_action',
+            '/missing-action',
+            false,
+            '',
+            actionClass: 'App\\Features\\MissingAction\\MissingAction',
+            writeAction: false,
+        );
+
+        $executor = $this->makeExecutor($this->project->root, ['posts.create']);
+
+        $this->expectException(FoundryError::class);
+        $this->expectExceptionMessage('Feature action class not found');
+
+        $executor->executeHttp(new RequestContext('GET', '/missing-action'));
+    }
+
+    public function test_action_class_must_implement_feature_action_contract(): void
+    {
+        $this->writeFeature(
+            'wrong_contract',
+            '/wrong-contract',
+            false,
+            '',
+            actionClass: NotAFeatureAction::class,
+            writeAction: false,
+        );
+
+        $executor = $this->makeExecutor($this->project->root, ['posts.create']);
+
+        $this->expectException(FoundryError::class);
+        $this->expectExceptionMessage('Action must implement FeatureAction');
+
+        $executor->executeHttp(new RequestContext('GET', '/wrong-contract'));
+    }
+
+    public function test_empty_action_class_uses_canonical_feature_action_fallback(): void
+    {
+        $this->writeFeature('fallback_action', '/fallback-action', false, <<<'PHP'
+<?php
+declare(strict_types=1);
+namespace App\Features\FallbackAction;
+use Foundry\Feature\FeatureAction;
+use Foundry\Feature\FeatureServices;
+use Foundry\Auth\AuthContext;
+use Foundry\Http\RequestContext;
+final class Action implements FeatureAction { public function handle(array $input, RequestContext $request, AuthContext $auth, FeatureServices $services): array { return ['id' => 'ok']; } }
+PHP, actionClass: '');
+
+        $executor = $this->makeExecutor($this->project->root, ['posts.create']);
+
+        $this->assertSame(['id' => 'ok'], $executor->executeHttp(new RequestContext('GET', '/fallback-action')));
+    }
+
+    public function test_absolute_schema_paths_are_used_without_joining_workspace_root(): void
+    {
+        $absoluteOutputSchema = $this->project->root . '/absolute-output.schema.json';
+        file_put_contents($absoluteOutputSchema, '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","required":["id"],"properties":{"id":{"type":"string"}}}');
+        $this->writeFeature('absolute_schema', '/absolute-schema', false, <<<'PHP'
+<?php
+declare(strict_types=1);
+namespace App\Features\AbsoluteSchema;
+use Foundry\Feature\FeatureAction;
+use Foundry\Feature\FeatureServices;
+use Foundry\Auth\AuthContext;
+use Foundry\Http\RequestContext;
+final class Action implements FeatureAction { public function handle(array $input, RequestContext $request, AuthContext $auth, FeatureServices $services): array { return ['id' => 'absolute']; } }
+PHP, outputSchema: $absoluteOutputSchema);
+
+        $executor = $this->makeExecutor($this->project->root, ['posts.create']);
+
+        $this->assertSame(['id' => 'absolute'], $executor->executeHttp(new RequestContext('GET', '/absolute-schema')));
+    }
+
     private function makeExecutor(string $root, array $permissions): FeatureExecutor
     {
         $perm = new PermissionRegistry();
@@ -135,19 +211,39 @@ PHP);
         );
     }
 
-    private function writeFeature(string $name, string $path, bool $authRequired, string $actionCode): void
+    private function writeFeature(
+        string $name,
+        string $path,
+        bool $authRequired,
+        string $actionCode,
+        ?string $actionClass = null,
+        bool $writeAction = true,
+        ?string $outputSchema = null,
+    ): void
     {
-        $featureDir = $this->project->root . '/app/features/' . $name;
-        mkdir($featureDir, 0777, true);
+        $studly = str_replace(' ', '', ucwords(str_replace(['_', '-'], ' ', $name)));
+        $featureDir = $this->project->root . '/Features/' . $studly;
+        mkdir($featureDir . '/src', 0777, true);
 
-        file_put_contents($featureDir . '/action.php', $actionCode);
+        if ($writeAction) {
+            file_put_contents($featureDir . '/src/Action.php', $actionCode);
+        }
+
         file_put_contents($featureDir . '/input.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($featureDir . '/output.schema.json', '{"$schema":"https://json-schema.org/draft/2020-12/schema","type":"object","additionalProperties":false,"required":["id"],"properties":{"id":{"type":"string"}}}');
 
-        $studly = str_replace(' ', '', ucwords(str_replace('_', ' ', $name)));
+        $inputSchema = 'Features/' . $studly . '/input.schema.json';
+        $outputSchema ??= 'Features/' . $studly . '/output.schema.json';
+        $basePath = 'Features/' . $studly;
+        $actionClassLiteral = $actionClass === null
+            ? 'App\\\\Features\\\\' . $studly . '\\\\Action'
+            : str_replace('\\', '\\\\', $actionClass);
+        $permissionsLiteral = $authRequired ? "['posts.create']" : '[]';
 
-        file_put_contents($this->project->root . '/app/generated/feature_index.php', "<?php return ['{$name}' => ['kind' => 'http', 'description' => 'x', 'route' => ['method' => 'GET', 'path' => '{$path}'], 'input_schema' => 'app/features/{$name}/input.schema.json', 'output_schema' => 'app/features/{$name}/output.schema.json', 'auth' => ['required' => " . ($authRequired ? 'true' : 'false') . ", 'strategies' => ['bearer'], 'permissions' => ['posts.create']], 'database' => ['transactions' => 'required'], 'cache' => [], 'events' => [], 'jobs' => [], 'rate_limit' => [], 'tests' => [], 'llm' => [], 'base_path' => 'app/features/{$name}', 'action_class' => 'App\\\\Features\\\\{$studly}\\\\Action']];");
+        file_put_contents($this->project->root . '/app/generated/feature_index.php', "<?php return ['{$name}' => ['kind' => 'http', 'description' => 'x', 'route' => ['method' => 'GET', 'path' => '{$path}'], 'input_schema' => '{$inputSchema}', 'output_schema' => '{$outputSchema}', 'auth' => ['required' => " . ($authRequired ? 'true' : 'false') . ", 'strategies' => ['bearer'], 'permissions' => {$permissionsLiteral}], 'database' => ['transactions' => 'required'], 'cache' => [], 'events' => [], 'jobs' => [], 'rate_limit' => [], 'tests' => [], 'llm' => [], 'base_path' => '{$basePath}', 'action_class' => '{$actionClassLiteral}']];");
 
-        file_put_contents($this->project->root . '/app/generated/routes.php', "<?php return ['GET {$path}' => ['feature' => '{$name}', 'kind' => 'http', 'input_schema' => 'app/features/{$name}/input.schema.json', 'output_schema' => 'app/features/{$name}/output.schema.json']];");
+        file_put_contents($this->project->root . '/app/generated/routes.php', "<?php return ['GET {$path}' => ['feature' => '{$name}', 'kind' => 'http', 'input_schema' => '{$inputSchema}', 'output_schema' => '{$outputSchema}']];");
     }
 }
+
+final class NotAFeatureAction {}

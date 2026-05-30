@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Foundry\Generation;
 
 use Foundry\Support\FoundryError;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Paths;
 use Foundry\Support\Yaml;
 
@@ -32,7 +33,7 @@ final class UploadsGenerator
         $generatedFeatures = [];
         $generatedFiles = [];
         foreach ($featureDefinitions as $definition) {
-            $generatedFeatures[] = (string) $definition['feature'];
+            $generatedFeatures[] = FeatureNaming::canonical((string) ($definition['canonical_feature'] ?? $definition['feature']));
             foreach ($this->featureGenerator->generateFromArray($definition, $force) as $path) {
                 $generatedFiles[] = $path;
             }
@@ -89,6 +90,7 @@ final class UploadsGenerator
 
         return [
             'feature' => $feature,
+            'canonical_feature' => FeatureNaming::canonical($feature),
             'kind' => 'http',
             'description' => sprintf('Generated %s feature for %s uploads.', $operation, $profile),
             'route' => [
@@ -190,9 +192,9 @@ final class UploadsGenerator
                 'owner_id_field' => 'owner_id',
             ],
             'feature_names' => [
-                'upload' => 'upload_' . ($profile === 'avatar' ? 'avatar' : 'attachment'),
-                'attach' => 'attach_' . ($profile === 'avatar' ? 'avatar' : 'attachment'),
-                'delete' => $profile === 'avatar' ? '' : 'delete_attachment',
+                'upload' => FeatureNaming::canonical('upload_' . ($profile === 'avatar' ? 'avatar' : 'attachment')),
+                'attach' => FeatureNaming::canonical('attach_' . ($profile === 'avatar' ? 'avatar' : 'attachment')),
+                'delete' => $profile === 'avatar' ? '' : FeatureNaming::canonical('delete_attachment'),
             ],
             'features' => array_values(array_unique(array_map('strval', $features))),
         ];

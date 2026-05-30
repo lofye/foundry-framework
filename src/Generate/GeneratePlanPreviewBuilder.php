@@ -8,6 +8,7 @@ use Foundry\Generation\ContextManifestGenerator;
 use Foundry\Generation\FeatureGenerator;
 use Foundry\Generation\TestGenerator;
 use Foundry\Support\Paths;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Yaml;
 
 final class GeneratePlanPreviewBuilder
@@ -165,8 +166,10 @@ final class GeneratePlanPreviewBuilder
         [$tempRoot, $tempPaths] = $this->makeTempPaths();
 
         try {
-            $sourceBasePath = $this->absolutePath((string) ($execution['base_path'] ?? ('app/features/' . $feature)));
-            $targetBasePath = $tempPaths->join('app/features/' . $feature);
+            $featureBasePath = FeatureNaming::directory($feature);
+            $codeSafeFeature = FeatureNaming::codeSafe($feature);
+            $sourceBasePath = $this->absolutePath((string) ($execution['base_path'] ?? $featureBasePath));
+            $targetBasePath = $tempPaths->join($featureBasePath);
             if (is_dir($sourceBasePath)) {
                 $this->copyDirectory($sourceBasePath, $targetBasePath);
             } elseif (!is_dir($targetBasePath)) {
@@ -185,11 +188,11 @@ final class GeneratePlanPreviewBuilder
 
             $paths = [];
             foreach ($missingTests as $type) {
-                $paths[] = 'app/features/' . $feature . '/tests/' . $feature . '_' . $type . '_test.php';
+                $paths[] = $featureBasePath . '/tests/' . $codeSafeFeature . '_' . $type . '_test.php';
             }
 
             if ((bool) ($execution['restore_context_manifest'] ?? false)) {
-                $paths[] = 'app/features/' . $feature . '/context.manifest.json';
+                $paths[] = $featureBasePath . '/context.manifest.json';
             }
 
             return $this->readActionFilesFromTemp($tempPaths, $paths);

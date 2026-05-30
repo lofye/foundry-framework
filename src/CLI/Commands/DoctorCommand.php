@@ -28,6 +28,7 @@ use Foundry\Pipeline\PipelineIntegrityInspector;
 use Foundry\Pro\DeepDiagnosticsBuilder;
 use Foundry\Quality\QualityToolRunner;
 use Foundry\Support\CliCommandPrefix;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\FoundryError;
 use Foundry\Support\Json;
 use Foundry\Support\Paths;
@@ -440,7 +441,7 @@ final class DoctorCommand extends Command
 
     private function featureExists(CommandContext $context, string $feature): bool
     {
-        return is_dir($context->paths()->features() . '/' . $feature);
+        return is_dir($context->paths()->root() . '/' . FeatureNaming::directory($feature));
     }
 
     /**

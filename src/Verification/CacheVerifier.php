@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Foundry\Verification;
 
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Paths;
 use Foundry\Support\Yaml;
 
@@ -14,7 +15,10 @@ final class CacheVerifier
     public function verify(): VerificationResult
     {
         $errors = [];
-        $allFeatures = array_map('basename', glob($this->paths->features() . '/*', GLOB_ONLYDIR) ?: []);
+        $allFeatures = array_values(array_map(
+            static fn(string $dir): string => FeatureNaming::fromDirectoryName(basename($dir)),
+            glob($this->paths->features() . '/*', GLOB_ONLYDIR) ?: [],
+        ));
 
         foreach (glob($this->paths->features() . '/*', GLOB_ONLYDIR) ?: [] as $dir) {
             $feature = basename($dir);

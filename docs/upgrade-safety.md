@@ -52,7 +52,7 @@ Use:
 
 ```bash
 foundry inspect migrations --json
-foundry migrate definitions --path=app/features/<feature>/feature.yaml --write
+foundry migrate definitions --path=Features/<Feature>/feature.yaml --write
 ```
 
 ## Extension Compatibility

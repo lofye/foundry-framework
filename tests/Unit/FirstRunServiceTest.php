@@ -39,7 +39,7 @@ final class FirstRunServiceTest extends TestCase
         $this->assertIsArray($result['payload']);
         $this->assertSame('example', $result['payload']['mode']);
         $this->assertSame('blog-api', $result['payload']['example']['name']);
-        $this->assertFileExists($root . '/app/features/list_posts/feature.yaml');
+        $this->assertFileExists($root . '/Features/ListPosts/feature.yaml');
         $this->assertFileExists($root . '/README.md');
 
         $this->deleteDirectory($root);
@@ -86,7 +86,7 @@ final class FirstRunServiceTest extends TestCase
     {
         $root = $this->makeTempDirectory('foundry-first-run-existing-');
         $repoRoot = dirname(__DIR__, 2);
-        $this->copyDirectory($repoRoot . '/examples/hello-world/app', $root . '/app');
+        $this->copyDirectory($repoRoot . '/examples/hello-world', $root);
 
         $service = new FirstRunService(interactive: false);
         $result = $service->run(new CommandContext(cwd: $root));
@@ -116,7 +116,7 @@ final class FirstRunServiceTest extends TestCase
         $this->assertSame(0, $result['status']);
         $this->assertNull($result['payload']);
         $this->assertStringContainsString('Loaded example:', (string) $result['message']);
-        $this->assertFileExists($root . '/app/features/list_posts/feature.yaml');
+        $this->assertFileExists($root . '/Features/ListPosts/feature.yaml');
 
         $this->deleteDirectory($root);
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Foundry\Generation;
 
+use Foundry\Support\FeatureNaming;
 use Foundry\Testing\AuthTestGenerator;
 use Foundry\Testing\ContractTestGenerator;
 use Foundry\Testing\FeatureTestGenerator;
@@ -31,29 +32,30 @@ final class TestGenerator
 
         $required = array_values(array_unique(array_map('strval', $required)));
         sort($required);
+        $codeSafeFeature = FeatureNaming::codeSafe($featureName);
 
         $written = [];
 
         if (in_array('contract', $required, true)) {
-            $path = $testsPath . '/' . $featureName . '_contract_test.php';
+            $path = $testsPath . '/' . $codeSafeFeature . '_contract_test.php';
             file_put_contents($path, $this->contract->generate($featureName));
             $written[] = $path;
         }
 
         if (in_array('feature', $required, true)) {
-            $path = $testsPath . '/' . $featureName . '_feature_test.php';
+            $path = $testsPath . '/' . $codeSafeFeature . '_feature_test.php';
             file_put_contents($path, $this->feature->generate($featureName));
             $written[] = $path;
         }
 
         if (in_array('auth', $required, true)) {
-            $path = $testsPath . '/' . $featureName . '_auth_test.php';
+            $path = $testsPath . '/' . $codeSafeFeature . '_auth_test.php';
             file_put_contents($path, $this->auth->generate($featureName));
             $written[] = $path;
         }
 
         if (in_array('job', $required, true)) {
-            $path = $testsPath . '/' . $featureName . '_job_test.php';
+            $path = $testsPath . '/' . $codeSafeFeature . '_job_test.php';
             file_put_contents($path, $this->job->generate($featureName));
             $written[] = $path;
         }

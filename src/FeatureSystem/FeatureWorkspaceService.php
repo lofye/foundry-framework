@@ -29,24 +29,6 @@ final class FeatureWorkspaceService
             $rows[$slug] = $feature;
         }
 
-        foreach ($this->legacyFeatures() as $feature) {
-            $slug = $feature['slug'];
-            if (isset($rows[$slug])) {
-                if ((bool) ($rows[$slug]['has_context'] ?? false) && (bool) ($feature['has_context'] ?? false)) {
-                    $rows[$slug]['legacy_path'] = $feature['legacy_path'];
-                    $duplicates[] = [
-                        'code' => 'FEATURE_DUPLICATE_CANONICAL_AND_LEGACY',
-                        'feature' => $slug,
-                        'canonical_path' => $rows[$slug]['path'],
-                        'legacy_path' => $feature['legacy_path'],
-                    ];
-                }
-                continue;
-            }
-
-            $rows[$slug] = $feature;
-        }
-
         ksort($rows);
 
         return [
@@ -147,6 +129,19 @@ final class FeatureWorkspaceService
         $enforced = $this->boundaryEnforced();
 
         $violations = [];
+        if (is_dir($this->paths->join('app/features'))) {
+            $violations[] = [
+                'code' => 'APP_FEATURES_LEGACY_DIRECTORY_PRESENT',
+                'feature' => '',
+                'path' => 'app/features',
+                'message' => 'Legacy app/features directory is not part of the current Foundry app layout. App feature source belongs under Features/<Feature>/.',
+            ];
+        }
+
+        foreach ($this->legacyDocsFeatureContextViolations() as $violation) {
+            $violations[] = $violation;
+        }
+
         foreach ((array) $scan['duplicates'] as $duplicate) {
             if (!is_array($duplicate)) {
                 continue;
@@ -230,7 +225,7 @@ final class FeatureWorkspaceService
      */
     private function canonicalFeatures(): array
     {
-        $rootName = $this->canonicalRootName();
+        $rootName = 'Features';
         $root = $this->paths->join($rootName);
         if (!is_dir($root)) {
             return [];
@@ -255,46 +250,6 @@ final class FeatureWorkspaceService
                 name: $item,
                 relativePath: $rootName . '/' . $item,
                 isCanonical: true,
-            );
-        }
-
-        usort($rows, static fn(array $a, array $b): int => strcmp((string) $a['slug'], (string) $b['slug']));
-
-        return $rows;
-    }
-
-    /**
-     * @return list<array<string,mixed>>
-     */
-    private function legacyFeatures(): array
-    {
-        $root = $this->paths->join('docs/features');
-        if (!is_dir($root)) {
-            return [];
-        }
-
-        $items = scandir($root) ?: [];
-        $rows = [];
-
-        foreach ($items as $item) {
-            if ($item === '.' || $item === '..') {
-                continue;
-            }
-
-            $path = $root . '/' . $item;
-            if (!is_dir($path)) {
-                continue;
-            }
-
-            if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $item)) {
-                continue;
-            }
-
-            $rows[] = $this->row(
-                slug: $item,
-                name: $this->pascalFromSlug($item),
-                relativePath: 'docs/features/' . $item,
-                isCanonical: false,
             );
         }
 
@@ -364,6 +319,14 @@ final class FeatureWorkspaceService
             $file = basename((string) $matches[0]);
 
             return substr($file, 0, -strlen('.spec.md'));
+        }
+
+        $manifestPath = $absolutePath . '/feature.yaml';
+        if (is_file($manifestPath)) {
+            $contents = (string) file_get_contents($manifestPath);
+            if (preg_match('/^feature:\s*([a-z0-9_-]+(?:[-_][a-z0-9]+)*)\s*$/m', $contents, $matches) === 1) {
+                return FeatureNaming::canonical((string) $matches[1]);
+            }
         }
 
         return FeatureNaming::canonical(strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $name) ?? $name));
@@ -458,15 +421,6 @@ final class FeatureWorkspaceService
         return implode('', array_map(static fn(string $part): string => ucfirst($part), $parts));
     }
 
-    private function canonicalRootName(): string
-    {
-        if (is_dir($this->paths->join('Modules'))) {
-            return 'Modules';
-        }
-
-        return 'Features';
-    }
-
     /**
      * @return list<array{feature:string,path:string,expected_path:string,duplicate:bool}>
      */
@@ -489,6 +443,10 @@ final class FeatureWorkspaceService
 
             $featurePath = $featuresRoot . '/' . $item;
             if (!is_dir($featurePath) || preg_match('/^[A-Z][A-Za-z0-9]*$/', $item) !== 1) {
+                continue;
+            }
+
+            if (is_file($featurePath . '/feature.yaml')) {
                 continue;
             }
 
@@ -575,31 +533,6 @@ final class FeatureWorkspaceService
                 }
             }
 
-            $legacyBase = 'app/features/' . $slug;
-            if ($this->directoryContainsFiles($legacyBase)) {
-                $violations[] = [
-                    'code' => 'APP_FEATURE_OWNED_SOURCE_OUTSIDE_FEATURE_ROOT',
-                    'feature' => $slug,
-                    'path' => $legacyBase,
-                    'message' => 'Application feature-owned runtime artifacts must be localized under Features/<Feature>/src and Features/<Feature>/tests.',
-                    'details' => [
-                        'expected_path' => 'Features/' . $name,
-                    ],
-                ];
-            }
-
-            $legacyContextBase = 'docs/features/' . $slug;
-            if ($this->legacyContextFilesExist($legacyContextBase)) {
-                $violations[] = [
-                    'code' => 'APP_FEATURE_LEGACY_CONTEXT_LOCATION',
-                    'feature' => $slug,
-                    'path' => $legacyContextBase,
-                    'message' => 'Application feature context files must live under Features/<Feature>/ at the feature root.',
-                    'details' => [
-                        'expected_path' => $path,
-                    ],
-                ];
-            }
         }
 
         return $violations;
@@ -626,7 +559,7 @@ final class FeatureWorkspaceService
                 continue;
             }
 
-            if (is_dir($this->paths->join('Modules/' . $item))) {
+            if (is_dir($this->paths->join('Modules/' . $item)) && !is_file($path . '/feature.yaml')) {
                 continue;
             }
 
@@ -663,41 +596,58 @@ final class FeatureWorkspaceService
         return true;
     }
 
-    private function directoryContainsFiles(string $relativePath): bool
+    /**
+     * @return list<array<string,mixed>>
+     */
+    private function legacyDocsFeatureContextViolations(): array
     {
-        $absolutePath = $this->paths->join($relativePath);
-        if (!is_dir($absolutePath)) {
-            return false;
+        $root = $this->paths->join('docs/features');
+        if (!is_dir($root)) {
+            return [];
         }
 
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($absolutePath, \FilesystemIterator::SKIP_DOTS),
-        );
+        $violations = [];
+        foreach (scandir($root) ?: [] as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
 
-        foreach ($iterator as $fileInfo) {
-            if ($fileInfo instanceof \SplFileInfo && $fileInfo->isFile()) {
-                return true;
+            $path = $root . '/' . $item;
+            if (!is_dir($path) || preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $item) !== 1) {
+                continue;
+            }
+
+            $legacyContextPaths = [
+                $item . '.spec.md',
+                $item . '.md',
+                $item . '.decisions.md',
+                'specs',
+                'outcomes',
+                'plans',
+            ];
+
+            foreach ($legacyContextPaths as $legacyContextPath) {
+                if (!file_exists($path . '/' . $legacyContextPath)) {
+                    continue;
+                }
+
+                $violations[] = [
+                    'code' => 'DOCS_FEATURES_LEGACY_CONTEXT_PRESENT',
+                    'feature' => $item,
+                    'path' => 'docs/features/' . $item,
+                    'message' => 'Legacy docs/features application context is not part of the current Foundry app layout. App feature context belongs under Features/<Feature>/.',
+                    'details' => [
+                        'legacy_path' => 'docs/features/' . $item . '/' . $legacyContextPath,
+                    ],
+                ];
+
+                break;
             }
         }
 
-        return false;
+        usort($violations, static fn(array $a, array $b): int => strcmp((string) $a['path'], (string) $b['path']));
+
+        return $violations;
     }
 
-    private function legacyContextFilesExist(string $legacyContextBase): bool
-    {
-        $slug = basename($legacyContextBase);
-        $legacyPaths = [
-            $legacyContextBase . '/' . $slug . '.spec.md',
-            $legacyContextBase . '/' . $slug . '.md',
-            $legacyContextBase . '/' . $slug . '.decisions.md',
-        ];
-
-        foreach ($legacyPaths as $legacyPath) {
-            if (is_file($this->paths->join($legacyPath))) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

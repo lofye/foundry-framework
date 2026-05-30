@@ -22,7 +22,7 @@ final class HistoricalSpecEvidenceMapper
      */
     private const DEFAULT_TRANSITION = [
         'legacy_label' => 'Spec35D1',
-        'canonical_path' => 'docs/features/context-persistence/001-initial.md',
+        'canonical_path' => 'Features/ContextPersistence/specs/001-initial.md',
         'canonical_module' => 'ContextPersistence',
         'canonical_spec_id' => '001',
         'canonical_slug' => 'initial',
@@ -395,6 +395,11 @@ final class HistoricalSpecEvidenceMapper
      */
     private function discoverCurrentCanonicalPath(array $transition): ?string
     {
+        $canonicalPath = trim((string) ($transition['canonical_path'] ?? ''));
+        if ($canonicalPath !== '' && is_file($this->paths->join($canonicalPath))) {
+            return $canonicalPath;
+        }
+
         $module = trim((string) ($transition['canonical_module'] ?? ''));
         $specId = trim((string) ($transition['canonical_spec_id'] ?? ''));
         $slug = trim((string) ($transition['canonical_slug'] ?? ''));

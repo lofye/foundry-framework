@@ -7,14 +7,14 @@ declare(strict_types=1);
  * Regenerate with: foundry compile graph
  */
 return array (
-  'context-persistence' => 
+  'context-persistence' =>
   array (
-    'input' => 'app/features/context-persistence/input.schema.json',
-    'output' => 'app/features/context-persistence/output.schema.json',
+    'input' => 'Features/ContextPersistence/input.schema.json',
+    'output' => 'Features/ContextPersistence/output.schema.json',
   ),
-  'publish_post' => 
+  'publish-post' =>
   array (
-    'input' => 'app/features/publish_post/input.schema.json',
-    'output' => 'app/features/publish_post/output.schema.json',
+    'input' => 'Features/PublishPost/input.schema.json',
+    'output' => 'Features/PublishPost/output.schema.json',
   ),
 );

@@ -14,6 +14,7 @@ Do show:
 
 - Composer install and app creation.
 - Valet linking and HTTPS at `https://demo.test`.
+- The scaffolded top-level `Features/`, `Modules/`, and `Packs/` roots.
 - Feature context under `Features/Blog/`.
 - Draft spec, promotion, implementation prompt, and verification.
 - The implemented Blog surfaces and durable artifacts.
@@ -154,6 +155,7 @@ While Codex works, narrate the contract:
 
 - Feature-owned code belongs under `Features/Blog/src/`.
 - Feature-owned tests belong under `Features/Blog/tests/`.
+- `Modules/` is reserved for Foundry/framework governance, and `Packs/` is reserved for future extension packs.
 - Drafts must be hidden from public pages and RSS.
 - Tests, decisions, docs, reconstruction, and verification are part of done.
 

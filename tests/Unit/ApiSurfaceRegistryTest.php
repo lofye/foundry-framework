@@ -408,7 +408,7 @@ final class ApiSurfaceRegistryTest extends TestCase
     {
         $registry = new ApiSurfaceRegistry();
 
-        $manifest = $registry->classifyConfigurationArtifact('app/features/list_posts/feature.yaml');
+        $manifest = $registry->classifyConfigurationArtifact('Features/ListPosts/feature.yaml');
         $platformConfig = $registry->classifyConfigurationArtifact('config/cache.php');
         $packRegistry = $registry->classifyConfigurationArtifact('.foundry/packs/installed.json');
         $packManifest = $registry->classifyConfigurationArtifact('Packs/foundry/blog/foundry.json');

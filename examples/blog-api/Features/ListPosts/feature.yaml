@@ -1,0 +1,34 @@
+version: 2
+feature: list-posts
+kind: http
+description: List the published posts exposed by the canonical example API.
+owners:
+  - examples
+route:
+  method: GET
+  path: /posts
+input:
+  schema: Features/ListPosts/input.schema.json
+output:
+  schema: Features/ListPosts/output.schema.json
+auth:
+  required: false
+  public: true
+  strategies: []
+  permissions: []
+database:
+  reads:
+    - posts
+  writes: []
+  transactions: optional
+  queries: []
+observability:
+  audit: false
+  trace: true
+  log_level: info
+tests:
+  required:
+    - feature
+llm:
+  editable: true
+  risk_level: low

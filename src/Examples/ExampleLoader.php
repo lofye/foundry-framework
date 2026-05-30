@@ -116,11 +116,11 @@ final class ExampleLoader
                 'source_paths' => ['examples/blog-api'],
                 'destination_behavior' => 'current_directory_or_temp_directory',
                 'overwrite_behavior' => 'refuse_non_empty_without_temp',
-                'explain_default_target' => 'feature:list_posts',
+                'explain_default_target' => 'feature:list-posts',
                 'recommended' => true,
                 'next_generate_intent' => 'Add comments to blog posts',
                 'next_generate_mode' => 'modify',
-                'next_generate_target' => 'list_posts',
+                'next_generate_target' => 'list-posts',
                 'copy_sets' => [
                     [
                         'source_example' => 'blog-api',
@@ -139,10 +139,10 @@ final class ExampleLoader
                 'taxonomy' => 'reference',
                 'mode' => 'composed',
                 'source_examples' => ['hello-world', 'extensions-migrations'],
-                'source_paths' => ['examples/hello-world/app', 'examples/extensions-migrations'],
+                'source_paths' => ['examples/hello-world', 'examples/extensions-migrations'],
                 'destination_behavior' => 'current_directory_or_temp_directory',
                 'overwrite_behavior' => 'refuse_non_empty_without_temp',
-                'explain_default_target' => 'feature:say_hello',
+                'explain_default_target' => 'feature:say-hello',
                 'recommended' => false,
                 'next_generate_intent' => 'Add a feature',
                 'next_generate_mode' => 'new',
@@ -150,9 +150,9 @@ final class ExampleLoader
                 'copy_sets' => [
                     [
                         'source_example' => 'hello-world',
-                        'source_path' => 'examples/hello-world/app',
-                        'source' => $frameworkRoot . '/examples/hello-world/app',
-                        'destination' => 'app',
+                        'source_path' => 'examples/hello-world',
+                        'source' => $frameworkRoot . '/examples/hello-world',
+                        'destination' => '',
                     ],
                     [
                         'source_example' => 'extensions-migrations',

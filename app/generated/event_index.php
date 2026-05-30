@@ -7,32 +7,32 @@ declare(strict_types=1);
  * Regenerate with: foundry compile graph
  */
 return array (
-  'emit' => 
+  'emit' =>
   array (
-    'post.created' => 
+    'post.created' =>
     array (
-      'feature' => 'publish_post',
-      'schema' => 
+      'feature' => 'publish-post',
+      'schema' =>
       array (
         'type' => 'object',
         'additionalProperties' => false,
-        'required' => 
+        'required' =>
         array (
           0 => 'post_id',
           1 => 'author_id',
           2 => 'status',
         ),
-        'properties' => 
+        'properties' =>
         array (
-          'post_id' => 
+          'post_id' =>
           array (
             'type' => 'string',
           ),
-          'author_id' => 
+          'author_id' =>
           array (
             'type' => 'string',
           ),
-          'status' => 
+          'status' =>
           array (
             'type' => 'string',
           ),
@@ -40,7 +40,7 @@ return array (
       ),
     ),
   ),
-  'subscribe' => 
+  'subscribe' =>
   array (
   ),
 );

@@ -192,9 +192,9 @@ When no explain target is provided, Foundry explains the first feature or route 
 `explain` surface:
 
 ```bash
-foundry explain publish_post --json
-foundry explain publish_post --deep
-foundry explain feature:publish_post --markdown
+foundry explain publish-post --json
+foundry explain publish-post --deep
+foundry explain feature:publish-post --markdown
 foundry explain route:POST /posts --json
 foundry explain route:POST /posts --neighbors
 foundry explain command:doctor --json
@@ -266,11 +266,11 @@ Subject
   kind: route
 
 Summary
-  POST /posts handles requests through the compiled application graph. It dispatches the publish_post feature action. It emits post.created. It triggers notify_followers.
+  POST /posts handles requests through the compiled application graph. It dispatches the publish-post feature action. It emits post.created. It triggers notify_followers.
 
 Responsibilities
   Handle POST /posts requests
-  Dispatch the publish_post feature action
+  Dispatch the publish-post feature action
 
 Execution Flow
   request
@@ -279,15 +279,15 @@ Execution Flow
   -> rate_limit guard
   -> request_validation guard
   -> transaction guard
-  -> publish_post feature action
+  -> publish-post feature action
   -> post.created
   -> notify_followers
 
 Depends On
-  feature:publish_post
+  feature:publish-post
   permission:posts.create
-  schema:app/features/publish_post/input.schema.json
-  schema:app/features/publish_post/output.schema.json
+  schema:Features/PublishPost/input.schema.json
+  schema:Features/PublishPost/output.schema.json
 
 Emits
   event:post.created
@@ -297,15 +297,15 @@ Triggers
 
 Permissions
   posts.create
-    defined in: feature:publish_post
-    enforced by: guard:permission:publish_post:posts_create @ auth
+    defined in: feature:publish-post
+    enforced by: guard:permission:publish-post:posts_create @ auth
 
 Schema Interaction
-  reads: schema:app/features/publish_post/input.schema.json
-  writes: schema:app/features/publish_post/output.schema.json
+  reads: schema:Features/PublishPost/input.schema.json
+  writes: schema:Features/PublishPost/output.schema.json
 
 Graph Relationships
-  inbound: feature:publish_post
+  inbound: feature:publish-post
 
 Related Commands
   ./foundry inspect execution-plan POST /posts --json
@@ -313,7 +313,7 @@ Related Commands
   ./foundry inspect node route:POST:/posts --json
   ./foundry inspect pipeline --json
   ./foundry inspect route POST /posts --json
-  foundry verify feature publish_post --json
+  foundry verify feature publish-post --json
   foundry verify graph --json
   foundry verify pipeline --json
   php vendor/bin/phpunit
@@ -332,7 +332,7 @@ Suggested Fixes
 
 Impact
   risk: high
-  affected_features: publish_post
+  affected_features: publish-post
   affected_routes: POST /posts
   affected_events:
   affected_jobs:
@@ -347,11 +347,11 @@ Subject
   kind: route
 
 Summary
-  POST /posts handles requests through the compiled application graph. It dispatches the publish_post feature action. It emits post.created. It triggers notify_followers.
+  POST /posts handles requests through the compiled application graph. It dispatches the publish-post feature action. It emits post.created. It triggers notify_followers.
 
 Responsibilities
   Handle POST /posts requests
-  Dispatch the publish_post feature action
+  Dispatch the publish-post feature action
 
 Execution Flow (Detailed)
   Stage 1: request
@@ -366,16 +366,16 @@ Execution Flow (Detailed)
     - stage: validation
   Stage 6: transaction guard
     - stage: before_action
-  Stage 7: publish_post feature action
-    - feature: publish_post
+  Stage 7: publish-post feature action
+    - feature: publish-post
   Stage 8: post.created
   Stage 9: notify_followers
 
 Depends On
-  feature:publish_post
+  feature:publish-post
   permission:posts.create
-  schema:app/features/publish_post/input.schema.json
-  schema:app/features/publish_post/output.schema.json
+  schema:Features/PublishPost/input.schema.json
+  schema:Features/PublishPost/output.schema.json
 
 Emits
   event:post.created
@@ -385,15 +385,15 @@ Triggers
 
 Permissions
   posts.create
-    defined in: feature:publish_post
-    enforced by: guard:permission:publish_post:posts_create @ auth
+    defined in: feature:publish-post
+    enforced by: guard:permission:publish-post:posts_create @ auth
 
 Schema Interaction
-  reads: schema:app/features/publish_post/input.schema.json
-  writes: schema:app/features/publish_post/output.schema.json
+  reads: schema:Features/PublishPost/input.schema.json
+  writes: schema:Features/PublishPost/output.schema.json
 
 Graph Relationships (Expanded)
-  inbound: feature:publish_post
+  inbound: feature:publish-post
 
 Related Commands
   ./foundry inspect execution-plan POST /posts --json
@@ -401,7 +401,7 @@ Related Commands
   ./foundry inspect node route:POST:/posts --json
   ./foundry inspect pipeline --json
   ./foundry inspect route POST /posts --json
-  foundry verify feature publish_post --json
+  foundry verify feature publish-post --json
   foundry verify graph --json
   foundry verify pipeline --json
   php vendor/bin/phpunit
@@ -420,7 +420,7 @@ Suggested Fixes
 
 Impact
   risk: high
-  affected_features: publish_post
+  affected_features: publish-post
   affected_routes: POST /posts
   affected_events:
   affected_jobs:
@@ -460,18 +460,18 @@ Representative `--json` output:
       "method": "POST",
       "path": "/posts",
       "signature": "POST /posts",
-      "feature": "publish_post"
+      "feature": "publish-post"
     }
   },
   "summary": {
-    "text": "POST /posts handles requests through the compiled application graph. It dispatches the publish_post feature action. It emits post.created. It triggers notify_followers.",
+    "text": "POST /posts handles requests through the compiled application graph. It dispatches the publish-post feature action. It emits post.created. It triggers notify_followers.",
     "deterministic": true,
     "deep": false
   },
   "responsibilities": {
     "items": [
       "Handle POST /posts requests",
-      "Dispatch the publish_post feature action"
+      "Dispatch the publish-post feature action"
     ]
   },
   "executionFlow": {
@@ -482,7 +482,7 @@ Representative `--json` output:
       { "kind": "guard", "label": "rate_limit guard" },
       { "kind": "guard", "label": "request_validation guard" },
       { "kind": "guard", "label": "transaction guard" },
-      { "kind": "action", "label": "publish_post feature action" },
+      { "kind": "action", "label": "publish-post feature action" },
       { "kind": "event", "label": "post.created", "name": "post.created" },
       { "kind": "job", "label": "notify_followers", "name": "notify_followers" }
     ],
@@ -492,14 +492,14 @@ Representative `--json` output:
       { "id": "pipeline_stage:action", "kind": "pipeline_stage", "label": "action", "name": "action", "order": 7 }
     ],
     "guards": [
-      { "id": "guard:auth:publish_post", "feature": "publish_post", "type": "authentication", "stage": "auth" },
-      { "id": "guard:permission:publish_post:posts_create", "feature": "publish_post", "type": "permission", "stage": "auth" }
+      { "id": "guard:auth:publish-post", "feature": "publish-post", "type": "authentication", "stage": "auth" },
+      { "id": "guard:permission:publish-post:posts_create", "feature": "publish-post", "type": "permission", "stage": "auth" }
     ],
     "action": {
-      "id": "feature:publish_post",
+      "id": "feature:publish-post",
       "kind": "feature",
-      "label": "publish_post",
-      "feature": "publish_post"
+      "label": "publish-post",
+      "feature": "publish-post"
     },
     "events": [
       { "id": "event:post.created", "kind": "event", "label": "post.created", "name": "post.created" }
@@ -512,10 +512,10 @@ Representative `--json` output:
   "relationships": {
     "dependsOn": {
       "items": [
-        { "id": "feature:publish_post", "kind": "feature", "label": "publish_post", "feature": "publish_post" },
+        { "id": "feature:publish-post", "kind": "feature", "label": "publish-post", "feature": "publish-post" },
         { "id": "permission:posts.create", "kind": "permission", "label": "posts.create" },
-        { "id": "schema:app/features/publish_post/input.schema.json", "kind": "schema", "label": "app/features/publish_post/input.schema.json", "path": "app/features/publish_post/input.schema.json", "role": "input", "feature": "publish_post" },
-        { "id": "schema:app/features/publish_post/output.schema.json", "kind": "schema", "label": "app/features/publish_post/output.schema.json", "path": "app/features/publish_post/output.schema.json", "role": "output", "feature": "publish_post" }
+        { "id": "schema:Features/PublishPost/input.schema.json", "kind": "schema", "label": "Features/PublishPost/input.schema.json", "path": "Features/PublishPost/input.schema.json", "role": "input", "feature": "publish-post" },
+        { "id": "schema:Features/PublishPost/output.schema.json", "kind": "schema", "label": "Features/PublishPost/output.schema.json", "path": "Features/PublishPost/output.schema.json", "role": "output", "feature": "publish-post" }
       ]
     },
     "usedBy": {
@@ -523,7 +523,7 @@ Representative `--json` output:
     },
     "graph": {
       "inbound": [
-        { "id": "feature:publish_post", "kind": "feature", "label": "publish_post", "feature": "publish_post", "source_path": "app/features/publish_post/feature.yaml", "edge_type": "feature_to_route" }
+        { "id": "feature:publish-post", "kind": "feature", "label": "publish-post", "feature": "publish-post", "source_path": "Features/PublishPost/feature.yaml", "edge_type": "feature_to_route" }
       ],
       "outbound": [],
       "lateral": []
@@ -542,23 +542,23 @@ Representative `--json` output:
   "permissions": {
     "required": ["posts.create"],
     "enforced_by": [
-      { "guard": "guard:permission:publish_post:posts_create", "permission": "posts.create", "stage": "auth" }
+      { "guard": "guard:permission:publish-post:posts_create", "permission": "posts.create", "stage": "auth" }
     ],
     "defined_in": [
-      { "permission": "posts.create", "source": "feature:publish_post" }
+      { "permission": "posts.create", "source": "feature:publish-post" }
     ],
     "missing": []
   },
   "schemaInteraction": {
     "items": [
-      { "id": "schema:app/features/publish_post/input.schema.json", "kind": "schema", "label": "app/features/publish_post/input.schema.json", "path": "app/features/publish_post/input.schema.json", "role": "input", "feature": "publish_post" },
-      { "id": "schema:app/features/publish_post/output.schema.json", "kind": "schema", "label": "app/features/publish_post/output.schema.json", "path": "app/features/publish_post/output.schema.json", "role": "output", "feature": "publish_post" }
+      { "id": "schema:Features/PublishPost/input.schema.json", "kind": "schema", "label": "Features/PublishPost/input.schema.json", "path": "Features/PublishPost/input.schema.json", "role": "input", "feature": "publish-post" },
+      { "id": "schema:Features/PublishPost/output.schema.json", "kind": "schema", "label": "Features/PublishPost/output.schema.json", "path": "Features/PublishPost/output.schema.json", "role": "output", "feature": "publish-post" }
     ],
     "reads": [
-      { "id": "schema:app/features/publish_post/input.schema.json", "kind": "schema", "label": "app/features/publish_post/input.schema.json", "path": "app/features/publish_post/input.schema.json", "role": "input", "feature": "publish_post" }
+      { "id": "schema:Features/PublishPost/input.schema.json", "kind": "schema", "label": "Features/PublishPost/input.schema.json", "path": "Features/PublishPost/input.schema.json", "role": "input", "feature": "publish-post" }
     ],
     "writes": [
-      { "id": "schema:app/features/publish_post/output.schema.json", "kind": "schema", "label": "app/features/publish_post/output.schema.json", "path": "app/features/publish_post/output.schema.json", "role": "output", "feature": "publish_post" }
+      { "id": "schema:Features/PublishPost/output.schema.json", "kind": "schema", "label": "Features/PublishPost/output.schema.json", "path": "Features/PublishPost/output.schema.json", "role": "output", "feature": "publish-post" }
     ],
     "fields": [],
     "subject": null
@@ -569,7 +569,7 @@ Representative `--json` output:
     "./foundry inspect node route:POST:/posts --json",
     "./foundry inspect pipeline --json",
     "./foundry inspect route POST /posts --json",
-    "foundry verify feature publish_post --json",
+    "foundry verify feature publish-post --json",
     "foundry verify graph --json",
     "foundry verify pipeline --json",
     "php vendor/bin/phpunit"
@@ -590,7 +590,7 @@ Representative `--json` output:
         "category": "events",
         "message": "Event has no subscribers: post.created",
         "node_id": "event:post.created",
-        "source_path": "app/features/publish_post/events.yaml",
+        "source_path": "Features/PublishPost/events.yaml",
         "source_line": null,
         "related_nodes": [],
         "suggested_fix": null,
@@ -610,7 +610,7 @@ Representative `--json` output:
       "shape": "key_value",
       "items": {
         "risk": "high",
-        "affected_features": ["publish_post"],
+        "affected_features": ["publish-post"],
         "affected_routes": ["POST /posts"],
         "affected_events": [],
         "affected_jobs": [],
@@ -675,11 +675,11 @@ Representative `--markdown` output:
 **Type:** route
 
 ### Summary
-POST /posts handles requests through the compiled application graph. It dispatches the publish_post feature action. It emits post.created. It triggers notify_followers.
+POST /posts handles requests through the compiled application graph. It dispatches the publish-post feature action. It emits post.created. It triggers notify_followers.
 
 ### Responsibilities
 - Handle POST /posts requests
-- Dispatch the publish_post feature action
+- Dispatch the publish-post feature action
 
 ### Execution Flow
 - request
@@ -688,15 +688,15 @@ POST /posts handles requests through the compiled application graph. It dispatch
 - rate_limit guard
 - request_validation guard
 - transaction guard
-- publish_post feature action
+- publish-post feature action
 - post.created
 - notify_followers
 
 ### Dependencies
-- feature:publish_post
+- feature:publish-post
 - permission:posts.create
-- schema:app/features/publish_post/input.schema.json
-- schema:app/features/publish_post/output.schema.json
+- schema:Features/PublishPost/input.schema.json
+- schema:Features/PublishPost/output.schema.json
 
 ### Emits
 - event:post.created
@@ -706,15 +706,15 @@ POST /posts handles requests through the compiled application graph. It dispatch
 
 ### Permissions
 - posts.create
-- defined in: feature:publish_post
-- enforced by: guard:permission:publish_post:posts_create
+- defined in: feature:publish-post
+- enforced by: guard:permission:publish-post:posts_create
 
 ### Schema Interaction
-- reads: schema:app/features/publish_post/input.schema.json
-- writes: schema:app/features/publish_post/output.schema.json
+- reads: schema:Features/PublishPost/input.schema.json
+- writes: schema:Features/PublishPost/output.schema.json
 
 ### Graph Relationships
-- inbound: feature:publish_post
+- inbound: feature:publish-post
 
 ### Related Commands
 - `./foundry inspect execution-plan POST /posts --json`
@@ -722,7 +722,7 @@ POST /posts handles requests through the compiled application graph. It dispatch
 - `./foundry inspect node route:POST:/posts --json`
 - `./foundry inspect pipeline --json`
 - `./foundry inspect route POST /posts --json`
-- `foundry verify feature publish_post --json`
+- `foundry verify feature publish-post --json`
 - `foundry verify graph --json`
 - `foundry verify pipeline --json`
 - `php vendor/bin/phpunit`
@@ -741,7 +741,7 @@ POST /posts handles requests through the compiled application graph. It dispatch
 
 ### Impact
 - risk: high
-- affected_features: publish_post
+- affected_features: publish-post
 - affected_routes: POST /posts
 - affected_events:
 - affected_jobs:
@@ -755,15 +755,15 @@ Ambiguous target: "publish"
 
 Did you mean:
 
-  publish_post (feature)
-  app/features/publish_post/input.schema.json (schema)
-  app/features/publish_post/output.schema.json (schema)
+  publish-post (feature)
+  Features/PublishPost/input.schema.json (schema)
+  Features/PublishPost/output.schema.json (schema)
 
 Use a more specific target, or prefix with type:
 
-  foundry explain feature:publish_post
-  foundry explain schema:app/features/publish_post/input.schema.json
-  foundry explain schema:app/features/publish_post/output.schema.json
+  foundry explain feature:publish-post
+  foundry explain schema:Features/PublishPost/input.schema.json
+  foundry explain schema:Features/PublishPost/output.schema.json
 ```
 
 ```json
@@ -836,7 +836,7 @@ The architecture tools layer introduces extension-visible graph analyzers via ex
 
 Recommended loop for graph-native changes:
 
-1. Edit source-of-truth manifests/schemas/tests under `app/features/*`.
+1. Edit source-of-truth manifests/schemas/tests under `Features/<Feature>/`.
 2. `foundry compile graph --json`
 3. `foundry doctor --json`
 4. `foundry inspect graph --event=post.created --format=mermaid --json`

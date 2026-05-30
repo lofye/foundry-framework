@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Foundry\Generation;
 
 use Foundry\Support\FoundryError;
+use Foundry\Support\FeatureNaming;
 use Foundry\Support\Paths;
 use Foundry\Support\Str;
 use Foundry\Support\Yaml;
@@ -48,7 +49,7 @@ final class AdminResourceGenerator
         $generatedFeatures = [];
         $generatedFiles = [];
         foreach ($featureDefinitions as $featureDefinition) {
-            $generatedFeatures[] = (string) $featureDefinition['feature'];
+            $generatedFeatures[] = FeatureNaming::canonical((string) ($featureDefinition['canonical_feature'] ?? $featureDefinition['feature']));
             foreach ($this->featureGenerator->generateFromArray($featureDefinition, $force) as $path) {
                 $generatedFiles[] = $path;
             }
@@ -126,6 +127,7 @@ final class AdminResourceGenerator
     {
         return [
             'feature' => $feature,
+            'canonical_feature' => FeatureNaming::canonical($feature),
             'kind' => 'http',
             'description' => sprintf('Generated admin %s feature for %s.', $operation, $resource),
             'route' => ['method' => $method, 'path' => $path],

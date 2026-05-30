@@ -3,15 +3,15 @@
   "dry_run": true,
   "feature_context": true,
   "selected_features": [
-    "delete_post",
-    "publish_post",
-    "list_posts",
-    "update_post",
-    "view_post"
+    "delete-post",
+    "publish-post",
+    "list-posts",
+    "update-post",
+    "view-post"
   ],
   "impact": [
     {
-      "node_id": "feature:publish_post",
+      "node_id": "feature:publish-post",
       "node_type": "feature",
       "risk": "medium",
       "affected_routes": [
@@ -23,47 +23,47 @@
         "routes_index.php"
       ],
       "recommended_verification": [
-        "foundry verify feature publish_post --json",
+        "foundry verify feature publish-post --json",
         "foundry verify graph --json",
         "foundry verify pipeline --json",
         "php vendor/bin/phpunit"
       ],
       "recommended_tests": [
-        "publish_post_auth_test",
-        "publish_post_contract_test",
-        "publish_post_feature_test"
+        "publish-post_auth_test",
+        "publish-post_contract_test",
+        "publish-post_feature_test"
       ]
     }
   ],
   "prompt": {
     "constraints": [
-      "Edit only source-of-truth files under app/features/* and app/definitions/*.",
+      "Edit only source-of-truth files under Features/* and app/definitions/*.",
       "Do not hand-edit app/.foundry/build/* or app/generated/*.",
       "Preserve existing graph node IDs and naming conventions when possible."
     ],
     "workflow": [
       "foundry compile graph --json",
       "foundry inspect execution-plan <feature> --json",
-      "foundry inspect impact --file=app/features/<feature>/feature.yaml --json",
+      "foundry inspect impact --file=Features/<Feature>/feature.yaml --json",
       "foundry verify graph --json",
       "foundry verify pipeline --json",
       "foundry verify contracts --json",
       "php vendor/bin/phpunit"
     ],
-    "text": "Instruction:\nadd bookmark endpoint for posts\n\nRelevant features: delete_post, publish_post, list_posts, update_post, view_post\n...",
+    "text": "Instruction:\nadd bookmark endpoint for posts\n\nRelevant features: delete-post, publish-post, list-posts, update-post, view-post\n...",
     "correction_template": "The previous attempt produced diagnostics.\nUse the diagnostic JSON as authoritative feedback.\nRevise only the impacted source-of-truth files.\nRe-run compile and verify commands after changes."
   },
   "recommended_commands": [
     "foundry compile graph --json",
     "foundry inspect execution-plan <feature> --json",
-    "foundry inspect impact --file=app/features/<feature>/feature.yaml --json",
-    "foundry verify feature publish_post --json",
+    "foundry inspect impact --file=Features/<Feature>/feature.yaml --json",
+    "foundry verify feature publish-post --json",
     "foundry verify graph --json",
     "foundry verify pipeline --json",
     "foundry verify contracts --json",
     "php vendor/bin/phpunit",
-    "php vendor/bin/phpunit --filter=publish_post_auth_test",
-    "php vendor/bin/phpunit --filter=publish_post_contract_test",
-    "php vendor/bin/phpunit --filter=publish_post_feature_test"
+    "php vendor/bin/phpunit --filter=publish-post_auth_test",
+    "php vendor/bin/phpunit --filter=publish-post_contract_test",
+    "php vendor/bin/phpunit --filter=publish-post_feature_test"
   ]
 }

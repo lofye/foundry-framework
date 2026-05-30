@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Define canonical framework-module governance boundaries under `Modules/` with deterministic compatibility for legacy `Features/` and `docs/features/` paths.
+Define canonical framework-module governance boundaries under `Modules/` and canonical downstream application feature boundaries under `Features/<Feature>/`.
 
 ## Goals
 
@@ -11,7 +11,7 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - Support canonical `Modules/*/specs/` and `Modules/*/plans/` in spec validation.
 - Require reconstruction notes for completed framework module specs under `Modules/<Module>/outcomes/<id>-<slug>.md`.
 - Require canonical module implementation-log references in the form `Modules/<Module>/specs/<id>-<slug>.md`.
-- Keep migration-compatible behavior for legacy `docs/features/*` inputs.
+- Enforce canonical application feature context and runtime placement under `Features/<Feature>/`.
 - Provide deterministic prep-only historical-spec archive extraction tooling before full module import migration.
 - Provide deterministic historical-spec evidence mapping that preserves legacy ordering keys, confidence levels, and supporting evidence before import.
 - Tighten historical evidence boundaries so `Spec35D1` is the canonical transition anchor and historical candidates are classified by import era/action before any import step.
@@ -24,17 +24,17 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 ## Non-Goals
 
 - Do not physically migrate all framework runtime/test code in one step.
-- Do not remove legacy `docs/features/` compatibility in this step.
+- Do not preserve obsolete `app/features/*` or application-context `docs/features/*` layouts as valid app feature sources.
 
 ## Constraints
 
 - Output ordering must remain deterministic and stable.
-- Canonical and legacy duplicate definitions must emit deterministic diagnostics.
+- Obsolete application feature source/context paths must emit deterministic diagnostics.
 - Boundary enforcement defaults to enabled and disabled mode must emit visible warnings.
 
 ## Expected Behavior
 
-- `feature:list` returns deterministic feature rows from canonical and legacy sources.
+- `feature:list` returns deterministic application feature rows from canonical `Features/<Feature>/` sources.
 - `feature:inspect <feature>` returns context and directory mapping with deterministic dependency order.
 - `feature:map` returns deterministic owned path maps.
 - `verify features` reports boundary/duplication issues and enforcement status.
@@ -71,7 +71,8 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 - `historical-specs:evidence` shares the hardened root-detection semantics and does not independently resurrect rejected section fragments as importable candidates.
 - `verify features` enforces executable application feature-local runtime layout under `Features/<Feature>/` (`src/` and `tests/` required by default).
 - `verify features` permits omitted `specs/`, `plans/`, and `docs/` directories when absent, and fails deterministically when present paths are not directories.
-- `verify features` emits deterministic violations when attributable application-owned runtime/context files remain in legacy `app/features/<slug>` and `docs/features/<slug>` paths.
+- `verify features` emits deterministic violations when application-owned runtime/context files remain in obsolete `app/features/<slug>` and application-context `docs/features/<slug>` paths.
+- Fresh app scaffolding, feature generation, context initialization, source scanning, graph compilation, feature execution, and feature verification use `Features/<Feature>/` as the app feature source root.
 - Framework-module misplacement checks do not classify application features under `Features/` as framework modules unless matching `Modules/<Name>` entries exist.
 - `spec:validate` validates canonical `Modules/*/specs` and `Modules/*/plans` paths.
 - `spec:validate` requires reconstruction-note coverage for active framework module specs and reports deterministic violations when notes are missing or malformed.
@@ -84,8 +85,9 @@ Define canonical framework-module governance boundaries under `Modules/` with de
 
 - Canonical `Modules/` workspace is discoverable and preferred for framework modules.
 - New feature-system CLI surfaces are available and deterministic.
-- Canonical/legacy duplicate detection reports `FEATURE_DUPLICATE_CANONICAL_AND_LEGACY`.
+- Obsolete app feature source/context detection reports deterministic boundary violations.
 - Application feature-local runtime ownership checks are deterministic and enforce default executable layout semantics.
+- Fresh app scaffolding and feature workflow commands consistently create, discover, compile, execute, and verify app features from `Features/<Feature>/`.
 - Spec validation supports canonical `Modules/*` specs and plans.
 - Active module specs require matching reconstruction notes; legacy `# Implementation Plan:` notes remain deterministic grandfathered artifacts during migration.
 - Framework implementation-log entries are canonicalized to module spec paths and slug-style module references fail deterministic validation.

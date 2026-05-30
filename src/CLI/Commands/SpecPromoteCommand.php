@@ -236,9 +236,6 @@ final class SpecPromoteCommand extends Command
         foreach ((glob($context->paths()->join('Features/*/specs/drafts/' . $name . '.md')) ?: []) as $path) {
             $candidates[] = $path;
         }
-        foreach ((glob($context->paths()->join('docs/features/*/specs/drafts/' . $name . '.md')) ?: []) as $path) {
-            $candidates[] = $path;
-        }
 
         $rows = [];
         foreach ($candidates as $absolutePath) {

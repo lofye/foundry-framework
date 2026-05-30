@@ -39,7 +39,9 @@ final class InstallCompletenessCheck implements DoctorCheck
             'composer.json',
             'vendor/autoload.php',
             $context->projectType() === 'framework_repository' ? 'bin/foundry' : 'vendor/bin/foundry',
-            'app/features',
+            'Features',
+            'Modules',
+            'Packs',
         ];
 
         $missingPaths = [];

@@ -232,36 +232,38 @@ ZSH,
      */
     private function featureNames(): array
     {
-        $directory = $this->paths->join('docs/features');
-        if (!is_dir($directory)) {
-            return [];
-        }
-
-        $entries = scandir($directory);
-        if ($entries === false) {
-            return [];
-        }
-
         $features = [];
-        foreach ($entries as $entry) {
-            if ($entry === '.' || $entry === '..') {
+        foreach (['Modules', 'Features'] as $root) {
+            $directory = $this->paths->join($root);
+            if (!is_dir($directory)) {
                 continue;
             }
 
-            if (!is_dir($directory . '/' . $entry)) {
+            $entries = scandir($directory);
+            if ($entries === false) {
                 continue;
             }
 
-            if (preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $entry) !== 1) {
-                continue;
-            }
+            foreach ($entries as $entry) {
+                if ($entry === '.' || $entry === '..') {
+                    continue;
+                }
 
-            $specsDirectory = $directory . '/' . $entry . '/specs';
-            if (!is_dir($specsDirectory)) {
-                continue;
-            }
+                if (!is_dir($directory . '/' . $entry)) {
+                    continue;
+                }
 
-            $features[] = $entry;
+                if (preg_match('/^[A-Z][A-Za-z0-9]*$/', $entry) !== 1) {
+                    continue;
+                }
+
+                $specsDirectory = $directory . '/' . $entry . '/specs';
+                if (!is_dir($specsDirectory)) {
+                    continue;
+                }
+
+                $features[] = FeatureNaming::fromDirectoryName($entry);
+            }
         }
 
         sort($features);

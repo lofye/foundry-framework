@@ -18,12 +18,13 @@ final class ContextManifestGenerator
      */
     public function build(string $feature, array $manifest): array
     {
+        $feature = FeatureNaming::canonical($feature);
         $codeSafeFeature = FeatureNaming::codeSafe($feature);
-        $featureDir = 'app/features/' . $feature;
+        $featureDir = FeatureNaming::directory($feature);
 
         $relevant = [
             $featureDir . '/feature.yaml',
-            $featureDir . '/action.php',
+            $featureDir . '/src/Action.php',
             $featureDir . '/input.schema.json',
             $featureDir . '/output.schema.json',
             $featureDir . '/queries.sql',
@@ -95,7 +96,13 @@ final class ContextManifestGenerator
      */
     public function write(string $feature, array $manifest): string
     {
-        $path = $this->paths->join('app/features/' . $feature . '/context.manifest.json');
+        $feature = FeatureNaming::canonical($feature);
+        $path = $this->paths->join(FeatureNaming::directory($feature) . '/context.manifest.json');
+        $directory = dirname($path);
+        if (!is_dir($directory)) {
+            mkdir($directory, 0777, true);
+        }
+
         file_put_contents($path, Json::encode($this->build($feature, $manifest), true) . "\n");
 
         return $path;

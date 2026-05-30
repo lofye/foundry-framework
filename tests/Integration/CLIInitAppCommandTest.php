@@ -76,11 +76,11 @@ final class CLIInitAppCommandTest extends TestCase
         $this->assertFileExists($target . '/storage/logs/.gitignore');
         $this->assertFileExists($target . '/storage/tmp/.gitignore');
         $this->assertFileExists($target . '/app/definitions/inspect-ui/dev.inspect-ui.yaml');
-        $this->assertFileExists($target . '/app/features/home/context.manifest.json');
-        $this->assertFileExists($target . '/app/features/project_docs/feature.yaml');
-        $this->assertFileExists($target . '/app/features/submit_feedback/feature.yaml');
-        $this->assertFileExists($target . '/app/features/dashboard/feature.yaml');
-        $this->assertFileExists($target . '/app/features/current_user/feature.yaml');
+        $this->assertFileExists($target . '/Features/Home/context.manifest.json');
+        $this->assertFileExists($target . '/Features/ProjectDocs/feature.yaml');
+        $this->assertFileExists($target . '/Features/SubmitFeedback/feature.yaml');
+        $this->assertFileExists($target . '/Features/Dashboard/feature.yaml');
+        $this->assertFileExists($target . '/Features/CurrentUser/feature.yaml');
         $this->assertFileExists($target . '/app/generated/routes.php');
         $this->assertFileExists($target . '/app/.foundry/build/projections/feature_index.php');
         $this->assertFileExists($target . '/docs/generated/features.md');
@@ -180,10 +180,10 @@ final class CLIInitAppCommandTest extends TestCase
 
         $this->assertSame(0, $result['status']);
         $this->assertSame('minimal', $result['payload']['starter_mode']);
-        $this->assertContains('submit_feedback', $result['payload']['features']);
+        $this->assertContains('submit-feedback', $result['payload']['features']);
         $this->assertNotContains('dashboard', $result['payload']['features']);
-        $this->assertFileExists($target . '/app/features/submit_feedback/feature.yaml');
-        $this->assertFileDoesNotExist($target . '/app/features/dashboard/feature.yaml');
+        $this->assertFileExists($target . '/Features/SubmitFeedback/feature.yaml');
+        $this->assertFileDoesNotExist($target . '/Features/Dashboard/feature.yaml');
 
         $this->seedInstalledApp($target);
 
@@ -192,7 +192,7 @@ final class CLIInitAppCommandTest extends TestCase
 
         $inspect = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--json'], $target);
         $this->assertSame(0, $inspect['status']);
-        $this->assertContains('submit_feedback', $inspect['payload']['summary']['features']);
+        $this->assertContains('submit-feedback', $inspect['payload']['summary']['features']);
     }
 
     public function test_new_command_supports_api_first_starter_mode(): void
@@ -204,13 +204,13 @@ final class CLIInitAppCommandTest extends TestCase
 
         $this->assertSame(0, $result['status']);
         $this->assertSame('api-first', $result['payload']['starter_mode']);
-        $this->assertContains('api_overview', $result['payload']['features']);
-        $this->assertContains('api_me', $result['payload']['features']);
+        $this->assertContains('api-overview', $result['payload']['features']);
+        $this->assertContains('api-me', $result['payload']['features']);
         $this->assertContains('GET /api/me', $result['payload']['routes']);
-        $this->assertFileExists($target . '/app/features/api_overview/feature.yaml');
-        $this->assertFileExists($target . '/app/features/api_echo/feature.yaml');
-        $this->assertFileExists($target . '/app/features/api_me/feature.yaml');
-        $this->assertFileDoesNotExist($target . '/app/features/dashboard/feature.yaml');
+        $this->assertFileExists($target . '/Features/ApiOverview/feature.yaml');
+        $this->assertFileExists($target . '/Features/ApiEcho/feature.yaml');
+        $this->assertFileExists($target . '/Features/ApiMe/feature.yaml');
+        $this->assertFileDoesNotExist($target . '/Features/Dashboard/feature.yaml');
 
         $this->seedInstalledApp($target);
 
@@ -220,7 +220,7 @@ final class CLIInitAppCommandTest extends TestCase
         $inspect = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--command', 'GET /api/me', '--json'], $target);
         $this->assertSame(0, $inspect['status']);
         $this->assertSame('GET /api/me', $inspect['payload']['command_filter']);
-        $this->assertContains('api_me', $inspect['payload']['summary']['features']);
+        $this->assertContains('api-me', $inspect['payload']['summary']['features']);
     }
 
     public function test_new_command_defaults_to_current_directory_when_path_is_omitted(): void

@@ -79,7 +79,7 @@ MD . "\n", (string) file_get_contents($this->project->root . '/' . (string) $res
 
     public function test_allocation_failure_is_reported_when_feature_spec_state_is_invalid(): void
     {
-        $directory = $this->project->root . '/docs/features/execution-spec-system/specs/drafts';
+        $directory = $this->project->root . '/Modules/ExecutionSpecSystem/specs/drafts';
         mkdir($directory, 0777, true);
         file_put_contents($directory . '/not-a-spec.md', "# Execution Spec: not-a-spec\n");
 
@@ -131,7 +131,7 @@ MD . "\n", (string) file_get_contents($this->project->root . '/' . (string) $res
 
     public function test_create_draft_reports_target_file_collision(): void
     {
-        $path = $this->project->root . '/docs/features/execution-spec-system/specs/drafts/001-add-cli-command.md';
+        $path = $this->project->root . '/Modules/ExecutionSpecSystem/specs/drafts/001-add-cli-command.md';
         if (!is_dir(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }
@@ -156,7 +156,7 @@ MD . "\n", (string) file_get_contents($this->project->root . '/' . (string) $res
 
     private function writeSpecForProject(TempProject $project, string $feature, string $name, string $subdirectory = ''): void
     {
-        $directory = $project->root . '/docs/features/' . $feature . '/specs' . ($subdirectory !== '' ? '/' . $subdirectory : '');
+        $directory = $project->root . '/Modules/' . str_replace(' ', '', ucwords(str_replace('-', ' ', $feature))) . '/specs' . ($subdirectory !== '' ? '/' . $subdirectory : '');
         if (!is_dir($directory)) {
             mkdir($directory, 0777, true);
         }

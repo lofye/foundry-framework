@@ -2,21 +2,21 @@
 
 ## Purpose
 
-- Record the implemented state of canonical feature workspace boundaries and migration-safe compatibility behavior.
+- Record the implemented state of canonical framework-module and application-feature workspace boundaries.
 
 ## Decision Summary
 
-- Refreshed Through Spec: `013-import-explicitly-marked-precanonical-archive`
+- Refreshed Through Spec: `014-canonical-app-feature-roots-without-legacy-layout`
 - FeatureSystem keeps module and feature decision ledgers append-only and non-destructive.
 - Decision history is summarized in module state (`## Decision Summary`) rather than by rewriting `.decisions.md`.
 - `spec:validate` surfaces deterministic non-blocking warnings for missing or possibly stale module decision summaries.
 - Historical extraction now distinguishes explicit spec roots from ordinary section headings, recaps, and result/output commentary.
 - Explicit pre-canonical imports preserve marked archive lineage in `Modules/PreCanonical` without inferring modern module ownership.
-- App feature layout will make a clean no-legacy break: new app feature source/context belongs under `Features/<Feature>/`, top-level `Features/`, `Modules/`, and `Packs/` must exist in fresh apps, and obsolete `app/features/` and `docs/features/` app-layout paths should fail verification rather than be migrated or supported.
+- App feature layout makes a clean no-legacy break: new app feature source/context belongs under `Features/<Feature>/`, top-level `Features/`, `Modules/`, and `Packs/` must exist in fresh apps, obsolete `app/features/` app source fails verification, and obsolete app context under `docs/features/<feature>/` fails verification while authored framework docs under `docs/` remain canonical public documentation.
 
 ## Current State
 
-- `feature:list` returns deterministic feature rows from canonical and legacy sources.
+- `feature:list` returns deterministic application feature rows from canonical `Features/<Feature>/` sources.
 - `feature:inspect <feature>` returns context and directory mapping with deterministic dependency order.
 - `feature:map` returns deterministic owned path maps.
 - `verify features` reports boundary and duplication issues with explicit enforcement status.
@@ -24,12 +24,14 @@
 - Active-spec implementation logging uses `Modules/implementation.log` when canonical module workspace is present.
 - Canonical `Modules/` workspace is discoverable and preferred for framework modules.
 - New feature-system CLI surfaces are available and deterministic.
-- Canonical and legacy duplicate detection reports `FEATURE_DUPLICATE_CANONICAL_AND_LEGACY`.
+- Framework-module duplicate detection reports deterministic issues when a module is represented under both `Modules/<Module>/` and `Features/<Module>/`.
 - Spec validation supports canonical `Modules/*` specs and plans.
 - Canonical implementation ledger path is recognized as `Modules/implementation.log`.
 - Application feature layout validation enforces executable `Features/<Feature>/src/` and `Features/<Feature>/tests/` ownership by default.
 - Optional `specs/`, `plans/`, and `docs/` directories are validated when present and may be omitted when absent.
-- Application feature legacy ownership leaks are reported deterministically (`app/features/<slug>` runtime artifacts and `docs/features/<slug>` context files).
+- Application feature legacy ownership leaks are reported deterministically (`app/features/` runtime artifacts and `docs/features/<slug>` app context files).
+- Fresh app scaffolding, feature generation, context initialization, source scanning, graph compilation, feature execution, and feature verification now use `Features/<Feature>/` as the app feature source root.
+- Generated apps include empty top-level `Features/`, `Modules/`, and `Packs/` roots.
 - Framework module duplication under both `Modules/<Module>/` and `Features/<Module>/` is reported deterministically without misclassifying application features that exist only under `Features/`.
 - Framework and scaffold documentation now consistently distinguish Framework Modules (`Modules/*`) from Application Features (`Features/*`).
 - Agent guides and implementation skills now route framework execution-spec work to `Modules/*` and `Modules/implementation.log` while keeping app feature-local guidance under `Features/*`.
@@ -82,11 +84,11 @@
 ## Open Questions
 
 - Shared-glue versus feature-owned runtime boundary classification depth remains open.
-- Full physical migration sequencing for feature-owned source/test files remains open.
+- Full physical migration sequencing for framework-owned source/test files remains open.
 
 ## Next Steps
 
-- Implement `Modules/FeatureSystem/specs/014-canonical-app-feature-roots-without-legacy-layout.md`.
+- Keep public docs and examples aligned with canonical `Features/<Feature>/` app feature paths as follow-up specs change surrounding workflows.
 - Expand boundary-violation classification depth in follow-up execution specs.
 - Continue incremental source/test localization through promoted execution specs.
 - Evaluate follow-up specs to migrate grandfathered legacy module plan documents into strict reconstruction-note format.

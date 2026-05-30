@@ -6,8 +6,8 @@ Core flows:
 
 ```bash
 foundry explain
-foundry explain publish_post --json
-foundry explain publish_post --git --json
+foundry explain publish-post --json
+foundry explain publish-post --git --json
 foundry explain pack:foundry/blog --json
 foundry explain --diff
 foundry explain --diff --json

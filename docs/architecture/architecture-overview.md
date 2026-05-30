@@ -4,7 +4,7 @@ Foundry is a compile-first PHP framework. Authored feature and definition files 
 
 ## Source-Of-Truth Boundaries
 
-- `app/features/*` is the primary authored source of truth for application behavior.
+- `Features/<Feature>/` is the primary authored source of truth for application behavior, including feature context, runtime code under `src/`, and feature-local tests under `tests/`.
 - `app/definitions/*` adds authored definitions for workflows, resources, inspect UI, and other capability-specific inputs when those capabilities are used.
 - `app/.foundry/build/*` is canonical compiled output: graph artifacts, projections, manifests, diagnostics, and exports.
 - `app/generated/*` is a generated compatibility mirror for runtime and tooling that still expect legacy projection paths.

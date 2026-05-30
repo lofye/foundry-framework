@@ -77,14 +77,14 @@ final class CLIBatchWorkflowCommandsTest extends TestCase
             'doctor',
             '--cli',
             '--graph',
-            '--feature=publish_post',
+            '--feature=publish-post',
             '--json',
         ]);
 
         $this->assertSame(0, $cliGraph['status']);
         $this->assertTrue($cliGraph['payload']['cli']);
         $this->assertTrue($cliGraph['payload']['graph_mode']);
-        $this->assertSame('publish_post', $cliGraph['payload']['feature_filter']);
+        $this->assertSame('publish-post', $cliGraph['payload']['feature_filter']);
         $this->assertArrayHasKey('cli_surface', $cliGraph['payload']);
 
         $strict = $this->runCommand(new Application(), ['foundry', 'doctor', '--strict', '--json']);

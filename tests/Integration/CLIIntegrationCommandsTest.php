@@ -60,7 +60,7 @@ YAML);
 
         $apiResource = $this->runCommand($app, ['foundry', 'generate', 'api-resource', 'posts', '--definition=definitions/posts.api-resource.yaml', '--json']);
         $this->assertSame(0, $apiResource['status']);
-        $this->assertContains('api_create_post', $apiResource['payload']['features']);
+        $this->assertContains('api-create-post', $apiResource['payload']['features']);
         $this->assertFileExists($this->project->root . '/app/definitions/api/posts.api-resource.yaml');
 
         $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json']);
@@ -97,7 +97,7 @@ YAML);
         $this->assertFileExists($this->project->root . '/docs/generated/api-surface.md');
         $this->assertFileExists($this->project->root . '/docs/generated/cli-reference.md');
 
-        $deepTests = $this->runCommand($app, ['foundry', 'generate', 'tests', 'api_create_post', '--mode=deep', '--json']);
+        $deepTests = $this->runCommand($app, ['foundry', 'generate', 'tests', 'api-create-post', '--mode=deep', '--json']);
         $this->assertSame(0, $deepTests['status']);
         $this->assertSame('feature', $deepTests['payload']['kind']);
 

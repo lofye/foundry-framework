@@ -20,7 +20,7 @@ final class CLIArchitectureToolsCommandsTest extends TestCase
         chdir($this->project->root);
 
         $this->seedFeature(
-            feature: 'publish_post',
+            feature: 'publish-post',
             method: 'POST',
             path: '/posts',
             authRequired: true,
@@ -32,7 +32,7 @@ final class CLIArchitectureToolsCommandsTest extends TestCase
         );
 
         $this->seedFeature(
-            feature: 'update_feed',
+            feature: 'update-feed',
             method: 'POST',
             path: '/feed',
             authRequired: true,
@@ -44,7 +44,7 @@ final class CLIArchitectureToolsCommandsTest extends TestCase
         );
 
         $this->seedFeature(
-            feature: 'list_posts',
+            feature: 'list-posts',
             method: 'GET',
             path: '/posts',
             authRequired: false,
@@ -82,12 +82,12 @@ YAML);
         $compile = $this->runCommand($app, ['foundry', 'compile', 'graph', '--json']);
         $this->assertSame(0, $compile['status']);
 
-        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=list_posts', '--json']);
+        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=list-posts', '--json']);
         $this->assertSame(0, $doctor['status']);
         $this->assertTrue($doctor['payload']['ok']);
         $this->assertSame(0, $doctor['payload']['exit_code']);
         $this->assertSame('foundry', $doctor['payload']['command_prefix']);
-        $this->assertSame('list_posts', $doctor['payload']['feature_filter']);
+        $this->assertSame('list-posts', $doctor['payload']['feature_filter']);
         $this->assertArrayHasKey('checks', $doctor['payload']);
         $this->assertArrayHasKey('analyzers', $doctor['payload']);
         $this->assertArrayHasKey('diagnostics_summary', $doctor['payload']);
@@ -95,7 +95,7 @@ YAML);
         $this->assertArrayHasKey('extension_lifecycle', $doctor['payload']);
         $this->assertArrayHasKey('extension_load_order', $doctor['payload']);
 
-        $doctorStrict = $this->runCommand($app, ['foundry', 'doctor', '--feature=list_posts', '--strict', '--json']);
+        $doctorStrict = $this->runCommand($app, ['foundry', 'doctor', '--feature=list-posts', '--strict', '--json']);
         $this->assertSame(1, $doctorStrict['status']);
         $this->assertTrue($doctorStrict['payload']['strict']);
 
@@ -103,22 +103,22 @@ YAML);
         $this->assertSame(1, $doctorMissingFeature['status']);
         $this->assertSame('FEATURE_NOT_FOUND', $doctorMissingFeature['payload']['error']['code']);
 
-        $doctorCli = $this->runCommand($app, ['foundry', 'doctor', '--feature=list_posts', '--cli', '--json']);
+        $doctorCli = $this->runCommand($app, ['foundry', 'doctor', '--feature=list-posts', '--cli', '--json']);
         $this->assertSame(0, $doctorCli['status']);
         $this->assertSame(1, $doctorCli['payload']['cli_surface']['coverage']);
         $this->assertSame(0, $doctorCli['payload']['cli_surface']['invalid']);
         $this->assertSame(0, $doctorCli['payload']['cli_surface']['ambiguous']);
         $this->assertSame(0, $doctorCli['payload']['cli_surface']['orphan_handlers']);
 
-        $deepDoctor = $this->runCommand($app, ['foundry', 'doctor', '--deep', '--feature=list_posts', '--json']);
+        $deepDoctor = $this->runCommand($app, ['foundry', 'doctor', '--deep', '--feature=list-posts', '--json']);
         $this->assertSame(0, $deepDoctor['status']);
         $this->assertTrue($deepDoctor['payload']['deep']);
         $this->assertArrayHasKey('monetization', $deepDoctor['payload']);
         $this->assertArrayHasKey('deep_diagnostics', $deepDoctor['payload']['monetization']);
         $this->assertArrayHasKey('graph', $deepDoctor['payload']['monetization']['deep_diagnostics']);
-        $this->assertSame('list_posts', $deepDoctor['payload']['feature_filter']);
+        $this->assertSame('list-posts', $deepDoctor['payload']['feature_filter']);
 
-        $deepDoctorHuman = $this->runRawCommand($app, ['foundry', 'doctor', '--deep', '--feature=list_posts']);
+        $deepDoctorHuman = $this->runRawCommand($app, ['foundry', 'doctor', '--deep', '--feature=list-posts']);
         $this->assertSame(0, $deepDoctorHuman['status']);
         $this->assertStringContainsString('deep diagnostics', $deepDoctorHuman['output']);
         $this->assertStringContainsString('Graph:', $deepDoctorHuman['output']);
@@ -143,9 +143,9 @@ YAML);
         $this->assertSame('pipeline', $pipelineViz['payload']['view']);
         $this->assertArrayHasKey('edges', $pipelineViz['payload']['graph']);
 
-        $pipelineFeatureViz = $this->runCommand($app, ['foundry', 'graph', 'visualize', '--pipeline', '--feature=publish_post', '--json']);
+        $pipelineFeatureViz = $this->runCommand($app, ['foundry', 'graph', 'visualize', '--pipeline', '--feature=publish-post', '--json']);
         $this->assertSame(0, $pipelineFeatureViz['status']);
-        $this->assertSame('publish_post', $pipelineFeatureViz['payload']['feature_filter']);
+        $this->assertSame('publish-post', $pipelineFeatureViz['payload']['feature_filter']);
         $this->assertNotEmpty($pipelineFeatureViz['payload']['summary']['features']);
 
         $inspectGraph = $this->runCommand($app, ['foundry', 'inspect', 'graph', '--command', 'POST /posts', '--format=dot', '--json']);
@@ -220,7 +220,7 @@ PHP);
 
         $app = new Application();
 
-        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=list_posts', '--json']);
+        $doctor = $this->runCommand($app, ['foundry', 'doctor', '--feature=list-posts', '--json']);
         $this->assertSame(0, $doctor['status']);
         $this->assertArrayHasKey('fixture_custom_doctor', $doctor['payload']['checks']);
 
@@ -230,7 +230,7 @@ PHP);
         ));
         $this->assertContains('FDY9901_FIXTURE_DOCTOR_CHECK', $codes);
 
-        $human = $this->runRawCommand($app, ['foundry', 'doctor', '--feature=list_posts']);
+        $human = $this->runRawCommand($app, ['foundry', 'doctor', '--feature=list-posts']);
         $this->assertSame(0, $human['status']);
         $this->assertStringContainsString('Foundry doctor completed with warnings.', $human['output']);
         $this->assertStringContainsString('fixture_custom_doctor: warning', $human['output']);
@@ -256,7 +256,8 @@ PHP);
         array $requiredTests,
         array $createTests,
     ): void {
-        $base = $this->project->root . '/app/features/' . $feature;
+        $directory = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+        $base = $this->project->root . '/Features/' . $directory;
         mkdir($base . '/tests', 0777, true);
 
         $permissionsList = '[' . implode(', ', array_map(static fn(string $permission): string => '"' . $permission . '"', $permissions)) . ']';
@@ -273,9 +274,9 @@ route:
   method: {$method}
   path: {$path}
 input:
-  schema: app/features/{$feature}/input.schema.json
+  schema: Features/{$directory}/input.schema.json
 output:
-  schema: app/features/{$feature}/output.schema.json
+  schema: Features/{$directory}/output.schema.json
 auth:
   required: {$this->boolString($authRequired)}
   strategies: [bearer]

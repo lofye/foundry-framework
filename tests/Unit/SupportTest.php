@@ -34,7 +34,7 @@ final class SupportTest extends TestCase
         $this->assertSame('PublishPost', Str::studly('publish_post'));
         $this->assertSame('context-persistence', FeatureNaming::canonical('context_persistence'));
         $this->assertSame('context_persistence', FeatureNaming::codeSafe('context-persistence'));
-        $this->assertSame('app/features/context-persistence', FeatureNaming::directory('context_persistence'));
+        $this->assertSame('Features/ContextPersistence', FeatureNaming::directory('context_persistence'));
     }
 
     public function test_json_round_trip(): void

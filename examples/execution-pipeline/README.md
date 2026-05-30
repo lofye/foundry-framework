@@ -20,8 +20,8 @@ Representative payload: `inspect/pipeline.sample.json`.
 ## Example B - Inspect Execution Plan
 
 ```bash
-php bin/foundry inspect execution-plan publish_post --json
-php bin/foundry inspect guards publish_post --json
+php bin/foundry inspect execution-plan publish-post --json
+php bin/foundry inspect guards publish-post --json
 php bin/foundry inspect interceptors --stage=auth --json
 php bin/foundry verify pipeline --json
 ```

@@ -1,10 +1,10 @@
 {
   "codemod": "feature-manifest-v1-to-v2",
   "written": false,
-  "path_filter": "app/features/publish_post/feature.yaml",
+  "path_filter": "Features/PublishPost/feature.yaml",
   "changes": [
     {
-      "path": "app/features/publish_post/feature.yaml",
+      "path": "Features/PublishPost/feature.yaml",
       "rules": ["FDY_MIGRATE_FEATURE_MANIFEST_V2"],
       "from_version": 1,
       "to_version": 2,
@@ -18,7 +18,7 @@
       "severity": "warning",
       "category": "migrations",
       "message": "Outdated feature manifest version 1 detected; expected 2.",
-      "source_path": "app/features/publish_post/feature.yaml"
+      "source_path": "Features/PublishPost/feature.yaml"
     }
   ]
 }

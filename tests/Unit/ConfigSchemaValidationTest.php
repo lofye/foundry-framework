@@ -63,7 +63,7 @@ YAML);
         $this->assertArrayHasKey('extension.descriptor', $schemas['schemas']);
         $this->assertSame(0, $validation['summary']['error']);
         $this->assertContains('config/app.php', $validation['validated_sources']);
-        $this->assertContains('app/features/list_posts/feature.yaml', $validation['validated_sources']);
+        $this->assertContains('Features/ListPosts/feature.yaml', $validation['validated_sources']);
     }
 
     public function test_compile_reports_actionable_invalid_config_errors(): void
@@ -280,7 +280,8 @@ PHP);
 
     private function seedFeature(string $feature): void
     {
-        $base = $this->project->root . '/app/features/' . $feature;
+        $directory = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $feature)));
+        $base = $this->project->root . '/Features/' . $directory;
         mkdir($base . '/tests', 0777, true);
 
         file_put_contents($base . '/feature.yaml', <<<YAML
@@ -292,9 +293,9 @@ route:
   method: GET
   path: /posts
 input:
-  schema: app/features/{$feature}/input.schema.json
+  schema: Features/{$directory}/input.schema.json
 output:
-  schema: app/features/{$feature}/output.schema.json
+  schema: Features/{$directory}/output.schema.json
 auth:
   required: false
   public: true
@@ -324,7 +325,10 @@ YAML);
 
         file_put_contents($base . '/input.schema.json', '{"type":"object","additionalProperties":false,"properties":{}}');
         file_put_contents($base . '/output.schema.json', '{"type":"object","additionalProperties":false,"properties":{}}');
-        file_put_contents($base . '/action.php', '<?php declare(strict_types=1);');
+        if (!is_dir($base . '/src')) {
+            mkdir($base . '/src', 0777, true);
+        }
+        file_put_contents($base . '/src/Action.php', '<?php declare(strict_types=1);');
         file_put_contents($base . '/queries.sql', '');
         file_put_contents($base . '/permissions.yaml', "version: 1\npermissions: []\nrules: {}\n");
         file_put_contents($base . '/cache.yaml', "version: 1\nentries: []\n");

@@ -108,13 +108,13 @@ final class GeneratedFeatureApplier
      */
     private function featureFiles(string $feature): array
     {
-        $base = $this->paths->join('app/features/' . $feature);
+        $base = $this->paths->join(\Foundry\Support\FeatureNaming::directory($feature));
 
         return [
             $base . '/feature.yaml',
             $base . '/input.schema.json',
             $base . '/output.schema.json',
-            $base . '/action.php',
+            $base . '/src/Action.php',
             $base . '/queries.sql',
             $base . '/permissions.yaml',
             $base . '/cache.yaml',
@@ -122,9 +122,9 @@ final class GeneratedFeatureApplier
             $base . '/jobs.yaml',
             $base . '/prompts.md',
             $base . '/context.manifest.json',
-            $base . '/tests/' . $feature . '_contract_test.php',
-            $base . '/tests/' . $feature . '_feature_test.php',
-            $base . '/tests/' . $feature . '_auth_test.php',
+            $base . '/tests/' . \Foundry\Support\FeatureNaming::codeSafe($feature) . '_contract_test.php',
+            $base . '/tests/' . \Foundry\Support\FeatureNaming::codeSafe($feature) . '_feature_test.php',
+            $base . '/tests/' . \Foundry\Support\FeatureNaming::codeSafe($feature) . '_auth_test.php',
         ];
     }
 
